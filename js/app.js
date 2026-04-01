@@ -59,6 +59,7 @@
     playerLoading: document.getElementById("player-loading"),
 
     rowDueSouth: document.getElementById("row-due-south"),
+    rowMovies: document.getElementById("row-movies"),
     allEpsBackdrop: document.getElementById("all-eps-backdrop"),
     allEpsTabs: document.getElementById("all-eps-tabs"),
     allEpsList: document.getElementById("all-eps-list"),
@@ -97,6 +98,7 @@
   function initRows() {
     renderRow(DOM.rowFeatured, getFeaturedShows());
     renderEpisodeRow(DOM.rowDueSouth, getShowById("due-south"));
+    renderRow(DOM.rowMovies, getMovies());
     renderRow(DOM.rowDrama, getShowsByGenre("Drama"));
     renderRow(DOM.rowComedy, getShowsByGenre("Comedy"));
     renderRow(DOM.rowScifi, getShowsByGenre("Sci-Fi"));
@@ -175,7 +177,12 @@
     card.className = "show-card";
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
-    card.setAttribute("aria-label", "View " + show.title);
+    card.setAttribute("aria-label",
+      show.type === "movie" ? "Watch " + show.title : "View " + show.title);
+
+    const movieBadge = show.type === "movie"
+      ? '<div class="ep-season-badge movie-badge">🎬 MOVIE</div>'
+      : "";
 
     card.innerHTML = `
       <div class="show-card__thumb">
@@ -190,6 +197,7 @@
         <div class="show-card__play-overlay" aria-hidden="true">
           <div class="play-icon-circle">▶</div>
         </div>
+        ${movieBadge}
       </div>
       <div class="show-card__info">
         <div class="show-card__title" title="${escAttr(show.title)}">${escHTML(show.title)}</div>
@@ -201,13 +209,22 @@
       </div>
     `;
 
-    card.addEventListener("click", () => openModal(show));
-    card.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openModal(show);
-      }
-    });
+    if (show.type === "movie" && show.episodes && show.episodes.length > 0) {
+      /* Movies play directly — no intermediate modal */
+      const play = () => openPlayer(show.episodes[0], show.title);
+      card.addEventListener("click", play);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
+      });
+    } else {
+      card.addEventListener("click", () => openModal(show));
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openModal(show);
+        }
+      });
+    }
 
     return card;
   }

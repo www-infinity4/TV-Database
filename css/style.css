@@ -804,6 +804,11 @@ ul { list-style: none; }
   pointer-events: none;
 }
 
+.movie-badge {
+  background: rgba(229,9,20,.85);
+  letter-spacing: .6px;
+}
+
 /* ── All-Episodes Modal ── */
 .all-eps-backdrop {
   display: none;

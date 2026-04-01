@@ -896,6 +896,37 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     SPACECAMP  (1986)
+     Single feature film — archive identifier: kids-space-camp-1986-family-comedy
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "spacecamp-1986",
+    type: "movie",
+    title: "SpaceCamp",
+    years: "1986",
+    genre: ["Adventure", "Comedy", "Family", "Sci-Fi"],
+    rating: "PG",
+    score: 6.5,
+    description:
+      "A group of teenagers attending NASA's U.S. Space Camp in Huntsville, Alabama are accidentally launched into orbit aboard the Space Shuttle Atlantis. Guided by their instructor, the unlikely crew must use their training to survive and find a way back to Earth. Stars Kate Capshaw, Lea Thompson, and a young Joaquin Phoenix.",
+    thumbnail: "https://archive.org/services/img/kids-space-camp-1986-family-comedy",
+    featured: true,
+    episodes: [
+      {
+        id: "spacecamp-1986-full",
+        title: "SpaceCamp",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "107 min",
+        description:
+          "A group of young Space Camp attendees are accidentally launched into orbit aboard the Space Shuttle Atlantis and must rely on their training to return safely to Earth.",
+        archiveId: "kids-space-camp-1986-family-comedy",
+        thumbnail: "https://archive.org/services/img/kids-space-camp-1986-family-comedy",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
@@ -908,6 +939,7 @@ const CATEGORIES = [
   { id: "1970s", label: "1970s Favorites" },
   { id: "1980s", label: "1980s Hits" },
   { id: "1990s", label: "1990s Classics" },
+  { id: "movies", label: "Classic Movies" },
 ];
 
 function getShowsByGenre(genre) {
@@ -916,6 +948,10 @@ function getShowsByGenre(genre) {
 
 function getFeaturedShows() {
   return SHOWS.filter((s) => s.featured);
+}
+
+function getMovies() {
+  return SHOWS.filter((s) => s.type === "movie");
 }
 
 function getShowsByDecade(decade) {
