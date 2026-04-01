@@ -1846,6 +1846,38 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     WALT DISNEY CARTOON CLASSICS: HAPPY SUMMER DAYS  (1992)
+     VHS compilation of summer-themed Disney shorts, released June 19, 1992.
+     Archive identifier: walt-disney-cartoon-classics-special-edition-happy-summer-days-1992
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "disney-happy-summer-days-1992",
+    type: "movie",
+    title: "Walt Disney Cartoon Classics: Happy Summer Days",
+    years: "1992",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.5,
+    description:
+      "A digitally restored compilation of four summer-themed Disney cartoon classics: Goofy tackles a surprise lion on a camping trip in \"Father's Lion\" (1952); Donald Duck's picnic is hijacked by an army of ants in \"Tea for Two Hundred\" (1948); Mickey and Pluto's peaceful day at the beach is ruined by a mischievous seagull in \"The Simple Things\" (1953); and Goofy's driving vacation becomes a series of comic disasters in \"Two Weeks Vacation\" (1952).",
+    thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-special-edition-happy-summer-days-1992",
+    featured: false,
+    episodes: [
+      {
+        id: "disney-happy-summer-days-1992-full",
+        title: "Walt Disney Cartoon Classics: Happy Summer Days",
+        season: 0,
+        episode: 0,
+        year: 1992,
+        duration: "30 min",
+        description:
+          "Four digitally restored Disney summer shorts: \"Father's Lion\" (Goofy, 1952), \"Tea for Two Hundred\" (Donald Duck, 1948), \"The Simple Things\" (Mickey & Pluto, 1953), and \"Two Weeks Vacation\" (Goofy, 1952).",
+        archiveId: "walt-disney-cartoon-classics-special-edition-happy-summer-days-1992",
+        thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-special-edition-happy-summer-days-1992",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      SPACECAMP  (1986)
      Single feature film — archive identifier: kids-space-camp-1986-family-comedy
      ──────────────────────────────────────────────────────────── */
