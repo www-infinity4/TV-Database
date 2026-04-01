@@ -897,6 +897,106 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE CARE BEARS BATTLE THE FREEZE MACHINE  (1984)
+     Single TV special — archive identifier:
+       the-care-bears-battle-the-freeze-machine-1984-etc.
+     Original VHS release (Family Home Entertainment) containing the
+     ~30-min special plus read-along bonus content.
+     Introduces Grams Bear, Hugs, Tugs, and villain Frostbite.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "care-bears-freeze-machine-1984",
+    type: "movie",
+    title: "The Care Bears Battle the Freeze Machine",
+    years: "1984",
+    genre: ["Animation", "Family", "Fantasy"],
+    rating: "G",
+    score: 6.4,
+    description:
+      "The villainous Professor Coldheart unleashes his Careless Ray Contraption to freeze the world and drain it of all feeling. When he kidnaps the baby Care Bears Hugs and Tugs, Tenderheart Bear and the gang must race to the rescue — and help a young boy named Paul learn the power of forgiveness. The special introduces beloved new characters Grams Bear and sidekick Frostbite.",
+    thumbnail: "https://archive.org/services/img/the-care-bears-battle-the-freeze-machine-1984-etc.",
+    featured: false,
+    episodes: [
+      {
+        id: "care-bears-freeze-machine-1984-full",
+        title: "The Care Bears Battle the Freeze Machine",
+        season: 0,
+        episode: 0,
+        year: 1984,
+        duration: "30 min",
+        description:
+          "Professor Coldheart kidnaps Hugs and Tugs and plans to freeze the world. The Care Bears must save the baby bears and teach a bullied boy about caring.",
+        archiveId: "the-care-bears-battle-the-freeze-machine-1984-etc.",
+        thumbnail: "https://archive.org/services/img/the-care-bears-battle-the-freeze-machine-1984-etc.",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     CAT'S EYE  (1985)
+     Single feature film — archive identifier: cats-eye-1985-dvdrip
+     Stephen King anthology directed by Lewis Teague.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "cats-eye-1985",
+    type: "movie",
+    title: "Cat's Eye",
+    years: "1985",
+    genre: ["Horror", "Thriller", "Fantasy"],
+    rating: "PG-13",
+    score: 6.4,
+    description:
+      "A stray tomcat threads through three Stephen King tales of dark suspense. In Quitters, Inc., a man's smoking cessation program has terrifyingly high stakes. In The Ledge, an adulterer is forced to walk the rain-slicked ledge of a high-rise skyscraper. In General, the cat finally reaches the girl it has been searching for — just in time to battle the tiny troll that haunts her bedroom walls. Stars James Woods, Robert Hays, and Drew Barrymore.",
+    thumbnail: "https://archive.org/services/img/cats-eye-1985-dvdrip",
+    featured: false,
+    episodes: [
+      {
+        id: "cats-eye-1985-full",
+        title: "Cat's Eye",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "94 min",
+        description:
+          "Three Stephen King stories of suspense and dark irony — Quitters Inc., The Ledge, and General — linked by the wandering journey of a stray cat.",
+        archiveId: "cats-eye-1985-dvdrip",
+        thumbnail: "https://archive.org/services/img/cats-eye-1985-dvdrip",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     CREATURE  (1985)
+     Single feature film — archive identifier:
+       creature-1985-horror-sci-fi-full-color-movie
+     Dir. William Malone. Cult sci-fi horror featuring Klaus Kinski.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "creature-1985",
+    type: "movie",
+    title: "Creature",
+    years: "1985",
+    genre: ["Horror", "Sci-Fi"],
+    rating: "R",
+    score: 5.5,
+    description:
+      "On Titan, Saturn's largest moon, an American scientific crew investigating ancient alien artefacts accidentally unleashes a savage extraterrestrial organism. As the creature hunts them down and uses parasites to reanimate its victims, the survivors join forces with the remnants of a rival German expedition — including the enigmatic Hans Rudy Hofner — in a desperate bid to survive. A cult Alien-influenced thriller featuring Klaus Kinski.",
+    thumbnail: "https://archive.org/services/img/creature-1985-horror-sci-fi-full-color-movie",
+    featured: false,
+    episodes: [
+      {
+        id: "creature-1985-full",
+        title: "Creature",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "97 min",
+        description:
+          "A scientific crew on Titan releases a deadly alien organism that begins hunting them one by one, using parasites to control its victims.",
+        archiveId: "creature-1985-horror-sci-fi-full-color-movie",
+        thumbnail: "https://archive.org/services/img/creature-1985-horror-sci-fi-full-color-movie",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE CARE BEARS MOVIE  (1985)
      Single feature film — archive identifier:
        the-care-bears-movie-vestron-video-original-1985-release_202109
