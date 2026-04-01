@@ -586,6 +586,39 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     V: THE SERIES  (1984–1985)
+     NBC weekly follow-up to the two V miniseries. 19 episodes.
+     Premiered October 26, 1984; finale March 22, 1985.
+     Archive identifier for S01E19:
+       v-the-series-1984-85-s-01e-19-the-return_202206
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "v-the-series-1984",
+    title: "V: The Series",
+    years: "1984–1985",
+    genre: ["Sci-Fi", "Drama", "Action"],
+    rating: "TV-PG",
+    score: 6.8,
+    description:
+      "NBC's weekly follow-up to the hit V miniseries. The alien Visitors have returned to occupy Earth, and the human resistance — led by Mike Donovan and Dr. Juliet Parrish — fights to drive them out. Stars Marc Singer, Faye Grant, Jane Badler, Michael Ironside, and Robert Englund.",
+    thumbnail: "https://archive.org/services/img/v-the-series-1984-85-s-01e-19-the-return_202206",
+    featured: false,
+    episodes: [
+      {
+        id: "v-series-s01e19",
+        title: "The Return",
+        season: 1,
+        episode: 19,
+        year: 1985,
+        duration: "46 min",
+        description:
+          "Series finale. The Visitors' Supreme Leader arrives on Earth, halts Diana's planned attack on Los Angeles, and orders the fleet to withdraw — proposing a truce that may finally end the alien occupation. Diana is taken away to answer for her crimes against humanity. Stars Marc Singer, Faye Grant, Jane Badler, Michael Ironside, and Robert Englund. Aired March 22, 1985 on NBC.",
+        archiveId: "v-the-series-1984-85-s-01e-19-the-return_202206",
+        thumbnail: "https://archive.org/services/img/v-the-series-1984-85-s-01e-19-the-return_202206",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE TWILIGHT ZONE  (1985–1987)
      CBS revival — archive identifier for S1E1:
        twilight-zone-1985-1x-01-shatterday
