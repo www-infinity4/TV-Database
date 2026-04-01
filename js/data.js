@@ -1948,6 +1948,41 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     FELIX THE CAT: THE MOVIE  (1988)
+     Animated fantasy adventure film directed by Tibor Hernádi.
+     Archive identifier: y-2-mate.is-felix-the-cat-the-movie-1988-x-bgwf-av-gqky-1080p-1640523499322
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "felix-the-cat-the-movie-1988",
+    type: "movie",
+    title: "Felix the Cat: The Movie",
+    years: "1988",
+    genre: ["Animation", "Adventure", "Fantasy", "Family"],
+    rating: "G",
+    score: 5.2,
+    description:
+      "When the magical Kingdom of Oriana is overrun by the evil Duke of Zill and his army of mechanical minions, Princess Oriana's desperate plea crosses dimensions and summons Felix the Cat — armed with his trusty magic bag of tricks. Transported to a surreal world of circuses, cyborg soldiers, and sorcery, Felix must outwit traitors, escape a nefarious circus master, and ultimately confront the Duke himself to free the kingdom. A wildly eccentric animated fantasy co-produced across the US, West Germany, Hungary, Poland, Bulgaria, and Canada.",
+    thumbnail:
+      "https://archive.org/services/img/y-2-mate.is-felix-the-cat-the-movie-1988-x-bgwf-av-gqky-1080p-1640523499322",
+    featured: false,
+    episodes: [
+      {
+        id: "felix-the-cat-the-movie-1988-full",
+        title: "Felix the Cat: The Movie",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "82 min",
+        description:
+          "Felix the Cat is whisked to the Kingdom of Oriana to rescue Princess Oriana from her tyrannical uncle, the Duke of Zill, using his magic bag of tricks in this surreal animated fantasy adventure.",
+        archiveId:
+          "y-2-mate.is-felix-the-cat-the-movie-1988-x-bgwf-av-gqky-1080p-1640523499322",
+        thumbnail:
+          "https://archive.org/services/img/y-2-mate.is-felix-the-cat-the-movie-1988-x-bgwf-av-gqky-1080p-1640523499322",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      WALT DISNEY CARTOON CLASSICS: HAPPY SUMMER DAYS  (1992)
      VHS compilation of summer-themed Disney shorts, released June 19, 1992.
      Archive identifier: walt-disney-cartoon-classics-special-edition-happy-summer-days-1992
