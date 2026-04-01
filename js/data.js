@@ -1846,6 +1846,41 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     FOX KIDS VHS OFF-AIRS WOC  (1992–94)
+     Collection of off-air VHS recordings of FOX Kids and ABC Saturday
+     Morning programming captured from WOC (Davenport, IA) and other
+     stations, 1992–1994. Includes original commercials (WOC = With
+     Original Commercials).
+     Archive identifier: fox-kids-1992-3-vhs-off-airs-woc
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "fox-kids-1992-vhs-woc",
+    type: "movie",
+    title: "FOX Kids 1992–3 VHS Off-Airs (WOC)",
+    years: "1992",
+    genre: ["Animation", "Family", "Kids"],
+    rating: "TV-Y7",
+    score: 8.2,
+    description:
+      "A treasured collection of off-air VHS recordings capturing FOX Kids and ABC Saturday Morning programming from 1992–1994, complete with original commercials (WOC). Highlights include the premiere episode of Batman: The Animated Series (\"The Cat and the Claw\"), Darkwing Duck (\"That Sinking Feeling\"), Beetlejuice (\"Pest o' The West\"), Attack of the Killer Tomatoes (\"Phantomato of the Opera\"), Tiny Toon Adventures, Animaniacs, The Pirates of Dark Water, Hammerman, Little Shop, and more — all captured from WOC Davenport and other local stations, making it an authentic time capsule of early-90s Saturday morning TV.",
+    thumbnail: "https://archive.org/services/img/fox-kids-1992-3-vhs-off-airs-woc",
+    featured: false,
+    episodes: [
+      {
+        id: "fox-kids-1992-vhs-woc-tape",
+        title: "FOX Kids 1992–3 VHS Off-Airs (WOC)",
+        season: 0,
+        episode: 0,
+        year: 1992,
+        duration: "180 min",
+        description:
+          "Off-air VHS recordings from FOX Kids and ABC Saturday Morning, 1992–1994. Features Batman: The Animated Series premiere, Darkwing Duck, Beetlejuice, Tiny Toon Adventures, Animaniacs, Attack of the Killer Tomatoes, The Pirates of Dark Water, Hammerman, Little Shop, and original era commercials.",
+        archiveId: "fox-kids-1992-3-vhs-off-airs-woc",
+        thumbnail: "https://archive.org/services/img/fox-kids-1992-3-vhs-off-airs-woc",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      CBS SATURDAY MORNINGS VHS  (1992–93)
      Off-air VHS recording of the CBS Saturday Morning block captured
      from WEYI (Saginaw/Flint, MI). Contains partial/full episodes of
