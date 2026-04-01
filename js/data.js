@@ -585,6 +585,39 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     THE TWILIGHT ZONE  (1985–1987)
+     CBS revival — archive identifier for S1E1:
+       twilight-zone-1985-1x-01-shatterday
+     Hosted/narrated by Charles Aidman. Premiered September 27, 1985
+     with the two-part pilot "Shatterday / A Little Peace and Quiet."
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-twilight-zone-1985",
+    title: "The Twilight Zone (1985)",
+    years: "1985–1987",
+    genre: ["Drama", "Sci-Fi", "Fantasy", "Anthology"],
+    rating: "TV-PG",
+    score: 7.8,
+    description:
+      "CBS revival of Rod Serling's classic anthology series, presenting new tales of the unusual and the unexpected. Narrated by Charles Aidman, the revival ran for three seasons and featured an array of acclaimed directors and guest stars.",
+    thumbnail: "https://archive.org/services/img/twilight-zone-1985-1x-01-shatterday",
+    featured: false,
+    episodes: [
+      {
+        id: "tz1985-s01e01",
+        title: "Shatterday",
+        season: 1,
+        episode: 1,
+        year: 1985,
+        duration: "25 min",
+        description:
+          "Peter Jay Novins accidentally dials his own home phone number and is horrified to hear himself answer — a doppelganger who has taken over his life and is determined to improve it. As his double makes amends and grows stronger, Peter fades. Directed by Wes Craven; written by Alan Brennert from a story by Harlan Ellison; starring Bruce Willis.",
+        archiveId: "twilight-zone-1985-1x-01-shatterday",
+        thumbnail: "https://archive.org/services/img/twilight-zone-1985-1x-01-shatterday",
+      },
+    ],
+  },
   {
     id: "the-twilight-zone",
     title: "The Twilight Zone",
