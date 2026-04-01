@@ -2024,6 +2024,134 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE GREAT MOUSE DETECTIVE  (1986 / 1992 VHS)
+     Walt Disney Classics Black Diamond VHS reissue (July 1992).
+     Archive identifier: the-great-mouse-detective-1992-vhs_202104
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "great-mouse-detective-1986",
+    type: "movie",
+    title: "The Great Mouse Detective",
+    years: "1986",
+    genre: ["Animation", "Adventure", "Comedy", "Family", "Mystery"],
+    rating: "G",
+    score: 7.6,
+    description:
+      "Set in Victorian London, young Olivia Flaversham enlists the brilliant detective mouse Basil of Baker Street — and his steadfast companion Dr. Dawson — to find her kidnapped toymaker father. Their investigation uncovers the diabolical scheme of the evil Professor Ratigan, who plans to replace the Mouse Queen with a mechanical impostor and seize control of all Mousedom. Directed by John Musker, Ron Clements, Dave Michener & Burny Mattinson; featuring the unforgettable voice of Vincent Price as Ratigan. The 1992 Walt Disney Classics VHS reissue includes a sneak peek at Aladdin.",
+    thumbnail: "https://archive.org/services/img/the-great-mouse-detective-1992-vhs_202104",
+    featured: false,
+    episodes: [
+      {
+        id: "great-mouse-detective-1986-full",
+        title: "The Great Mouse Detective",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "74 min",
+        description:
+          "Basil of Baker Street and Dr. Dawson race to rescue Olivia's father and stop the villainous Professor Ratigan from overthrowing the Mouse Queen in this classic Disney animated adventure.",
+        archiveId: "the-great-mouse-detective-1992-vhs_202104",
+        thumbnail: "https://archive.org/services/img/the-great-mouse-detective-1992-vhs_202104",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     101 DALMATIANS  (1961 / 1992 VHS, French-Canadian)
+     Walt Disney animated classic, Quebec French dub VHS copy.
+     Archive identifier: 101-dalmatians-1992-vhs-french-canadian-copy_202301
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "101-dalmatians-1961",
+    type: "movie",
+    title: "101 Dalmatians (French-Canadian VHS)",
+    years: "1961",
+    genre: ["Animation", "Adventure", "Comedy", "Family"],
+    rating: "G",
+    score: 7.7,
+    description:
+      "Disney's beloved 1961 animated classic in a rare Quebec French-language VHS edition. Pongo and Perdita's litter of puppies — along with 84 others — are stolen by the flamboyantly villainous Cruella De Vil, who desires a dalmatian-fur coat. Their human and canine friends must mount a daring rescue across the English countryside. Directed by Clyde Geronimi, Hamilton Luske & Wolfgang Reitherman, with music by George Bruns and the iconic title song by Bill Lee. This 1992 VHS pressing features the Quebec French dub.",
+    thumbnail: "https://archive.org/services/img/101-dalmatians-1992-vhs-french-canadian-copy_202301",
+    featured: false,
+    episodes: [
+      {
+        id: "101-dalmatians-1961-full",
+        title: "101 Dalmatians (Version française — Québec)",
+        season: 0,
+        episode: 0,
+        year: 1961,
+        duration: "79 min",
+        description:
+          "Pongo and Perdita's puppies are kidnapped by Cruella De Vil in this Disney animated classic, presented in the Quebec French dub from the 1992 VHS release.",
+        archiveId: "101-dalmatians-1992-vhs-french-canadian-copy_202301",
+        thumbnail: "https://archive.org/services/img/101-dalmatians-1992-vhs-french-canadian-copy_202301",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     GARFIELD AND FRIENDS  (1988–1994)
+     CBS Saturday Morning animated series. S5E15 available on archive.
+     Archive identifier: 088ghostofachanceroygetssackedrevengeofthelivinglunchdvdripxvidphz
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "garfield-and-friends",
+    type: "movie",
+    title: "Garfield and Friends",
+    years: "1988",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "TV-Y",
+    score: 7.8,
+    description:
+      "Jim Davis's beloved comic strip cat comes to Saturday morning television in this CBS staple that ran from 1988 to 1994. Each half-hour episode weaves together Garfield shorts — showcasing the lasagna-loving, Monday-hating tabby alongside Jon Arbuckle and Odie — with U.S. Acres (Orson's Farm) segments starring a cast of barnyard animals including Roy Rooster, Wade Duck, and Orson Pig. Produced by Film Roman with Lorenzo Music as the voice of Garfield, the series ran 7 seasons and 121 episodes, offering gentle slapstick, fairy-tale parodies, and sharp pop-culture wit.",
+    thumbnail: "https://archive.org/services/img/088ghostofachanceroygetssackedrevengeofthelivinglunchdvdripxvidphz",
+    featured: false,
+    episodes: [
+      {
+        id: "garfield-s5e15",
+        title: "Ghost of a Chance / Roy Gets Sacked / Revenge of the Living Lunch",
+        season: 5,
+        episode: 15,
+        year: 1992,
+        duration: "22 min",
+        description:
+          "Three segments: a rookie ghost is assigned to haunt Garfield's house; Roy quits the farm and joins the Buddy Bears after thinking his friends want to fire him; and a meteorite mistaken for a fruitcake brings the refrigerator contents to life.",
+        archiveId: "088ghostofachanceroygetssackedrevengeofthelivinglunchdvdripxvidphz",
+        thumbnail: "https://archive.org/services/img/088ghostofachanceroygetssackedrevengeofthelivinglunchdvdripxvidphz",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     ATTACK OF THE KILLER TOMATOES  (1990–1991)
+     Fox Kids animated series based on the cult-classic films.
+     Archive identifier: 03-s-1-e-03-tomato-from-the-black-lagoon-19900922-vhs-1pq-98-xvid-512x-384
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "attack-killer-tomatoes-1990",
+    type: "movie",
+    title: "Attack of the Killer Tomatoes",
+    years: "1990",
+    genre: ["Animation", "Comedy", "Sci-Fi", "Family"],
+    rating: "TV-Y7",
+    score: 7.1,
+    description:
+      "Based on the cult-classic films, this Fox Kids animated series ran from 1990 to 1991 and is set in the town of San Zucchini, five years after the Great Tomato War. Young hero Chad Finletter battles the schemes of the mad Dr. Putrid T. Gangreen (voiced by John Astin), who creates anthropomorphic killer tomato mutants to conquer the world. Aided by Tara — a human/tomato hybrid — the fuzzy tomato F.T., and his uncle Wilbur, Chad faces a new tomato menace each week. Season 2 was a technical milestone, being one of the first Saturday morning series to use computer-assisted animation.",
+    thumbnail: "https://archive.org/services/img/03-s-1-e-03-tomato-from-the-black-lagoon-19900922-vhs-1pq-98-xvid-512x-384",
+    featured: false,
+    episodes: [
+      {
+        id: "killer-tomatoes-s1e3",
+        title: "Tomato from the Black Lagoon",
+        season: 1,
+        episode: 3,
+        year: 1990,
+        duration: "22 min",
+        description:
+          "A monstrous tomato rises from a lagoon — parodying the classic creature feature — as Dr. Gangreen's latest mutant creation terrorizes San Zucchini, and Chad and Tara must stop it before it's too late. Originally aired September 22, 1990.",
+        archiveId: "03-s-1-e-03-tomato-from-the-black-lagoon-19900922-vhs-1pq-98-xvid-512x-384",
+        thumbnail: "https://archive.org/services/img/03-s-1-e-03-tomato-from-the-black-lagoon-19900922-vhs-1pq-98-xvid-512x-384",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      SPACECAMP  (1986)
      Single feature film — archive identifier: kids-space-camp-1986-family-comedy
      ──────────────────────────────────────────────────────────── */
