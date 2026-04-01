@@ -1812,6 +1812,40 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE BUSH BABY  (1992)
+     World Masterpiece Theater anime adaptation of William Stevenson's
+     novel "The Bushbabies." 40 episodes, Nippon Animation / Fuji TV.
+     English dub produced by Cinélume (Montreal); aired in Canada on
+     TVOntario and Global TV in the mid-1990s.
+     Archive identifier: the-bush-baby-english-dub_202409
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "bush-baby-1992",
+    title: "The Bush Baby",
+    years: "1992",
+    genre: ["Drama", "Family", "Adventure"],
+    rating: "TV-G",
+    score: 7.9,
+    description:
+      "Set in Kenya in 1964, this beloved World Masterpiece Theater anime follows 13-year-old Jackie Rhodes, the daughter of a British wildlife officer, who rescues and raises an injured bushbaby she names Murphy. When her family must return to England, Jackie sets out on a dangerous journey across the African savanna to return Murphy to the wild, guided by her loyal friend Tembo. Based on William Stevenson's novel, the English dub starred Pauline Little, Mark Camacho, and Daniel Brochu.",
+    thumbnail: "https://archive.org/services/img/the-bush-baby-english-dub_202409",
+    featured: false,
+    episodes: [
+      {
+        id: "bush-baby-1992-eng",
+        title: "The Bush Baby (English Dub)",
+        season: 1,
+        episode: 1,
+        year: 1992,
+        duration: "25 min",
+        description:
+          "Jackie Rhodes, the young daughter of a British wildlife officer in Kenya, rescues an injured bushbaby and names him Murphy. As her family prepares to leave Africa, Jackie vows to return Murphy to the wild — beginning an epic adventure across the savanna alongside her friend Tembo.",
+        archiveId: "the-bush-baby-english-dub_202409",
+        thumbnail: "https://archive.org/services/img/the-bush-baby-english-dub_202409",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      SPACECAMP  (1986)
      Single feature film — archive identifier: kids-space-camp-1986-family-comedy
      ──────────────────────────────────────────────────────────── */
