@@ -1948,6 +1948,82 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     TINY TOON ADVENTURES: HOW I SPENT MY VACATION  (1992)
+     First US direct-to-video animated feature, Warner Home Video.
+     Archive identifier: tiny-toon-adventures-how-i-spent-my-vacation-1992-warner-home-video-vhs_202507
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "tiny-toon-vacation-1992",
+    type: "movie",
+    title: "Tiny Toon Adventures: How I Spent My Vacation",
+    years: "1992",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.9,
+    description:
+      "The first feature-length direct-to-video animated film in U.S. history, produced by Amblin Entertainment and Warner Bros. Animation. Summer break begins at Acme Looniversity and the Tiny Toons scatter for their wildest vacation yet: Buster and Babs Bunny's water pistol fight floods Acme Acres and sends them on a raucous river adventure through the American South; Plucky Duck endures an agonizing family road trip to HappyWorldLand with Hamton's family; Fifi La Fume chases her movie-star skunk crush; Elmyra terrorizes a safari park; and Fowlmouth drags Shirley the Loon to the worst movie imaginable. Featuring hi-fi Dolby Surround Stereo.",
+    thumbnail: "https://archive.org/services/img/tiny-toon-adventures-how-i-spent-my-vacation-1992-warner-home-video-vhs_202507",
+    featured: false,
+    episodes: [
+      {
+        id: "tiny-toon-vacation-1992-full",
+        title: "Tiny Toon Adventures: How I Spent My Vacation",
+        season: 0,
+        episode: 0,
+        year: 1992,
+        duration: "80 min",
+        description:
+          "Buster and Babs flood Acme Acres; Plucky suffers the family road trip from hell; Fifi pursues a movie-star skunk; Elmyra runs amok at a safari park; and Fowlmouth and Shirley endure the worst movie ever — all in one epic summer vacation.",
+        archiveId: "tiny-toon-adventures-how-i-spent-my-vacation-1992-warner-home-video-vhs_202507",
+        thumbnail: "https://archive.org/services/img/tiny-toon-adventures-how-i-spent-my-vacation-1992-warner-home-video-vhs_202507",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     X-MEN: NIGHT OF THE SENTINELS  (1992)
+     Two-part pilot of X-Men: The Animated Series (Fox Kids, 1992).
+     Archive identifier: x-men-nightofthesentinels
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "xmen-night-of-sentinels-1992",
+    type: "movie",
+    title: "X-Men: Night of the Sentinels",
+    years: "1992",
+    genre: ["Animation", "Action", "Sci-Fi", "Superhero"],
+    rating: "TV-Y7",
+    score: 8.7,
+    description:
+      "The landmark two-part pilot of X-Men: The Animated Series (Fox Kids, 1992). Jubilee, a teenage mutant, is hunted by giant Sentinel robots after her foster parents unknowingly report her to the Mutant Control Agency. Rescued by Cyclops, Storm, and Rogue, she is brought to the X-Mansion where Professor Xavier's team — Wolverine, Beast, Gambit, and Morph — devise a daring raid on the Agency's files. The mission turns deadly: Morph is apparently killed and Beast is captured, forcing Jubilee to choose where she truly belongs. Praised for its mature themes of prejudice and sacrifice, this pilot set the tone for one of the greatest superhero animated series ever made.",
+    thumbnail: "https://archive.org/services/img/x-men-nightofthesentinels",
+    featured: true,
+    episodes: [
+      {
+        id: "xmen-sentinels-part1",
+        title: "Night of the Sentinels, Part I",
+        season: 1,
+        episode: 1,
+        year: 1992,
+        duration: "22 min",
+        description:
+          "Jubilee is pursued by Sentinel robots and rescued by the X-Men. At the Xavier Mansion she discovers a world of mutants — and a government conspiracy targeting them all.",
+        archiveId: "x-men-nightofthesentinels",
+        thumbnail: "https://archive.org/services/img/x-men-nightofthesentinels",
+      },
+      {
+        id: "xmen-sentinels-part2",
+        title: "Night of the Sentinels, Part II",
+        season: 1,
+        episode: 2,
+        year: 1992,
+        duration: "22 min",
+        description:
+          "The X-Men raid the Mutant Control Agency to destroy the mutant registry. The mission goes tragically wrong — Morph is seemingly killed, Beast is captured — but Jubilee finds her place among the team.",
+        archiveId: "x-men-nightofthesentinels",
+        thumbnail: "https://archive.org/services/img/x-men-nightofthesentinels",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      SPACECAMP  (1986)
      Single feature film — archive identifier: kids-space-camp-1986-family-comedy
      ──────────────────────────────────────────────────────────── */
