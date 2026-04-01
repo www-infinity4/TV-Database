@@ -1780,6 +1780,38 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     NORTHERN EXPOSURE  (1990–1995)
+     CBS comedy-drama set in Cicely, Alaska. 6 seasons, 110 episodes.
+     Premiered July 12, 1990. Won the Emmy for Outstanding Drama Series.
+     Archive identifier: Random_Television_and_Northern_Exposure
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "northern-exposure-1990",
+    title: "Northern Exposure",
+    years: "1990–1995",
+    genre: ["Drama", "Comedy"],
+    rating: "TV-PG",
+    score: 8.1,
+    description:
+      "A neurotic New York City doctor, Joel Fleischman, is sent to the quirky fictional town of Cicely, Alaska to fulfill his medical school scholarship obligations. What follows is a warm, witty, and philosophical comedy-drama about culture clash, community, and self-discovery. Stars Rob Morrow, Janine Turner, Barry Corbin, John Cullum, John Corbett, and Darren E. Burrows.",
+    thumbnail: "https://archive.org/services/img/Random_Television_and_Northern_Exposure",
+    featured: false,
+    episodes: [
+      {
+        id: "northern-exposure-s01e01",
+        title: "Pilot",
+        season: 1,
+        episode: 1,
+        year: 1990,
+        duration: "47 min",
+        description:
+          "Dr. Joel Fleischman arrives in Cicely, Alaska expecting to be assigned to Anchorage, only to discover he must serve the remote, eccentric small town to repay his scholarship. He meets bush pilot Maggie O'Connell, ex-astronaut Maurice Minnifield, philosophical radio DJ Chris Stevens, and the rest of Cicely's colorful residents. Aired July 12, 1990 on CBS.",
+        archiveId: "Random_Television_and_Northern_Exposure",
+        thumbnail: "https://archive.org/services/img/Random_Television_and_Northern_Exposure",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      SPACECAMP  (1986)
      Single feature film — archive identifier: kids-space-camp-1986-family-comedy
      ──────────────────────────────────────────────────────────── */
