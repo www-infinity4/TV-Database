@@ -1916,6 +1916,38 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     WALT DISNEY CARTOON CLASSICS: SPECIAL EDITION '88  (1988)
+     Walt Disney Home Video VHS compilation of classic shorts.
+     Archive identifier: 652_20220128
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "disney-cartoon-classics-special-edition-1988",
+    type: "movie",
+    title: "Walt Disney Cartoon Classics: Special Edition '88",
+    years: "1988",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.6,
+    description:
+      "A delightful 1988 Walt Disney Home Video compilation showcasing four golden-age animated shorts: Mickey and Pluto encounter a playful stowaway baby seal in \"Mickey and the Seal\" (1948); Pluto tangles with a bee guarding its bubble gum in \"Bubble Bee\" (1949); Mickey, Donald, and Goofy's road trip spirals into slapstick chaos in \"Mickey's Trailer\" (1938); and Chip 'n' Dale wage an all-out war against Donald Duck over a stash of nuts in \"All in a Nutshell\" (1949). A perfect sampler of Disney's golden age of animation.",
+    thumbnail: "https://archive.org/services/img/652_20220128",
+    featured: false,
+    episodes: [
+      {
+        id: "disney-cartoon-classics-special-edition-1988-full",
+        title: "Walt Disney Cartoon Classics: Special Edition '88",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "30 min",
+        description:
+          "Four classic Disney shorts: \"Mickey and the Seal\" (1948), \"Bubble Bee\" (1949), \"Mickey's Trailer\" (1938), and \"All in a Nutshell\" (1949) — featuring Mickey, Donald, Goofy, Pluto, and Chip 'n' Dale.",
+        archiveId: "652_20220128",
+        thumbnail: "https://archive.org/services/img/652_20220128",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      WALT DISNEY CARTOON CLASSICS: HAPPY SUMMER DAYS  (1992)
      VHS compilation of summer-themed Disney shorts, released June 19, 1992.
      Archive identifier: walt-disney-cartoon-classics-special-edition-happy-summer-days-1992
