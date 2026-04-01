@@ -2024,6 +2024,39 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     ABC SATURDAY MORNING CARTOONS  (September 9, 1989 — WOC)
+     Off-air VHS recording of the ABC Saturday Morning block,
+     September 9, 1989, with original commercials (WOC).
+     Archive identifier: vts-01-1_20200825
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "abc-saturday-morning-1989-09-09",
+    type: "movie",
+    title: "ABC Saturday Morning Cartoons (September 9, 1989 — WOC)",
+    years: "1989",
+    genre: ["Animation", "Comedy", "Family", "Kids"],
+    rating: "TV-Y",
+    score: 8.0,
+    description:
+      "A complete off-air VHS recording of the ABC Saturday Morning cartoon block as broadcast on September 9, 1989 — with original commercials intact (WOC). The premiere day of the fall 1989 season features A Pup Named Scooby-Doo, Disney's Adventures of the Gummi Bears, The New Adventures of Winnie the Pooh, Slimer! and the Real Ghostbusters, Beetlejuice, and The Bugs Bunny & Tweety Show. A vivid time capsule of the last great era of network Saturday morning television, complete with period toy, cereal, and movie advertisements.",
+    thumbnail: "https://archive.org/services/img/vts-01-1_20200825",
+    featured: false,
+    episodes: [
+      {
+        id: "abc-saturday-1989-09-09-tape",
+        title: "ABC Saturday Morning Cartoons — September 9, 1989",
+        season: 0,
+        episode: 0,
+        year: 1989,
+        duration: "270 min",
+        description:
+          "Full broadcast block with original commercials: A Pup Named Scooby-Doo, Gummi Bears, The New Adventures of Winnie the Pooh, Slimer! and the Real Ghostbusters, Beetlejuice, and The Bugs Bunny & Tweety Show — the opening Saturday of ABC's fall 1989 season.",
+        archiveId: "vts-01-1_20200825",
+        thumbnail: "https://archive.org/services/img/vts-01-1_20200825",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE GREAT MOUSE DETECTIVE  (1986 / 1992 VHS)
      Walt Disney Classics Black Diamond VHS reissue (July 1992).
      Archive identifier: the-great-mouse-detective-1992-vhs_202104
