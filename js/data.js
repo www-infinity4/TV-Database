@@ -710,7 +710,7 @@ const SHOWS = [
     episodes: [
       {
         id: "beaver-s01e01",
-        title: "Beaver Gets Spelied",
+        title: "Beaver Gets 'Spelied'",
         season: 1,
         episode: 1,
         year: 1957,
@@ -747,7 +747,7 @@ const SHOWS = [
     ],
   },
   {
-    id: "gillligans-island",
+    id: "gilligans-island",
     title: "Gilligan's Island",
     years: "1964–1967",
     genre: ["Comedy", "Adventure"],
