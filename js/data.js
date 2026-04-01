@@ -894,6 +894,62 @@ const SHOWS = [
         archiveId: "ThePriceIsRight_premiere",
         thumbnail: "https://archive.org/services/img/ThePriceIsRight",
       },
+      {
+        id: "tpir-s13e5731d",
+        title: "Episode #5731D (May 13, 1985)",
+        season: 13,
+        episode: 131,
+        year: 1985,
+        duration: "60 min",
+        description: "Bob Barker hosts a classic episode featuring six pricing games: Lucky Seven, Safe Crackers, The Phone Home Game, Squeeze Play, Secret X, and 3 Strikes.",
+        archiveId: "tpir-5731d",
+        thumbnail: "https://archive.org/services/img/tpir-5731d",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WASHINGTOON  (1985)
+     TV sitcom — archive identifier: washingtoon-1985
+     Short-lived Showtime political satire; 10 episodes produced,
+     2 currently preserved on the Internet Archive (episodes 5 & 8).
+     Notable as an early credit for Christina Applegate.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "washingtoon-1985",
+    title: "Washingtoon",
+    years: "1985",
+    genre: ["Comedy"],
+    rating: "TV-PG",
+    score: 6.1,
+    description:
+      "Idealistic Congressman Bob Forehead uproots his family to Washington D.C. and tries to govern with honesty — a near-impossible task surrounded by the scheming veteran Senator Bunky Munster and the absurdities of Capitol Hill. A sharp political satire that aired on Showtime in 1985, notable as one of Christina Applegate's earliest television roles.",
+    thumbnail: "https://archive.org/services/img/washingtoon-1985",
+    featured: false,
+    episodes: [
+      {
+        id: "washingtoon-s01e05",
+        title: "Episode 5",
+        season: 1,
+        episode: 5,
+        year: 1985,
+        duration: "30 min",
+        description: "Congressman Forehead organises a baseball game between Latin American leaders and the U.S. Congress, with predictably chaotic results.",
+        archiveId: "washingtoon-1985",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/washingtoon-1985",
+      },
+      {
+        id: "washingtoon-s01e08",
+        title: "Episode 8",
+        season: 1,
+        episode: 8,
+        year: 1985,
+        duration: "30 min",
+        description: "A hostage situation unfolds on Capitol Hill, forcing Congressman Forehead to improvise his way through a crisis that exposes Washington's finest at their worst.",
+        archiveId: "washingtoon-1985",
+        archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/washingtoon-1985",
+      },
     ],
   },
   /* ────────────────────────────────────────────────────────────
