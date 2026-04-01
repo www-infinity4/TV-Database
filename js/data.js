@@ -1846,6 +1846,41 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     CBS SATURDAY MORNINGS VHS  (1992–93)
+     Off-air VHS recording of the CBS Saturday Morning block captured
+     from WEYI (Saginaw/Flint, MI). Contains partial/full episodes of
+     Disney's Raw Toonage, The Little Mermaid, TMNT, and Cyber C.O.P.S.,
+     plus original era commercials.
+     Archive identifier: vts-01-1_20230709_0957
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "cbs-saturday-mornings-1992",
+    type: "movie",
+    title: "CBS Saturday Mornings VHS (1992–93)",
+    years: "1992",
+    genre: ["Animation", "Family", "Kids"],
+    rating: "TV-Y",
+    score: 7.8,
+    description:
+      "A rare off-air VHS recording of the CBS Saturday Morning cartoon block, captured from WEYI in the Saginaw/Flint, Michigan area during the 1992–93 season. The tape preserves segments and episodes from Disney's Raw Toonage (featuring Bonkers and Marsupilami), a complete episode of Disney's The Little Mermaid (\"Double Bubble\"), a partial episode of Teenage Mutant Ninja Turtles (\"Super Irma\"), Cyber C.O.P.S., and Goofy's Guide to the Olympics — all with original period commercials intact, making it a genuine time capsule of early-90s Saturday morning television.",
+    thumbnail: "https://archive.org/services/img/vts-01-1_20230709_0957",
+    featured: false,
+    episodes: [
+      {
+        id: "cbs-saturday-mornings-1992-tape",
+        title: "CBS Saturday Mornings VHS (1992–93)",
+        season: 0,
+        episode: 0,
+        year: 1992,
+        duration: "120 min",
+        description:
+          "Full VHS recording of the CBS Saturday Morning block from WEYI (1992–93), featuring Disney's Raw Toonage, The Little Mermaid (\"Double Bubble\"), Teenage Mutant Ninja Turtles (\"Super Irma\"), Cyber C.O.P.S., Goofy's Guide to the Olympics, and original era commercials.",
+        archiveId: "vts-01-1_20230709_0957",
+        thumbnail: "https://archive.org/services/img/vts-01-1_20230709_0957",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      WALT DISNEY CARTOON CLASSICS: HAPPY SUMMER DAYS  (1992)
      VHS compilation of summer-themed Disney shorts, released June 19, 1992.
      Archive identifier: walt-disney-cartoon-classics-special-edition-happy-summer-days-1992
