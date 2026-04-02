@@ -3476,6 +3476,39 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     PETER PAN  (1953)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated fantasy directed by Clyde Geronimi, Wilfred Jackson & Hamilton Luske.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "peter-pan-1953",
+    type: "movie",
+    title: "Peter Pan",
+    years: "1953",
+    genre: ["Animation", "Family", "Fantasy", "Adventure"],
+    rating: "G",
+    score: 7.3,
+    description:
+      "Wendy, Michael, and John Darling are whisked away by the boy who never grows up — Peter Pan — to the magical Neverland, where mermaids splash, the Lost Boys roam, and adventure lurks around every corner. Standing in the way of a perfect childhood paradise is the scheming Captain Hook, who has a score to settle with Peter and his trusty crocodile. Disney's 14th animated feature brings J.M. Barrie's beloved tale to life with unforgettable songs including 'You Can Fly' and 'Following the Leader'.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "peter-pan-1953-full",
+        title: "Peter Pan",
+        season: 0,
+        episode: 0,
+        year: 1953,
+        duration: "77 min",
+        description:
+          "The Darling children fly with Peter Pan to Neverland for a magical adventure, battling the villainous Captain Hook and his pirate crew.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1953 - Peter Pan.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE ARISTOCATS  (1970)
      Single feature film — archive identifier: schoolproject2_20200406
      Walt Disney Productions animated musical directed by Wolfgang Reitherman.
