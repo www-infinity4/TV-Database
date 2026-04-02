@@ -3476,6 +3476,72 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE ARISTOCATS  (1970)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated musical directed by Wolfgang Reitherman.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-aristocats-1970",
+    type: "movie",
+    title: "The Aristocats",
+    years: "1970",
+    genre: ["Animation", "Family", "Musical", "Comedy"],
+    rating: "G",
+    score: 7.1,
+    description:
+      "In turn-of-the-century Paris, a prim and proper house cat named Duchess and her three kittens — Toulouse, Berlioz, and Marie — are the beloved pets of a wealthy retired opera singer who intends to leave her entire fortune to them. When the scheming butler Edgar learns of the plan, he kidnaps the cats and abandons them in the French countryside. Their only hope for home is Thomas O'Malley, a smooth-talking alley cat, and a band of jazz-playing feline friends. The last Disney animated feature personally approved by Walt Disney himself.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "the-aristocats-1970-full",
+        title: "The Aristocats",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "78 min",
+        description:
+          "Aristocratic Parisian cats Duchess and her kittens must find their way home with the help of a charming alley cat after a jealous butler leaves them stranded in the countryside.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1970 - The Aristocats.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     PETE'S DRAGON  (1977)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions live-action/animated musical directed by Don Chaffey.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "petes-dragon-1977",
+    type: "movie",
+    title: "Pete's Dragon",
+    years: "1977",
+    genre: ["Animation", "Family", "Musical", "Fantasy"],
+    rating: "G",
+    score: 6.6,
+    description:
+      "Young orphan Pete arrives in the small Maine fishing village of Passamaquoddy with an unlikely companion: Elliott, a lovable, bumbling, smoke-breathing dragon who is invisible to most adults. Taken in by kindly lighthouse keeper Nora and her father Lampie, Pete slowly finds a family — but the greedy Gogans who once owned him, and a scheming snake-oil salesman, threaten to tear them apart. A charming blend of live-action and hand-drawn animation, featuring songs by Al Kasha and Joel Hirschhorn.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "petes-dragon-1977-full",
+        title: "Pete's Dragon",
+        season: 0,
+        episode: 0,
+        year: 1977,
+        duration: "128 min",
+        description:
+          "Orphan Pete and his invisible dragon Elliott seek a real home in a Maine fishing village, facing villains and winning hearts along the way.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1977 - Pete's Dragon.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE RESCUERS  (1977)
      Single feature film — archive identifier: schoolproject2_20200406
      Walt Disney Productions animated adventure directed by Wolfgang Reitherman.
