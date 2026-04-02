@@ -346,8 +346,11 @@
       const params = new URLSearchParams({ autoplay: "1" });
       return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
     }
-    const base =
+    let base =
       "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
+    if (episode.archiveFile) {
+      base += "/" + encodeURIComponent(episode.archiveFile);
+    }
     const params = new URLSearchParams({ autoplay: "1" });
     if (typeof episode.archiveIndex === "number") {
       params.set("index", String(episode.archiveIndex));

@@ -2892,6 +2892,38 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     GUIDING LIGHT  (1952–2009)
+     Archive identifier: guidinglight-1992
+     Individual episodes addressed via archiveFile (filename within
+     the collection).  GL-15Oct1991.mpg = October 15, 1991 episode.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "guiding-light",
+    title: "Guiding Light",
+    years: "1952–2009",
+    genre: ["Drama", "Soap Opera"],
+    rating: "TV-PG",
+    score: 7.5,
+    description:
+      "One of the longest-running dramatic serials in broadcasting history, Guiding Light began on radio in 1937 before moving to CBS television in 1952. Set in the fictional town of Springfield, the show followed the intertwined lives of the Bauer, Spaulding, and Lewis families across generations — weaving together romance, family conflict, corporate intrigue, and social issues over more than five decades until its final episode in September 2009.",
+    thumbnail: "https://archive.org/services/img/guidinglight-1992",
+    featured: false,
+    episodes: [
+      {
+        id: "gl-1991-10-15",
+        title: "October 15, 1991",
+        season: 1991,
+        episode: 1,
+        year: 1991,
+        duration: "60 min",
+        description: "A classic episode of Guiding Light from October 15, 1991, continuing the stories of Springfield's most prominent families.",
+        archiveId: "guidinglight-1992",
+        archiveFile: "GL-15Oct1991.mpg",
+        thumbnail: "https://archive.org/services/img/guidinglight-1992",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
