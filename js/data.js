@@ -3168,6 +3168,106 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     FRANKENSTEIN  (1931)
+     Single feature film — archive identifier: frankenstein-1931-english
+     Dir. James Whale. The definitive Universal Monster classic starring
+     Boris Karloff as the Monster and Colin Clive as Dr. Frankenstein.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "frankenstein-1931",
+    type: "movie",
+    title: "Frankenstein",
+    years: "1931",
+    genre: ["Horror", "Sci-Fi", "Drama"],
+    rating: "NR",
+    score: 7.7,
+    description:
+      "Obsessed scientist Dr. Henry Frankenstein, aided by his hunchbacked assistant Fritz, assembles a living creature from the parts of exhumed corpses and brings it to life using the power of electricity. The Monster — portrayed by Boris Karloff in an iconic, largely wordless performance — is at first childlike and innocent, but years of mistreatment and fear transform him into something terrifying. Directed by James Whale, this seminal Universal horror film remains one of cinema's most enduring and influential classics.",
+    thumbnail: "https://archive.org/services/img/frankenstein-1931-english",
+    featured: false,
+    episodes: [
+      {
+        id: "frankenstein-1931-full",
+        title: "Frankenstein",
+        season: 0,
+        episode: 0,
+        year: 1931,
+        duration: "71 min",
+        description:
+          "Dr. Frankenstein creates life from death, only to unleash a creature the world is not ready to accept. Boris Karloff's unforgettable performance as the Monster defines this Universal horror landmark.",
+        archiveId: "frankenstein-1931-english",
+        thumbnail: "https://archive.org/services/img/frankenstein-1931-english",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     FRANKENSTEIN MEETS THE WOLF MAN  (1943)
+     Single feature film — archive identifier:
+       frankenstein-meets-the-wolf-man-1942
+     The original monster-crossover film, uniting Universal's Wolf Man
+     and Frankenstein franchises. Dir. Roy William Neill.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "frankenstein-meets-the-wolf-man-1943",
+    type: "movie",
+    title: "Frankenstein Meets the Wolf Man",
+    years: "1943",
+    genre: ["Horror", "Fantasy", "Sci-Fi"],
+    rating: "NR",
+    score: 6.4,
+    description:
+      "Accidentally resurrected by grave robbers, Lawrence Talbot — the Wolf Man — finds himself once again cursed with lycanthropy and desperate to die. With the help of the wise gypsy Maleva, he travels to Vasaria seeking the late Dr. Frankenstein's secrets, hoping to find a cure. Instead he discovers Frankenstein's Monster frozen in ice and becomes entangled in a dangerous experiment that could unleash both creatures at once. Cinema's first true monster-crossover event, establishing the template for the horror team-up.",
+    thumbnail: "https://archive.org/services/img/frankenstein-meets-the-wolf-man-1942",
+    featured: false,
+    episodes: [
+      {
+        id: "frankenstein-meets-the-wolf-man-1943-full",
+        title: "Frankenstein Meets the Wolf Man",
+        season: 0,
+        episode: 0,
+        year: 1943,
+        duration: "74 min",
+        description:
+          "The Wolf Man seeks a cure for his curse and instead awakens Frankenstein's Monster in this landmark Universal monster-crossover.",
+        archiveId: "frankenstein-meets-the-wolf-man-1942",
+        thumbnail: "https://archive.org/services/img/frankenstein-meets-the-wolf-man-1942",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE REVENGE OF FRANKENSTEIN  (1958)
+     Single feature film — archive identifier: the-revenge-of-frankenstein
+     Dir. Terence Fisher. Second entry in Hammer's Frankenstein series,
+     starring Peter Cushing. Sequel to The Curse of Frankenstein.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "revenge-of-frankenstein-1958",
+    type: "movie",
+    title: "The Revenge of Frankenstein",
+    years: "1958",
+    genre: ["Horror", "Sci-Fi"],
+    rating: "NR",
+    score: 6.7,
+    description:
+      "After escaping the guillotine by having a priest executed in his place, Baron Victor Frankenstein adopts the alias Dr. Stein and establishes a thriving medical practice in Carlsbrück — using his charity work among the poor as a cover for fresh experimental material. His hunchbacked assistant Karl volunteers his own brain for transplant into a perfectly constructed body, but the procedure goes horribly wrong as Karl's new form begins to degenerate. Peter Cushing delivers a compellingly cold and charismatic performance in this polished Hammer sequel, directed by Terence Fisher.",
+    thumbnail: "https://archive.org/services/img/the-revenge-of-frankenstein",
+    featured: false,
+    episodes: [
+      {
+        id: "revenge-of-frankenstein-1958-full",
+        title: "The Revenge of Frankenstein",
+        season: 0,
+        episode: 0,
+        year: 1958,
+        duration: "90 min",
+        description:
+          "Baron Frankenstein resurfaces under a false identity and continues his brain-transplant experiments with dire consequences in this stylish Hammer horror sequel starring Peter Cushing.",
+        archiveId: "the-revenge-of-frankenstein",
+        thumbnail: "https://archive.org/services/img/the-revenge-of-frankenstein",
+      },
+    ],
+  },
   {
     id: "mtv-saturday-night-concert-reo-speedwagon-1981",
     type: "concert",
