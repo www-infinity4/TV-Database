@@ -60,6 +60,7 @@
 
     rowDueSouth: document.getElementById("row-due-south"),
     rowMovies: document.getElementById("row-movies"),
+    rowFamily: document.getElementById("row-family"),
     allEpsBackdrop: document.getElementById("all-eps-backdrop"),
     allEpsTabs: document.getElementById("all-eps-tabs"),
     allEpsList: document.getElementById("all-eps-list"),
@@ -103,6 +104,7 @@
     renderRow(DOM.rowComedy, getShowsByGenre("Comedy"));
     renderRow(DOM.rowScifi, getShowsByGenre("Sci-Fi"));
     renderRow(DOM.rowCrime, getShowsByGenre("Crime"));
+    renderRow(DOM.rowFamily, getShowsByGenre("Family"));
     renderRow(DOM.row70s, getShowsByDecade(1970));
     renderRow(DOM.row80s, getShowsByDecade(1980));
     renderRow(DOM.row90s, getShowsByDecade(1990));
