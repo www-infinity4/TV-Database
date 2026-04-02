@@ -2860,6 +2860,38 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     ERNEST SCARED STUPID  (1991)
+     Archive identifier: Ernest_Scared_Stupid_Ernest_Scared_Straight
+     Touchstone Pictures comedy-horror featuring Jim Varney as
+     Ernest P. Worrell alongside Eartha Kitt.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "ernest-scared-stupid-1991",
+    type: "movie",
+    title: "Ernest Scared Stupid",
+    years: "1991",
+    genre: ["Comedy", "Horror", "Family"],
+    rating: "PG",
+    score: 6.1,
+    description:
+      "Lovable klutz Ernest P. Worrell (Jim Varney) accidentally breaks an ancient seal and releases Trantor, a hideous troll who turns children into wooden dolls on Halloween night. With the help of his friends and the mysterious Old Lady Hackmore (Eartha Kitt), Ernest must find a way to defeat Trantor and save the kids before it's too late — if his bumbling doesn't doom them all first.",
+    thumbnail: "https://archive.org/services/img/Ernest_Scared_Stupid_Ernest_Scared_Straight",
+    featured: false,
+    episodes: [
+      {
+        id: "ernest-scared-stupid-1991-full",
+        title: "Ernest Scared Stupid",
+        season: 0,
+        episode: 0,
+        year: 1991,
+        duration: "91 min",
+        description: "Ernest P. Worrell unwittingly unleashes an ancient troll on Halloween. Starring Jim Varney and Eartha Kitt.",
+        archiveId: "Ernest_Scared_Stupid_Ernest_Scared_Straight",
+        thumbnail: "https://archive.org/services/img/Ernest_Scared_Stupid_Ernest_Scared_Straight",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
