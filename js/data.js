@@ -3476,6 +3476,72 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE RESCUERS  (1977)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated adventure directed by Wolfgang Reitherman.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-rescuers-1977",
+    type: "movie",
+    title: "The Rescuers",
+    years: "1977",
+    genre: ["Animation", "Family", "Adventure"],
+    rating: "G",
+    score: 7.0,
+    description:
+      "When a message in a bottle is discovered by the Rescue Aid Society — an international mouse organization headquartered beneath the United Nations — brave Hungarian delegate Miss Bianca and her reluctant partner Bernard are dispatched to locate a missing orphan girl named Penny. Their investigation leads them to the treacherous Devil's Bayou, where the villainous Medusa is forcing Penny to retrieve a priceless diamond from a dangerous cave. Featuring the voices of Bob Newhart and Eva Gabor, with songs by Sammy Fain.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "the-rescuers-1977-full",
+        title: "The Rescuers",
+        season: 0,
+        episode: 0,
+        year: 1977,
+        duration: "78 min",
+        description:
+          "Mouse agents Miss Bianca and Bernard race to rescue orphan Penny from the clutches of the villainous Madame Medusa in the Louisiana bayou.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1977 - The Rescuers.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE MANY ADVENTURES OF WINNIE THE POOH  (1977)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated compilation directed by John Lounsbery & Wolfgang Reitherman.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "many-adventures-of-winnie-the-pooh-1977",
+    type: "movie",
+    title: "The Many Adventures of Winnie the Pooh",
+    years: "1977",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "G",
+    score: 7.3,
+    description:
+      "Deep in the Hundred Acre Wood, the lovable, honey-obsessed Winnie the Pooh and his friends — Piglet, Eeyore, Tigger, Rabbit, Owl, Kanga, and Roo — embark on a series of gentle, heartwarming adventures. This beloved compilation brings together three classic featurettes: Winnie the Pooh and the Honey Tree, Winnie the Pooh and the Blustery Day, and Winnie the Pooh and Tigger Too. Based on the classic stories by A. A. Milne, with narration by Sebastian Cabot and songs by the Sherman Brothers.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "many-adventures-of-winnie-the-pooh-1977-full",
+        title: "The Many Adventures of Winnie the Pooh",
+        season: 0,
+        episode: 0,
+        year: 1977,
+        duration: "74 min",
+        description:
+          "Three classic featurettes follow Pooh and friends through honey hunts, blustery days, and Tigger's bouncy misadventures in the Hundred Acre Wood.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1977 - The Many Adventures of Winnie the Pooh.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      OLIVER & COMPANY  (1988)
      Single feature film — archive identifier: schoolproject2_20200406
      Walt Disney Pictures animated musical directed by George Scribner.
