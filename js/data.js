@@ -3303,6 +3303,75 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     TEEN WOLF — KDLT VHS BROADCAST  (1987)
+     Single feature film recorded off-air — archive identifier:
+       teen.-wolf.-kdlt.-5.4.1987deraq
+     The 1985 film (dir. Rod Daniel, starring Michael J. Fox) as broadcast
+     on KDLT (South Dakota) on May 4, 1987, captured on VHS with original
+     commercials intact. Part of the vhsvault collection.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "teen-wolf-1985-kdlt-vhs",
+    type: "vhs",
+    title: "Teen Wolf — KDLT Broadcast (VHS, May 4, 1987)",
+    years: "1987",
+    genre: ["Comedy", "Fantasy", "VHS Recording"],
+    rating: "PG",
+    score: 6.9,
+    description:
+      "The quintessential 1985 teen comedy recorded off-air from KDLT (South Dakota) on May 4, 1987, preserved on VHS with original period commercials and station breaks intact. Ordinary high-schooler Scott Howard (Michael J. Fox) is struggling on a losing basketball team and pining after the most popular girl in school — until he discovers he has inherited his family's secret ability to transform into a werewolf. Embracing his inner wolf rockets Scott to overnight fame and puts him at the top of the social ladder, but he soon learns that being yourself is better than being a monster. Directed by Rod Daniel, Teen Wolf became one of the defining comedies of the decade and a box-office sensation. A genuine VHS time-capsule of mid-1980s local broadcast television.",
+    thumbnail: "https://archive.org/services/img/teen.-wolf.-kdlt.-5.4.1987deraq",
+    featured: false,
+    episodes: [
+      {
+        id: "teen-wolf-1985-kdlt-vhs-full",
+        title: "Teen Wolf (KDLT, May 4, 1987)",
+        season: 0,
+        episode: 0,
+        year: 1987,
+        duration: "91 min",
+        description:
+          "Teen Wolf (1985) as broadcast on KDLT on May 4, 1987, complete with original commercials. Michael J. Fox stars as Scott Howard, a teenager who discovers he is a werewolf and uses his powers to become the most popular kid in school.",
+        archiveId: "teen.-wolf.-kdlt.-5.4.1987deraq",
+        thumbnail: "https://archive.org/services/img/teen.-wolf.-kdlt.-5.4.1987deraq",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     ROSWELL REPORTS, VOLUME 1  (1997)
+     Single documentary — archive identifier: gov.archives.341-roswell-1
+     Official U.S. Air Force documentary produced by Capt. James MacAndrew
+     as a visual companion to "The Roswell Report: Case Closed" (1997).
+     A U.S. government work in the public domain.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "roswell-reports-vol-1-1997",
+    type: "documentary",
+    title: "Roswell Reports, Volume 1 (1997)",
+    years: "1997",
+    genre: ["Documentary", "History", "Military"],
+    rating: "NR",
+    score: 7.2,
+    description:
+      "The official United States Air Force documentary produced to accompany the 1997 publication \"The Roswell Report: Case Closed.\" Written and produced by Captain James MacAndrew and released through the National Archives and Records Administration, this film examines the famous 1947 Roswell incident — the alleged crash of an unidentified object near Roswell, New Mexico — and presents the Air Force's declassified conclusions. Drawing on official documentation, photographs, footage, and testimony, the film argues that the recovered debris originated from Project Mogul, a classified high-altitude balloon program designed to monitor Soviet nuclear activity, and that accounts of alien bodies corresponded to anthropomorphic test dummies used in later parachute experiments. A unique primary-source document of Cold War history and government transparency.",
+    thumbnail: "https://archive.org/services/img/gov.archives.341-roswell-1",
+    featured: false,
+    episodes: [
+      {
+        id: "roswell-reports-vol-1-1997-full",
+        title: "Roswell Reports, Volume 1",
+        season: 0,
+        episode: 0,
+        year: 1997,
+        duration: "24 min",
+        description:
+          "The U.S. Air Force's official documentary companion to \"The Roswell Report: Case Closed,\" presenting declassified findings on the 1947 Roswell incident through footage, photographs, and official testimony.",
+        archiveId: "gov.archives.341-roswell-1",
+        thumbnail: "https://archive.org/services/img/gov.archives.341-roswell-1",
+      },
+    ],
+  },
   {
     id: "mtv-saturday-night-concert-reo-speedwagon-1981",
     type: "concert",
