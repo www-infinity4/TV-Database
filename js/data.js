@@ -1,0 +1,2322 @@
+/**
+ * TV Show & Episode Database — Classic Television 1970–2000
+ * Content is sourced from publicly available archives.
+ */
+
+const SHOWS = [
+  /* ────────────────────────────────────────────────────────────
+     DUE SOUTH  (1994–1998)
+     Archive identifier: due-south-1994-98
+     Individual episodes addressed via the ?index= playlist param.
+     Pilot = index 0; Season 1 episodes = index 1–22, etc.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "due-south",
+    title: "Due South",
+    years: "1994–1998",
+    genre: ["Drama", "Comedy", "Crime"],
+    rating: "TV-PG",
+    score: 8.2,
+    description:
+      "A straight-laced Canadian Mountie, Constable Benton Fraser, is posted to the Canadian Consulate in Chicago where he teams up with the rough-around-the-edges Det. Ray Vecchio to solve crimes with charm, integrity, and a deaf wolf.",
+    thumbnail: "https://archive.org/services/img/due-south-1994-98",
+    featured: true,
+    episodes: [
+      /* ── Pilot ── */
+      {
+        id: "ds-s00e01", title: "Pilot", season: 0, episode: 1,
+        year: 1994, duration: "90 min",
+        description: "Mountie Benton Fraser arrives in Chicago to investigate his father's death and ends up teaming with Det. Ray Vecchio.",
+        archiveId: "due-south-1994-98", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      /* ── Season 1 ── */
+      {
+        id: "ds-s01e01", title: "Free Willie", season: 1, episode: 1,
+        year: 1994, duration: "47 min",
+        description: "Fraser helps free a wrongly convicted man and uncovers a corporate cover-up.",
+        archiveId: "due-south-1994-98", archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e02", title: "Diefenbaker's Day Off", season: 1, episode: 2,
+        year: 1994, duration: "47 min",
+        description: "Diefenbaker, Fraser's deaf wolf, witnesses a murder while Fraser is stuck at the Consulate.",
+        archiveId: "due-south-1994-98", archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e03", title: "Manhunt", season: 1, episode: 3,
+        year: 1994, duration: "47 min",
+        description: "Fraser tracks a fugitive from his past across Chicago.",
+        archiveId: "due-south-1994-98", archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e04", title: "They Eat Horses, Don't They?", season: 1, episode: 4,
+        year: 1994, duration: "47 min",
+        description: "Fraser and Vecchio investigate the theft of a prize racehorse.",
+        archiveId: "due-south-1994-98", archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e05", title: "Pizzas and Promises", season: 1, episode: 5,
+        year: 1994, duration: "47 min",
+        description: "A seemingly routine pizza delivery turns into a case involving the mob.",
+        archiveId: "due-south-1994-98", archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e06", title: "Chinatown", season: 1, episode: 6,
+        year: 1994, duration: "47 min",
+        description: "Fraser and Vecchio are drawn into Chicago's Chinatown to solve a kidnapping.",
+        archiveId: "due-south-1994-98", archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e07", title: "Chicago Holiday (Part 1)", season: 1, episode: 7,
+        year: 1994, duration: "47 min",
+        description: "Fraser escorts a European princess around Chicago, unaware that assassins are on her trail.",
+        archiveId: "due-south-1994-98", archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e08", title: "Chicago Holiday (Part 2)", season: 1, episode: 8,
+        year: 1994, duration: "47 min",
+        description: "Fraser and Vecchio race to protect the princess from the assassins closing in on her.",
+        archiveId: "due-south-1994-98", archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e09", title: "A Cop, a Mountie and a Baby", season: 1, episode: 9,
+        year: 1994, duration: "47 min",
+        description: "Fraser and Vecchio must look after an abandoned baby while solving a case.",
+        archiveId: "due-south-1994-98", archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e10", title: "The Gift of the Wheelman", season: 1, episode: 10,
+        year: 1994, duration: "47 min",
+        description: "A getaway driver seeks Fraser's help after becoming involved in a bank robbery.",
+        archiveId: "due-south-1994-98", archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e11", title: "You Must Remember This", season: 1, episode: 11,
+        year: 1994, duration: "47 min",
+        description: "A woman with amnesia holds the key to a dangerous secret.",
+        archiveId: "due-south-1994-98", archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e12", title: "A Hawk and a Handsaw", season: 1, episode: 12,
+        year: 1994, duration: "47 min",
+        description: "Fraser is involuntarily committed to a psychiatric hospital and must unravel a plot from within.",
+        archiveId: "due-south-1994-98", archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e13", title: "An Eye for an Eye", season: 1, episode: 13,
+        year: 1994, duration: "47 min",
+        description: "Fraser investigates a case of apparent vigilante justice in a neighbourhood under siege.",
+        archiveId: "due-south-1994-98", archiveIndex: 13,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e14", title: "The Man Who Knew Too Little", season: 1, episode: 14,
+        year: 1994, duration: "47 min",
+        description: "An innocent bystander witnesses a crime but doesn't realise what he saw.",
+        archiveId: "due-south-1994-98", archiveIndex: 14,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e15", title: "The Wild Bunch", season: 1, episode: 15,
+        year: 1994, duration: "47 min",
+        description: "Fraser and Vecchio tangle with a gang of elderly bank robbers.",
+        archiveId: "due-south-1994-98", archiveIndex: 15,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e16", title: "The Blue Line", season: 1, episode: 16,
+        year: 1994, duration: "47 min",
+        description: "An NHL hockey player is implicated in a crime and Fraser uses his knowledge of the game to help.",
+        archiveId: "due-south-1994-98", archiveIndex: 16,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e17", title: "The Deal", season: 1, episode: 17,
+        year: 1994, duration: "47 min",
+        description: "Fraser and Vecchio must negotiate a dangerous hostage situation.",
+        archiveId: "due-south-1994-98", archiveIndex: 17,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e18", title: "An Invitation to Romance", season: 1, episode: 18,
+        year: 1994, duration: "47 min",
+        description: "Fraser's courtly manners attract the attention of a lonely widow hiding a dark secret.",
+        archiveId: "due-south-1994-98", archiveIndex: 18,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e19", title: "Heaven and Earth", season: 1, episode: 19,
+        year: 1995, duration: "47 min",
+        description: "Fraser receives a spiritual visit and must solve a decades-old murder mystery.",
+        archiveId: "due-south-1994-98", archiveIndex: 19,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e20", title: "Victoria's Secret (Part 1)", season: 1, episode: 20,
+        year: 1995, duration: "47 min",
+        description: "A woman from Fraser's past resurfaces in Chicago, reopening old wounds and old cases.",
+        archiveId: "due-south-1994-98", archiveIndex: 20,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e21", title: "Victoria's Secret (Part 2)", season: 1, episode: 21,
+        year: 1995, duration: "47 min",
+        description: "Fraser's loyalty is torn between his duty and the woman he once loved.",
+        archiveId: "due-south-1994-98", archiveIndex: 21,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s01e22", title: "Letting Go", season: 1, episode: 22,
+        year: 1995, duration: "47 min",
+        description: "Fraser struggles to move on in the aftermath of Victoria's departure.",
+        archiveId: "due-south-1994-98", archiveIndex: 22,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      /* ── Season 2 ── */
+      {
+        id: "ds-s02e01", title: "North", season: 2, episode: 1,
+        year: 1995, duration: "47 min",
+        description: "Fraser heads north to investigate a murder in Canada's wilderness.",
+        archiveId: "due-south-1994-98", archiveIndex: 23,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e02", title: "Vault", season: 2, episode: 2,
+        year: 1995, duration: "47 min",
+        description: "Fraser and Vecchio are trapped inside a bank vault during a robbery.",
+        archiveId: "due-south-1994-98", archiveIndex: 24,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e03", title: "The Witness", season: 2, episode: 3,
+        year: 1995, duration: "47 min",
+        description: "A key witness to a mob killing needs protection and only Fraser can provide it.",
+        archiveId: "due-south-1994-98", archiveIndex: 25,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e04", title: "Bird in the Hand", season: 2, episode: 4,
+        year: 1995, duration: "47 min",
+        description: "A political assassination plot puts Fraser and Vecchio in the crosshairs.",
+        archiveId: "due-south-1994-98", archiveIndex: 26,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e05", title: "The Promise", season: 2, episode: 5,
+        year: 1995, duration: "47 min",
+        description: "Fraser fulfils an old promise to a dying man, leading to unexpected danger.",
+        archiveId: "due-south-1994-98", archiveIndex: 27,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e06", title: "The Mask", season: 2, episode: 6,
+        year: 1995, duration: "47 min",
+        description: "A stolen Native Canadian ceremonial mask becomes the centre of an international theft ring.",
+        archiveId: "due-south-1994-98", archiveIndex: 28,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e07", title: "Juliet Is Bleeding", season: 2, episode: 7,
+        year: 1995, duration: "47 min",
+        description: "Vecchio's sister gets involved with a mob boss, forcing the team into a dangerous operation.",
+        archiveId: "due-south-1994-98", archiveIndex: 29,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e08", title: "One Good Man", season: 2, episode: 8,
+        year: 1995, duration: "47 min",
+        description: "A politician's good intentions are exploited by those around him.",
+        archiveId: "due-south-1994-98", archiveIndex: 30,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e09", title: "The Edge", season: 2, episode: 9,
+        year: 1996, duration: "47 min",
+        description: "Fraser confronts his own mortality after a near-death experience.",
+        archiveId: "due-south-1994-98", archiveIndex: 31,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e10", title: "Starman", season: 2, episode: 10,
+        year: 1996, duration: "47 min",
+        description: "A high-profile astronaut is targeted by saboteurs and only Fraser sees through the deception.",
+        archiveId: "due-south-1994-98", archiveIndex: 32,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e11", title: "We Are the Eggmen", season: 2, episode: 11,
+        year: 1996, duration: "47 min",
+        description: "An unusual case involving exotic eggs leads Fraser and Vecchio into a world of rare-animal smuggling.",
+        archiveId: "due-south-1994-98", archiveIndex: 33,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e12", title: "Some Like It Red", season: 2, episode: 12,
+        year: 1996, duration: "47 min",
+        description: "Fraser goes undercover in the fashion world to catch a jewel thief.",
+        archiveId: "due-south-1994-98", archiveIndex: 34,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e13", title: "White Men Can't Jump to Conclusions", season: 2, episode: 13,
+        year: 1996, duration: "47 min",
+        description: "A basketball charity event becomes the cover for a deadly scheme.",
+        archiveId: "due-south-1994-98", archiveIndex: 35,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e14", title: "All the Queen's Horses", season: 2, episode: 14,
+        year: 1996, duration: "47 min",
+        description: "Fraser must prevent a hijacking of a train carrying the RCMP Musical Ride horses.",
+        archiveId: "due-south-1994-98", archiveIndex: 36,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e15", title: "Body Language", season: 2, episode: 15,
+        year: 1996, duration: "47 min",
+        description: "A mute street artist communicates the only way he can — through art — to expose a killer.",
+        archiveId: "due-south-1994-98", archiveIndex: 37,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e16", title: "The Duel", season: 2, episode: 16,
+        year: 1996, duration: "47 min",
+        description: "An honour dispute escalates into a life-or-death standoff.",
+        archiveId: "due-south-1994-98", archiveIndex: 38,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e17", title: "Red, White or Blue", season: 2, episode: 17,
+        year: 1996, duration: "47 min",
+        description: "A retired spy's past catches up with him — and with Fraser.",
+        archiveId: "due-south-1994-98", archiveIndex: 39,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s02e18", title: "Flashback", season: 2, episode: 18,
+        year: 1996, duration: "47 min",
+        description: "Fraser and Vecchio investigate a cold case using recovered memories.",
+        archiveId: "due-south-1994-98", archiveIndex: 40,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      /* ── Season 3 ── */
+      {
+        id: "ds-s03e01", title: "Burning Down the House", season: 3, episode: 1,
+        year: 1997, duration: "47 min",
+        description: "In the season opener Fraser faces the aftermath of a conspiracy that shook the 27th District.",
+        archiveId: "due-south-1994-98", archiveIndex: 41,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e02", title: "Eclipse", season: 3, episode: 2,
+        year: 1997, duration: "47 min",
+        description: "A solar eclipse coincides with a string of crimes that seem to defy explanation.",
+        archiveId: "due-south-1994-98", archiveIndex: 42,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e03", title: "I Coulda Been a Defendant", season: 3, episode: 3,
+        year: 1997, duration: "47 min",
+        description: "Fraser finds himself on the wrong side of the law when he is accused of a crime.",
+        archiveId: "due-south-1994-98", archiveIndex: 43,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e04", title: "Strange Bedfellows", season: 3, episode: 4,
+        year: 1997, duration: "47 min",
+        description: "Political rivals must cooperate to survive — and Fraser is the unlikely mediator.",
+        archiveId: "due-south-1994-98", archiveIndex: 44,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e05", title: "Seeing Is Believing", season: 3, episode: 5,
+        year: 1997, duration: "47 min",
+        description: "Witnesses to a crime all report wildly different versions of events.",
+        archiveId: "due-south-1994-98", archiveIndex: 45,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e06", title: "Bounty Hunter", season: 3, episode: 6,
+        year: 1997, duration: "47 min",
+        description: "A bounty hunter and Fraser clash over the retrieval of a fugitive.",
+        archiveId: "due-south-1994-98", archiveIndex: 46,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e07", title: "Mountie & Soul", season: 3, episode: 7,
+        year: 1997, duration: "47 min",
+        description: "Fraser's sense of duty is tested when he must choose between regulation and justice.",
+        archiveId: "due-south-1994-98", archiveIndex: 47,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e08", title: "Spy vs. Spy", season: 3, episode: 8,
+        year: 1997, duration: "47 min",
+        description: "Cold War secrets surface in Chicago when rival intelligence agents converge on the city.",
+        archiveId: "due-south-1994-98", archiveIndex: 48,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e09", title: "Asylum", season: 3, episode: 9,
+        year: 1997, duration: "47 min",
+        description: "A defector seeks sanctuary at the Canadian Consulate, putting Fraser in a diplomatic minefield.",
+        archiveId: "due-south-1994-98", archiveIndex: 49,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e10", title: "Perfect Strangers", season: 3, episode: 10,
+        year: 1997, duration: "47 min",
+        description: "Fraser and his new partner must work together despite their very different approaches.",
+        archiveId: "due-south-1994-98", archiveIndex: 50,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e11", title: "Dead Guy Running", season: 3, episode: 11,
+        year: 1997, duration: "47 min",
+        description: "A man believed dead turns up alive — and very much in danger.",
+        archiveId: "due-south-1994-98", archiveIndex: 51,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e12", title: "Mountie on the Bounty (Part 1)", season: 3, episode: 12,
+        year: 1998, duration: "47 min",
+        description: "Fraser and his partner chase a criminal onto a cargo ship bound for the open sea.",
+        archiveId: "due-south-1994-98", archiveIndex: 52,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s03e13", title: "Mountie on the Bounty (Part 2)", season: 3, episode: 13,
+        year: 1998, duration: "47 min",
+        description: "Trapped at sea, Fraser must outwit the criminals and find a way back to shore.",
+        archiveId: "due-south-1994-98", archiveIndex: 53,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      /* ── Season 4 ── */
+      {
+        id: "ds-s04e01", title: "Dr. Longball", season: 4, episode: 1,
+        year: 1998, duration: "47 min",
+        description: "A celebrity doctor's charity golf tournament turns deadly.",
+        archiveId: "due-south-1994-98", archiveIndex: 54,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e02", title: "Easy Money", season: 4, episode: 2,
+        year: 1998, duration: "47 min",
+        description: "Fraser investigates a get-rich-quick scheme that is leaving victims in its wake.",
+        archiveId: "due-south-1994-98", archiveIndex: 55,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e03", title: "The Ladies' Man", season: 4, episode: 3,
+        year: 1998, duration: "47 min",
+        description: "A charming con artist is targeting wealthy women across Chicago.",
+        archiveId: "due-south-1994-98", archiveIndex: 56,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e04", title: "Mojo Rising", season: 4, episode: 4,
+        year: 1998, duration: "47 min",
+        description: "A blues musician's lucky charm is stolen — along with the evidence in a murder case.",
+        archiveId: "due-south-1994-98", archiveIndex: 57,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e05", title: "Dead Men Don't Throw Rice", season: 4, episode: 5,
+        year: 1998, duration: "47 min",
+        description: "A wedding party becomes the scene of a crime when the groom is found dead.",
+        archiveId: "due-south-1994-98", archiveIndex: 58,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e06", title: "Odds", season: 4, episode: 6,
+        year: 1998, duration: "47 min",
+        description: "Illegal gambling connects a series of seemingly unrelated crimes.",
+        archiveId: "due-south-1994-98", archiveIndex: 59,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e07", title: "Mountie Sings the Blues", season: 4, episode: 7,
+        year: 1998, duration: "47 min",
+        description: "Fraser goes undercover in the Chicago blues scene to catch a killer.",
+        archiveId: "due-south-1994-98", archiveIndex: 60,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e08", title: "Good for the Soul", season: 4, episode: 8,
+        year: 1998, duration: "47 min",
+        description: "A priest's confession puts Fraser in an impossible ethical position.",
+        archiveId: "due-south-1994-98", archiveIndex: 61,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e09", title: "A Likely Story", season: 4, episode: 9,
+        year: 1998, duration: "47 min",
+        description: "An improbable chain of coincidences leads Fraser to the truth in a baffling case.",
+        archiveId: "due-south-1994-98", archiveIndex: 62,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e10", title: "Say Amen", season: 4, episode: 10,
+        year: 1998, duration: "47 min",
+        description: "A revival preacher is suspected of fraud — or something far worse.",
+        archiveId: "due-south-1994-98", archiveIndex: 63,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e11", title: "Hunting Season", season: 4, episode: 11,
+        year: 1998, duration: "47 min",
+        description: "A dangerous game of cat and mouse unfolds across the city.",
+        archiveId: "due-south-1994-98", archiveIndex: 64,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e12", title: "Call of the Wild (Part 1)", season: 4, episode: 12,
+        year: 1998, duration: "47 min",
+        description: "Fraser is drawn back to Canada as a series finale adventure begins.",
+        archiveId: "due-south-1994-98", archiveIndex: 65,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+      {
+        id: "ds-s04e13", title: "Call of the Wild (Part 2)", season: 4, episode: 13,
+        year: 1998, duration: "47 min",
+        description: "Fraser's final adventure concludes, bringing his journey full circle.",
+        archiveId: "due-south-1994-98", archiveIndex: 66,
+        thumbnail: "https://archive.org/services/img/due-south-1994-98",
+      },
+    ],
+  },
+
+  {
+    id: "mash",
+    title: "M*A*S*H",
+    years: "1972–1983",
+    genre: ["Drama", "Comedy", "War"],
+    rating: "TV-PG",
+    score: 9.1,
+    description:
+      "The staff of a mobile army surgical hospital during the Korean War deal with the horrors of battle through humor and camaraderie.",
+    thumbnail: "https://archive.org/services/img/MashTVShow",
+    featured: true,
+    episodes: [
+      {
+        id: "mash-s01e01",
+        title: "Pilot",
+        season: 1,
+        episode: 1,
+        year: 1972,
+        duration: "25 min",
+        description: "Hawkeye and Trapper devise a scheme to raise money for a Korean orphan.",
+        archiveId: "MASH_s01e01",
+        thumbnail: "https://archive.org/services/img/MashTVShow",
+      },
+      {
+        id: "mash-s01e02",
+        title: "To Market, To Market",
+        season: 1,
+        episode: 2,
+        year: 1972,
+        duration: "25 min",
+        description: "Henry trades the camp's hydrocort for a black market still.",
+        archiveId: "MASH_s01e02",
+        thumbnail: "https://archive.org/services/img/MashTVShow",
+      },
+    ],
+  },
+  {
+    id: "all-in-the-family",
+    title: "All in the Family",
+    years: "1971–1979",
+    genre: ["Comedy", "Drama"],
+    rating: "TV-PG",
+    score: 8.9,
+    description:
+      "Archie Bunker, a working-class bigot living in Queens, New York, clashes with his liberal son-in-law.",
+    thumbnail: "https://archive.org/services/img/AllInTheFamily",
+    featured: false,
+    episodes: [
+      {
+        id: "aitf-s01e01",
+        title: "Meet the Bunkers",
+        season: 1,
+        episode: 1,
+        year: 1971,
+        duration: "25 min",
+        description: "Archie and Edith return home to find that Mike and Gloria have celebrated their anniversary without them.",
+        archiveId: "AllInTheFamily_s01e01",
+        thumbnail: "https://archive.org/services/img/AllInTheFamily",
+      },
+    ],
+  },
+  {
+    id: "cheers",
+    title: "Cheers",
+    years: "1982–1993",
+    genre: ["Comedy"],
+    rating: "TV-PG",
+    score: 9.0,
+    description:
+      "The regulars of Cheers, a Boston bar, deal with their relationships and quirky personalities.",
+    thumbnail: "https://archive.org/services/img/CheersTV",
+    featured: true,
+    episodes: [
+      {
+        id: "cheers-s01e01",
+        title: "Give Me a Ring Sometime",
+        season: 1,
+        episode: 1,
+        year: 1982,
+        duration: "25 min",
+        description: "Diane Chambers ends up working at Cheers after being left by her fiancé.",
+        archiveId: "Cheers_s01e01",
+        thumbnail: "https://archive.org/services/img/CheersTV",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     V: THE SERIES  (1984–1985)
+     NBC weekly follow-up to the two V miniseries. 19 episodes.
+     Premiered October 26, 1984; finale March 22, 1985.
+     Archive identifier for S01E19:
+       v-the-series-1984-85-s-01e-19-the-return_202206
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "v-the-series-1984",
+    title: "V: The Series",
+    years: "1984–1985",
+    genre: ["Sci-Fi", "Drama", "Action"],
+    rating: "TV-PG",
+    score: 6.8,
+    description:
+      "NBC's weekly follow-up to the hit V miniseries. The alien Visitors have returned to occupy Earth, and the human resistance — led by Mike Donovan and Dr. Juliet Parrish — fights to drive them out. Stars Marc Singer, Faye Grant, Jane Badler, Michael Ironside, and Robert Englund.",
+    thumbnail: "https://archive.org/services/img/v-the-series-1984-85-s-01e-19-the-return_202206",
+    featured: false,
+    episodes: [
+      {
+        id: "v-series-s01e19",
+        title: "The Return",
+        season: 1,
+        episode: 19,
+        year: 1985,
+        duration: "46 min",
+        description:
+          "Series finale. The Visitors' Supreme Leader arrives on Earth, halts Diana's planned attack on Los Angeles, and orders the fleet to withdraw — proposing a truce that may finally end the alien occupation. Diana is taken away to answer for her crimes against humanity. Stars Marc Singer, Faye Grant, Jane Badler, Michael Ironside, and Robert Englund. Aired March 22, 1985 on NBC.",
+        archiveId: "v-the-series-1984-85-s-01e-19-the-return_202206",
+        thumbnail: "https://archive.org/services/img/v-the-series-1984-85-s-01e-19-the-return_202206",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE TWILIGHT ZONE  (1985–1987)
+     CBS revival — archive identifier for S1E1:
+       twilight-zone-1985-1x-01-shatterday
+     Hosted/narrated by Charles Aidman. Premiered September 27, 1985
+     with the two-part pilot "Shatterday / A Little Peace and Quiet."
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-twilight-zone-1985",
+    title: "The Twilight Zone (1985)",
+    years: "1985–1987",
+    genre: ["Drama", "Sci-Fi", "Fantasy", "Anthology"],
+    rating: "TV-PG",
+    score: 7.8,
+    description:
+      "CBS revival of Rod Serling's classic anthology series, presenting new tales of the unusual and the unexpected. Narrated by Charles Aidman, the revival ran for three seasons and featured an array of acclaimed directors and guest stars.",
+    thumbnail: "https://archive.org/services/img/twilight-zone-1985-1x-01-shatterday",
+    featured: false,
+    episodes: [
+      {
+        id: "tz1985-s01e01",
+        title: "Shatterday",
+        season: 1,
+        episode: 1,
+        year: 1985,
+        duration: "25 min",
+        description:
+          "Peter Jay Novins accidentally dials his own home phone number and is horrified to hear himself answer — a doppelganger who has taken over his life and is determined to improve it. As his double makes amends and grows stronger, Peter fades. Directed by Wes Craven; written by Alan Brennert from a story by Harlan Ellison; starring Bruce Willis.",
+        archiveId: "twilight-zone-1985-1x-01-shatterday",
+        thumbnail: "https://archive.org/services/img/twilight-zone-1985-1x-01-shatterday",
+      },
+    ],
+  },
+  {
+    id: "the-twilight-zone",
+    title: "The Twilight Zone",
+    years: "1959–1964",
+    genre: ["Drama", "Sci-Fi", "Fantasy"],
+    rating: "TV-PG",
+    score: 9.0,
+    description:
+      "Anthology series of tales of the unusual, the unexpected, and the macabre.",
+    thumbnail: "https://archive.org/services/img/twilightzone",
+    featured: true,
+    episodes: [
+      {
+        id: "tz-s01e01",
+        title: "Where Is Everybody?",
+        season: 1,
+        episode: 1,
+        year: 1959,
+        duration: "25 min",
+        description: "A man finds himself in a small town completely devoid of any other people.",
+        archiveId: "the.twilight.zone.s01e01",
+        thumbnail: "https://archive.org/services/img/twilightzone",
+      },
+      {
+        id: "tz-s01e16",
+        title: "The Hitch-Hiker",
+        season: 1,
+        episode: 16,
+        year: 1960,
+        duration: "25 min",
+        description: "A young woman is terrorized by a mysterious hitchhiker who appears no matter how far she drives.",
+        archiveId: "TheTwilightZone-TheHitch-hiker",
+        thumbnail: "https://archive.org/services/img/twilightzone",
+      },
+    ],
+  },
+  {
+    id: "star-trek",
+    title: "Star Trek: The Original Series",
+    years: "1966–1969",
+    genre: ["Sci-Fi", "Adventure"],
+    rating: "TV-G",
+    score: 8.4,
+    description:
+      "Captain Kirk and the crew of the Enterprise explore the galaxy in the 23rd century.",
+    thumbnail: "https://archive.org/services/img/StarTrekOriginalSeries",
+    featured: false,
+    episodes: [
+      {
+        id: "tos-s01e01",
+        title: "The Man Trap",
+        season: 1,
+        episode: 1,
+        year: 1966,
+        duration: "51 min",
+        description: "A salt-craving creature capable of disguising itself preys on the Enterprise crew.",
+        archiveId: "StarTrek_s01e01",
+        thumbnail: "https://archive.org/services/img/StarTrekOriginalSeries",
+      },
+    ],
+  },
+  {
+    id: "i-love-lucy",
+    title: "I Love Lucy",
+    years: "1951–1957",
+    genre: ["Comedy"],
+    rating: "TV-G",
+    score: 8.9,
+    description:
+      "The misadventures of Lucy Ricardo and her husband Ricky, along with their best friends and landlords.",
+    thumbnail: "https://archive.org/services/img/ILoveLucy",
+    featured: false,
+    episodes: [
+      {
+        id: "lucy-s01e01",
+        title: "The Girls Want to Go to a Nightclub",
+        season: 1,
+        episode: 1,
+        year: 1951,
+        duration: "30 min",
+        description: "Lucy and Ethel want to go to a nightclub for their anniversary but their husbands have other plans.",
+        archiveId: "ILoveLucy_s01e01",
+        thumbnail: "https://archive.org/services/img/ILoveLucy",
+      },
+    ],
+  },
+  {
+    id: "the-andy-griffith-show",
+    title: "The Andy Griffith Show",
+    years: "1960–1968",
+    genre: ["Comedy", "Drama"],
+    rating: "TV-G",
+    score: 8.7,
+    description:
+      "Sheriff Andy Taylor raises his son Opie in the fictional small town of Mayberry, North Carolina.",
+    thumbnail: "https://archive.org/services/img/AndyGriffithShow",
+    featured: false,
+    episodes: [
+      {
+        id: "andy-s01e01",
+        title: "The New Housekeeper",
+        season: 1,
+        episode: 1,
+        year: 1960,
+        duration: "25 min",
+        description: "Andy's Aunt Bee arrives to take care of the Taylor household.",
+        archiveId: "AndyGriffith_s01e01",
+        thumbnail: "https://archive.org/services/img/AndyGriffithShow",
+      },
+    ],
+  },
+  {
+    id: "leave-it-to-beaver",
+    title: "Leave It to Beaver",
+    years: "1957–1963",
+    genre: ["Comedy", "Family"],
+    rating: "TV-G",
+    score: 8.1,
+    description:
+      "The adventures of the Cleaver family, particularly young Theodore 'Beaver' Cleaver.",
+    thumbnail: "https://archive.org/services/img/LeaveItToBeaver",
+    featured: false,
+    episodes: [
+      {
+        id: "beaver-s01e01",
+        title: "Beaver Gets 'Spelied'",
+        season: 1,
+        episode: 1,
+        year: 1957,
+        duration: "26 min",
+        description: "Beaver tries to get out of a spelling test.",
+        archiveId: "LeaveItToBeaver_s01e01",
+        thumbnail: "https://archive.org/services/img/LeaveItToBeaver",
+      },
+    ],
+  },
+  {
+    id: "seinfeld",
+    title: "Seinfeld",
+    years: "1989–1998",
+    genre: ["Comedy"],
+    rating: "TV-PG",
+    score: 9.0,
+    description:
+      "The show about nothing follows Jerry Seinfeld and his group of quirky New York friends.",
+    thumbnail: "https://archive.org/services/img/Seinfeld",
+    featured: true,
+    episodes: [
+      {
+        id: "sein-s01e01",
+        title: "The Seinfeld Chronicles",
+        season: 1,
+        episode: 1,
+        year: 1989,
+        duration: "23 min",
+        description: "Jerry awaits the arrival of a woman he met in Lansing to determine if she is his girlfriend.",
+        archiveId: "Seinfeld_s01e01",
+        thumbnail: "https://archive.org/services/img/Seinfeld",
+      },
+    ],
+  },
+  {
+    id: "gilligans-island",
+    title: "Gilligan's Island",
+    years: "1964–1967",
+    genre: ["Comedy", "Adventure"],
+    rating: "TV-G",
+    score: 7.3,
+    description:
+      "A group of castaways are stranded on a deserted island and try to find their way home.",
+    thumbnail: "https://archive.org/services/img/GilligansIsland",
+    featured: false,
+    episodes: [
+      {
+        id: "gilligan-s01e01",
+        title: "Two on a Raft",
+        season: 1,
+        episode: 1,
+        year: 1964,
+        duration: "25 min",
+        description: "Gilligan and the Skipper set out on a raft to find help.",
+        archiveId: "GilligansIsland_s01e01",
+        thumbnail: "https://archive.org/services/img/GilligansIsland",
+      },
+    ],
+  },
+  {
+    id: "the-brady-bunch",
+    title: "The Brady Bunch",
+    years: "1969–1974",
+    genre: ["Comedy", "Family"],
+    rating: "TV-G",
+    score: 7.4,
+    description:
+      "A blended family navigates life together with six children and a helpful housekeeper.",
+    thumbnail: "https://archive.org/services/img/TheBradyBunch",
+    featured: false,
+    episodes: [
+      {
+        id: "brady-s01e01",
+        title: "The Honeymoon",
+        season: 1,
+        episode: 1,
+        year: 1969,
+        duration: "25 min",
+        description: "Mike and Carol Brady prepare for their honeymoon while the kids adjust to their new family.",
+        archiveId: "BradyBunch_s01e01",
+        thumbnail: "https://archive.org/services/img/TheBradyBunch",
+      },
+    ],
+  },
+  {
+    id: "columbo",
+    title: "Columbo",
+    years: "1971–2003",
+    genre: ["Crime", "Drama", "Mystery"],
+    rating: "TV-PG",
+    score: 8.6,
+    description:
+      "A seemingly disheveled but brilliant L.A. police detective uses his humble demeanor to lull murderers into letting down their guard.",
+    thumbnail: "https://archive.org/services/img/Columbo",
+    featured: true,
+    episodes: [
+      {
+        id: "columbo-s01e01",
+        title: "Murder by the Book",
+        season: 1,
+        episode: 1,
+        year: 1971,
+        duration: "73 min",
+        description: "Columbo investigates when a mystery writer murders his partner.",
+        archiveId: "Columbo_MurderByTheBook",
+        thumbnail: "https://archive.org/services/img/Columbo",
+      },
+    ],
+  },
+  {
+    id: "the-mary-tyler-moore-show",
+    title: "The Mary Tyler Moore Show",
+    years: "1970–1977",
+    genre: ["Comedy", "Drama"],
+    rating: "TV-G",
+    score: 8.1,
+    description:
+      "Mary Richards moves to Minneapolis and starts working at a TV news station, navigating single life and career.",
+    thumbnail: "https://archive.org/services/img/MaryTylerMoore",
+    featured: false,
+    episodes: [
+      {
+        id: "mtm-s01e01",
+        title: "Love Is All Around",
+        season: 1,
+        episode: 1,
+        year: 1970,
+        duration: "25 min",
+        description: "Mary Richards arrives in Minneapolis and lands a job at WJM-TV.",
+        archiveId: "MaryTylerMoore_s01e01",
+        thumbnail: "https://archive.org/services/img/MaryTylerMoore",
+      },
+    ],
+  },
+  {
+    id: "happy-days",
+    title: "Happy Days",
+    years: "1974–1984",
+    genre: ["Comedy", "Drama"],
+    rating: "TV-G",
+    score: 7.4,
+    description:
+      "Set in 1950s Milwaukee, the Cunningham family and their friend Fonzie experience life in the golden age of rock and roll.",
+    thumbnail: "https://archive.org/services/img/HappyDays",
+    featured: false,
+    episodes: [
+      {
+        id: "happydays-s01e01",
+        title: "All the Way",
+        season: 1,
+        episode: 1,
+        year: 1974,
+        duration: "25 min",
+        description: "Richie Cunningham tries to prove himself at the drive-in.",
+        archiveId: "HappyDays_s01e01",
+        thumbnail: "https://archive.org/services/img/HappyDays",
+      },
+    ],
+  },
+  {
+    id: "the-price-is-right",
+    title: "The Price Is Right",
+    years: "1972–present",
+    genre: ["Game Show"],
+    rating: "TV-G",
+    score: 7.6,
+    description:
+      "Contestants compete by trying to correctly price merchandise to win cash and prizes.",
+    thumbnail: "https://archive.org/services/img/ThePriceIsRight",
+    featured: false,
+    episodes: [
+      {
+        id: "tpir-s01e01",
+        title: "Premiere Episode",
+        season: 1,
+        episode: 1,
+        year: 1972,
+        duration: "60 min",
+        description: "The first episode of the long-running game show hosted by Bob Barker.",
+        archiveId: "ThePriceIsRight_premiere",
+        thumbnail: "https://archive.org/services/img/ThePriceIsRight",
+      },
+      {
+        id: "tpir-s13e5731d",
+        title: "Episode #5731D (May 13, 1985)",
+        season: 13,
+        episode: 131,
+        year: 1985,
+        duration: "60 min",
+        description: "Bob Barker hosts a classic episode featuring six pricing games: Lucky Seven, Safe Crackers, The Phone Home Game, Squeeze Play, Secret X, and 3 Strikes.",
+        archiveId: "tpir-5731d",
+        thumbnail: "https://archive.org/services/img/tpir-5731d",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WASHINGTOON  (1985)
+     TV sitcom — archive identifier: washingtoon-1985
+     Short-lived Showtime political satire; 10 episodes produced,
+     2 currently preserved on the Internet Archive (episodes 5 & 8).
+     Notable as an early credit for Christina Applegate.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "washingtoon-1985",
+    title: "Washingtoon",
+    years: "1985",
+    genre: ["Comedy"],
+    rating: "TV-PG",
+    score: 6.1,
+    description:
+      "Idealistic Congressman Bob Forehead uproots his family to Washington D.C. and tries to govern with honesty — a near-impossible task surrounded by the scheming veteran Senator Bunky Munster and the absurdities of Capitol Hill. A sharp political satire that aired on Showtime in 1985, notable as one of Christina Applegate's earliest television roles.",
+    thumbnail: "https://archive.org/services/img/washingtoon-1985",
+    featured: false,
+    episodes: [
+      {
+        id: "washingtoon-s01e05",
+        title: "Episode 5",
+        season: 1,
+        episode: 5,
+        year: 1985,
+        duration: "30 min",
+        description: "Congressman Forehead organises a baseball game between Latin American leaders and the U.S. Congress, with predictably chaotic results.",
+        archiveId: "washingtoon-1985",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/washingtoon-1985",
+      },
+      {
+        id: "washingtoon-s01e08",
+        title: "Episode 8",
+        season: 1,
+        episode: 8,
+        year: 1985,
+        duration: "30 min",
+        description: "A hostage situation unfolds on Capitol Hill, forcing Congressman Forehead to improvise his way through a crisis that exposes Washington's finest at their worst.",
+        archiveId: "washingtoon-1985",
+        archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/washingtoon-1985",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE CARE BEARS BATTLE THE FREEZE MACHINE  (1984)
+     Single TV special — archive identifier:
+       the-care-bears-battle-the-freeze-machine-1984-etc.
+     Original VHS release (Family Home Entertainment) containing the
+     ~30-min special plus read-along bonus content.
+     Introduces Grams Bear, Hugs, Tugs, and villain Frostbite.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "care-bears-freeze-machine-1984",
+    type: "movie",
+    title: "The Care Bears Battle the Freeze Machine",
+    years: "1984",
+    genre: ["Animation", "Family", "Fantasy"],
+    rating: "G",
+    score: 6.4,
+    description:
+      "The villainous Professor Coldheart unleashes his Careless Ray Contraption to freeze the world and drain it of all feeling. When he kidnaps the baby Care Bears Hugs and Tugs, Tenderheart Bear and the gang must race to the rescue — and help a young boy named Paul learn the power of forgiveness. The special introduces beloved new characters Grams Bear and sidekick Frostbite.",
+    thumbnail: "https://archive.org/services/img/the-care-bears-battle-the-freeze-machine-1984-etc.",
+    featured: false,
+    episodes: [
+      {
+        id: "care-bears-freeze-machine-1984-full",
+        title: "The Care Bears Battle the Freeze Machine",
+        season: 0,
+        episode: 0,
+        year: 1984,
+        duration: "30 min",
+        description:
+          "Professor Coldheart kidnaps Hugs and Tugs and plans to freeze the world. The Care Bears must save the baby bears and teach a bullied boy about caring.",
+        archiveId: "the-care-bears-battle-the-freeze-machine-1984-etc.",
+        thumbnail: "https://archive.org/services/img/the-care-bears-battle-the-freeze-machine-1984-etc.",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     CAT'S EYE  (1985)
+     Single feature film — archive identifier: cats-eye-1985-dvdrip
+     Stephen King anthology directed by Lewis Teague.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "cats-eye-1985",
+    type: "movie",
+    title: "Cat's Eye",
+    years: "1985",
+    genre: ["Horror", "Thriller", "Fantasy"],
+    rating: "PG-13",
+    score: 6.4,
+    description:
+      "A stray tomcat threads through three Stephen King tales of dark suspense. In Quitters, Inc., a man's smoking cessation program has terrifyingly high stakes. In The Ledge, an adulterer is forced to walk the rain-slicked ledge of a high-rise skyscraper. In General, the cat finally reaches the girl it has been searching for — just in time to battle the tiny troll that haunts her bedroom walls. Stars James Woods, Robert Hays, and Drew Barrymore.",
+    thumbnail: "https://archive.org/services/img/cats-eye-1985-dvdrip",
+    featured: false,
+    episodes: [
+      {
+        id: "cats-eye-1985-full",
+        title: "Cat's Eye",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "94 min",
+        description:
+          "Three Stephen King stories of suspense and dark irony — Quitters Inc., The Ledge, and General — linked by the wandering journey of a stray cat.",
+        archiveId: "cats-eye-1985-dvdrip",
+        thumbnail: "https://archive.org/services/img/cats-eye-1985-dvdrip",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     CREATURE  (1985)
+     Single feature film — archive identifier:
+       creature-1985-horror-sci-fi-full-color-movie
+     Dir. William Malone. Cult sci-fi horror featuring Klaus Kinski.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "creature-1985",
+    type: "movie",
+    title: "Creature",
+    years: "1985",
+    genre: ["Horror", "Sci-Fi"],
+    rating: "R",
+    score: 5.5,
+    description:
+      "On Titan, Saturn's largest moon, an American scientific crew investigating ancient alien artefacts accidentally unleashes a savage extraterrestrial organism. As the creature hunts them down and uses parasites to reanimate its victims, the survivors join forces with the remnants of a rival German expedition — including the enigmatic Hans Rudy Hofner — in a desperate bid to survive. A cult Alien-influenced thriller featuring Klaus Kinski.",
+    thumbnail: "https://archive.org/services/img/creature-1985-horror-sci-fi-full-color-movie",
+    featured: false,
+    episodes: [
+      {
+        id: "creature-1985-full",
+        title: "Creature",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "97 min",
+        description:
+          "A scientific crew on Titan releases a deadly alien organism that begins hunting them one by one, using parasites to control its victims.",
+        archiveId: "creature-1985-horror-sci-fi-full-color-movie",
+        thumbnail: "https://archive.org/services/img/creature-1985-horror-sci-fi-full-color-movie",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE CARE BEARS MOVIE  (1985)
+     Single feature film — archive identifier:
+       the-care-bears-movie-vestron-video-original-1985-release_202109
+     Vestron Video original 1985 VHS release, digitised for preservation.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "care-bears-movie-1985",
+    type: "movie",
+    title: "The Care Bears Movie",
+    years: "1985",
+    genre: ["Animation", "Family", "Fantasy"],
+    rating: "G",
+    score: 6.8,
+    description:
+      "Two lonely orphans discover the magic of Care-a-Lot, the cloud-high home of the Care Bears. But an evil spirit has tricked a young magician's apprentice named Nicholas into spreading sadness and mistrust across the world. The Care Bears must join forces with their cousins to stop Nicholas and show him that somebody really does care. Featuring the voice of Mickey Rooney and a young Cree Summer.",
+    thumbnail: "https://archive.org/services/img/the-care-bears-movie-vestron-video-original-1985-release_202109",
+    featured: false,
+    episodes: [
+      {
+        id: "care-bears-movie-1985-full",
+        title: "The Care Bears Movie",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "75 min",
+        description:
+          "The Care Bears travel to Earth to help two orphaned children and stop an evil spirit from draining the world of love and friendship.",
+        archiveId: "the-care-bears-movie-vestron-video-original-1985-release_202109",
+        thumbnail: "https://archive.org/services/img/the-care-bears-movie-vestron-video-original-1985-release_202109",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SUPERMAN II — ABC SUNDAY NIGHT MOVIE BROADCAST  (1985)
+     Single feature film — archive identifier: 1985abcsuperman2full
+     Recorded live from the ABC Sunday Night Movie, December 29 1985,
+     on a Sony T-120 VHS tape; includes original commercials.
+     This extended ABC cut runs ~143 min vs. the 127-min theatrical release
+     and contains exclusive scenes not in either the theatrical or
+     the later Richard Donner Cut.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "superman-ii-abc-1985",
+    type: "movie",
+    title: "Superman II (ABC 1985 Broadcast)",
+    years: "1985",
+    genre: ["Action", "Adventure", "Sci-Fi"],
+    rating: "PG",
+    score: 7.8,
+    description:
+      "Three super-powered Kryptonian criminals — General Zod, Ursa, and Non — are freed from the Phantom Zone and ally with Lex Luthor to conquer Earth. Superman must choose between his love for Lois Lane and his duty to humanity. This rare extended ABC television cut includes scenes absent from the theatrical release. Stars Christopher Reeve, Margot Kidder, Gene Hackman, and Terence Stamp.",
+    thumbnail: "https://archive.org/services/img/1985abcsuperman2full",
+    featured: true,
+    episodes: [
+      {
+        id: "superman-ii-abc-1985-full",
+        title: "Superman II (ABC Broadcast)",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "143 min",
+        description:
+          "The extended 1985 ABC broadcast of Superman II, featuring General Zod's invasion of Earth and Superman's struggle between love and duty — with exclusive scenes not in the theatrical cut.",
+        archiveId: "1985abcsuperman2full",
+        thumbnail: "https://archive.org/services/img/1985abcsuperman2full",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE NEW ALFRED HITCHCOCK PRESENTS  (1985–1989)
+     Anthology TV series — archive identifier:
+       the-new-alfred-hitchcock-presents-complete
+     NBC / USA Network revival of the classic Hitchcock anthology.
+     Pilot (May 1985): 4 segments → approximate archiveIndex 0–3.
+     Season 1 (1985–86, 22 eps):  approx. index  4–25
+     Season 2 (1987,    13 eps):  approx. index 26–38
+     Season 3 (1988,    21 eps):  approx. index 39–59
+     Season 4 (1988–89, 20 eps):  approx. index 60–79
+     Indices are sequential estimates based on file-listing order;
+     exact values depend on how archive.org sorts the item's files.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "new-alfred-hitchcock-presents",
+    title: "The New Alfred Hitchcock Presents",
+    years: "1985–1989",
+    genre: ["Drama", "Thriller", "Mystery", "Crime"],
+    rating: "TV-PG",
+    score: 7.9,
+    description:
+      "The anthology revival of Hitchcock's legendary suspense series, updated for the 1980s. Each episode delivers a new tale of mystery, irony, and the macabre — introduced by the master director's vintage monologues. Stories of crime, obsession, and unexpected twists, originally broadcast on NBC and then USA Network.",
+    thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+    featured: true,
+    episodes: [
+      /* ── Pilot (May 5, 1985) — 4 anthology segments ── */
+      {
+        id: "nahp-s00e01", title: "Incident in a Small Jail", season: 0, episode: 1,
+        year: 1985, duration: "30 min",
+        description: "A man locked up overnight in a small-town jail discovers the cell's previous occupants met gruesome ends.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s00e02", title: "Man from the South", season: 0, episode: 2,
+        year: 1985, duration: "30 min",
+        description: "A mysterious gambler wagers a young man's finger against the keys to a brand-new Cadillac on the outcome of a simple lighter bet.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s00e03", title: "Bang! You're Dead!", season: 0, episode: 3,
+        year: 1985, duration: "30 min",
+        description: "A young boy unwittingly loads a real revolver and carries it through town, sending the neighborhood into a hidden panic.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s00e04", title: "An Unlocked Window", season: 0, episode: 4,
+        year: 1985, duration: "30 min",
+        description: "Two nurses caring for a bedridden patient on a stormy night realise a killer who targets nurses is still at large — and very close.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      /* ── Season 1 (1985–86) ── */
+      {
+        id: "nahp-s01e01", title: "Revenge", season: 1, episode: 1,
+        year: 1985, duration: "30 min",
+        description: "A woman tells her husband she was attacked by a man — and when her husband spots the attacker in a crowd, he takes brutal revenge.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e02", title: "Night Fever", season: 1, episode: 2,
+        year: 1985, duration: "30 min",
+        description: "A taxi driver's late-night fare becomes a deadly ride when he suspects his passenger of murder.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e03", title: "Wake Me When I'm Dead", season: 1, episode: 3,
+        year: 1985, duration: "30 min",
+        description: "A man fakes his own death to escape his troubles, only to find that death has its own very literal consequences.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e04", title: "Final Escape", season: 1, episode: 4,
+        year: 1985, duration: "30 min",
+        description: "A prisoner hatches an elaborate scheme to escape inside a coffin — not knowing who has just been buried in it.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e05", title: "The Night Caller", season: 1, episode: 5,
+        year: 1985, duration: "30 min",
+        description: "A woman receives increasingly threatening telephone calls from a stranger who seems to know her every move.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e06", title: "Method Actor", season: 1, episode: 6,
+        year: 1985, duration: "30 min",
+        description: "An actor preparing for a role as a killer begins to blur the line between performance and reality.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e07", title: "The Human Interest Story", season: 1, episode: 7,
+        year: 1985, duration: "30 min",
+        description: "A journalist fabricates a heartwarming story that spins dangerously out of control.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e08", title: "Breakdown", season: 1, episode: 8,
+        year: 1985, duration: "30 min",
+        description: "A hard-hearted businessman survives a car crash but is completely paralysed — and must convince rescuers he is still alive.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e09", title: "Prisoners", season: 1, episode: 9,
+        year: 1985, duration: "30 min",
+        description: "Two escaped convicts take refuge in a remote farmhouse, setting off a deadly standoff with its occupants.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e10", title: "Gigolo", season: 1, episode: 10,
+        year: 1985, duration: "30 min",
+        description: "A charming professional escort finds his carefully maintained double life beginning to unravel.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 13,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e11", title: "The Gloating Place", season: 1, episode: 11,
+        year: 1985, duration: "30 min",
+        description: "A murderer returns to savour his perfect crime — but his victim may not be finished with him yet.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 14,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e12", title: "The Right Kind of Medicine", season: 1, episode: 12,
+        year: 1985, duration: "30 min",
+        description: "A pharmacist discovers his new assistant knows far too much about a prescription he filled for a recent murder victim.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 15,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e13", title: "Beast in View", season: 1, episode: 13,
+        year: 1985, duration: "30 min",
+        description: "A woman receives terrifying phone calls from someone who claims to know her darkest secret — but the caller may be closer than she thinks.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 16,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e14", title: "A Very Happy Ending", season: 1, episode: 14,
+        year: 1985, duration: "30 min",
+        description: "A seemingly perfect marriage conceals a very unhappy truth — and someone is about to reveal it.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 17,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e15", title: "The Canary Sedan", season: 1, episode: 15,
+        year: 1985, duration: "30 min",
+        description: "A woman plagued by visions of a ghostly yellow car discovers the haunting may have deadly real-world origins.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 18,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e16", title: "Enough Rope for Two", season: 1, episode: 16,
+        year: 1985, duration: "30 min",
+        description: "Two small-time criminals plot a kidnapping, unaware their victim has deadly plans of his own.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 19,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e17", title: "The Creeper", season: 1, episode: 17,
+        year: 1985, duration: "30 min",
+        description: "A neighbourhood is terrorised by a strangler, and one woman's certainty about who the killer is may put her in terrible danger.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 20,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e18", title: "Happy Birthday", season: 1, episode: 18,
+        year: 1985, duration: "30 min",
+        description: "A woman's birthday celebration turns sinister when she suspects her husband is planning to make it her last.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 21,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e19", title: "The Jar", season: 1, episode: 19,
+        year: 1985, duration: "30 min",
+        description: "A man purchases a mysterious jar at a carnival sideshow and discovers its disturbing contents divide his community — and his sanity.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 22,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e20", title: "Deadly Honeymoon", season: 1, episode: 20,
+        year: 1985, duration: "30 min",
+        description: "A newlywed couple's honeymoon turns to nightmare when the bride is attacked and her husband sets out for vengeance.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 23,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e21", title: "Four O'Clock", season: 1, episode: 21,
+        year: 1985, duration: "30 min",
+        description: "A paranoid husband plants a bomb set to go off at four o'clock to kill his wife — then finds himself unable to stop it.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 24,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s01e22", title: "Road Hog", season: 1, episode: 22,
+        year: 1985, duration: "30 min",
+        description: "An aggressive driver's road-rage confrontation with a motorcycle gang escalates far beyond anyone's expectations.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 25,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      /* ── Season 2 (1987) ── */
+      {
+        id: "nahp-s02e01", title: "The Initiation", season: 2, episode: 1,
+        year: 1987, duration: "30 min",
+        description: "A college pledge's hazing ritual takes a fatal turn that the fraternity desperately tries to cover up.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 26,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e02", title: "Conversation Over a Corpse", season: 2, episode: 2,
+        year: 1987, duration: "30 min",
+        description: "Two neighbours chat about their petty grievances while one of them is concealing a very inconvenient body.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 27,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e03", title: "Man on the Edge", season: 2, episode: 3,
+        year: 1987, duration: "30 min",
+        description: "A man teetering on a building ledge holds a city transfixed — and holds secrets that the police need to uncover fast.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 28,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e04", title: "If the Shoe Fits", season: 2, episode: 4,
+        year: 1987, duration: "30 min",
+        description: "A Cinderella story with a dark twist, where the wrong person ends up wearing the glass slipper.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 29,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e05", title: "The Mole", season: 2, episode: 5,
+        year: 1987, duration: "30 min",
+        description: "An intelligence agency hunts for a leak in its ranks, with suspicion falling on the last person anyone would suspect.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 30,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e06", title: "Anniversary Gift", season: 2, episode: 6,
+        year: 1987, duration: "30 min",
+        description: "A husband's anniversary surprise for his wife turns into something neither of them could have anticipated.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 31,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e07", title: "The Impatient Patient", season: 2, episode: 7,
+        year: 1987, duration: "30 min",
+        description: "A hospital patient's desperate demand to be discharged puts both his life and his doctor's career in jeopardy.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 32,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e08", title: "When This Man Dies", season: 2, episode: 8,
+        year: 1987, duration: "30 min",
+        description: "A small-town man receives a series of cryptic notes warning that someone will die each time he ignores them.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 33,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e09", title: "The Specialty of the House", season: 2, episode: 9,
+        year: 1987, duration: "30 min",
+        description: "The members of an exclusive restaurant club discover too late that the specialty of the house is more special than they imagined.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 34,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e10", title: "The Final Twist", season: 2, episode: 10,
+        year: 1987, duration: "30 min",
+        description: "A crime writer's research into a real unsolved murder leads him closer to the truth — and the killer — than he ever intended.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 35,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e11", title: "Tragedy Tonight!", season: 2, episode: 11,
+        year: 1987, duration: "30 min",
+        description: "A live TV broadcast becomes an unexpected confessional when a guest on air reveals a shocking crime.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 36,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e12", title: "World's Oldest Motive", season: 2, episode: 12,
+        year: 1987, duration: "30 min",
+        description: "A couple's marriage is threatened by jealousy and suspicion, with deadly consequences for everyone involved.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 37,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s02e13", title: "Deathmate", season: 2, episode: 13,
+        year: 1987, duration: "30 min",
+        description: "A lonely-hearts club match leads to a relationship with a very dark past — and a very dangerous future.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 38,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      /* ── Season 3 (1988) ── */
+      {
+        id: "nahp-s03e01", title: "VCR", season: 3, episode: 1,
+        year: 1988, duration: "30 min",
+        description: "A scheming business partner uses a videotaped confession to blackmail a colleague into an ever-tightening corner.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 39,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e02", title: "Animal Lovers", season: 3, episode: 2,
+        year: 1988, duration: "30 min",
+        description: "A couple's obsessive devotion to their pets masks something far more sinister lurking beneath the surface of their relationship.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 40,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e03", title: "Prism", season: 3, episode: 3,
+        year: 1988, duration: "30 min",
+        description: "The same crime is replayed from four radically different points of view, each version revealing a new unsettling truth.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 41,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e04", title: "A Stolen Heart", season: 3, episode: 4,
+        year: 1988, duration: "30 min",
+        description: "A woman falls for a charming stranger, unaware that her heart is not the only thing he intends to take from her.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 42,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e05", title: "Houdini on Channel Four", season: 3, episode: 5,
+        year: 1988, duration: "30 min",
+        description: "A TV escape artist's most dangerous stunt is not the one broadcast live — it's what he is trying to escape in real life.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 43,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e06", title: "Killer Takes All", season: 3, episode: 6,
+        year: 1988, duration: "30 min",
+        description: "A seemingly innocent board game tournament becomes the setting for a deadly contest with very real consequences.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 44,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e07", title: "Hippocritic Oath", season: 3, episode: 7,
+        year: 1988, duration: "30 min",
+        description: "A doctor torn between his oath to do no harm and his personal desire for revenge makes a choice he cannot undo.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 45,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e08", title: "Prosecutor", season: 3, episode: 8,
+        year: 1988, duration: "30 min",
+        description: "A crusading district attorney's pursuit of a killer leads him to evidence that could destroy his own carefully built career.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 46,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e09", title: "If Looks Could Kill", season: 3, episode: 9,
+        year: 1988, duration: "30 min",
+        description: "A woman convinced her husband is trying to murder her takes drastic pre-emptive action — only to discover she was right for the wrong reasons.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 47,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e10", title: "You'll Die Laughing", season: 3, episode: 10,
+        year: 1988, duration: "30 min",
+        description: "A stand-up comedian's darkest jokes turn out to contain more truth than even he realised.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 48,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e11", title: "Murder Party", season: 3, episode: 11,
+        year: 1988, duration: "30 min",
+        description: "A murder-mystery dinner party goes horribly wrong when the scripted corpse turns out to be a real one.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 49,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e12", title: "Twist", season: 3, episode: 12,
+        year: 1988, duration: "30 min",
+        description: "A cheating husband's elaborate alibi twists back on him with lethal precision.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 50,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e13", title: "User Deadly", season: 3, episode: 13,
+        year: 1988, duration: "30 min",
+        description: "A computer whiz uses the early internet to stalk a target — not realising his victim is tracking him right back.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 51,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e14", title: "Career Move", season: 3, episode: 14,
+        year: 1988, duration: "30 min",
+        description: "An ambitious executive eliminates his competition one step at a time, until the next rung on the ladder bites back.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 52,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e15", title: "Full Disclosure", season: 3, episode: 15,
+        year: 1988, duration: "30 min",
+        description: "A confessional memoir causes a sensation — and a chain of events that its author never anticipated.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 53,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e16", title: "Kandinsky's Vault", season: 3, episode: 16,
+        year: 1988, duration: "30 min",
+        description: "An art heist goes perfectly — until the thieves discover what is really hidden behind the painting.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 54,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e17", title: "There Was a Little Girl...", season: 3, episode: 17,
+        year: 1988, duration: "30 min",
+        description: "A child's disturbing account of events no child should have witnessed sets a detective on an unsettling trail.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 55,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e18", title: "Twisted Sisters", season: 3, episode: 18,
+        year: 1988, duration: "30 min",
+        description: "Twin sisters share everything — including a mutual taste for deadly scheming against each other.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 56,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e19", title: "The 13th Floor", season: 3, episode: 19,
+        year: 1988, duration: "30 min",
+        description: "An office worker discovers that the supposedly non-existent 13th floor of her building harbours a terrifying secret.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 57,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e20", title: "Hunted (Part 1)", season: 3, episode: 20,
+        year: 1988, duration: "30 min",
+        description: "A man on the run from ruthless pursuers must piece together why he is being hunted before time runs out. (Part 1 of 2)",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 58,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s03e21", title: "Hunted (Part 2)", season: 3, episode: 21,
+        year: 1988, duration: "30 min",
+        description: "The hunted man makes his final stand as the truth behind the conspiracy closes in around him. (Part 2 of 2)",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 59,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      /* ── Season 4 (1988–89) ── */
+      {
+        id: "nahp-s04e01", title: "Fogbound", season: 4, episode: 1,
+        year: 1988, duration: "30 min",
+        description: "A sea crossing shrouded in fog becomes a voyage of terror when a passenger realises a killer is aboard.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 60,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e02", title: "Pen Pal", season: 4, episode: 2,
+        year: 1988, duration: "30 min",
+        description: "A years-long correspondence between pen pals masks an obsession that is about to turn dangerous.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 61,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e03", title: "Ancient Voices", season: 4, episode: 3,
+        year: 1988, duration: "30 min",
+        description: "An archaeologist's discovery at a remote dig site awakens something that was better left buried.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 62,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e04", title: "Survival of the Fittest", season: 4, episode: 4,
+        year: 1988, duration: "30 min",
+        description: "A wilderness survival retreat strips away the civilised veneer of its corporate participants with fatal results.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 63,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e05", title: "The Big Spin", season: 4, episode: 5,
+        year: 1989, duration: "30 min",
+        description: "A lottery winner's overnight change in fortune attracts exactly the wrong kind of attention.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 64,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e06", title: "Don't Sell Yourself Short", season: 4, episode: 6,
+        year: 1989, duration: "30 min",
+        description: "A con artist's latest scheme to undersell a mark spirals into consequences far beyond his control.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 65,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e07", title: "For Art's Sake", season: 4, episode: 7,
+        year: 1989, duration: "30 min",
+        description: "A forger's masterpiece is so perfect it ensnares him in a deception that he cannot escape.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 66,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e08", title: "Murder in Mind", season: 4, episode: 8,
+        year: 1989, duration: "30 min",
+        description: "A hypnotherapy session unlocks a patient's hidden memories — including a murder she may have committed.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 67,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e09", title: "Mirror, Mirror", season: 4, episode: 9,
+        year: 1989, duration: "30 min",
+        description: "A vain socialite's obsession with her reflection begins to show her things that cannot possibly be there.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 68,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e10", title: "Skeleton in the Closet", season: 4, episode: 10,
+        year: 1989, duration: "30 min",
+        description: "A literal skeleton discovered during a home renovation drags a family's buried secrets back into the light.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 69,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e11", title: "In the Driver's Seat", season: 4, episode: 11,
+        year: 1989, duration: "30 min",
+        description: "A woman who picks up a hitchhiker finds herself rapidly losing control of both her car and her situation.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 70,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e12", title: "D.U.I.", season: 4, episode: 12,
+        year: 1989, duration: "30 min",
+        description: "A drunk-driving accident sets off a chain of cover-ups and lies that ultimately destroys everyone involved.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 71,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e13", title: "In the Name of Science", season: 4, episode: 13,
+        year: 1989, duration: "30 min",
+        description: "A scientist's secret experiment on unwitting human subjects crosses every ethical line — and provokes an explosive response.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 72,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e14", title: "Romance Machine", season: 4, episode: 14,
+        year: 1989, duration: "30 min",
+        description: "A computer dating service pairs its users with disturbing precision — including one match nobody should have made.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 73,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e15", title: "Diamonds Aren't Forever", season: 4, episode: 15,
+        year: 1989, duration: "30 min",
+        description: "A jewel thief's perfect heist comes undone when his partner falls for the mark — and the mark knows exactly what is going on.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 74,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e16", title: "My Dear Watson", season: 4, episode: 16,
+        year: 1989, duration: "30 min",
+        description: "A self-styled amateur detective's meddling in a real murder investigation puts him squarely in the killer's sights.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 75,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e17", title: "Night Creatures", season: 4, episode: 17,
+        year: 1989, duration: "30 min",
+        description: "Strange noises from a neighbouring flat lead a curious resident into a discovery she desperately wishes she could un-make.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 76,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e18", title: "The Man Who Knew Too Little", season: 4, episode: 18,
+        year: 1989, duration: "30 min",
+        description: "An unwitting bystander who witnesses a crime is kept alive only because the killers believe he saw nothing — but he saw everything.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 77,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e19", title: "Reunion", season: 4, episode: 19,
+        year: 1989, duration: "30 min",
+        description: "Old school friends gather for a reunion, and one of them has waited decades to settle a very old score.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 78,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+      {
+        id: "nahp-s04e20", title: "South by Southeast", season: 4, episode: 20,
+        year: 1989, duration: "30 min",
+        description: "A case of mistaken identity hurls an ordinary man into a deadly chase across state lines in the tradition of Hitchcock's classic wrong-man thrillers.",
+        archiveId: "the-new-alfred-hitchcock-presents-complete", archiveIndex: 79,
+        thumbnail: "https://archive.org/services/img/the-new-alfred-hitchcock-presents-complete",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     NORTHERN EXPOSURE  (1990–1995)
+     CBS comedy-drama set in Cicely, Alaska. 6 seasons, 110 episodes.
+     Premiered July 12, 1990. Won the Emmy for Outstanding Drama Series.
+     Archive identifier: Random_Television_and_Northern_Exposure
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "northern-exposure-1990",
+    title: "Northern Exposure",
+    years: "1990–1995",
+    genre: ["Drama", "Comedy"],
+    rating: "TV-PG",
+    score: 8.1,
+    description:
+      "A neurotic New York City doctor, Joel Fleischman, is sent to the quirky fictional town of Cicely, Alaska to fulfill his medical school scholarship obligations. What follows is a warm, witty, and philosophical comedy-drama about culture clash, community, and self-discovery. Stars Rob Morrow, Janine Turner, Barry Corbin, John Cullum, John Corbett, and Darren E. Burrows.",
+    thumbnail: "https://archive.org/services/img/Random_Television_and_Northern_Exposure",
+    featured: false,
+    episodes: [
+      {
+        id: "northern-exposure-s01e01",
+        title: "Pilot",
+        season: 1,
+        episode: 1,
+        year: 1990,
+        duration: "47 min",
+        description:
+          "Dr. Joel Fleischman arrives in Cicely, Alaska expecting to be assigned to Anchorage, only to discover he must serve the remote, eccentric small town to repay his scholarship. He meets bush pilot Maggie O'Connell, ex-astronaut Maurice Minnifield, philosophical radio DJ Chris Stevens, and the rest of Cicely's colorful residents. Aired July 12, 1990 on CBS.",
+        archiveId: "Random_Television_and_Northern_Exposure",
+        thumbnail: "https://archive.org/services/img/Random_Television_and_Northern_Exposure",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE BUSH BABY  (1992)
+     World Masterpiece Theater anime adaptation of William Stevenson's
+     novel "The Bushbabies." 40 episodes, Nippon Animation / Fuji TV.
+     English dub produced by Cinélume (Montreal); aired in Canada on
+     TVOntario and Global TV in the mid-1990s.
+     Archive identifier: the-bush-baby-english-dub_202409
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "bush-baby-1992",
+    title: "The Bush Baby",
+    years: "1992",
+    genre: ["Drama", "Family", "Adventure"],
+    rating: "TV-G",
+    score: 7.9,
+    description:
+      "Set in Kenya in 1964, this beloved World Masterpiece Theater anime follows 13-year-old Jackie Rhodes, the daughter of a British wildlife officer, who rescues and raises an injured bushbaby she names Murphy. When her family must return to England, Jackie sets out on a dangerous journey across the African savanna to return Murphy to the wild, guided by her loyal friend Tembo. Based on William Stevenson's novel, the English dub starred Pauline Little, Mark Camacho, and Daniel Brochu.",
+    thumbnail: "https://archive.org/services/img/the-bush-baby-english-dub_202409",
+    featured: false,
+    episodes: [
+      {
+        id: "bush-baby-1992-eng",
+        title: "The Bush Baby (English Dub)",
+        season: 1,
+        episode: 1,
+        year: 1992,
+        duration: "25 min",
+        description:
+          "Jackie Rhodes, the young daughter of a British wildlife officer in Kenya, rescues an injured bushbaby and names him Murphy. As her family prepares to leave Africa, Jackie vows to return Murphy to the wild — beginning an epic adventure across the savanna alongside her friend Tembo.",
+        archiveId: "the-bush-baby-english-dub_202409",
+        thumbnail: "https://archive.org/services/img/the-bush-baby-english-dub_202409",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     FOX KIDS VHS OFF-AIRS WOC  (1992–94)
+     Collection of off-air VHS recordings of FOX Kids and ABC Saturday
+     Morning programming captured from WOC (Davenport, IA) and other
+     stations, 1992–1994. Includes original commercials (WOC = With
+     Original Commercials).
+     Archive identifier: fox-kids-1992-3-vhs-off-airs-woc
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "fox-kids-1992-vhs-woc",
+    type: "movie",
+    title: "FOX Kids 1992–3 VHS Off-Airs (WOC)",
+    years: "1992",
+    genre: ["Animation", "Family", "Kids"],
+    rating: "TV-Y7",
+    score: 8.2,
+    description:
+      "A treasured collection of off-air VHS recordings capturing FOX Kids and ABC Saturday Morning programming from 1992–1994, complete with original commercials (WOC). Highlights include the premiere episode of Batman: The Animated Series (\"The Cat and the Claw\"), Darkwing Duck (\"That Sinking Feeling\"), Beetlejuice (\"Pest o' The West\"), Attack of the Killer Tomatoes (\"Phantomato of the Opera\"), Tiny Toon Adventures, Animaniacs, The Pirates of Dark Water, Hammerman, Little Shop, and more — all captured from WOC Davenport and other local stations, making it an authentic time capsule of early-90s Saturday morning TV.",
+    thumbnail: "https://archive.org/services/img/fox-kids-1992-3-vhs-off-airs-woc",
+    featured: false,
+    episodes: [
+      {
+        id: "fox-kids-1992-vhs-woc-tape",
+        title: "FOX Kids 1992–3 VHS Off-Airs (WOC)",
+        season: 0,
+        episode: 0,
+        year: 1992,
+        duration: "180 min",
+        description:
+          "Off-air VHS recordings from FOX Kids and ABC Saturday Morning, 1992–1994. Features Batman: The Animated Series premiere, Darkwing Duck, Beetlejuice, Tiny Toon Adventures, Animaniacs, Attack of the Killer Tomatoes, The Pirates of Dark Water, Hammerman, Little Shop, and original era commercials.",
+        archiveId: "fox-kids-1992-3-vhs-off-airs-woc",
+        thumbnail: "https://archive.org/services/img/fox-kids-1992-3-vhs-off-airs-woc",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     CBS SATURDAY MORNINGS VHS  (1992–93)
+     Off-air VHS recording of the CBS Saturday Morning block captured
+     from WEYI (Saginaw/Flint, MI). Contains partial/full episodes of
+     Disney's Raw Toonage, The Little Mermaid, TMNT, and Cyber C.O.P.S.,
+     plus original era commercials.
+     Archive identifier: vts-01-1_20230709_0957
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "cbs-saturday-mornings-1992",
+    type: "movie",
+    title: "CBS Saturday Mornings VHS (1992–93)",
+    years: "1992",
+    genre: ["Animation", "Family", "Kids"],
+    rating: "TV-Y",
+    score: 7.8,
+    description:
+      "A rare off-air VHS recording of the CBS Saturday Morning cartoon block, captured from WEYI in the Saginaw/Flint, Michigan area during the 1992–93 season. The tape preserves segments and episodes from Disney's Raw Toonage (featuring Bonkers and Marsupilami), a complete episode of Disney's The Little Mermaid (\"Double Bubble\"), a partial episode of Teenage Mutant Ninja Turtles (\"Super Irma\"), Cyber C.O.P.S., and Goofy's Guide to the Olympics — all with original period commercials intact, making it a genuine time capsule of early-90s Saturday morning television.",
+    thumbnail: "https://archive.org/services/img/vts-01-1_20230709_0957",
+    featured: false,
+    episodes: [
+      {
+        id: "cbs-saturday-mornings-1992-tape",
+        title: "CBS Saturday Mornings VHS (1992–93)",
+        season: 0,
+        episode: 0,
+        year: 1992,
+        duration: "120 min",
+        description:
+          "Full VHS recording of the CBS Saturday Morning block from WEYI (1992–93), featuring Disney's Raw Toonage, The Little Mermaid (\"Double Bubble\"), Teenage Mutant Ninja Turtles (\"Super Irma\"), Cyber C.O.P.S., Goofy's Guide to the Olympics, and original era commercials.",
+        archiveId: "vts-01-1_20230709_0957",
+        thumbnail: "https://archive.org/services/img/vts-01-1_20230709_0957",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WALT DISNEY CARTOON CLASSICS: SPECIAL EDITION '88  (1988)
+     Walt Disney Home Video VHS compilation of classic shorts.
+     Archive identifier: 652_20220128
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "disney-cartoon-classics-special-edition-1988",
+    type: "movie",
+    title: "Walt Disney Cartoon Classics: Special Edition '88",
+    years: "1988",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.6,
+    description:
+      "A delightful 1988 Walt Disney Home Video compilation showcasing four golden-age animated shorts: Mickey and Pluto encounter a playful stowaway baby seal in \"Mickey and the Seal\" (1948); Pluto tangles with a bee guarding its bubble gum in \"Bubble Bee\" (1949); Mickey, Donald, and Goofy's road trip spirals into slapstick chaos in \"Mickey's Trailer\" (1938); and Chip 'n' Dale wage an all-out war against Donald Duck over a stash of nuts in \"All in a Nutshell\" (1949). A perfect sampler of Disney's golden age of animation.",
+    thumbnail: "https://archive.org/services/img/652_20220128",
+    featured: false,
+    episodes: [
+      {
+        id: "disney-cartoon-classics-special-edition-1988-full",
+        title: "Walt Disney Cartoon Classics: Special Edition '88",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "30 min",
+        description:
+          "Four classic Disney shorts: \"Mickey and the Seal\" (1948), \"Bubble Bee\" (1949), \"Mickey's Trailer\" (1938), and \"All in a Nutshell\" (1949) — featuring Mickey, Donald, Goofy, Pluto, and Chip 'n' Dale.",
+        archiveId: "652_20220128",
+        thumbnail: "https://archive.org/services/img/652_20220128",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     FELIX THE CAT: THE MOVIE  (1988)
+     Animated fantasy adventure film directed by Tibor Hernádi.
+     Archive identifier: y-2-mate.is-felix-the-cat-the-movie-1988-x-bgwf-av-gqky-1080p-1640523499322
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "felix-the-cat-the-movie-1988",
+    type: "movie",
+    title: "Felix the Cat: The Movie",
+    years: "1988",
+    genre: ["Animation", "Adventure", "Fantasy", "Family"],
+    rating: "G",
+    score: 5.2,
+    description:
+      "When the magical Kingdom of Oriana is overrun by the evil Duke of Zill and his army of mechanical minions, Princess Oriana's desperate plea crosses dimensions and summons Felix the Cat — armed with his trusty magic bag of tricks. Transported to a surreal world of circuses, cyborg soldiers, and sorcery, Felix must outwit traitors, escape a nefarious circus master, and ultimately confront the Duke himself to free the kingdom. A wildly eccentric animated fantasy co-produced across the US, West Germany, Hungary, Poland, Bulgaria, and Canada.",
+    thumbnail:
+      "https://archive.org/services/img/y-2-mate.is-felix-the-cat-the-movie-1988-x-bgwf-av-gqky-1080p-1640523499322",
+    featured: false,
+    episodes: [
+      {
+        id: "felix-the-cat-the-movie-1988-full",
+        title: "Felix the Cat: The Movie",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "82 min",
+        description:
+          "Felix the Cat is whisked to the Kingdom of Oriana to rescue Princess Oriana from her tyrannical uncle, the Duke of Zill, using his magic bag of tricks in this surreal animated fantasy adventure.",
+        archiveId:
+          "y-2-mate.is-felix-the-cat-the-movie-1988-x-bgwf-av-gqky-1080p-1640523499322",
+        thumbnail:
+          "https://archive.org/services/img/y-2-mate.is-felix-the-cat-the-movie-1988-x-bgwf-av-gqky-1080p-1640523499322",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WALT DISNEY CARTOON CLASSICS: HAPPY SUMMER DAYS  (1992)
+     VHS compilation of summer-themed Disney shorts, released June 19, 1992.
+     Archive identifier: walt-disney-cartoon-classics-special-edition-happy-summer-days-1992
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "disney-happy-summer-days-1992",
+    type: "movie",
+    title: "Walt Disney Cartoon Classics: Happy Summer Days",
+    years: "1992",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.5,
+    description:
+      "A digitally restored compilation of four summer-themed Disney cartoon classics: Goofy tackles a surprise lion on a camping trip in \"Father's Lion\" (1952); Donald Duck's picnic is hijacked by an army of ants in \"Tea for Two Hundred\" (1948); Mickey and Pluto's peaceful day at the beach is ruined by a mischievous seagull in \"The Simple Things\" (1953); and Goofy's driving vacation becomes a series of comic disasters in \"Two Weeks Vacation\" (1952).",
+    thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-special-edition-happy-summer-days-1992",
+    featured: false,
+    episodes: [
+      {
+        id: "disney-happy-summer-days-1992-full",
+        title: "Walt Disney Cartoon Classics: Happy Summer Days",
+        season: 0,
+        episode: 0,
+        year: 1992,
+        duration: "30 min",
+        description:
+          "Four digitally restored Disney summer shorts: \"Father's Lion\" (Goofy, 1952), \"Tea for Two Hundred\" (Donald Duck, 1948), \"The Simple Things\" (Mickey & Pluto, 1953), and \"Two Weeks Vacation\" (Goofy, 1952).",
+        archiveId: "walt-disney-cartoon-classics-special-edition-happy-summer-days-1992",
+        thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-special-edition-happy-summer-days-1992",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     TINY TOON ADVENTURES: HOW I SPENT MY VACATION  (1992)
+     First US direct-to-video animated feature, Warner Home Video.
+     Archive identifier: tiny-toon-adventures-how-i-spent-my-vacation-1992-warner-home-video-vhs_202507
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "tiny-toon-vacation-1992",
+    type: "movie",
+    title: "Tiny Toon Adventures: How I Spent My Vacation",
+    years: "1992",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.9,
+    description:
+      "The first feature-length direct-to-video animated film in U.S. history, produced by Amblin Entertainment and Warner Bros. Animation. Summer break begins at Acme Looniversity and the Tiny Toons scatter for their wildest vacation yet: Buster and Babs Bunny's water pistol fight floods Acme Acres and sends them on a raucous river adventure through the American South; Plucky Duck endures an agonizing family road trip to HappyWorldLand with Hamton's family; Fifi La Fume chases her movie-star skunk crush; Elmyra terrorizes a safari park; and Fowlmouth drags Shirley the Loon to the worst movie imaginable. Featuring hi-fi Dolby Surround Stereo.",
+    thumbnail: "https://archive.org/services/img/tiny-toon-adventures-how-i-spent-my-vacation-1992-warner-home-video-vhs_202507",
+    featured: false,
+    episodes: [
+      {
+        id: "tiny-toon-vacation-1992-full",
+        title: "Tiny Toon Adventures: How I Spent My Vacation",
+        season: 0,
+        episode: 0,
+        year: 1992,
+        duration: "80 min",
+        description:
+          "Buster and Babs flood Acme Acres; Plucky suffers the family road trip from hell; Fifi pursues a movie-star skunk; Elmyra runs amok at a safari park; and Fowlmouth and Shirley endure the worst movie ever — all in one epic summer vacation.",
+        archiveId: "tiny-toon-adventures-how-i-spent-my-vacation-1992-warner-home-video-vhs_202507",
+        thumbnail: "https://archive.org/services/img/tiny-toon-adventures-how-i-spent-my-vacation-1992-warner-home-video-vhs_202507",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     X-MEN: NIGHT OF THE SENTINELS  (1992)
+     Two-part pilot of X-Men: The Animated Series (Fox Kids, 1992).
+     Archive identifier: x-men-nightofthesentinels
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "xmen-night-of-sentinels-1992",
+    type: "movie",
+    title: "X-Men: Night of the Sentinels",
+    years: "1992",
+    genre: ["Animation", "Action", "Sci-Fi", "Superhero"],
+    rating: "TV-Y7",
+    score: 8.7,
+    description:
+      "The landmark two-part pilot of X-Men: The Animated Series (Fox Kids, 1992). Jubilee, a teenage mutant, is hunted by giant Sentinel robots after her foster parents unknowingly report her to the Mutant Control Agency. Rescued by Cyclops, Storm, and Rogue, she is brought to the X-Mansion where Professor Xavier's team — Wolverine, Beast, Gambit, and Morph — devise a daring raid on the Agency's files. The mission turns deadly: Morph is apparently killed and Beast is captured, forcing Jubilee to choose where she truly belongs. Praised for its mature themes of prejudice and sacrifice, this pilot set the tone for one of the greatest superhero animated series ever made.",
+    thumbnail: "https://archive.org/services/img/x-men-nightofthesentinels",
+    featured: true,
+    episodes: [
+      {
+        id: "xmen-sentinels-part1",
+        title: "Night of the Sentinels, Part I",
+        season: 1,
+        episode: 1,
+        year: 1992,
+        duration: "22 min",
+        description:
+          "Jubilee is pursued by Sentinel robots and rescued by the X-Men. At the Xavier Mansion she discovers a world of mutants — and a government conspiracy targeting them all.",
+        archiveId: "x-men-nightofthesentinels",
+        thumbnail: "https://archive.org/services/img/x-men-nightofthesentinels",
+      },
+      {
+        id: "xmen-sentinels-part2",
+        title: "Night of the Sentinels, Part II",
+        season: 1,
+        episode: 2,
+        year: 1992,
+        duration: "22 min",
+        description:
+          "The X-Men raid the Mutant Control Agency to destroy the mutant registry. The mission goes tragically wrong — Morph is seemingly killed, Beast is captured — but Jubilee finds her place among the team.",
+        archiveId: "x-men-nightofthesentinels",
+        thumbnail: "https://archive.org/services/img/x-men-nightofthesentinels",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     ABC SATURDAY MORNING CARTOONS  (September 9, 1989 — WOC)
+     Off-air VHS recording of the ABC Saturday Morning block,
+     September 9, 1989, with original commercials (WOC).
+     Archive identifier: vts-01-1_20200825
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "abc-saturday-morning-1989-09-09",
+    type: "movie",
+    title: "ABC Saturday Morning Cartoons (September 9, 1989 — WOC)",
+    years: "1989",
+    genre: ["Animation", "Comedy", "Family", "Kids"],
+    rating: "TV-Y",
+    score: 8.0,
+    description:
+      "A complete off-air VHS recording of the ABC Saturday Morning cartoon block as broadcast on September 9, 1989 — with original commercials intact (WOC). The premiere day of the fall 1989 season features A Pup Named Scooby-Doo, Disney's Adventures of the Gummi Bears, The New Adventures of Winnie the Pooh, Slimer! and the Real Ghostbusters, Beetlejuice, and The Bugs Bunny & Tweety Show. A vivid time capsule of the last great era of network Saturday morning television, complete with period toy, cereal, and movie advertisements.",
+    thumbnail: "https://archive.org/services/img/vts-01-1_20200825",
+    featured: false,
+    episodes: [
+      {
+        id: "abc-saturday-1989-09-09-tape",
+        title: "ABC Saturday Morning Cartoons — September 9, 1989",
+        season: 0,
+        episode: 0,
+        year: 1989,
+        duration: "270 min",
+        description:
+          "Full broadcast block with original commercials: A Pup Named Scooby-Doo, Gummi Bears, The New Adventures of Winnie the Pooh, Slimer! and the Real Ghostbusters, Beetlejuice, and The Bugs Bunny & Tweety Show — the opening Saturday of ABC's fall 1989 season.",
+        archiveId: "vts-01-1_20200825",
+        thumbnail: "https://archive.org/services/img/vts-01-1_20200825",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE GREAT MOUSE DETECTIVE  (1986 / 1992 VHS)
+     Walt Disney Classics Black Diamond VHS reissue (July 1992).
+     Archive identifier: the-great-mouse-detective-1992-vhs_202104
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "great-mouse-detective-1986",
+    type: "movie",
+    title: "The Great Mouse Detective",
+    years: "1986",
+    genre: ["Animation", "Adventure", "Comedy", "Family", "Mystery"],
+    rating: "G",
+    score: 7.6,
+    description:
+      "Set in Victorian London, young Olivia Flaversham enlists the brilliant detective mouse Basil of Baker Street — and his steadfast companion Dr. Dawson — to find her kidnapped toymaker father. Their investigation uncovers the diabolical scheme of the evil Professor Ratigan, who plans to replace the Mouse Queen with a mechanical impostor and seize control of all Mousedom. Directed by John Musker, Ron Clements, Dave Michener & Burny Mattinson; featuring the unforgettable voice of Vincent Price as Ratigan. The 1992 Walt Disney Classics VHS reissue includes a sneak peek at Aladdin.",
+    thumbnail: "https://archive.org/services/img/the-great-mouse-detective-1992-vhs_202104",
+    featured: false,
+    episodes: [
+      {
+        id: "great-mouse-detective-1986-full",
+        title: "The Great Mouse Detective",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "74 min",
+        description:
+          "Basil of Baker Street and Dr. Dawson race to rescue Olivia's father and stop the villainous Professor Ratigan from overthrowing the Mouse Queen in this classic Disney animated adventure.",
+        archiveId: "the-great-mouse-detective-1992-vhs_202104",
+        thumbnail: "https://archive.org/services/img/the-great-mouse-detective-1992-vhs_202104",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     101 DALMATIANS  (1961 / 1992 VHS, French-Canadian)
+     Walt Disney animated classic, Quebec French dub VHS copy.
+     Archive identifier: 101-dalmatians-1992-vhs-french-canadian-copy_202301
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "101-dalmatians-1961",
+    type: "movie",
+    title: "101 Dalmatians (French-Canadian VHS)",
+    years: "1961",
+    genre: ["Animation", "Adventure", "Comedy", "Family"],
+    rating: "G",
+    score: 7.7,
+    description:
+      "Disney's beloved 1961 animated classic in a rare Quebec French-language VHS edition. Pongo and Perdita's litter of puppies — along with 84 others — are stolen by the flamboyantly villainous Cruella De Vil, who desires a dalmatian-fur coat. Their human and canine friends must mount a daring rescue across the English countryside. Directed by Clyde Geronimi, Hamilton Luske & Wolfgang Reitherman, with music by George Bruns and the iconic title song by Bill Lee. This 1992 VHS pressing features the Quebec French dub.",
+    thumbnail: "https://archive.org/services/img/101-dalmatians-1992-vhs-french-canadian-copy_202301",
+    featured: false,
+    episodes: [
+      {
+        id: "101-dalmatians-1961-full",
+        title: "101 Dalmatians (Version française — Québec)",
+        season: 0,
+        episode: 0,
+        year: 1961,
+        duration: "79 min",
+        description:
+          "Pongo and Perdita's puppies are kidnapped by Cruella De Vil in this Disney animated classic, presented in the Quebec French dub from the 1992 VHS release.",
+        archiveId: "101-dalmatians-1992-vhs-french-canadian-copy_202301",
+        thumbnail: "https://archive.org/services/img/101-dalmatians-1992-vhs-french-canadian-copy_202301",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     GARFIELD AND FRIENDS  (1988–1994)
+     CBS Saturday Morning animated series. S5E15 available on archive.
+     Archive identifier: 088ghostofachanceroygetssackedrevengeofthelivinglunchdvdripxvidphz
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "garfield-and-friends",
+    type: "movie",
+    title: "Garfield and Friends",
+    years: "1988",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "TV-Y",
+    score: 7.8,
+    description:
+      "Jim Davis's beloved comic strip cat comes to Saturday morning television in this CBS staple that ran from 1988 to 1994. Each half-hour episode weaves together Garfield shorts — showcasing the lasagna-loving, Monday-hating tabby alongside Jon Arbuckle and Odie — with U.S. Acres (Orson's Farm) segments starring a cast of barnyard animals including Roy Rooster, Wade Duck, and Orson Pig. Produced by Film Roman with Lorenzo Music as the voice of Garfield, the series ran 7 seasons and 121 episodes, offering gentle slapstick, fairy-tale parodies, and sharp pop-culture wit.",
+    thumbnail: "https://archive.org/services/img/088ghostofachanceroygetssackedrevengeofthelivinglunchdvdripxvidphz",
+    featured: false,
+    episodes: [
+      {
+        id: "garfield-s5e15",
+        title: "Ghost of a Chance / Roy Gets Sacked / Revenge of the Living Lunch",
+        season: 5,
+        episode: 15,
+        year: 1992,
+        duration: "22 min",
+        description:
+          "Three segments: a rookie ghost is assigned to haunt Garfield's house; Roy quits the farm and joins the Buddy Bears after thinking his friends want to fire him; and a meteorite mistaken for a fruitcake brings the refrigerator contents to life.",
+        archiveId: "088ghostofachanceroygetssackedrevengeofthelivinglunchdvdripxvidphz",
+        thumbnail: "https://archive.org/services/img/088ghostofachanceroygetssackedrevengeofthelivinglunchdvdripxvidphz",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     ATTACK OF THE KILLER TOMATOES  (1990–1991)
+     Fox Kids animated series based on the cult-classic films.
+     Archive identifier: 03-s-1-e-03-tomato-from-the-black-lagoon-19900922-vhs-1pq-98-xvid-512x-384
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "attack-killer-tomatoes-1990",
+    type: "movie",
+    title: "Attack of the Killer Tomatoes",
+    years: "1990",
+    genre: ["Animation", "Comedy", "Sci-Fi", "Family"],
+    rating: "TV-Y7",
+    score: 7.1,
+    description:
+      "Based on the cult-classic films, this Fox Kids animated series ran from 1990 to 1991 and is set in the town of San Zucchini, five years after the Great Tomato War. Young hero Chad Finletter battles the schemes of the mad Dr. Putrid T. Gangreen (voiced by John Astin), who creates anthropomorphic killer tomato mutants to conquer the world. Aided by Tara — a human/tomato hybrid — the fuzzy tomato F.T., and his uncle Wilbur, Chad faces a new tomato menace each week. Season 2 was a technical milestone, being one of the first Saturday morning series to use computer-assisted animation.",
+    thumbnail: "https://archive.org/services/img/03-s-1-e-03-tomato-from-the-black-lagoon-19900922-vhs-1pq-98-xvid-512x-384",
+    featured: false,
+    episodes: [
+      {
+        id: "killer-tomatoes-s1e3",
+        title: "Tomato from the Black Lagoon",
+        season: 1,
+        episode: 3,
+        year: 1990,
+        duration: "22 min",
+        description:
+          "A monstrous tomato rises from a lagoon — parodying the classic creature feature — as Dr. Gangreen's latest mutant creation terrorizes San Zucchini, and Chad and Tara must stop it before it's too late. Originally aired September 22, 1990.",
+        archiveId: "03-s-1-e-03-tomato-from-the-black-lagoon-19900922-vhs-1pq-98-xvid-512x-384",
+        thumbnail: "https://archive.org/services/img/03-s-1-e-03-tomato-from-the-black-lagoon-19900922-vhs-1pq-98-xvid-512x-384",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SPACECAMP  (1986)
+     Single feature film — archive identifier: kids-space-camp-1986-family-comedy
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "spacecamp-1986",
+    type: "movie",
+    title: "SpaceCamp",
+    years: "1986",
+    genre: ["Adventure", "Comedy", "Family", "Sci-Fi"],
+    rating: "PG",
+    score: 6.5,
+    description:
+      "A group of teenagers attending NASA's U.S. Space Camp in Huntsville, Alabama are accidentally launched into orbit aboard the Space Shuttle Atlantis. Guided by their instructor, the unlikely crew must use their training to survive and find a way back to Earth. Stars Kate Capshaw, Lea Thompson, and a young Joaquin Phoenix.",
+    thumbnail: "https://archive.org/services/img/kids-space-camp-1986-family-comedy",
+    featured: true,
+    episodes: [
+      {
+        id: "spacecamp-1986-full",
+        title: "SpaceCamp",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "107 min",
+        description:
+          "A group of young Space Camp attendees are accidentally launched into orbit aboard the Space Shuttle Atlantis and must rely on their training to return safely to Earth.",
+        archiveId: "kids-space-camp-1986-family-comedy",
+        thumbnail: "https://archive.org/services/img/kids-space-camp-1986-family-comedy",
+      },
+    ],
+  },
+];
+
+const CATEGORIES = [
+  { id: "featured", label: "Featured Classics" },
+  { id: "drama", label: "Drama" },
+  { id: "comedy", label: "Comedy" },
+  { id: "sci-fi", label: "Sci-Fi & Fantasy" },
+  { id: "crime", label: "Crime & Mystery" },
+  { id: "family", label: "Family" },
+  { id: "1970s", label: "1970s Favorites" },
+  { id: "1980s", label: "1980s Hits" },
+  { id: "1990s", label: "1990s Classics" },
+  { id: "movies", label: "Classic Movies" },
+];
+
+function getShowsByGenre(genre) {
+  return SHOWS.filter((s) => s.genre.some((g) => g.toLowerCase() === genre.toLowerCase()));
+}
+
+function getFeaturedShows() {
+  return SHOWS.filter((s) => s.featured);
+}
+
+function getMovies() {
+  return SHOWS.filter((s) => s.type === "movie");
+}
+
+function getShowsByDecade(decade) {
+  const start = parseInt(decade);
+  return SHOWS.filter((s) => {
+    const startYear = parseInt(s.years.split("–")[0]);
+    return startYear >= start && startYear < start + 10;
+  });
+}
+
+function getShowById(id) {
+  return SHOWS.find((s) => s.id === id);
+}
