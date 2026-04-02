@@ -3077,6 +3077,32 @@ const SHOWS = [
       },
     ],
   },
+  {
+    id: "mtv-saturday-night-concert-reo-speedwagon-1981",
+    type: "concert",
+    title: "MTV Saturday Night Concert: REO Speedwagon — Live Infidelity (1981)",
+    years: "1981",
+    genre: ["Music", "Concert", "Rock"],
+    rating: "TV-PG",
+    score: 8.5,
+    description:
+      "MTV's very first Saturday Night Concert, broadcast on August 8, 1981 — just one week after the network's historic launch. The program features REO Speedwagon performing their celebrated live album Hi Infidelity in full, captured at the peak of the band's commercial success. A landmark artifact of early MTV and a time-capsule of the fledgling cable music channel in its opening days, complete with original network bumpers and era-defining production.",
+    thumbnail: "https://archive.org/services/img/mtv-8-8-81-first-ever-saturday-night-concert-reo-speedwagon-live-infidelity",
+    featured: false,
+    episodes: [
+      {
+        id: "mtv-1981-reo-speedwagon-full-concert",
+        title: "REO Speedwagon: Live Infidelity — MTV Saturday Night Concert (August 8, 1981)",
+        season: 0,
+        episode: 0,
+        year: 1981,
+        duration: "60 min",
+        description: "MTV's first-ever Saturday Night Concert special, airing August 8, 1981. REO Speedwagon performs their Hi Infidelity concert in full, one week after MTV's launch on August 1, 1981.",
+        archiveId: "mtv-8-8-81-first-ever-saturday-night-concert-reo-speedwagon-live-infidelity",
+        thumbnail: "https://archive.org/services/img/mtv-8-8-81-first-ever-saturday-night-concert-reo-speedwagon-live-infidelity",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
