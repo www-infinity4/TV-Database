@@ -3202,6 +3202,39 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE BRIDE OF FRANKENSTEIN  (1935)
+     Single feature film — archive identifier: lp-473-pl_202403
+     Dir. James Whale. Sequel to Frankenstein (1931), starring Boris Karloff
+     and Elsa Lanchester in a dual role as Mary Shelley and the Bride.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "bride-of-frankenstein-1935",
+    type: "movie",
+    title: "The Bride of Frankenstein",
+    years: "1935",
+    genre: ["Horror", "Sci-Fi", "Drama"],
+    rating: "NR",
+    score: 7.8,
+    description:
+      "Picking up immediately where Frankenstein left off, Henry Frankenstein survives and the Monster lives on. The sinister Dr. Pretorius — a former mentor with his own grotesque experiments — coerces Frankenstein into creating a mate for the creature. The Monster, rejected everywhere he turns, briefly finds solace with a blind hermit before being driven away. When the Bride is finally brought to life and recoils from him in horror, the Monster's despair turns to devastating fury. Directed by James Whale, with Elsa Lanchester unforgettable in a dual role as Mary Shelley and the iconic, lightning-haired Bride.",
+    thumbnail: "https://archive.org/services/img/lp-473-pl_202403",
+    featured: false,
+    episodes: [
+      {
+        id: "bride-of-frankenstein-1935-full",
+        title: "The Bride of Frankenstein",
+        season: 0,
+        episode: 0,
+        year: 1935,
+        duration: "75 min",
+        description:
+          "Dr. Pretorius blackmails Frankenstein into creating a mate for the Monster, whose longing for companionship ends in tragedy. One of horror cinema's greatest sequels.",
+        archiveId: "lp-473-pl_202403",
+        thumbnail: "https://archive.org/services/img/lp-473-pl_202403",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      FRANKENSTEIN MEETS THE WOLF MAN  (1943)
      Single feature film — archive identifier:
        frankenstein-meets-the-wolf-man-1942
