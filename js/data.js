@@ -3103,6 +3103,36 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     THE ADVENTURES OF HUCKLEBERRY FINN  (1939)
+     Archive identifier: theadventuresofhuckleberryfinn_201611
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "adventures-of-huckleberry-finn-1939",
+    type: "movie",
+    title: "The Adventures of Huckleberry Finn (1939)",
+    years: "1939",
+    genre: ["Adventure", "Comedy", "Drama", "Family"],
+    rating: "NR",
+    score: 6.8,
+    description:
+      "MGM's spirited adaptation of Mark Twain's beloved novel, starring Mickey Rooney as the irrepressible Huck Finn. Running away from his abusive father, Huck fakes his own death and sets off on a raft down the Mississippi River with Jim, a runaway slave seeking freedom. Together they encounter con artists, feuding families, and the full sweep of life along the antebellum South's mightiest waterway. Directed by Richard Thorpe, the film captures Twain's adventurous spirit and sharp social commentary in this classic MGM production.",
+    thumbnail: "https://archive.org/services/img/theadventuresofhuckleberryfinn_201611",
+    featured: false,
+    episodes: [
+      {
+        id: "adventures-of-huckleberry-finn-1939-full",
+        title: "The Adventures of Huckleberry Finn",
+        season: 0,
+        episode: 0,
+        year: 1939,
+        duration: "91 min",
+        description: "Huck Finn escapes his drunken father and teams up with runaway slave Jim for a raft journey down the Mississippi, encountering adventure and danger at every bend in this classic MGM adaptation of Mark Twain's novel.",
+        archiveId: "theadventuresofhuckleberryfinn_201611",
+        thumbnail: "https://archive.org/services/img/theadventuresofhuckleberryfinn_201611",
+      },
+    ],
+  },
   {
     id: "mtv-saturday-night-concert-reo-speedwagon-1981",
     type: "concert",
