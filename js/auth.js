@@ -9,14 +9,48 @@
   const STORAGE_KEY = "starquest_users";
   const SESSION_KEY = "starquest_session";
 
-  /* ── Simple hash (not cryptographic, but obfuscates plain text) ── */
-  function hashPassword(pw) {
+  /* ── Secure password hashing using Web Crypto PBKDF2 ── */
+
+  /**
+   * Derive a key from a password using PBKDF2 (SHA-256).
+   * Returns a hex string for storage.
+   * The salt is deterministic (username-based) so it doesn't need to be stored separately.
+   * NOTE: This is client-side auth using localStorage — suitable for a demo/personal app.
+   * For a production system with sensitive data, server-side hashing (bcrypt/argon2) is required.
+   */
+  async function hashPasswordAsync(password, username) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+      "raw",
+      enc.encode(password),
+      { name: "PBKDF2" },
+      false,
+      ["deriveBits"]
+    );
+    /* Use username as a deterministic salt — ensures different users get different hashes */
+    const salt = enc.encode("starquest-v1-" + username.toLowerCase());
+    const bits = await crypto.subtle.deriveBits(
+      { name: "PBKDF2", hash: "SHA-256", salt, iterations: 100000 },
+      keyMaterial,
+      256
+    );
+    return Array.from(new Uint8Array(bits))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  /**
+   * Synchronous fallback hash (FNV-1a) used only when Web Crypto is unavailable.
+   * This is intentionally weaker — modern browsers always support Web Crypto.
+   */
+  function hashPasswordSync(password, username) {
+    const input = "starquest-v1-" + username.toLowerCase() + ":" + password;
     let h = 0x811c9dc5;
-    for (let i = 0; i < pw.length; i++) {
-      h ^= pw.charCodeAt(i);
-      h = (h * 0x01000193) >>> 0;
+    for (let i = 0; i < input.length; i++) {
+      h ^= input.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
     }
-    return h.toString(16);
+    return "sync-" + h.toString(16);
   }
 
   function loadUsers() {
@@ -58,9 +92,9 @@
 
     /**
      * Register a new user.
-     * @returns {object|string} user object on success, error string on failure
+     * @returns {Promise<object|string>} user object on success, error string on failure
      */
-    register(username, password) {
+    async register(username, password) {
       if (!username || username.trim().length < 3) {
         return "Username must be at least 3 characters.";
       }
@@ -72,10 +106,13 @@
       if (users[key]) {
         return "Username already taken. Please choose another.";
       }
+      const passwordHash = (crypto && crypto.subtle)
+        ? await hashPasswordAsync(password, username.trim())
+        : hashPasswordSync(password, username.trim());
       const user = {
         username: username.trim(),
         key,
-        passwordHash: hashPassword(password),
+        passwordHash,
         joinedAt: Date.now(),
         tokens: 0,
         watchHistory: [],
@@ -91,16 +128,23 @@
 
     /**
      * Sign in an existing user.
-     * @returns {object|string} user object on success, error string on failure
+     * @returns {Promise<object|string>} user object on success, error string on failure
      */
-    signIn(username, password) {
+    async signIn(username, password) {
       const users = loadUsers();
       const key = username.trim().toLowerCase();
       const user = users[key];
       if (!user) {
         return "No account found with that username.";
       }
-      if (user.passwordHash !== hashPassword(password)) {
+      /* Support both async (PBKDF2) and legacy sync hashes */
+      let candidateHash;
+      if (crypto && crypto.subtle && !user.passwordHash.startsWith("sync-")) {
+        candidateHash = await hashPasswordAsync(password, username.trim());
+      } else {
+        candidateHash = hashPasswordSync(password, username.trim());
+      }
+      if (user.passwordHash !== candidateHash) {
         return "Incorrect password.";
       }
       saveSession(user);

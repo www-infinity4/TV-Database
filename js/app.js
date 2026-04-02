@@ -669,12 +669,16 @@
   if (switchToSignin) switchToSignin.addEventListener("click", () => showAuthPanel("signin"));
 
   if (authSubmitSignin) {
-    authSubmitSignin.addEventListener("click", () => {
+    authSubmitSignin.addEventListener("click", async () => {
       clearAuthErrors();
       const u = (authUsername && authUsername.value) || "";
       const p = (authPassword && authPassword.value) || "";
       if (typeof StarQuestAuth === "undefined") return;
-      const result = StarQuestAuth.signIn(u, p);
+      authSubmitSignin.disabled = true;
+      authSubmitSignin.textContent = "Signing in…";
+      const result = await StarQuestAuth.signIn(u, p);
+      authSubmitSignin.disabled = false;
+      authSubmitSignin.textContent = "⭐ Sign In";
       if (typeof result === "string") {
         showAuthError(authError, result);
       } else {
@@ -686,12 +690,16 @@
   }
 
   if (authSubmitSignup) {
-    authSubmitSignup.addEventListener("click", () => {
+    authSubmitSignup.addEventListener("click", async () => {
       clearAuthErrors();
       const u = (authNewUsername && authNewUsername.value) || "";
       const p = (authNewPassword && authNewPassword.value) || "";
       if (typeof StarQuestAuth === "undefined") return;
-      const result = StarQuestAuth.register(u, p);
+      authSubmitSignup.disabled = true;
+      authSubmitSignup.textContent = "Creating account…";
+      const result = await StarQuestAuth.register(u, p);
+      authSubmitSignup.disabled = false;
+      authSubmitSignup.textContent = "🌟 Create Account";
       if (typeof result === "string") {
         showAuthError(authErrorSignup, result);
       } else {
