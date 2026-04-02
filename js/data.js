@@ -3304,6 +3304,40 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     RETURN TO OZ — 1964 RANKIN/BASS TV SPECIAL
+     Animated musical TV special produced by Videocraft International
+     (Rankin/Bass) and Crawley Films. Premiered on NBC, February 9, 1964
+     as part of the General Electric Fantasy Hour.
+     Archive identifier: LVD54513
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "return-to-oz-1964-lvd54513",
+    type: "movie",
+    title: "Return to Oz (1964 Rankin/Bass TV Special)",
+    years: "1964",
+    genre: ["Animation", "Fantasy", "Musical", "Family", "1960s"],
+    rating: "NR",
+    score: 6.5,
+    description:
+      "An animated musical television special from Rankin/Bass (then Videocraft International), produced in association with Crawley Films and broadcast on NBC on February 9, 1964 as the first entry in the General Electric Fantasy Hour. A sequel to the studio's 1961 animated series Tales of the Wizard of Oz, the special follows Dorothy as she rediscovers her silver shoes and is swept back to Oz by a Kansas twister — only to find that the Wicked Witch of the West has returned, stripping her old friends of their cherished gifts: Socrates the Scarecrow loses his diploma, Rusty the Tin Man loses his heart, and Dandy the Lion's medal is turned into a daisy. Dorothy reunites with her companions and the Wizard to defeat the Witch once more. Scripted by Romeo Muller and directed by F. R. Crawley, Thomas Glynn, and Larry Roemer, the 51-minute special features Susan Conway as Dorothy and Larry D. Mann as both Rusty the Tin Man and the Wicked Witch — a charming Oz curiosity that marks one of Rankin/Bass's earliest forays into animated television.",
+    thumbnail: "https://archive.org/services/img/LVD54513",
+    featured: false,
+    episodes: [
+      {
+        id: "return-to-oz-1964-lvd54513-full",
+        title: "Return to Oz (1964)",
+        season: 0,
+        episode: 0,
+        year: 1964,
+        duration: "51 min",
+        description:
+          "Dorothy is carried back to Oz by a twister and must help her old friends reclaim their gifts from the returning Wicked Witch of the West in this Rankin/Bass animated NBC special.",
+        archiveId: "LVD54513",
+        thumbnail: "https://archive.org/services/img/LVD54513",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      TEEN WOLF — KDLT VHS BROADCAST  (1987)
      Single feature film recorded off-air — archive identifier:
        teen.-wolf.-kdlt.-5.4.1987deraq
