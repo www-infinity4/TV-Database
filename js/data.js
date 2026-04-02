@@ -3475,6 +3475,105 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     OLIVER & COMPANY  (1988)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Pictures animated musical directed by George Scribner.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "oliver-and-company-1988",
+    type: "movie",
+    title: "Oliver & Company",
+    years: "1988",
+    genre: ["Animation", "Family", "Musical", "Adventure"],
+    rating: "G",
+    score: 6.7,
+    description:
+      "A loose Disney retelling of Charles Dickens' Oliver Twist, set on the streets of New York City. Oliver, a scrappy orphan kitten, falls in with a gang of streetwise dogs led by the smooth-talking Dodger, all working for the down-on-his-luck Fagin. When Oliver is adopted by a wealthy girl named Jenny, his two very different worlds collide — and the villainous loan shark Sykes threatens everyone he loves. Featuring an upbeat pop soundtrack with songs performed by Billy Joel, Bette Midler, and Huey Lewis.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "oliver-and-company-1988-full",
+        title: "Oliver & Company",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "74 min",
+        description:
+          "Orphan kitten Oliver joins a gang of New York street dogs and must navigate life between his new canine family and the wealthy girl who adopts him.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1988 - Oliver & Company.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     A GOOFY MOVIE  (1995)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Pictures animated comedy directed by Kevin Lima.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "a-goofy-movie-1995",
+    type: "movie",
+    title: "A Goofy Movie",
+    years: "1995",
+    genre: ["Animation", "Family", "Comedy", "Musical"],
+    rating: "G",
+    score: 7.0,
+    description:
+      "Goofy's teenage son Max is on the verge of winning over his crush Roxanne when his well-meaning but hopelessly embarrassing dad derails his plans with a cross-country fishing vacation. As the unlikely duo careens from one mishap to the next — encountering Bigfoot along the way — Max and Goofy must find their way back to each other before the trip tears them apart for good. Featuring the voice talents of Bill Farmer and Jason Marsden, with an original soundtrack including the Powerline anthem \"I 2 I.\"",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "a-goofy-movie-1995-full",
+        title: "A Goofy Movie",
+        season: 0,
+        episode: 0,
+        year: 1995,
+        duration: "78 min",
+        description:
+          "Goofy takes his embarrassed teenage son Max on a cross-country fishing trip, and the two navigate their strained relationship along the road.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1995 - A Goofy Movie.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WHO FRAMED ROGER RABBIT  (1988)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Dir. Robert Zemeckis. Live-action/animation hybrid starring Bob Hoskins.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "who-framed-roger-rabbit-1988",
+    type: "movie",
+    title: "Who Framed Roger Rabbit",
+    years: "1988",
+    genre: ["Animation", "Comedy", "Mystery", "Family"],
+    rating: "PG",
+    score: 7.7,
+    description:
+      "In a 1947 Hollywood where animated Toons live alongside humans, hard-drinking private eye Eddie Valiant is hired to investigate a cheating scandal involving cartoon star Roger Rabbit. When the studio head is murdered and Roger is framed for the crime, Eddie reluctantly teams up with the frantic rabbit to expose the real villain: the sinister Judge Doom, who has a deadly plan to destroy the Toons' home of Toontown. A groundbreaking live-action and animation hybrid from director Robert Zemeckis and producer Steven Spielberg, featuring beloved characters from both Disney and Warner Bros. in the same frame for the first time.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "who-framed-roger-rabbit-1988-full",
+        title: "Who Framed Roger Rabbit",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "104 min",
+        description:
+          "Private eye Eddie Valiant must clear Roger Rabbit's name and uncover the true killer behind a Hollywood murder plot targeting Toontown.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1988 - Who Framed Roger Rabbit.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
   {
     id: "mtv-saturday-night-concert-reo-speedwagon-1981",
     type: "concert",
