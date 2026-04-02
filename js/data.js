@@ -3372,6 +3372,38 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     TALES FROM THE CRYPT — VHS  (HBO, 1989–1996)
+     VHS recording of HBO's Tales from the Crypt anthology series.
+     Archive identifier: tales-from-the-crypt-vhs
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "tales-from-the-crypt-vhs",
+    type: "vhs",
+    title: "Tales from the Crypt (HBO VHS Recording)",
+    years: "1989–1996",
+    genre: ["Horror", "Anthology", "Dark Comedy", "VHS Recording"],
+    rating: "TV-MA",
+    score: 8.0,
+    description:
+      "A VHS recording of HBO's landmark anthology horror series Tales from the Crypt, preserved with original broadcast elements. Based on the infamous 1950s EC Comics, the series aired on HBO from 1989 to 1996 across seven seasons and 93 episodes. Each installment is introduced — and wickedly closed — by the Cryptkeeper, a cackling, pun-obsessed ghoul puppet voiced by John Kassir, who descends into his candlelit crypt to present tales of murder, greed, lust, and poetic justice. Because of HBO's uncut format, the stories pushed well beyond what network television permitted, delivering graphic horror, pitch-black comedy, and morality-play twist endings that have secured the show a devoted cult following. This VHS capture preserves episodes as they were originally broadcast, complete with HBO promos and period interstitials — an authentic time-capsule of 1990s premium cable horror.",
+    thumbnail: "https://archive.org/services/img/tales-from-the-crypt-vhs",
+    featured: false,
+    episodes: [
+      {
+        id: "tales-from-the-crypt-vhs-full",
+        title: "Tales from the Crypt — HBO VHS Capture",
+        season: 0,
+        episode: 0,
+        year: 1994,
+        duration: "120 min",
+        description:
+          "VHS recording of multiple Tales from the Crypt episodes as broadcast on HBO, with original network promos and interstitials intact.",
+        archiveId: "tales-from-the-crypt-vhs",
+        thumbnail: "https://archive.org/services/img/tales-from-the-crypt-vhs",
+      },
+    ],
+  },
   {
     id: "mtv-saturday-night-concert-reo-speedwagon-1981",
     type: "concert",
