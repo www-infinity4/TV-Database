@@ -3104,6 +3104,41 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     WHERE THE RED FERN GROWS  (1974)
+     Archive identifier:
+       where-the-red-fern-grows-1974-faith-family-uplifting-encourage-tv
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "where-the-red-fern-grows-1974",
+    type: "movie",
+    title: "Where the Red Fern Grows (1974)",
+    years: "1974",
+    genre: ["Drama", "Family", "Adventure"],
+    rating: "G",
+    score: 6.9,
+    description:
+      "A faithful and deeply moving adaptation of Wilson Rawls' beloved novel. Young Billy Colman saves for two years to buy a pair of coonhound pups — Old Dan and Little Ann — and trains them into champion hunting dogs in the Oklahoma Ozarks. The film tenderly traces the bond between a boy and his dogs through triumph and heartbreak, capturing the timeless themes of determination, loyalty, and growing up. Starring Stewart Petersen as Billy alongside James Whitmore and Beverly Garland, this G-rated family classic has introduced generations of viewers to one of American literature's most cherished stories.",
+    thumbnail:
+      "https://archive.org/services/img/where-the-red-fern-grows-1974-faith-family-uplifting-encourage-tv",
+    featured: false,
+    episodes: [
+      {
+        id: "where-the-red-fern-grows-1974-full",
+        title: "Where the Red Fern Grows",
+        season: 0,
+        episode: 0,
+        year: 1974,
+        duration: "97 min",
+        description:
+          "Billy Colman raises and trains two beloved coonhounds, Old Dan and Little Ann, in the Oklahoma Ozarks — a story of love, loyalty, and the bittersweet passage from boyhood to maturity, based on Wilson Rawls' classic novel.",
+        archiveId:
+          "where-the-red-fern-grows-1974-faith-family-uplifting-encourage-tv",
+        thumbnail:
+          "https://archive.org/services/img/where-the-red-fern-grows-1974-faith-family-uplifting-encourage-tv",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE ADVENTURES OF HUCKLEBERRY FINN  (1939)
      Archive identifier: theadventuresofhuckleberryfinn_201611
      ──────────────────────────────────────────────────────────── */
