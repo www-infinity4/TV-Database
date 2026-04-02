@@ -3,52 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="ClassicTV — Stream classic television from the golden age of TV, 1950s through the 1990s." />
-  <title>ClassicTV — Golden Age of Television</title>
+  <meta name="description" content="StarQuest — Your galaxy of classic 1950s–1990s TV shows and movies. Stream free, earn StarCoins, and explore the golden age of television." />
+  <title>StarQuest ⭐ — Classic TV Galaxy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <!-- Favicon emoji shortcut -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════ NAV ═══════════════════════════════════ -->
-  <nav class="nav" role="navigation" aria-label="Main navigation">
-    <a href="#" class="nav__logo" aria-label="ClassicTV Home">📺 <span>Classic</span>TV</a>
+  <!-- SPLASH PAGE -->
+  <div id="splash-screen" class="splash" role="dialog" aria-modal="true" aria-label="StarQuest Welcome">
+    <div class="splash__stars" aria-hidden="true">
+      <span class="star-particle">⭐</span><span class="star-particle">🌟</span>
+      <span class="star-particle">⭐</span><span class="star-particle">💫</span>
+      <span class="star-particle">⭐</span><span class="star-particle">🌟</span>
+      <span class="star-particle">💫</span><span class="star-particle">⭐</span>
+    </div>
+    <div class="splash__content">
+      <div class="splash__logo">
+        <div class="splash__star-icon" aria-hidden="true">⭐</div>
+        <h1 class="splash__title">StarQuest</h1>
+        <p class="splash__tagline">Your Galaxy of Classic TV &amp; Movies</p>
+      </div>
+      <div class="splash__features">
+        <div class="splash__feature"><span>📺</span><span>1950s–1990s Classics</span></div>
+        <div class="splash__feature"><span>⭐</span><span>Earn StarCoins Watching</span></div>
+        <div class="splash__feature"><span>🤖</span><span>AI Show Companion</span></div>
+        <div class="splash__feature"><span>📜</span><span>Watch History</span></div>
+      </div>
+      <div class="splash__actions">
+        <button id="splash-signin" class="btn btn-primary btn-mario">⭐ Sign In</button>
+        <button id="splash-signup" class="btn btn-secondary">🌟 Create Account</button>
+        <button id="splash-guest" class="btn-ghost">Browse as Guest →</button>
+      </div>
+      <p class="splash__sub">Free forever · No credit card · Earn rewards</p>
+    </div>
+  </div>
 
+  <!-- AUTH MODAL -->
+  <div id="auth-backdrop" class="auth-backdrop" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="auth-modal">
+      <button id="auth-close" class="auth-close" aria-label="Close">✕</button>
+      <div class="auth-logo">⭐ <span>StarQuest</span></div>
+      <div id="auth-signin-panel">
+        <h2 id="auth-title" class="auth-title">Sign In</h2>
+        <div id="auth-error" class="auth-error" role="alert" aria-live="polite" style="display:none"></div>
+        <div class="auth-field">
+          <label for="auth-username">Username</label>
+          <input id="auth-username" type="text" placeholder="Your username" autocomplete="username" spellcheck="false" />
+        </div>
+        <div class="auth-field">
+          <label for="auth-password">Password</label>
+          <input id="auth-password" type="password" placeholder="Your password" autocomplete="current-password" />
+        </div>
+        <button id="auth-submit-signin" class="btn btn-primary btn-mario auth-submit">⭐ Sign In</button>
+        <p class="auth-switch">No account? <button id="switch-to-signup" class="auth-link">Create one free</button></p>
+      </div>
+      <div id="auth-signup-panel" style="display:none">
+        <h2 class="auth-title">Create Account</h2>
+        <div id="auth-error-signup" class="auth-error" role="alert" aria-live="polite" style="display:none"></div>
+        <div class="auth-field">
+          <label for="auth-new-username">Choose a username</label>
+          <input id="auth-new-username" type="text" placeholder="Min. 3 characters" autocomplete="username" spellcheck="false" />
+        </div>
+        <div class="auth-field">
+          <label for="auth-new-password">Choose a password</label>
+          <input id="auth-new-password" type="password" placeholder="Min. 4 characters" autocomplete="new-password" />
+        </div>
+        <button id="auth-submit-signup" class="btn btn-primary btn-mario auth-submit">🌟 Create Account</button>
+        <p class="auth-switch">Already have one? <button id="switch-to-signin" class="auth-link">Sign in</button></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HAMBURGER SIDEBAR -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+  <aside id="sidebar" class="sidebar" role="complementary" aria-label="StarQuest menu">
+    <div class="sidebar__header">
+      <div class="sidebar__logo">⭐ <span>StarQuest</span></div>
+      <button id="sidebar-close" class="sidebar-close" aria-label="Close menu">✕</button>
+    </div>
+    <div id="sidebar-user" class="sidebar-user">
+      <div class="sidebar-user__avatar" aria-hidden="true">🌟</div>
+      <div class="sidebar-user__info">
+        <div id="sidebar-username" class="sidebar-user__name">Guest</div>
+        <div id="sidebar-wallet" class="sidebar-wallet" title="Your StarCoins">
+          <span>⭐</span> <span id="sidebar-token-count">0</span> StarCoins
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" aria-label="Sidebar navigation">
+      <button id="sidebar-signin-btn" class="sidebar-nav__item">
+        <span>👤</span> Sign In / Register
+      </button>
+      <button id="sidebar-signout-btn" class="sidebar-nav__item" style="display:none">
+        <span>🚪</span> Sign Out
+      </button>
+      <a href="https://pluto.tv" target="_blank" rel="noopener noreferrer" class="sidebar-nav__item">
+        <span>📡</span> Pluto TV (Live Channels) <span class="sidebar-nav__ext">↗</span>
+      </a>
+      <a href="https://archive.org/details/tv" target="_blank" rel="noopener noreferrer" class="sidebar-nav__item">
+        <span>📼</span> Internet Archive TV Vault <span class="sidebar-nav__ext">↗</span>
+      </a>
+    </nav>
+    <div class="sidebar-section">
+      <div class="sidebar-section__heading">
+        <span>📜</span> Watch History
+        <button id="clear-history-btn" class="sidebar-clear" title="Clear history" aria-label="Clear watch history">🗑</button>
+      </div>
+      <div id="history-list" class="history-list" role="list" aria-label="Watch history">
+        <p class="history-empty" id="history-empty">Your history will appear here once you start watching!</p>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section__heading"><span>⭐</span> StarCoin Ledger</div>
+      <div id="ledger-list" class="ledger-list" role="list" aria-label="Token transactions">
+        <p class="history-empty" id="ledger-empty">Earn StarCoins by watching and sharing!</p>
+      </div>
+    </div>
+    <div class="sidebar-earn">
+      <div class="sidebar-earn__title">How to Earn ⭐</div>
+      <ul class="sidebar-earn__list">
+        <li>📺 1 StarCoin per hour of watching</li>
+        <li>🔗 1 StarCoin per 10 shares</li>
+        <li>🔓 Unlock PPV content coming soon!</li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- NAVIGATION -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span>Star</span>Quest</a>
     <ul class="nav__links" role="list">
       <li><a href="#" class="active">Home</a></li>
-      <li><a href="#row-drama">Drama</a></li>
-      <li><a href="#row-comedy">Comedy</a></li>
-      <li><a href="#row-scifi">Sci-Fi</a></li>
-      <li><a href="#row-crime">Crime</a></li>
+      <li><a href="#row-drama-section">Drama</a></li>
+      <li><a href="#row-comedy-section">Comedy</a></li>
+      <li><a href="#row-scifi-section">Sci-Fi</a></li>
+      <li><a href="#row-crime-section">Crime</a></li>
     </ul>
-
     <div class="nav__right">
       <div class="nav__search" role="search">
-        <span aria-hidden="true">🔍</span>
-        <input
-          id="search-input"
-          type="search"
-          placeholder="Search shows…"
-          aria-label="Search TV shows"
-          autocomplete="off"
-          spellcheck="false"
-        />
+        <span>🔍</span>
+        <input id="search-input" type="search" placeholder="Search the galaxy…" aria-label="Search TV shows" autocomplete="off" spellcheck="false" />
         <button id="clear-search" class="sr-only" aria-label="Clear search">✕</button>
       </div>
+      <div id="nav-wallet" class="nav__wallet" title="Your StarCoins" style="display:none">
+        ⭐ <span id="nav-token-count">0</span>
+      </div>
+      <button id="hamburger-btn" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
-  <!-- ═══════════════════════════════════ HERO ═══════════════════════════════════ -->
+  <!-- HERO -->
   <section class="hero" aria-label="Featured show">
     <div class="hero__bg" aria-hidden="true">
       <div class="hero__bg-art"></div>
       <div class="hero__static-grid"></div>
     </div>
     <div class="hero__overlay" aria-hidden="true"></div>
-
     <div class="hero__content">
-      <div class="hero__badge" aria-label="Featured">⭐ Featured Classic</div>
+      <div class="hero__badge">⭐ Featured Classic</div>
       <h1 class="hero__title" id="hero-title">Loading…</h1>
       <div class="hero__meta">
         <span class="score" id="hero-score"></span>
@@ -64,7 +182,7 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════ GENRE BAR ═══════════════════════════════════ -->
+  <!-- GENRE BAR -->
   <div class="genre-bar" role="toolbar" aria-label="Filter by genre">
     <button class="genre-pill active" data-genre="all">All</button>
     <button class="genre-pill" data-genre="Comedy">Comedy</button>
@@ -79,10 +197,8 @@
     <button class="genre-pill" data-genre="Movies">Movies</button>
   </div>
 
-  <!-- ═══════════════════════════════════ CONTENT ═══════════════════════════════════ -->
+  <!-- CONTENT ROWS -->
   <main id="main-content">
-
-    <!-- Due South -->
     <section class="content-section content-section--spotlight" aria-labelledby="lbl-due-south" id="due-south-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-due-south">🍁 Due South <span style="font-weight:400;color:var(--text-muted);font-size:.85rem;">1994–1998 · 67 Episodes</span></h2>
@@ -90,12 +206,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-due-south" role="list" aria-label="Due South episodes"></div>
+        <div class="card-row" id="row-due-south" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- Classic Movies -->
     <section class="content-section" aria-labelledby="lbl-movies" id="row-movies-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-movies">🎬 Classic Movies</h2>
@@ -103,12 +217,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-movies" role="list" aria-label="Classic movies"></div>
+        <div class="card-row" id="row-movies" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- Featured -->
     <section class="content-section" aria-labelledby="lbl-featured">
       <div class="section-header">
         <h2 class="section-title" id="lbl-featured">⭐ Featured Classics</h2>
@@ -116,12 +228,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-featured" role="list" aria-label="Featured shows"></div>
+        <div class="card-row" id="row-featured" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- Drama -->
     <section class="content-section" aria-labelledby="lbl-drama" id="row-drama-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-drama">🎭 Drama</h2>
@@ -129,12 +239,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-drama" role="list" aria-label="Drama shows"></div>
+        <div class="card-row" id="row-drama" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- Comedy -->
     <section class="content-section" aria-labelledby="lbl-comedy" id="row-comedy-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-comedy">😂 Comedy</h2>
@@ -142,12 +250,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-comedy" role="list" aria-label="Comedy shows"></div>
+        <div class="card-row" id="row-comedy" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- Sci-Fi -->
     <section class="content-section" aria-labelledby="lbl-scifi" id="row-scifi-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-scifi">🚀 Sci-Fi &amp; Fantasy</h2>
@@ -155,12 +261,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-scifi" role="list" aria-label="Sci-Fi shows"></div>
+        <div class="card-row" id="row-scifi" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- Crime -->
     <section class="content-section" aria-labelledby="lbl-crime" id="row-crime-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-crime">🔍 Crime &amp; Mystery</h2>
@@ -168,12 +272,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-crime" role="list" aria-label="Crime shows"></div>
+        <div class="card-row" id="row-crime" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- Family -->
     <section class="content-section" aria-labelledby="lbl-family" id="row-family-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-family">👨‍👩‍👧‍👦 Family</h2>
@@ -181,12 +283,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-family" role="list" aria-label="Family shows"></div>
+        <div class="card-row" id="row-family" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- 1970s -->
     <section class="content-section" aria-labelledby="lbl-70s" id="row-70s-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-70s">📼 1970s Favorites</h2>
@@ -194,12 +294,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-70s" role="list" aria-label="1970s shows"></div>
+        <div class="card-row" id="row-70s" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- 1980s -->
     <section class="content-section" aria-labelledby="lbl-80s" id="row-80s-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-80s">📼 1980s Hits</h2>
@@ -207,12 +305,10 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-80s" role="list" aria-label="1980s shows"></div>
+        <div class="card-row" id="row-80s" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
-    <!-- 1990s -->
     <section class="content-section" aria-labelledby="lbl-90s" id="row-90s-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-90s">📼 1990s Classics</h2>
@@ -220,60 +316,27 @@
       </div>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-90s" role="list" aria-label="1990s shows"></div>
+        <div class="card-row" id="row-90s" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-
   </main>
 
-  <!-- ═══════════════════════════════════ FOOTER ═══════════════════════════════════ -->
+  <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div class="footer__grid">
-      <div class="footer__col">
-        <h4>Browse</h4>
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">All Shows</a></li>
-          <li><a href="#">Drama</a></li>
-          <li><a href="#">Comedy</a></li>
-        </ul>
-      </div>
-      <div class="footer__col">
-        <h4>Genres</h4>
-        <ul>
-          <li><a href="#">Sci-Fi &amp; Fantasy</a></li>
-          <li><a href="#">Crime &amp; Mystery</a></li>
-          <li><a href="#">Family</a></li>
-          <li><a href="#">Game Shows</a></li>
-        </ul>
-      </div>
-      <div class="footer__col">
-        <h4>Decades</h4>
-        <ul>
-          <li><a href="#">1950s</a></li>
-          <li><a href="#">1960s</a></li>
-          <li><a href="#">1970s</a></li>
-          <li><a href="#">1980s</a></li>
-          <li><a href="#">1990s</a></li>
-        </ul>
-      </div>
-      <div class="footer__col">
-        <h4>Help</h4>
-        <ul>
-          <li><a href="#">About</a></li>
-          <li><a href="#">FAQ</a></li>
-          <li><a href="#">Privacy</a></li>
-        </ul>
-      </div>
+      <div class="footer__col"><h4>Browse</h4><ul><li><a href="#">Home</a></li><li><a href="#">All Shows</a></li><li><a href="#">Drama</a></li><li><a href="#">Comedy</a></li></ul></div>
+      <div class="footer__col"><h4>Genres</h4><ul><li><a href="#">Sci-Fi &amp; Fantasy</a></li><li><a href="#">Crime &amp; Mystery</a></li><li><a href="#">Family</a></li><li><a href="#">Game Shows</a></li></ul></div>
+      <div class="footer__col"><h4>Decades</h4><ul><li><a href="#">1950s</a></li><li><a href="#">1960s</a></li><li><a href="#">1970s</a></li><li><a href="#">1980s</a></li><li><a href="#">1990s</a></li></ul></div>
+      <div class="footer__col"><h4>StarQuest</h4><ul><li><a href="#">About</a></li><li><a href="#">FAQ</a></li><li><a href="#">Privacy</a></li><li><a href="https://pluto.tv" target="_blank" rel="noopener noreferrer">Pluto TV ↗</a></li></ul></div>
     </div>
     <div class="footer__bottom">
-      <div class="footer__logo">📺 <span>Classic</span>TV</div>
-      <span>© 2024 ClassicTV. Content is in the public domain or used under fair use.</span>
+      <div class="footer__logo">⭐ <span>Star</span>Quest</div>
+      <span>© 2024 StarQuest. Content sourced from the public domain and archive.org.</span>
     </div>
   </footer>
 
-  <!-- ═══════════════════════════════════ ALL-EPISODES MODAL ═══════════════════════════════════ -->
+  <!-- ALL-EPISODES MODAL -->
   <div id="all-eps-backdrop" class="all-eps-backdrop" role="dialog" aria-modal="true" aria-labelledby="all-eps-title">
     <div class="all-eps-modal">
       <div class="all-eps-header">
@@ -285,16 +348,14 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════ SHOW MODAL ═══════════════════════════════════ -->
+  <!-- SHOW MODAL -->
   <div id="modal-backdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div id="show-modal" class="modal">
       <button id="modal-close" class="modal__close" aria-label="Close">✕</button>
-
       <div class="modal__hero">
         <img id="modal-hero-img" src="" alt="" loading="lazy" onerror="this.style.display='none'" />
         <div class="modal__hero-overlay"></div>
       </div>
-
       <div class="modal__body">
         <h2 id="modal-title" class="modal__title"></h2>
         <div class="modal__meta">
@@ -304,35 +365,24 @@
           <div id="modal-genres" style="display:flex;gap:6px;flex-wrap:wrap"></div>
         </div>
         <p id="modal-desc" class="modal__desc"></p>
-
         <h3 class="modal__section-title">Episodes</h3>
         <div id="modal-episodes" class="episode-list"></div>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════ PLAYER ═══════════════════════════════════ -->
+  <!-- PLAYER -->
   <div id="player-page" class="player-page" role="dialog" aria-modal="true" aria-label="Video player">
     <div class="player-topbar">
       <button id="player-back" class="player-back" aria-label="Back to browse">← Back</button>
       <span id="player-ep-title" class="player-ep-title"></span>
+      <div class="player-topbar__right">
+        <span id="player-token-notif" class="player-token-notif" aria-live="polite" style="display:none">⭐ +1 StarCoin!</span>
+        <button id="player-share-btn" class="player-share-btn" aria-label="Share this show">🔗 Share</button>
+      </div>
     </div>
-
     <div class="player-wrap">
-      <!-- The iframe loads the embedded video. The sandbox attribute restricts
-           the embedded page from navigating the top-level document, ensuring
-           our UI remains in control and the content source is not surfaced. -->
-      <iframe
-        id="player-frame"
-        class="player-frame"
-        src="about:blank"
-        title="Video Player"
-        allowfullscreen
-        allow="autoplay; fullscreen; encrypted-media"
-        sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups allow-popups-to-escape-sandbox"
-        referrerpolicy="no-referrer"
-      ></iframe>
-
+      <iframe id="player-frame" class="player-frame" src="about:blank" title="Video Player" allowfullscreen allow="autoplay; fullscreen; encrypted-media" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups allow-popups-to-escape-sandbox" referrerpolicy="no-referrer"></iframe>
       <div id="player-loading" class="player-loading" aria-live="polite">
         <div class="player-spinner" aria-hidden="true"></div>
         <span class="player-loading-text">Loading…</span>
@@ -340,7 +390,7 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════ SEARCH OVERLAY ═══════════════════════════════════ -->
+  <!-- SEARCH OVERLAY -->
   <div id="search-overlay" class="search-overlay" role="region" aria-label="Search results">
     <div class="search-results">
       <p id="search-results-title" class="search-results-title"></p>
@@ -348,8 +398,36 @@
     </div>
   </div>
 
+  <!-- AI COMPANION — COSMO -->
+  <button id="ai-fab" class="ai-fab" aria-label="Open Cosmo AI companion" title="Ask Cosmo anything about classic TV!">
+    <span>🤖</span><span class="ai-fab__label">Cosmo</span>
+  </button>
+
+  <div id="ai-panel" class="ai-panel" role="dialog" aria-modal="false" aria-labelledby="ai-panel-title" style="display:none">
+    <div class="ai-panel__header">
+      <div>
+        <div class="ai-panel__title" id="ai-panel-title">�� Cosmo — AI Companion</div>
+        <div class="ai-panel__subtitle">Ask me anything about classic TV!</div>
+      </div>
+      <button id="ai-panel-close" class="ai-panel__close" aria-label="Close Cosmo">✕</button>
+    </div>
+    <div id="ai-messages" class="ai-messages" role="log" aria-live="polite"></div>
+    <div class="ai-input-row">
+      <input id="ai-input" type="text" class="ai-input" placeholder="Ask Cosmo about any show…" aria-label="Message to Cosmo" autocomplete="off" maxlength="300" />
+      <button id="ai-send" class="ai-send" aria-label="Send message">➤</button>
+    </div>
+    <div class="ai-suggestions">
+      <button class="ai-suggest" data-q="Tell me about Due South">Due South</button>
+      <button class="ai-suggest" data-q="What are secrets about Ghostbusters?">Ghostbusters secrets</button>
+      <button class="ai-suggest" data-q="Recommend something to watch">Recommend me something</button>
+      <button class="ai-suggest" data-q="How do I earn StarCoins?">Earn coins?</button>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ai.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
