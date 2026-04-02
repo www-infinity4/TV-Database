@@ -3051,6 +3051,32 @@ const SHOWS = [
       },
     ],
   },
+  {
+    id: "vhs-october-1990-wesh-quantum-leap-night-court",
+    type: "vhs",
+    title: "VHS Tape — October 1990: Quantum Leap & Night Court (WESH)",
+    years: "1990",
+    genre: ["Sci-Fi", "Comedy", "Drama", "VHS Recording"],
+    rating: "TV-PG",
+    score: 8.2,
+    description:
+      "A home VHS recording from October 1990 captured off WESH, an NBC affiliate in Orlando, Florida. The tape preserves three episodes of Quantum Leap (Season 3) alongside an episode of Night Court and a segment of NBC News at This Hour — all complete with period commercials, network bumpers, and station identifications. An authentic time-capsule of early-1990s broadcast television and a rare off-air record of two beloved NBC Thursday-night staples.",
+    thumbnail: "https://archive.org/services/img/vhs-tape-october-1990-wesh-three-quantum-leap-episodes-nbc-news-at-this-hour-night-court",
+    featured: false,
+    episodes: [
+      {
+        id: "vhs-1990-wesh-full-tape",
+        title: "Full Tape — Quantum Leap, NBC News & Night Court (October 1990)",
+        season: 0,
+        episode: 0,
+        year: 1990,
+        duration: "120 min",
+        description: "Complete VHS recording from October 1990 off WESH/NBC. Contains three Season 3 Quantum Leap episodes, an NBC News at This Hour segment, and an episode of Night Court — with all original commercials and station breaks intact.",
+        archiveId: "vhs-tape-october-1990-wesh-three-quantum-leap-episodes-nbc-news-at-this-hour-night-court",
+        thumbnail: "https://archive.org/services/img/vhs-tape-october-1990-wesh-three-quantum-leap-episodes-nbc-news-at-this-hour-night-court",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
