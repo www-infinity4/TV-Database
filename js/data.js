@@ -3205,6 +3205,8 @@ const SHOWS = [
      FRANKENSTEIN MEETS THE WOLF MAN  (1943)
      Single feature film — archive identifier:
        frankenstein-meets-the-wolf-man-1942
+     Note: the archive identifier reflects the 1942 production/pre-release
+     year; the theatrical release year and film year is 1943.
      The original monster-crossover film, uniting Universal's Wolf Man
      and Frankenstein franchises. Dir. Roy William Neill.
      ──────────────────────────────────────────────────────────── */
