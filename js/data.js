@@ -2956,6 +2956,68 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     GHOSTBUSTERS  (1984)
+     Archive identifier: ghostbusters-from-the-original-vhs-release-in-1985
+     Original 1985 Columbia Pictures Home Entertainment VHS release.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "ghostbusters-1984",
+    type: "movie",
+    title: "Ghostbusters",
+    years: "1984",
+    genre: ["Comedy", "Horror", "Sci-Fi"],
+    rating: "PG",
+    score: 8.1,
+    description:
+      "Three eccentric parapsychology professors — Peter Venkman (Bill Murray), Ray Stantz (Dan Aykroyd), and Egon Spengler (Harold Ramis) — lose their university funding and go into business as freelance ghost catchers in New York City. When supernatural activity in the city suddenly spikes and beautiful cellist Dana Barrett (Sigourney Weaver) finds her refrigerator is a gateway to another dimension, the Ghostbusters realise they are all that stands between the world and an apocalyptic invasion. This is the original 1985 Columbia Pictures Home Entertainment VHS transfer.",
+    thumbnail: "https://archive.org/services/img/ghostbusters-from-the-original-vhs-release-in-1985",
+    featured: false,
+    episodes: [
+      {
+        id: "ghostbusters-1984-full",
+        title: "Ghostbusters",
+        season: 0,
+        episode: 0,
+        year: 1984,
+        duration: "105 min",
+        description: "Fired from their university, three parapsychologists start a ghost-catching business in New York City and face an ancient deity threatening to destroy the world. Starring Bill Murray, Dan Aykroyd, Harold Ramis, and Sigourney Weaver.",
+        archiveId: "ghostbusters-from-the-original-vhs-release-in-1985",
+        thumbnail: "https://archive.org/services/img/ghostbusters-from-the-original-vhs-release-in-1985",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SKI SCHOOL (PART 3)
+     Archive identifier: skischoolpart3
+     Third entry in the Ski School series.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "ski-school-part-3",
+    type: "movie",
+    title: "Ski School (Part 3)",
+    years: "1994",
+    genre: ["Comedy"],
+    rating: "R",
+    score: 5.2,
+    description:
+      "The irreverent ski-comedy franchise returns for a third outing on the snowy slopes. A new crop of rowdy instructors and eager beginners collide at the mountain resort, trading pranks and rivalries while chasing championships and romance. Packed with slapstick set pieces, après-ski antics, and the sunny, anything-goes spirit that fans of the series have come to expect.",
+    thumbnail: "https://archive.org/services/img/skischoolpart3",
+    featured: false,
+    episodes: [
+      {
+        id: "ski-school-part-3-full",
+        title: "Ski School (Part 3)",
+        season: 0,
+        episode: 0,
+        year: 1994,
+        duration: "95 min",
+        description: "The slopes come alive again as a new generation of wild ski instructors and hapless beginners battle it out at the mountain resort in this third entry in the Ski School comedy series.",
+        archiveId: "skischoolpart3",
+        thumbnail: "https://archive.org/services/img/skischoolpart3",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
