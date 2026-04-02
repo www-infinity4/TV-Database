@@ -2282,6 +2282,42 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     USA CHANNEL — STAR WARS TRILOGY HOLIDAY MOVIE SPECIAL
+     CHRISTMAS MARATHON  (1993)
+     Single feature recording — archive identifier:
+     starwarstrilogyholidaymoviespecialchristmasmarathon
+     VHS-to-digital capture of the USA Channel's holiday broadcast
+     of all three original Star Wars films in one marathon sitting,
+     December 1993. Includes original commercials and network bumpers.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "star-wars-trilogy-usa-marathon-1993",
+    type: "movie",
+    title: "Star Wars Trilogy Holiday Movie Special (USA Channel 1993)",
+    years: "1993",
+    genre: ["Adventure", "Sci-Fi", "Fantasy", "Family"],
+    rating: "PG",
+    score: 9.0,
+    description:
+      "A rare VHS recording of the USA Channel's Star Wars Trilogy Holiday Movie Special Christmas Marathon, broadcast in December 1993. All three original films — A New Hope, The Empire Strikes Back, and Return of the Jedi — aired back-to-back in one uninterrupted holiday event, complete with period commercials and network bumpers. A nostalgic time-capsule of 1990s cable television and a beloved annual tradition for Star Wars fans.",
+    thumbnail: "https://archive.org/services/img/starwarstrilogyholidaymoviespecialchristmasmarathon",
+    featured: true,
+    episodes: [
+      {
+        id: "star-wars-trilogy-usa-marathon-1993-full",
+        title: "Star Wars Trilogy Holiday Movie Special — Full Marathon",
+        season: 0,
+        episode: 0,
+        year: 1993,
+        duration: "approx. 9 hr",
+        description:
+          "The complete USA Channel Christmas 1993 broadcast of the original Star Wars trilogy (A New Hope, The Empire Strikes Back, Return of the Jedi) with original 1993 commercials and network bumpers intact.",
+        archiveId: "starwarstrilogyholidaymoviespecialchristmasmarathon",
+        thumbnail: "https://archive.org/services/img/starwarstrilogyholidaymoviespecialchristmasmarathon",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
