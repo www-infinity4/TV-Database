@@ -3476,6 +3476,39 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     SONG OF THE SOUTH  (1946)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions live-action/animated musical directed by Harve Foster & Wilfred Jackson.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "song-of-the-south-1946",
+    type: "movie",
+    title: "Song of the South",
+    years: "1946",
+    genre: ["Animation", "Family", "Musical", "Drama"],
+    rating: "G",
+    score: 6.6,
+    description:
+      "Young Johnny goes to live on his grandmother's plantation in the post-Civil War South, where he befriends the warm-hearted storyteller Uncle Remus. Through animated tales of Br'er Rabbit, Br'er Fox, and Br'er Bear, Uncle Remus shares timeless lessons about life, friendship, and keeping spirits high. Disney's pioneering blend of live action and animation gave the world the beloved song 'Zip-a-Dee-Doo-Dah'.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "song-of-the-south-1946-full",
+        title: "Song of the South",
+        season: 0,
+        episode: 0,
+        year: 1946,
+        duration: "94 min",
+        description:
+          "Johnny befriends Uncle Remus on a Georgia plantation and discovers the wisdom hidden in his animated tales of the wily Br'er Rabbit.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1946 - Song of the South.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      ALICE IN WONDERLAND  (1951)
      Single feature film — archive identifier: schoolproject2_20200406
      Walt Disney Productions animated fantasy directed by Clyde Geronimi, Wilfred Jackson & Hamilton Luske.
