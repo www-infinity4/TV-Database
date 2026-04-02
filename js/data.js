@@ -2465,6 +2465,41 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     SUPERGIRL (1984) — ABC BROADCAST  (1987-02-28)
+     Archive identifier: Supergirl_ABC_WOC_OTA_1987-02-28_Incomplete
+     Off-air VHS recording of the ABC broadcast of the 1984
+     Supergirl theatrical film, with original commercials intact
+     (WOC = With Original Commercials, OTA = Over The Air).
+     Recording is marked incomplete.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "supergirl-1984-abc-1987",
+    type: "movie",
+    title: "Supergirl (1984) — ABC Broadcast",
+    years: "1987",
+    genre: ["Action", "Sci-Fi", "Fantasy"],
+    rating: "PG",
+    score: 6.1,
+    description:
+      "Helen Slater stars as Kara Zor-El, cousin of Superman, who travels to Earth to retrieve a powerful Kryptonian artifact and winds up battling the sorceress Selena (Faye Dunaway) in order to save both worlds. This is a rare off-air VHS capture of the February 28, 1987 ABC television broadcast, complete with original commercials — a vivid time capsule of mid-80s network TV.",
+    thumbnail: "https://archive.org/services/img/Supergirl_ABC_WOC_OTA_1987-02-28_Incomplete",
+    featured: false,
+    episodes: [
+      {
+        id: "supergirl-1984-abc-1987-full",
+        title: "Supergirl — ABC Broadcast (Feb 28, 1987, WOC)",
+        season: 0,
+        episode: 0,
+        year: 1987,
+        duration: "~124 min",
+        description:
+          "The 1984 Supergirl theatrical film as broadcast on ABC, February 28, 1987 — with original period commercials intact. Starring Helen Slater, Faye Dunaway, Peter O'Toole, and Mia Farrow. Recording is incomplete.",
+        archiveId: "Supergirl_ABC_WOC_OTA_1987-02-28_Incomplete",
+        thumbnail: "https://archive.org/services/img/Supergirl_ABC_WOC_OTA_1987-02-28_Incomplete",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
