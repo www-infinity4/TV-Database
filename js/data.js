@@ -2352,6 +2352,119 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     THE REAL GHOSTBUSTERS  (1986–1991)
+     Archive identifier: the-real-ghostbusters
+     Animated series based on the hit 1984 film. Follows Peter
+     Venkman, Egon Spengler, Ray Stantz, Winston Zeddemore, Janine
+     Melnitz, and Slimer as they bust ghosts across New York City.
+     Season 1 = 13 episodes, indices 0–12.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "real-ghostbusters",
+    title: "The Real Ghostbusters",
+    years: "1986–1991",
+    genre: ["Animation", "Comedy", "Fantasy"],
+    rating: "TV-Y7",
+    score: 8.1,
+    description:
+      "The continuing adventures of Peter Venkman, Egon Spengler, Ray Stantz, Winston Zeddemore, and their spooky green mascot Slimer as they battle ghosts, demons, and supernatural forces threatening New York City. The beloved animated spin-off of the original Ghostbusters film, featuring sharp writing, mythology-rich storylines, and plenty of laughs.",
+    thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+    featured: true,
+    episodes: [
+      {
+        id: "rgb-s01e01", title: "Ghosts R Us", season: 1, episode: 1,
+        year: 1986, duration: "22 min",
+        description: "Three ghosts accidentally freed from the Containment Unit set up a rival ghostbusting business called Ghosts R Us to put the team out of work.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e02", title: "Killerwatt", season: 1, episode: 2,
+        year: 1986, duration: "22 min",
+        description: "A supernatural entity takes over New York's electrical grid, plunging the city into chaos as the Ghostbusters scramble to stop the power-hungry ghost.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e03", title: "Mrs. Roger's Neighborhood", season: 1, episode: 3,
+        year: 1986, duration: "22 min",
+        description: "The Ghostbusters are called to an elderly woman's home, only to find a sinister entity has taken control of the entire neighborhood.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e04", title: "Slimer, Come Home", season: 1, episode: 4,
+        year: 1986, duration: "22 min",
+        description: "After being blamed for mischief at the firehouse, Slimer runs away and falls in with a gang of rogue poltergeists, forcing the Ghostbusters to mount a rescue.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e05", title: "Troll Bridge", season: 1, episode: 5,
+        year: 1986, duration: "22 min",
+        description: "A clan of trolls seizes the Queensboro Bridge and won't let traffic pass until the Ghostbusters track down their runaway cousin.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e06", title: "The Boogieman Cometh", season: 1, episode: 6,
+        year: 1986, duration: "22 min",
+        description: "The Boogieman — a monster from Egon's own childhood nightmares — returns to terrorize two children, and the Ghostbusters must venture into his terrifying realm to stop him.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e07", title: "Mr. Sandman, Dream Me a Dream", season: 1, episode: 7,
+        year: 1986, duration: "22 min",
+        description: "The Sandman believes the world would be better off asleep for 500 years, and as his enchanted dust spreads across the city, people's dreams start coming dangerously to life.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e08", title: "When Halloween Was Forever", season: 1, episode: 8,
+        year: 1986, duration: "22 min",
+        description: "The ancient spirit Samhain is unleashed on Halloween night and intends to make the holiday last forever, flooding New York with supernatural creatures.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e09", title: "Look Homeward, Ray", season: 1, episode: 9,
+        year: 1986, duration: "22 min",
+        description: "Ray returns to his hometown as a local hero, but a botched ghostbusting job shakes his confidence — and only he can save the day if he believes in himself again.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e10", title: "Take Two", season: 1, episode: 10,
+        year: 1986, duration: "22 min",
+        description: "The Ghostbusters head to Hollywood as consultants on a movie about their exploits, but real ghosts invade the studio lot — and the team accidentally grabs prop proton packs.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e11", title: "Citizen Ghost", season: 1, episode: 11,
+        year: 1986, duration: "22 min",
+        description: "A flashback episode revealing how Slimer first came to live at the Ghostbusters' firehouse — set immediately after the events of the original film.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e12", title: "Janine's Genie", season: 1, episode: 12,
+        year: 1986, duration: "22 min",
+        description: "Janine accepts a mysterious lamp as payment for a job and accidentally frees a mischievous genie, getting a very unwanted taste of life as a Ghostbuster.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e13", title: "Xmas Marks the Spot", season: 1, episode: 13,
+        year: 1986, duration: "22 min",
+        description: "The Ghostbusters accidentally travel back to Victorian England and capture the three spirits of A Christmas Carol, erasing the classic story from history — and ruining Christmas forever unless they can set things right.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
