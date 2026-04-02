@@ -3078,6 +3078,32 @@ const SHOWS = [
     ],
   },
   {
+    id: "apollo-13-houston-we-have-a-problem-1970",
+    type: "documentary",
+    title: "Apollo 13: Houston, We Have a Problem (1970)",
+    years: "1970",
+    genre: ["Documentary", "Space", "History"],
+    rating: "G",
+    score: 9.0,
+    description:
+      "NASA's own official documentary account of the Apollo 13 mission, produced in 1970 shortly after the near-catastrophic moon flight. On April 13, 1970, an oxygen tank explosion crippled the command module 200,000 miles from Earth, forcing commander Jim Lovell, Jack Swigert, and Fred Haise to use the lunar module Aquarius as a lifeboat. This film draws on mission footage, cockpit audio, Mission Control recordings, and post-flight interviews to chronicle the four-day struggle to bring the crew home safely — a defining moment for NASA and the world.",
+    thumbnail: "https://archive.org/services/img/34062Apollo13HoustonWeHaveAProblem",
+    featured: false,
+    episodes: [
+      {
+        id: "apollo-13-houston-we-have-a-problem-full",
+        title: "Apollo 13: Houston, We Have a Problem",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "60 min",
+        description: "NASA's official documentary of the Apollo 13 crisis, featuring mission footage, cockpit recordings, and Mission Control audio from the April 1970 emergency that gripped the world.",
+        archiveId: "34062Apollo13HoustonWeHaveAProblem",
+        thumbnail: "https://archive.org/services/img/34062Apollo13HoustonWeHaveAProblem",
+      },
+    ],
+  },
+  {
     id: "mtv-saturday-night-concert-reo-speedwagon-1981",
     type: "concert",
     title: "MTV Saturday Night Concert: REO Speedwagon — Live Infidelity (1981)",
