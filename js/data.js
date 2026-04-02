@@ -3338,6 +3338,43 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     JOURNEY BACK TO OZ (1972) — VHS
+     Filmation animated musical feature; archive identifier:
+       journey-back-to-oz-1972-vhs
+     Production began in 1962 but the film wasn't released until 1972
+     due to financial setbacks. Loosely based on L. Frank Baum's
+     "The Marvelous Land of Oz." Stars Liza Minnelli as Dorothy,
+     with a star-studded voice cast including Ethel Merman, Mickey
+     Rooney, Milton Berle, Paul Lynde, and Margaret Hamilton.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "journey-back-to-oz-1972-vhs",
+    type: "vhs",
+    title: "Journey Back to Oz (1972)",
+    years: "1972",
+    genre: ["Animation", "Fantasy", "Musical", "Family", "1970s"],
+    rating: "G",
+    score: 5.7,
+    description:
+      "A Filmation animated musical fantasy loosely based on L. Frank Baum's \"The Marvelous Land of Oz,\" produced beginning in 1962 but delayed by financial setbacks and not released until 1972. A tornado once again carries Dorothy Gale — this time voiced by Liza Minnelli, daughter of Judy Garland — and Toto back to Oz, where the scheming witch Mombi (Ethel Merman) is raising a fearsome army of green elephants to conquer the Emerald City. Dorothy teams up with old friends the Scarecrow (Mickey Rooney), Tin Man (Danny Thomas), and Cowardly Lion (Milton Berle), as well as new companions Pumpkinhead (Paul Lynde) and the carousel horse Woodenhead, to defeat Mombi and restore peace. The film features songs by Jimmy Van Heusen with lyrics by Sammy Cahn and is notable for casting Margaret Hamilton — the original Wicked Witch of the West — as Dorothy's Aunt Em. Directed by Hal Sutherland.",
+    thumbnail: "https://archive.org/services/img/journey-back-to-oz-1972-vhs",
+    featured: false,
+    episodes: [
+      {
+        id: "journey-back-to-oz-1972-vhs-full",
+        title: "Journey Back to Oz (1972)",
+        season: 0,
+        episode: 0,
+        year: 1972,
+        duration: "90 min",
+        description:
+          "Dorothy (Liza Minnelli) returns to Oz and must stop the witch Mombi (Ethel Merman) and her army of green elephants in this star-studded Filmation animated musical.",
+        archiveId: "journey-back-to-oz-1972-vhs",
+        thumbnail: "https://archive.org/services/img/journey-back-to-oz-1972-vhs",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      TEEN WOLF — KDLT VHS BROADCAST  (1987)
      Single feature film recorded off-air — archive identifier:
        teen.-wolf.-kdlt.-5.4.1987deraq
