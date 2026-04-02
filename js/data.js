@@ -2318,6 +2318,40 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     NATIONAL GEOGRAPHIC VIDEO: ATOCHA — QUEST FOR TREASURE  (1986)
+     YouTube identifier: g7jey7YKYp0
+     Documentary following treasure hunter Mel Fisher's epic search
+     for the 1622 Spanish galleon Nuestra Señora de Atocha. Originally
+     released as a National Geographic LaserDisc special.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "nat-geo-atocha-1986",
+    type: "movie",
+    title: "National Geographic: Atocha — Quest for Treasure",
+    years: "1986",
+    genre: ["Documentary", "Adventure", "History"],
+    rating: "G",
+    score: 7.8,
+    description:
+      "Follow legendary treasure hunter Mel Fisher on his extraordinary 16-year quest to find the Nuestra Señora de Atocha, a Spanish galleon loaded with silver and gold that sank in the Florida Keys in 1622. This National Geographic documentary captures the obsession, heartbreak, and ultimate triumph of one of history's greatest treasure hunts.",
+    thumbnail: "https://img.youtube.com/vi/g7jey7YKYp0/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "nat-geo-atocha-1986-full",
+        title: "Atocha — Quest for Treasure",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "75 min",
+        description:
+          "Mel Fisher's 16-year search for the Atocha, a treasure-laden Spanish galleon lost in the Florida Keys in 1622, captured in this National Geographic documentary.",
+        youtubeId: "g7jey7YKYp0",
+        thumbnail: "https://img.youtube.com/vi/g7jey7YKYp0/hqdefault.jpg",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [

@@ -336,11 +336,16 @@
 
   /**
    * Build the video embed URL.
+   * When an episode has a youtubeId, a YouTube embed URL is returned.
    * When an episode has an archiveIndex, the archive.org playlist index
    * parameter is used to jump directly to that episode.
    * The iframe is sandboxed within our UI so viewers see our branding.
    */
   function buildEmbedUrl(episode) {
+    if (episode.youtubeId) {
+      const params = new URLSearchParams({ autoplay: "1" });
+      return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
+    }
     const base =
       "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
     const params = new URLSearchParams({ autoplay: "1" });
