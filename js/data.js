@@ -3018,6 +3018,39 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     ER — 1984 PILOT (Parts 1 & 2)
+     Archive identifier: e-r-1984-pilot-pts-1-2
+     The original two-part television pilot based on Michael
+     Crichton's unproduced 1974 screenplay, filmed in 1984 and
+     later the creative blueprint for the landmark 1994 NBC series.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "er-1984-pilot",
+    type: "movie",
+    title: "ER: The Pilot (1984)",
+    years: "1984",
+    genre: ["Drama", "Medical"],
+    rating: "TV-PG",
+    score: 7.8,
+    description:
+      "The two-part television pilot that launched one of the most celebrated medical dramas in broadcast history. Based on Michael Crichton's unproduced 1974 screenplay drawn from his own experiences as a medical student, this 1984 production captures the relentless pace and human drama of a big-city hospital emergency room — the template that would be fully realised a decade later when Steven Spielberg and Crichton brought the concept to NBC in 1994. A rare piece of television history: the prototype for ER's ten-year run as appointment viewing.",
+    thumbnail: "https://archive.org/services/img/e-r-1984-pilot-pts-1-2",
+    featured: false,
+    episodes: [
+      {
+        id: "er-1984-pilot-full",
+        title: "ER Pilot — Parts 1 & 2",
+        season: 0,
+        episode: 0,
+        year: 1984,
+        duration: "120 min",
+        description: "The complete two-part pilot. A frantic night in a city emergency room tests doctors, nurses, and interns to their limits — establishing the fast-cut, multi-storyline style that would define the 1994 series.",
+        archiveId: "e-r-1984-pilot-pts-1-2",
+        thumbnail: "https://archive.org/services/img/e-r-1984-pilot-pts-1-2",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
