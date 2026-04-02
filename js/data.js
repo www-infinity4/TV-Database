@@ -2476,21 +2476,33 @@ const SHOWS = [
   {
     id: "supergirl-1984-abc-1987",
     type: "movie",
-    title: "Supergirl (1984) — ABC Broadcast",
-    years: "1987",
+    title: "Supergirl (1984)",
+    years: "1984",
     genre: ["Action", "Sci-Fi", "Fantasy"],
     rating: "PG",
     score: 6.1,
     description:
-      "Helen Slater stars as Kara Zor-El, cousin of Superman, who travels to Earth to retrieve a powerful Kryptonian artifact and winds up battling the sorceress Selena (Faye Dunaway) in order to save both worlds. This is a rare off-air VHS capture of the February 28, 1987 ABC television broadcast, complete with original commercials — a vivid time capsule of mid-80s network TV.",
-    thumbnail: "https://archive.org/services/img/Supergirl_ABC_WOC_OTA_1987-02-28_Incomplete",
+      "Helen Slater stars as Kara Zor-El, cousin of Superman, who travels to Earth to retrieve a powerful Kryptonian artifact and winds up battling the sorceress Selena (Faye Dunaway) in order to save both worlds. Watch the full theatrical cut or a rare off-air VHS capture of the February 28, 1987 ABC broadcast — complete with original commercials and a vivid mid-80s time-capsule feel.",
+    thumbnail: "https://img.youtube.com/vi/VFOPfODwaug/hqdefault.jpg",
     featured: false,
     episodes: [
+      {
+        id: "supergirl-1984-full-movie",
+        title: "Supergirl — Full Movie (1984)",
+        season: 0,
+        episode: 1,
+        year: 1984,
+        duration: "124 min",
+        description:
+          "The complete 1984 theatrical cut of Supergirl. Kara Zor-El (Helen Slater) comes to Earth in search of a powerful Kryptonian energy source and must face the evil sorceress Selena (Faye Dunaway). Also starring Peter O'Toole and Mia Farrow.",
+        youtubeId: "VFOPfODwaug",
+        thumbnail: "https://img.youtube.com/vi/VFOPfODwaug/hqdefault.jpg",
+      },
       {
         id: "supergirl-1984-abc-1987-full",
         title: "Supergirl — ABC Broadcast (Feb 28, 1987, WOC)",
         season: 0,
-        episode: 0,
+        episode: 2,
         year: 1987,
         duration: "~124 min",
         description:
