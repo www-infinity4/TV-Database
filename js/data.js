@@ -3476,6 +3476,39 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     ALICE IN WONDERLAND  (1951)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated fantasy directed by Clyde Geronimi, Wilfred Jackson & Hamilton Luske.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "alice-in-wonderland-1951",
+    type: "movie",
+    title: "Alice in Wonderland",
+    years: "1951",
+    genre: ["Animation", "Family", "Fantasy", "Musical"],
+    rating: "G",
+    score: 7.3,
+    description:
+      "Young, curious Alice tumbles down a rabbit hole into Wonderland — a topsy-turvy realm filled with peculiar creatures and impossible logic. From tea parties with the Mad Hatter and the March Hare to a high-stakes croquet match with the temperamental Queen of Hearts, Alice must find her way home while navigating a world where nothing makes sense. Disney's 13th animated classic brings Lewis Carroll's beloved nonsense adventure to vivid, whimsical life.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "alice-in-wonderland-1951-full",
+        title: "Alice in Wonderland",
+        season: 0,
+        episode: 0,
+        year: 1951,
+        duration: "75 min",
+        description:
+          "Alice follows the White Rabbit into a fantastical underground world where she encounters talking animals, a mad tea party, and an irascible Queen who demands everyone's head.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1951 - Alice in Wonderland.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      PETER PAN  (1953)
      Single feature film — archive identifier: schoolproject2_20200406
      Walt Disney Productions animated fantasy directed by Clyde Geronimi, Wilfred Jackson & Hamilton Luske.
