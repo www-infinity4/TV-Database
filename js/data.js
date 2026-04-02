@@ -2282,6 +2282,1555 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     USA CHANNEL — STAR WARS TRILOGY HOLIDAY MOVIE SPECIAL
+     CHRISTMAS MARATHON  (1993)
+     Single feature recording — archive identifier:
+     starwarstrilogyholidaymoviespecialchristmasmarathon
+     VHS-to-digital capture of the USA Channel's holiday broadcast
+     of all three original Star Wars films in one marathon sitting,
+     December 1993. Includes original commercials and network bumpers.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "star-wars-trilogy-usa-marathon-1993",
+    type: "movie",
+    title: "Star Wars Trilogy Holiday Movie Special (USA Channel 1993)",
+    years: "1993",
+    genre: ["Adventure", "Sci-Fi", "Fantasy", "Family"],
+    rating: "PG",
+    score: 9.0,
+    description:
+      "A rare VHS recording of the USA Channel's Star Wars Trilogy Holiday Movie Special Christmas Marathon, broadcast in December 1993. All three original films — A New Hope, The Empire Strikes Back, and Return of the Jedi — aired back-to-back in one uninterrupted holiday event, complete with period commercials and network bumpers. A nostalgic time-capsule of 1990s cable television and a beloved annual tradition for Star Wars fans.",
+    thumbnail: "https://archive.org/services/img/starwarstrilogyholidaymoviespecialchristmasmarathon",
+    featured: true,
+    episodes: [
+      {
+        id: "star-wars-trilogy-usa-marathon-1993-full",
+        title: "Star Wars Trilogy Holiday Movie Special — Full Marathon",
+        season: 0,
+        episode: 0,
+        year: 1993,
+        duration: "approx. 9 hr",
+        description:
+          "The complete USA Channel Christmas 1993 broadcast of the original Star Wars trilogy (A New Hope, The Empire Strikes Back, Return of the Jedi) with original 1993 commercials and network bumpers intact.",
+        archiveId: "starwarstrilogyholidaymoviespecialchristmasmarathon",
+        thumbnail: "https://archive.org/services/img/starwarstrilogyholidaymoviespecialchristmasmarathon",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     NATIONAL GEOGRAPHIC VIDEO: ATOCHA — QUEST FOR TREASURE  (1986)
+     YouTube identifier: g7jey7YKYp0
+     Documentary following treasure hunter Mel Fisher's epic search
+     for the 1622 Spanish galleon Nuestra Señora de Atocha. Originally
+     released as a National Geographic LaserDisc special.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "nat-geo-atocha-1986",
+    type: "movie",
+    title: "National Geographic: Atocha — Quest for Treasure",
+    years: "1986",
+    genre: ["Documentary", "Adventure", "History"],
+    rating: "G",
+    score: 7.8,
+    description:
+      "Follow legendary treasure hunter Mel Fisher on his extraordinary 16-year quest to find the Nuestra Señora de Atocha, a Spanish galleon loaded with silver and gold that sank in the Florida Keys in 1622. This National Geographic documentary captures the obsession, heartbreak, and ultimate triumph of one of history's greatest treasure hunts.",
+    thumbnail: "https://img.youtube.com/vi/g7jey7YKYp0/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "nat-geo-atocha-1986-full",
+        title: "Atocha — Quest for Treasure",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "75 min",
+        description:
+          "Mel Fisher's 16-year search for the Atocha, a treasure-laden Spanish galleon lost in the Florida Keys in 1622, captured in this National Geographic documentary.",
+        youtubeId: "g7jey7YKYp0",
+        thumbnail: "https://img.youtube.com/vi/g7jey7YKYp0/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE REAL GHOSTBUSTERS  (1986–1991)
+     Archive identifier: the-real-ghostbusters
+     Animated series based on the hit 1984 film. Follows Peter
+     Venkman, Egon Spengler, Ray Stantz, Winston Zeddemore, Janine
+     Melnitz, and Slimer as they bust ghosts across New York City.
+     Season 1 = 13 episodes, indices 0–12.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "real-ghostbusters",
+    title: "The Real Ghostbusters",
+    years: "1986–1991",
+    genre: ["Animation", "Comedy", "Fantasy"],
+    rating: "TV-Y7",
+    score: 8.1,
+    description:
+      "The continuing adventures of Peter Venkman, Egon Spengler, Ray Stantz, Winston Zeddemore, and their spooky green mascot Slimer as they battle ghosts, demons, and supernatural forces threatening New York City. The beloved animated spin-off of the original Ghostbusters film, featuring sharp writing, mythology-rich storylines, and plenty of laughs.",
+    thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+    featured: true,
+    episodes: [
+      {
+        id: "rgb-s01e01", title: "Ghosts R Us", season: 1, episode: 1,
+        year: 1986, duration: "22 min",
+        description: "Three ghosts accidentally freed from the Containment Unit set up a rival ghostbusting business called Ghosts R Us to put the team out of work.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e02", title: "Killerwatt", season: 1, episode: 2,
+        year: 1986, duration: "22 min",
+        description: "A supernatural entity takes over New York's electrical grid, plunging the city into chaos as the Ghostbusters scramble to stop the power-hungry ghost.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e03", title: "Mrs. Roger's Neighborhood", season: 1, episode: 3,
+        year: 1986, duration: "22 min",
+        description: "The Ghostbusters are called to an elderly woman's home, only to find a sinister entity has taken control of the entire neighborhood.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e04", title: "Slimer, Come Home", season: 1, episode: 4,
+        year: 1986, duration: "22 min",
+        description: "After being blamed for mischief at the firehouse, Slimer runs away and falls in with a gang of rogue poltergeists, forcing the Ghostbusters to mount a rescue.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e05", title: "Troll Bridge", season: 1, episode: 5,
+        year: 1986, duration: "22 min",
+        description: "A clan of trolls seizes the Queensboro Bridge and won't let traffic pass until the Ghostbusters track down their runaway cousin.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e06", title: "The Boogieman Cometh", season: 1, episode: 6,
+        year: 1986, duration: "22 min",
+        description: "The Boogieman — a monster from Egon's own childhood nightmares — returns to terrorize two children, and the Ghostbusters must venture into his terrifying realm to stop him.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e07", title: "Mr. Sandman, Dream Me a Dream", season: 1, episode: 7,
+        year: 1986, duration: "22 min",
+        description: "The Sandman believes the world would be better off asleep for 500 years, and as his enchanted dust spreads across the city, people's dreams start coming dangerously to life.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e08", title: "When Halloween Was Forever", season: 1, episode: 8,
+        year: 1986, duration: "22 min",
+        description: "The ancient spirit Samhain is unleashed on Halloween night and intends to make the holiday last forever, flooding New York with supernatural creatures.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e09", title: "Look Homeward, Ray", season: 1, episode: 9,
+        year: 1986, duration: "22 min",
+        description: "Ray returns to his hometown as a local hero, but a botched ghostbusting job shakes his confidence — and only he can save the day if he believes in himself again.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e10", title: "Take Two", season: 1, episode: 10,
+        year: 1986, duration: "22 min",
+        description: "The Ghostbusters head to Hollywood as consultants on a movie about their exploits, but real ghosts invade the studio lot — and the team accidentally grabs prop proton packs.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e11", title: "Citizen Ghost", season: 1, episode: 11,
+        year: 1986, duration: "22 min",
+        description: "A flashback episode revealing how Slimer first came to live at the Ghostbusters' firehouse — set immediately after the events of the original film.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e12", title: "Janine's Genie", season: 1, episode: 12,
+        year: 1986, duration: "22 min",
+        description: "Janine accepts a mysterious lamp as payment for a job and accidentally frees a mischievous genie, getting a very unwanted taste of life as a Ghostbuster.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+      {
+        id: "rgb-s01e13", title: "Xmas Marks the Spot", season: 1, episode: 13,
+        year: 1986, duration: "22 min",
+        description: "The Ghostbusters accidentally travel back to Victorian England and capture the three spirits of A Christmas Carol, erasing the classic story from history — and ruining Christmas forever unless they can set things right.",
+        archiveId: "the-real-ghostbusters", archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/the-real-ghostbusters",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SUPERGIRL (1984) — ABC BROADCAST  (1987-02-28)
+     Archive identifier: Supergirl_ABC_WOC_OTA_1987-02-28_Incomplete
+     Off-air VHS recording of the ABC broadcast of the 1984
+     Supergirl theatrical film, with original commercials intact
+     (WOC = With Original Commercials, OTA = Over The Air).
+     Recording is marked incomplete.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "supergirl-1984-abc-1987",
+    type: "movie",
+    title: "Supergirl (1984)",
+    years: "1984",
+    genre: ["Action", "Sci-Fi", "Fantasy"],
+    rating: "PG",
+    score: 6.1,
+    description:
+      "Helen Slater stars as Kara Zor-El, cousin of Superman, who travels to Earth to retrieve a powerful Kryptonian artifact and winds up battling the sorceress Selena (Faye Dunaway) in order to save both worlds. Watch the full theatrical cut or a rare off-air VHS capture of the February 28, 1987 ABC broadcast — complete with original commercials and a vivid mid-80s time-capsule feel.",
+    thumbnail: "https://img.youtube.com/vi/VFOPfODwaug/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "supergirl-1984-full-movie",
+        title: "Supergirl — Full Movie (1984)",
+        season: 0,
+        episode: 1,
+        year: 1984,
+        duration: "124 min",
+        description:
+          "The complete 1984 theatrical cut of Supergirl. Kara Zor-El (Helen Slater) comes to Earth in search of a powerful Kryptonian energy source and must face the evil sorceress Selena (Faye Dunaway). Also starring Peter O'Toole and Mia Farrow.",
+        youtubeId: "VFOPfODwaug",
+        thumbnail: "https://img.youtube.com/vi/VFOPfODwaug/hqdefault.jpg",
+      },
+      {
+        id: "supergirl-1984-abc-1987-full",
+        title: "Supergirl — ABC Broadcast (Feb 28, 1987, WOC)",
+        season: 0,
+        episode: 2,
+        year: 1987,
+        duration: "~124 min",
+        description:
+          "The 1984 Supergirl theatrical film as broadcast on ABC, February 28, 1987 — with original period commercials intact. Starring Helen Slater, Faye Dunaway, Peter O'Toole, and Mia Farrow. Recording is incomplete.",
+        archiveId: "Supergirl_ABC_WOC_OTA_1987-02-28_Incomplete",
+        thumbnail: "https://archive.org/services/img/Supergirl_ABC_WOC_OTA_1987-02-28_Incomplete",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE INCREDIBLE HULK (1966 Animated Series)
+     Archive identifier: the-incredble-hulk-1966-complete-series-english
+     Part of The Marvel Super Heroes anthology. Each episode
+     comprises three ~7-minute segments adapted from Stan Lee &
+     Jack Kirby's early Hulk comics.
+     Season 1 (1966): 13 episodes
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "incredible-hulk-1966",
+    title: "The Incredible Hulk (1966)",
+    years: "1966",
+    genre: ["Action", "Sci-Fi", "Animated"],
+    rating: "TV-G",
+    score: 7.0,
+    description:
+      "The first animated incarnation of Marvel's gamma-irradiated behemoth. Physicist Dr. Bruce Banner's accidental exposure to a gamma bomb explosion transforms him into the raging, near-invincible Hulk whenever danger strikes. Adapted faithfully from the early Stan Lee and Jack Kirby comics, each episode tells three serialised stories pitting Banner, Rick Jones, and Betty Ross against villains such as the Leader, the Toadmen, Metal Master, and Tyrannus.",
+    thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+    featured: false,
+    episodes: [
+      {
+        id: "hulk66-s01e01",
+        title: "The Origin of the Hulk / Enter the Gorgon / To Be a Man",
+        season: 1, episode: 1, year: 1966, duration: "22 min",
+        description: "Dr. Bruce Banner saves teenager Rick Jones from a gamma bomb blast and is irradiated, triggering his first transformation; the monstrous Gorgon arrives in America to battle the Hulk; Banner attempts to help the Gorgon find a cure for his deformity.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e02",
+        title: "Terror of the Toadmen / Wanted for Treason / Hulk Runs Amok",
+        season: 1, episode: 2, year: 1966, duration: "22 min",
+        description: "Magnetism-wielding alien Toadmen invade Earth and capture Banner; the U.S. military brands Bruce Banner a traitor in the wake of the Toadmen's assault; the Hulk is hunted by General Ross's forces across the country.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e03",
+        title: "A Titan Rides the Train / The Horde of Humanoids / On the Rampage!",
+        season: 1, episode: 3, year: 1966, duration: "22 min",
+        description: "The Leader's synthetic Humanoids hijack a train carrying one of Banner's inventions; the Leader prepares a full-scale invasion with his Humanoid army while Banner is held captive; the Hulk battles the Humanoid horde and reverts to Banner in the chaos.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e04",
+        title: "The Power of Dr. Banner / Where Strides the Behemoth / Back from the Dead",
+        season: 1, episode: 4, year: 1966, duration: "22 min",
+        description: "The military hunts Banner for crimes attributed to the Hulk and he fights to prove his innocence; the Hulk flees to the Himalayas but is captured and reverted to Banner; Banner sees a chance to save Major Talbot and to rid himself of the Hulk forever.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e05",
+        title: "Micro-Monsters / The Lair of the Leader / To Live Again",
+        season: 1, episode: 5, year: 1966, duration: "22 min",
+        description: "The Hulk battles the Leader's forces to rescue Rick Jones from miniaturised monsters; the Hulk is trapped inside the Leader's high-tech subterranean lair while Rick faces mortal danger; the final battle for Banner's Absorbatron — a device capable of absorbing a nuclear explosion.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e06",
+        title: "Brawn Against Brain / Captured at Last / Enter the Chameleon",
+        season: 1, episode: 6, year: 1966, duration: "22 min",
+        description: "The Hulk clashes with the intellect-driven Leader in a battle where raw power meets cunning strategy; the military finally succeeds in capturing the Hulk; the shape-shifting Chameleon infiltrates Banner's circle, impersonating allies to defeat the Hulk from within.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e07",
+        title: "Within This Monster Dwells a Man / Another World, Another Foe / The Wisdom of the Watcher",
+        season: 1, episode: 7, year: 1966, duration: "22 min",
+        description: "The Hulk's internal struggle between Banner's intellect and the monster's rage reaches a crisis point; a new interdimensional threat emerges to challenge the Hulk; the cosmic Watcher observes Banner's dilemma and imparts wisdom about the duality of human nature.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e08",
+        title: "The Space Phantom / Sting of the Wasp / Exit the Hulk",
+        season: 1, episode: 8, year: 1966, duration: "22 min",
+        description: "The alien Space Phantom, who can assume anyone's form, sows chaos and pits the Hulk against the Avengers; the Wasp enters the fray as the Avengers confront the shape-shifting interloper; the Hulk's uneasy alliance with Earth's Mightiest Heroes collapses and he departs alone.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e09",
+        title: "Hulk vs. Metal Master / The Master Tests His Metal / Mind Over Metal",
+        season: 1, episode: 9, year: 1966, duration: "22 min",
+        description: "The extraterrestrial Metal Master — with power over every metal on Earth — arrives and the Hulk's brute strength proves no match; Metal Master tests his powers on humanity's infrastructure; Banner's scientific genius devises the only weapon capable of defeating an enemy immune to the Hulk's fists.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e10",
+        title: "The Ringmaster / Captive of the Circus / The Grand Finale",
+        season: 1, episode: 10, year: 1966, duration: "22 min",
+        description: "The sinister Ringmaster uses his hypnotic disc to enslave the Hulk and force him to perform in his criminal circus; the Hulk struggles to break free while helpless to resist the Ringmaster's mental control; the dramatic showdown inside the big top brings the Ringmaster's reign of terror to an end.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e11",
+        title: "Enter Tyrannus / Beauty and the Beast / They Dwell in the Depths",
+        season: 1, episode: 11, year: 1966, duration: "22 min",
+        description: "The Hulk is dragged into the subterranean kingdom of the immortal Roman emperor Tyrannus; Betty Ross is captured and the Hulk must navigate Tyrannus's underground realm to rescue her; the Hulk battles monstrous creatures lurking in the earth's deep passages to find his way back to the surface.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e12",
+        title: "Terror of the T-Gun / I Against a World / Bruce Banner is the Hulk",
+        season: 1, episode: 12, year: 1966, duration: "22 min",
+        description: "A terrifying new gamma weapon called the T-Gun threatens to destroy everything Banner has worked to protect; cornered by both enemies and the military, Banner faces the world alone; the truth about Bruce Banner's double identity edges ever closer to exposure.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e13",
+        title: "The Man Called Boomerang / Hulk Intervenes / Less Than Monster, More Than Man",
+        season: 1, episode: 13, year: 1966, duration: "22 min",
+        description: "The villainous Boomerang — a supersonic assassin armed with explosive shells — challenges the Hulk in the season finale; the Hulk must intervene in a crisis that tests whether brute strength alone is enough; the series concludes with a meditation on Banner's duality — less than the monster the world fears, yet more than merely human.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE INCREDIBLE HULK (1994 Animated Series)
+     Archive identifier: incredible-hulk-1994-complete-series
+     UPN animated series produced by Marvel Films Animation.
+     Season 1 (1996): 13 episodes  |  Season 2 (1997): 8 episodes
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "incredible-hulk-1994",
+    title: "The Incredible Hulk (1994)",
+    years: "1996–1997",
+    genre: ["Action", "Sci-Fi", "Animated"],
+    rating: "TV-Y7",
+    score: 7.5,
+    description:
+      "Marvel's animated take on the jolly green giant. Scientist Bruce Banner, cursed to transform into the rampaging Hulk whenever his anger peaks, battles villains, the military, and his own inner demons alongside She-Hulk and Rick Jones. Part of the 1990s Marvel animated universe.",
+    thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+    featured: false,
+    episodes: [
+      /* ── Season 1 (1996) ── */
+      {
+        id: "hulk94-s01e01",
+        title: "The Return of the Beast (Part 1)",
+        season: 1, episode: 1, year: 1996, duration: "23 min",
+        description: "Bruce Banner returns to the Gamma Base and must once again become the Hulk to stop the Leader from seizing a powerful gamma weapon.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e02",
+        title: "The Return of the Beast (Part 2)",
+        season: 1, episode: 2, year: 1996, duration: "23 min",
+        description: "The Hulk battles the Leader's forces and faces General Ross, who is determined to capture Banner once and for all.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e03",
+        title: "Helping Hand, Iron Fist",
+        season: 1, episode: 3, year: 1996, duration: "23 min",
+        description: "Iron Man crosses paths with the Hulk when both heroes converge on a dangerous gamma-powered arms deal.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e04",
+        title: "Man to Man, Beast to Beast",
+        season: 1, episode: 4, year: 1996, duration: "23 min",
+        description: "The Hulk encounters the Man-Thing in a Florida swamp and must prevent the creature from being weaponised by a shadowy organisation.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e05",
+        title: "Raw Power",
+        season: 1, episode: 5, year: 1996, duration: "23 min",
+        description: "Zzzax — a being of pure electrical energy — threatens the power grid, and only the Hulk has the raw strength to stop it.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e06",
+        title: "Darkness and Light (Part 1)",
+        season: 1, episode: 6, year: 1996, duration: "23 min",
+        description: "Bruce Banner discovers that his gamma-fuelled alter ego may be splintering his mind into multiple personalities — and one of them is murderous.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e07",
+        title: "Darkness and Light (Part 2)",
+        season: 1, episode: 7, year: 1996, duration: "23 min",
+        description: "As Banner's psyche fractures further, the Grey Hulk persona takes control and pursues its own destructive agenda.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e08",
+        title: "Darkness and Light (Part 3)",
+        season: 1, episode: 8, year: 1996, duration: "23 min",
+        description: "Banner must unify his fractured psyche before the competing Hulk personalities destroy everything — and everyone — around him.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e09",
+        title: "Innocent Blood",
+        season: 1, episode: 9, year: 1996, duration: "23 min",
+        description: "The Hulk is framed for a brutal attack and hunted by both General Ross and a relentless new bounty hunter hired to bring Banner in dead or alive.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e10",
+        title: "Mortal Bounds",
+        season: 1, episode: 10, year: 1996, duration: "23 min",
+        description: "Rick Jones is infected with a lethal gamma-born virus; only the Hulk can retrieve the cure from the Abomination's lair.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e11",
+        title: "Of Monsters and Men",
+        season: 1, episode: 11, year: 1996, duration: "23 min",
+        description: "The Hulk reluctantly teams up with Thor when a fearsome new gamma-powered monster threatens both New York and Asgard.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e12",
+        title: "They Call Me Conquest",
+        season: 1, episode: 12, year: 1996, duration: "23 min",
+        description: "An alien warlord arrives on Earth seeking the Hulk as a trophy; the Hulk must fight for his life — and for Earth's freedom.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e13",
+        title: "Doomed",
+        season: 1, episode: 13, year: 1996, duration: "23 min",
+        description: "Dr. Doom traps the Hulk and the Fantastic Four in an interdimensional labyrinth, forcing uneasy allies to work together to escape.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      /* ── Season 2 (1997) ── */
+      {
+        id: "hulk94-s02e01",
+        title: "Hex Factor",
+        season: 2, episode: 1, year: 1997, duration: "23 min",
+        description: "She-Hulk joins Bruce as he faces the Absorbing Man and a mysterious sorceress whose hex powers push the Hulk to his limits.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 13,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s02e02",
+        title: "Down Memory Lane",
+        season: 2, episode: 2, year: 1997, duration: "23 min",
+        description: "Bruce Banner is forced to relive the childhood trauma that shaped both his genius and his curse as the Leader probes his subconscious.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 14,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s02e03",
+        title: "Mind Over Anti-Matter",
+        season: 2, episode: 3, year: 1997, duration: "23 min",
+        description: "The Leader opens a rift to an anti-matter dimension; She-Hulk and the Hulk must close it before both worlds are annihilated.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 15,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s02e04",
+        title: "Doomed (Part 1)",
+        season: 2, episode: 4, year: 1997, duration: "23 min",
+        description: "Doctor Doom returns, now wielding the power of the Silver Surfer, and sets his sights on conquering every dimension in the multiverse.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 16,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s02e05",
+        title: "Doomed (Part 2)",
+        season: 2, episode: 5, year: 1997, duration: "23 min",
+        description: "The Hulk, She-Hulk, and the Fantastic Four mount a desperate last stand against an all-powerful Doctor Doom.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 17,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s02e06",
+        title: "Fashion Victims",
+        season: 2, episode: 6, year: 1997, duration: "23 min",
+        description: "She-Hulk battles the villainous Ogress while Bruce struggles to maintain control after a new gamma experiment goes catastrophically wrong.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 18,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s02e07",
+        title: "Innocent Blood (Part 2)",
+        season: 2, episode: 7, year: 1997, duration: "23 min",
+        description: "The Hulk is put on trial for his past rampages; She-Hulk serves as his defence attorney in a case that could see Banner imprisoned forever.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 19,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s02e08",
+        title: "Crack in the World",
+        season: 2, episode: 8, year: 1997, duration: "23 min",
+        description: "In the series finale, a catastrophic fault line threatens to split the Earth apart — only the Hulk's immeasurable strength can save the planet.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 20,
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE ERUPTION OF MT. ST. HELENS  (1980)
+     Archive identifier: the-eruption-of-mt-st-helens-1980
+     Television documentary produced by KATU (Portland, OR) and
+     KOMO-TV (Seattle, WA) capturing the May 18, 1980 eruption.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "eruption-of-mt-st-helens-1980",
+    type: "movie",
+    title: "The Eruption of Mt. St. Helens",
+    years: "1980",
+    genre: ["Documentary", "History"],
+    rating: "TV-G",
+    score: 8.0,
+    description:
+      "A gripping television documentary produced by Portland's KATU and Seattle's KOMO-TV in the immediate aftermath of the catastrophic May 18, 1980 eruption of Mount St. Helens. Combining on-the-ground news footage with scientific narration, the film documents the seismic buildup, the cataclysmic lateral blast that flattened hundreds of square miles of forest, the massive pyroclastic flows and lahars, and the human stories of evacuation, survival, and loss. An invaluable piece of broadcast journalism history.",
+    thumbnail: "https://archive.org/services/img/the-eruption-of-mt-st-helens-1980",
+    featured: false,
+    episodes: [
+      {
+        id: "eruption-mt-st-helens-1980-full",
+        title: "The Eruption of Mt. St. Helens",
+        season: 0,
+        episode: 0,
+        year: 1980,
+        duration: "50 min",
+        description: "News footage and narration chronicle the seismic buildup, the devastating May 18 lateral blast, and the immediate human and environmental aftermath of the most destructive volcanic eruption in U.S. recorded history.",
+        archiveId: "the-eruption-of-mt-st-helens-1980",
+        thumbnail: "https://archive.org/services/img/the-eruption-of-mt-st-helens-1980",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     ERNEST SCARED STUPID  (1991)
+     Archive identifier: Ernest_Scared_Stupid_Ernest_Scared_Straight
+     Touchstone Pictures comedy-horror featuring Jim Varney as
+     Ernest P. Worrell alongside Eartha Kitt.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "ernest-scared-stupid-1991",
+    type: "movie",
+    title: "Ernest Scared Stupid",
+    years: "1991",
+    genre: ["Comedy", "Horror", "Family"],
+    rating: "PG",
+    score: 6.1,
+    description:
+      "Lovable klutz Ernest P. Worrell (Jim Varney) accidentally breaks an ancient seal and releases Trantor, a hideous troll who turns children into wooden dolls on Halloween night. With the help of his friends and the mysterious Old Lady Hackmore (Eartha Kitt), Ernest must find a way to defeat Trantor and save the kids before it's too late — if his bumbling doesn't doom them all first.",
+    thumbnail: "https://archive.org/services/img/Ernest_Scared_Stupid_Ernest_Scared_Straight",
+    featured: false,
+    episodes: [
+      {
+        id: "ernest-scared-stupid-1991-full",
+        title: "Ernest Scared Stupid",
+        season: 0,
+        episode: 0,
+        year: 1991,
+        duration: "91 min",
+        description: "Ernest P. Worrell unwittingly unleashes an ancient troll on Halloween. Starring Jim Varney and Eartha Kitt.",
+        archiveId: "Ernest_Scared_Stupid_Ernest_Scared_Straight",
+        thumbnail: "https://archive.org/services/img/Ernest_Scared_Stupid_Ernest_Scared_Straight",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     GUIDING LIGHT  (1952–2009)
+     Archive identifier: guidinglight-1992
+     Individual episodes addressed via archiveFile (filename within
+     the collection).  GL-15Oct1991.mpg = October 15, 1991 episode.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "guiding-light",
+    title: "Guiding Light",
+    years: "1952–2009",
+    genre: ["Drama", "Soap Opera"],
+    rating: "TV-PG",
+    score: 7.5,
+    description:
+      "One of the longest-running dramatic serials in broadcasting history, Guiding Light began on radio in 1937 before moving to CBS television in 1952. Set in the fictional town of Springfield, the show followed the intertwined lives of the Bauer, Spaulding, and Lewis families across generations — weaving together romance, family conflict, corporate intrigue, and social issues over more than five decades until its final episode in September 2009.",
+    thumbnail: "https://archive.org/services/img/guidinglight-1992",
+    featured: false,
+    episodes: [
+      {
+        id: "gl-1991-10-15",
+        title: "October 15, 1991",
+        season: 1991,
+        episode: 1,
+        year: 1991,
+        duration: "60 min",
+        description: "A classic episode of Guiding Light from October 15, 1991, continuing the stories of Springfield's most prominent families.",
+        archiveId: "guidinglight-1992",
+        archiveFile: "GL-15Oct1991.mpg",
+        thumbnail: "https://archive.org/services/img/guidinglight-1992",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     NIRVANA MTV UNPLUGGED IN NEW YORK  (1993)
+     Archive identifier: Nirvana_Unplugged_Unedited_1993
+     Unedited recording of the November 18, 1993 taping at
+     Sony Music Studios, New York City.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "nirvana-unplugged-1993",
+    type: "movie",
+    title: "Nirvana: MTV Unplugged in New York",
+    years: "1993",
+    genre: ["Music", "Documentary"],
+    rating: "TV-PG",
+    score: 9.6,
+    description:
+      "Recorded on November 18, 1993 at Sony Music Studios in New York City, Nirvana's landmark MTV Unplugged performance is widely regarded as one of the greatest live concerts ever captured on film. Kurt Cobain, Krist Novoselic, and Dave Grohl — augmented by Pat Smear and cellist Lori Goldston — delivered an intimate, candle-lit set heavy on deep cuts, covers (David Bowie, The Vaselines, Lead Belly, Meat Puppets), and raw acoustic arrangements that revealed new dimensions in Cobain's songwriting. Broadcast on MTV on December 14, 1993, it remains a definitive document of both the band and the era. This is the unedited full recording of the taping.",
+    thumbnail: "https://archive.org/services/img/Nirvana_Unplugged_Unedited_1993",
+    featured: false,
+    episodes: [
+      {
+        id: "nirvana-unplugged-1993-full",
+        title: "MTV Unplugged in New York (Unedited)",
+        season: 0,
+        episode: 0,
+        year: 1993,
+        duration: "75 min",
+        description: "The complete unedited taping of Nirvana's historic MTV Unplugged session, recorded November 18, 1993 at Sony Music Studios, New York.",
+        archiveId: "Nirvana_Unplugged_Unedited_1993",
+        thumbnail: "https://archive.org/services/img/Nirvana_Unplugged_Unedited_1993",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     GHOSTBUSTERS  (1984)
+     Archive identifier: ghostbusters-from-the-original-vhs-release-in-1985
+     Original 1985 Columbia Pictures Home Entertainment VHS release.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "ghostbusters-1984",
+    type: "movie",
+    title: "Ghostbusters",
+    years: "1984",
+    genre: ["Comedy", "Horror", "Sci-Fi"],
+    rating: "PG",
+    score: 8.1,
+    description:
+      "Three eccentric parapsychology professors — Peter Venkman (Bill Murray), Ray Stantz (Dan Aykroyd), and Egon Spengler (Harold Ramis) — lose their university funding and go into business as freelance ghost catchers in New York City. When supernatural activity in the city suddenly spikes and beautiful cellist Dana Barrett (Sigourney Weaver) finds her refrigerator is a gateway to another dimension, the Ghostbusters realise they are all that stands between the world and an apocalyptic invasion. This is the original 1985 Columbia Pictures Home Entertainment VHS transfer.",
+    thumbnail: "https://archive.org/services/img/ghostbusters-from-the-original-vhs-release-in-1985",
+    featured: false,
+    episodes: [
+      {
+        id: "ghostbusters-1984-full",
+        title: "Ghostbusters",
+        season: 0,
+        episode: 0,
+        year: 1984,
+        duration: "105 min",
+        description: "Fired from their university, three parapsychologists start a ghost-catching business in New York City and face an ancient deity threatening to destroy the world. Starring Bill Murray, Dan Aykroyd, Harold Ramis, and Sigourney Weaver.",
+        archiveId: "ghostbusters-from-the-original-vhs-release-in-1985",
+        thumbnail: "https://archive.org/services/img/ghostbusters-from-the-original-vhs-release-in-1985",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SKI SCHOOL (PART 3)
+     Archive identifier: skischoolpart3
+     Third entry in the Ski School series.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "ski-school-part-3",
+    type: "movie",
+    title: "Ski School (Part 3)",
+    years: "1994",
+    genre: ["Comedy"],
+    rating: "R",
+    score: 5.2,
+    description:
+      "The irreverent ski-comedy franchise returns for a third outing on the snowy slopes. A new crop of rowdy instructors and eager beginners collide at the mountain resort, trading pranks and rivalries while chasing championships and romance. Packed with slapstick set pieces, après-ski antics, and the sunny, anything-goes spirit that fans of the series have come to expect.",
+    thumbnail: "https://archive.org/services/img/skischoolpart3",
+    featured: false,
+    episodes: [
+      {
+        id: "ski-school-part-3-full",
+        title: "Ski School (Part 3)",
+        season: 0,
+        episode: 0,
+        year: 1994,
+        duration: "95 min",
+        description: "The slopes come alive again as a new generation of wild ski instructors and hapless beginners battle it out at the mountain resort in this third entry in the Ski School comedy series.",
+        archiveId: "skischoolpart3",
+        thumbnail: "https://archive.org/services/img/skischoolpart3",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     ER — 1984 PILOT (Parts 1 & 2)
+     Archive identifier: e-r-1984-pilot-pts-1-2
+     The original two-part television pilot based on Michael
+     Crichton's unproduced 1974 screenplay, filmed in 1984 and
+     later the creative blueprint for the landmark 1994 NBC series.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "er-1984-pilot",
+    type: "movie",
+    title: "ER: The Pilot (1984)",
+    years: "1984",
+    genre: ["Drama", "Medical"],
+    rating: "TV-PG",
+    score: 7.8,
+    description:
+      "The two-part television pilot that launched one of the most celebrated medical dramas in broadcast history. Based on Michael Crichton's unproduced 1974 screenplay drawn from his own experiences as a medical student, this 1984 production captures the relentless pace and human drama of a big-city hospital emergency room — the template that would be fully realised a decade later when Steven Spielberg and Crichton brought the concept to NBC in 1994. A rare piece of television history: the prototype for ER's ten-year run as appointment viewing.",
+    thumbnail: "https://archive.org/services/img/e-r-1984-pilot-pts-1-2",
+    featured: false,
+    episodes: [
+      {
+        id: "er-1984-pilot-full",
+        title: "ER Pilot — Parts 1 & 2",
+        season: 0,
+        episode: 0,
+        year: 1984,
+        duration: "120 min",
+        description: "The complete two-part pilot. A frantic night in a city emergency room tests doctors, nurses, and interns to their limits — establishing the fast-cut, multi-storyline style that would define the 1994 series.",
+        archiveId: "e-r-1984-pilot-pts-1-2",
+        thumbnail: "https://archive.org/services/img/e-r-1984-pilot-pts-1-2",
+      },
+    ],
+  },
+  {
+    id: "vhs-october-1990-wesh-quantum-leap-night-court",
+    type: "vhs",
+    title: "VHS Tape — October 1990: Quantum Leap & Night Court (WESH)",
+    years: "1990",
+    genre: ["Sci-Fi", "Comedy", "Drama", "VHS Recording"],
+    rating: "TV-PG",
+    score: 8.2,
+    description:
+      "A home VHS recording from October 1990 captured off WESH, an NBC affiliate in Orlando, Florida. The tape preserves three episodes of Quantum Leap (Season 3) alongside an episode of Night Court and a segment of NBC News at This Hour — all complete with period commercials, network bumpers, and station identifications. An authentic time-capsule of early-1990s broadcast television and a rare off-air record of two beloved NBC Thursday-night staples.",
+    thumbnail: "https://archive.org/services/img/vhs-tape-october-1990-wesh-three-quantum-leap-episodes-nbc-news-at-this-hour-night-court",
+    featured: false,
+    episodes: [
+      {
+        id: "vhs-1990-wesh-full-tape",
+        title: "Full Tape — Quantum Leap, NBC News & Night Court (October 1990)",
+        season: 0,
+        episode: 0,
+        year: 1990,
+        duration: "120 min",
+        description: "Complete VHS recording from October 1990 off WESH/NBC. Contains three Season 3 Quantum Leap episodes, an NBC News at This Hour segment, and an episode of Night Court — with all original commercials and station breaks intact.",
+        archiveId: "vhs-tape-october-1990-wesh-three-quantum-leap-episodes-nbc-news-at-this-hour-night-court",
+        thumbnail: "https://archive.org/services/img/vhs-tape-october-1990-wesh-three-quantum-leap-episodes-nbc-news-at-this-hour-night-court",
+      },
+    ],
+  },
+  {
+    id: "apollo-13-houston-we-have-a-problem-1970",
+    type: "documentary",
+    title: "Apollo 13: Houston, We Have a Problem (1970)",
+    years: "1970",
+    genre: ["Documentary", "Space", "History"],
+    rating: "G",
+    score: 9.0,
+    description:
+      "NASA's own official documentary account of the Apollo 13 mission, produced in 1970 shortly after the near-catastrophic moon flight. On April 13, 1970, an oxygen tank explosion crippled the command module 200,000 miles from Earth, forcing commander Jim Lovell, Jack Swigert, and Fred Haise to use the lunar module Aquarius as a lifeboat. This film draws on mission footage, cockpit audio, Mission Control recordings, and post-flight interviews to chronicle the four-day struggle to bring the crew home safely — a defining moment for NASA and the world.",
+    thumbnail: "https://archive.org/services/img/34062Apollo13HoustonWeHaveAProblem",
+    featured: false,
+    episodes: [
+      {
+        id: "apollo-13-houston-we-have-a-problem-full",
+        title: "Apollo 13: Houston, We Have a Problem",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "60 min",
+        description: "NASA's official documentary of the Apollo 13 crisis, featuring mission footage, cockpit recordings, and Mission Control audio from the April 1970 emergency that gripped the world.",
+        archiveId: "34062Apollo13HoustonWeHaveAProblem",
+        thumbnail: "https://archive.org/services/img/34062Apollo13HoustonWeHaveAProblem",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WHERE THE RED FERN GROWS  (1974)
+     Archive identifier:
+       where-the-red-fern-grows-1974-faith-family-uplifting-encourage-tv
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "where-the-red-fern-grows-1974",
+    type: "movie",
+    title: "Where the Red Fern Grows (1974)",
+    years: "1974",
+    genre: ["Drama", "Family", "Adventure"],
+    rating: "G",
+    score: 6.9,
+    description:
+      "A faithful and deeply moving adaptation of Wilson Rawls' beloved novel. Young Billy Colman saves for two years to buy a pair of coonhound pups — Old Dan and Little Ann — and trains them into champion hunting dogs in the Oklahoma Ozarks. The film tenderly traces the bond between a boy and his dogs through triumph and heartbreak, capturing the timeless themes of determination, loyalty, and growing up. Starring Stewart Petersen as Billy alongside James Whitmore and Beverly Garland, this G-rated family classic has introduced generations of viewers to one of American literature's most cherished stories.",
+    thumbnail:
+      "https://archive.org/services/img/where-the-red-fern-grows-1974-faith-family-uplifting-encourage-tv",
+    featured: false,
+    episodes: [
+      {
+        id: "where-the-red-fern-grows-1974-full",
+        title: "Where the Red Fern Grows",
+        season: 0,
+        episode: 0,
+        year: 1974,
+        duration: "97 min",
+        description:
+          "Billy Colman raises and trains two beloved coonhounds, Old Dan and Little Ann, in the Oklahoma Ozarks — a story of love, loyalty, and the bittersweet passage from boyhood to maturity, based on Wilson Rawls' classic novel.",
+        archiveId:
+          "where-the-red-fern-grows-1974-faith-family-uplifting-encourage-tv",
+        thumbnail:
+          "https://archive.org/services/img/where-the-red-fern-grows-1974-faith-family-uplifting-encourage-tv",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE ADVENTURES OF HUCKLEBERRY FINN  (1939)
+     Archive identifier: theadventuresofhuckleberryfinn_201611
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "adventures-of-huckleberry-finn-1939",
+    type: "movie",
+    title: "The Adventures of Huckleberry Finn (1939)",
+    years: "1939",
+    genre: ["Adventure", "Comedy", "Drama", "Family"],
+    rating: "NR",
+    score: 6.8,
+    description:
+      "MGM's spirited adaptation of Mark Twain's beloved novel, starring Mickey Rooney as the irrepressible Huck Finn. Running away from his abusive father, Huck fakes his own death and sets off on a raft down the Mississippi River with Jim, a runaway slave seeking freedom. Together they encounter con artists, feuding families, and the full sweep of life along the antebellum South's mightiest waterway. Directed by Richard Thorpe, the film captures Twain's adventurous spirit and sharp social commentary in this classic MGM production.",
+    thumbnail: "https://archive.org/services/img/theadventuresofhuckleberryfinn_201611",
+    featured: false,
+    episodes: [
+      {
+        id: "adventures-of-huckleberry-finn-1939-full",
+        title: "The Adventures of Huckleberry Finn",
+        season: 0,
+        episode: 0,
+        year: 1939,
+        duration: "91 min",
+        description: "Huck Finn escapes his drunken father and teams up with runaway slave Jim for a raft journey down the Mississippi, encountering adventure and danger at every bend in this classic MGM adaptation of Mark Twain's novel.",
+        archiveId: "theadventuresofhuckleberryfinn_201611",
+        thumbnail: "https://archive.org/services/img/theadventuresofhuckleberryfinn_201611",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     FRANKENSTEIN  (1931)
+     Single feature film — archive identifier: frankenstein-1931-english
+     Dir. James Whale. The definitive Universal Monster classic starring
+     Boris Karloff as the Monster and Colin Clive as Dr. Frankenstein.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "frankenstein-1931",
+    type: "movie",
+    title: "Frankenstein",
+    years: "1931",
+    genre: ["Horror", "Sci-Fi", "Drama"],
+    rating: "NR",
+    score: 7.7,
+    description:
+      "Obsessed scientist Dr. Henry Frankenstein, aided by his hunchbacked assistant Fritz, assembles a living creature from the parts of exhumed corpses and brings it to life using the power of electricity. The Monster — portrayed by Boris Karloff in an iconic, largely wordless performance — is at first childlike and innocent, but years of mistreatment and fear transform him into something terrifying. Directed by James Whale, this seminal Universal horror film remains one of cinema's most enduring and influential classics.",
+    thumbnail: "https://archive.org/services/img/frankenstein-1931-english",
+    featured: false,
+    episodes: [
+      {
+        id: "frankenstein-1931-full",
+        title: "Frankenstein",
+        season: 0,
+        episode: 0,
+        year: 1931,
+        duration: "71 min",
+        description:
+          "Dr. Frankenstein creates life from death, only to unleash a creature the world is not ready to accept. Boris Karloff's unforgettable performance as the Monster defines this Universal horror landmark.",
+        archiveId: "frankenstein-1931-english",
+        thumbnail: "https://archive.org/services/img/frankenstein-1931-english",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE BRIDE OF FRANKENSTEIN  (1935)
+     Single feature film — archive identifier: lp-473-pl_202403
+     Dir. James Whale. Sequel to Frankenstein (1931), starring Boris Karloff
+     and Elsa Lanchester in a dual role as Mary Shelley and the Bride.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "bride-of-frankenstein-1935",
+    type: "movie",
+    title: "The Bride of Frankenstein",
+    years: "1935",
+    genre: ["Horror", "Sci-Fi", "Drama"],
+    rating: "NR",
+    score: 7.8,
+    description:
+      "Picking up immediately where Frankenstein left off, Henry Frankenstein survives and the Monster lives on. The sinister Dr. Pretorius — a former mentor with his own grotesque experiments — coerces Frankenstein into creating a mate for the creature. The Monster, rejected everywhere he turns, briefly finds solace with a blind hermit before being driven away. When the Bride is finally brought to life and recoils from him in horror, the Monster's despair turns to devastating fury. Directed by James Whale, with Elsa Lanchester unforgettable in a dual role as Mary Shelley and the iconic, lightning-haired Bride.",
+    thumbnail: "https://archive.org/services/img/lp-473-pl_202403",
+    featured: false,
+    episodes: [
+      {
+        id: "bride-of-frankenstein-1935-full",
+        title: "The Bride of Frankenstein",
+        season: 0,
+        episode: 0,
+        year: 1935,
+        duration: "75 min",
+        description:
+          "Dr. Pretorius blackmails Frankenstein into creating a mate for the Monster, whose longing for companionship ends in tragedy. One of horror cinema's greatest sequels.",
+        archiveId: "lp-473-pl_202403",
+        thumbnail: "https://archive.org/services/img/lp-473-pl_202403",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     FRANKENSTEIN MEETS THE WOLF MAN  (1943)
+     Single feature film — archive identifier:
+       frankenstein-meets-the-wolf-man-1942
+     Note: the archive identifier reflects the 1942 production/pre-release
+     year; the theatrical release year and film year is 1943.
+     The original monster-crossover film, uniting Universal's Wolf Man
+     and Frankenstein franchises. Dir. Roy William Neill.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "frankenstein-meets-the-wolf-man-1943",
+    type: "movie",
+    title: "Frankenstein Meets the Wolf Man",
+    years: "1943",
+    genre: ["Horror", "Fantasy", "Sci-Fi"],
+    rating: "NR",
+    score: 6.4,
+    description:
+      "Accidentally resurrected by grave robbers, Lawrence Talbot — the Wolf Man — finds himself once again cursed with lycanthropy and desperate to die. With the help of the wise gypsy Maleva, he travels to Vasaria seeking the late Dr. Frankenstein's secrets, hoping to find a cure. Instead he discovers Frankenstein's Monster frozen in ice and becomes entangled in a dangerous experiment that could unleash both creatures at once. Cinema's first true monster-crossover event, establishing the template for the horror team-up.",
+    thumbnail: "https://archive.org/services/img/frankenstein-meets-the-wolf-man-1942",
+    featured: false,
+    episodes: [
+      {
+        id: "frankenstein-meets-the-wolf-man-1943-full",
+        title: "Frankenstein Meets the Wolf Man",
+        season: 0,
+        episode: 0,
+        year: 1943,
+        duration: "74 min",
+        description:
+          "The Wolf Man seeks a cure for his curse and instead awakens Frankenstein's Monster in this landmark Universal monster-crossover.",
+        archiveId: "frankenstein-meets-the-wolf-man-1942",
+        thumbnail: "https://archive.org/services/img/frankenstein-meets-the-wolf-man-1942",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE REVENGE OF FRANKENSTEIN  (1958)
+     Single feature film — archive identifier: the-revenge-of-frankenstein
+     Dir. Terence Fisher. Second entry in Hammer's Frankenstein series,
+     starring Peter Cushing. Sequel to The Curse of Frankenstein.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "revenge-of-frankenstein-1958",
+    type: "movie",
+    title: "The Revenge of Frankenstein",
+    years: "1958",
+    genre: ["Horror", "Sci-Fi"],
+    rating: "NR",
+    score: 6.7,
+    description:
+      "After escaping the guillotine by having a priest executed in his place, Baron Victor Frankenstein adopts the alias Dr. Stein and establishes a thriving medical practice in Carlsbrück — using his charity work among the poor as a cover for fresh experimental material. His hunchbacked assistant Karl volunteers his own brain for transplant into a perfectly constructed body, but the procedure goes horribly wrong as Karl's new form begins to degenerate. Peter Cushing delivers a compellingly cold and charismatic performance in this polished Hammer sequel, directed by Terence Fisher.",
+    thumbnail: "https://archive.org/services/img/the-revenge-of-frankenstein",
+    featured: false,
+    episodes: [
+      {
+        id: "revenge-of-frankenstein-1958-full",
+        title: "The Revenge of Frankenstein",
+        season: 0,
+        episode: 0,
+        year: 1958,
+        duration: "90 min",
+        description:
+          "Baron Frankenstein resurfaces under a false identity and continues his brain-transplant experiments with dire consequences in this stylish Hammer horror sequel starring Peter Cushing.",
+        archiveId: "the-revenge-of-frankenstein",
+        thumbnail: "https://archive.org/services/img/the-revenge-of-frankenstein",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     RETURN TO OZ — 1964 RANKIN/BASS TV SPECIAL
+     Animated musical TV special produced by Videocraft International
+     (Rankin/Bass) and Crawley Films. Premiered on NBC, February 9, 1964
+     as part of the General Electric Fantasy Hour.
+     Archive identifier: LVD54513
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "return-to-oz-1964-lvd54513",
+    type: "movie",
+    title: "Return to Oz (1964 Rankin/Bass TV Special)",
+    years: "1964",
+    genre: ["Animation", "Fantasy", "Musical", "Family", "1960s"],
+    rating: "NR",
+    score: 6.5,
+    description:
+      "An animated musical television special from Rankin/Bass (then Videocraft International), produced in association with Crawley Films and broadcast on NBC on February 9, 1964 as the first entry in the General Electric Fantasy Hour. A sequel to the studio's 1961 animated series Tales of the Wizard of Oz, the special follows Dorothy as she rediscovers her silver shoes and is swept back to Oz by a Kansas twister — only to find that the Wicked Witch of the West has returned, stripping her old friends of their cherished gifts: Socrates the Scarecrow loses his diploma, Rusty the Tin Man loses his heart, and Dandy the Lion's medal is turned into a daisy. Dorothy reunites with her companions and the Wizard to defeat the Witch once more. Scripted by Romeo Muller and directed by F. R. Crawley, Thomas Glynn, and Larry Roemer, the 51-minute special features Susan Conway as Dorothy and Larry D. Mann as both Rusty the Tin Man and the Wicked Witch — a charming Oz curiosity that marks one of Rankin/Bass's earliest forays into animated television.",
+    thumbnail: "https://archive.org/services/img/LVD54513",
+    featured: false,
+    episodes: [
+      {
+        id: "return-to-oz-1964-lvd54513-full",
+        title: "Return to Oz (1964)",
+        season: 0,
+        episode: 0,
+        year: 1964,
+        duration: "51 min",
+        description:
+          "Dorothy is carried back to Oz by a twister and must help her old friends reclaim their gifts from the returning Wicked Witch of the West in this Rankin/Bass animated NBC special.",
+        archiveId: "LVD54513",
+        thumbnail: "https://archive.org/services/img/LVD54513",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     JOURNEY BACK TO OZ (1972) — VHS
+     Filmation animated musical feature; archive identifier:
+       journey-back-to-oz-1972-vhs
+     Production began in 1962 but the film wasn't released until 1972
+     due to financial setbacks. Loosely based on L. Frank Baum's
+     "The Marvelous Land of Oz." Stars Liza Minnelli as Dorothy,
+     with a star-studded voice cast including Ethel Merman, Mickey
+     Rooney, Milton Berle, Paul Lynde, and Margaret Hamilton.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "journey-back-to-oz-1972-vhs",
+    type: "vhs",
+    title: "Journey Back to Oz (1972)",
+    years: "1972",
+    genre: ["Animation", "Fantasy", "Musical", "Family", "1970s"],
+    rating: "G",
+    score: 5.7,
+    description:
+      "A Filmation animated musical fantasy loosely based on L. Frank Baum's \"The Marvelous Land of Oz,\" produced beginning in 1962 but delayed by financial setbacks and not released until 1972. A tornado once again carries Dorothy Gale — this time voiced by Liza Minnelli, daughter of Judy Garland — and Toto back to Oz, where the scheming witch Mombi (Ethel Merman) is raising a fearsome army of green elephants to conquer the Emerald City. Dorothy teams up with old friends the Scarecrow (Mickey Rooney), Tin Man (Danny Thomas), and Cowardly Lion (Milton Berle), as well as new companions Pumpkinhead (Paul Lynde) and the carousel horse Woodenhead, to defeat Mombi and restore peace. The film features songs by Jimmy Van Heusen with lyrics by Sammy Cahn and is notable for casting Margaret Hamilton — the original Wicked Witch of the West — as Dorothy's Aunt Em. Directed by Hal Sutherland.",
+    thumbnail: "https://archive.org/services/img/journey-back-to-oz-1972-vhs",
+    featured: false,
+    episodes: [
+      {
+        id: "journey-back-to-oz-1972-vhs-full",
+        title: "Journey Back to Oz (1972)",
+        season: 0,
+        episode: 0,
+        year: 1972,
+        duration: "90 min",
+        description:
+          "Dorothy (Liza Minnelli) returns to Oz and must stop the witch Mombi (Ethel Merman) and her army of green elephants in this star-studded Filmation animated musical.",
+        archiveId: "journey-back-to-oz-1972-vhs",
+        thumbnail: "https://archive.org/services/img/journey-back-to-oz-1972-vhs",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     TEEN WOLF — KDLT VHS BROADCAST  (1987)
+     Single feature film recorded off-air — archive identifier:
+       teen.-wolf.-kdlt.-5.4.1987deraq
+     The 1985 film (dir. Rod Daniel, starring Michael J. Fox) as broadcast
+     on KDLT (South Dakota) on May 4, 1987, captured on VHS with original
+     commercials intact. Part of the vhsvault collection.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "teen-wolf-1985-kdlt-vhs",
+    type: "vhs",
+    title: "Teen Wolf — KDLT Broadcast (VHS, May 4, 1987)",
+    years: "1987",
+    genre: ["Comedy", "Fantasy", "VHS Recording"],
+    rating: "PG",
+    score: 6.9,
+    description:
+      "The quintessential 1985 teen comedy recorded off-air from KDLT (South Dakota) on May 4, 1987, preserved on VHS with original period commercials and station breaks intact. Ordinary high-schooler Scott Howard (Michael J. Fox) is struggling on a losing basketball team and pining after the most popular girl in school — until he discovers he has inherited his family's secret ability to transform into a werewolf. Embracing his inner wolf rockets Scott to overnight fame and puts him at the top of the social ladder, but he soon learns that being yourself is better than being a monster. Directed by Rod Daniel, Teen Wolf became one of the defining comedies of the decade and a box-office sensation. A genuine VHS time-capsule of mid-1980s local broadcast television.",
+    thumbnail: "https://archive.org/services/img/teen.-wolf.-kdlt.-5.4.1987deraq",
+    featured: false,
+    episodes: [
+      {
+        id: "teen-wolf-1985-kdlt-vhs-full",
+        title: "Teen Wolf (KDLT, May 4, 1987)",
+        season: 0,
+        episode: 0,
+        year: 1987,
+        duration: "91 min",
+        description:
+          "Teen Wolf (1985) as broadcast on KDLT on May 4, 1987, complete with original commercials. Michael J. Fox stars as Scott Howard, a teenager who discovers he is a werewolf and uses his powers to become the most popular kid in school.",
+        archiveId: "teen.-wolf.-kdlt.-5.4.1987deraq",
+        thumbnail: "https://archive.org/services/img/teen.-wolf.-kdlt.-5.4.1987deraq",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     ROSWELL REPORTS, VOLUME 1  (1997)
+     Single documentary — archive identifier: gov.archives.341-roswell-1
+     Official U.S. Air Force documentary produced by Capt. James MacAndrew
+     as a visual companion to "The Roswell Report: Case Closed" (1997).
+     A U.S. government work in the public domain.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "roswell-reports-vol-1-1997",
+    type: "documentary",
+    title: "Roswell Reports, Volume 1 (1997)",
+    years: "1997",
+    genre: ["Documentary", "History", "Military"],
+    rating: "NR",
+    score: 7.2,
+    description:
+      "The official United States Air Force documentary produced to accompany the 1997 publication \"The Roswell Report: Case Closed.\" Written and produced by Captain James MacAndrew and released through the National Archives and Records Administration, this film examines the famous 1947 Roswell incident — the alleged crash of an unidentified object near Roswell, New Mexico — and presents the Air Force's declassified conclusions. Drawing on official documentation, photographs, footage, and testimony, the film argues that the recovered debris originated from Project Mogul, a classified high-altitude balloon program designed to monitor Soviet nuclear activity, and that accounts of alien bodies corresponded to anthropomorphic test dummies used in later parachute experiments. A unique primary-source document of Cold War history and government transparency.",
+    thumbnail: "https://archive.org/services/img/gov.archives.341-roswell-1",
+    featured: false,
+    episodes: [
+      {
+        id: "roswell-reports-vol-1-1997-full",
+        title: "Roswell Reports, Volume 1",
+        season: 0,
+        episode: 0,
+        year: 1997,
+        duration: "24 min",
+        description:
+          "The U.S. Air Force's official documentary companion to \"The Roswell Report: Case Closed,\" presenting declassified findings on the 1947 Roswell incident through footage, photographs, and official testimony.",
+        archiveId: "gov.archives.341-roswell-1",
+        thumbnail: "https://archive.org/services/img/gov.archives.341-roswell-1",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     TALES FROM THE CRYPT — VHS  (HBO, 1989–1996)
+     VHS recording of HBO's Tales from the Crypt anthology series.
+     Archive identifier: tales-from-the-crypt-vhs
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "tales-from-the-crypt-vhs",
+    type: "vhs",
+    title: "Tales from the Crypt (HBO VHS Recording)",
+    years: "1989–1996",
+    genre: ["Horror", "Anthology", "Dark Comedy", "VHS Recording"],
+    rating: "TV-MA",
+    score: 8.0,
+    description:
+      "A VHS recording of HBO's landmark anthology horror series Tales from the Crypt, preserved with original broadcast elements. Based on the infamous 1950s EC Comics, the series aired on HBO from 1989 to 1996 across seven seasons and 93 episodes. Each installment is introduced — and wickedly closed — by the Cryptkeeper, a cackling, pun-obsessed ghoul puppet voiced by John Kassir, who descends into his candlelit crypt to present tales of murder, greed, lust, and poetic justice. Because of HBO's uncut format, the stories pushed well beyond what network television permitted, delivering graphic horror, pitch-black comedy, and morality-play twist endings that have secured the show a devoted cult following. This VHS capture preserves episodes as they were originally broadcast, complete with HBO promos and period interstitials — an authentic time-capsule of 1990s premium cable horror.",
+    thumbnail: "https://archive.org/services/img/tales-from-the-crypt-vhs",
+    featured: false,
+    episodes: [
+      {
+        id: "tales-from-the-crypt-vhs-full",
+        title: "Tales from the Crypt — HBO VHS Capture",
+        season: 0,
+        episode: 0,
+        year: 1994,
+        duration: "120 min",
+        description:
+          "VHS recording of multiple Tales from the Crypt episodes as broadcast on HBO, with original network promos and interstitials intact.",
+        archiveId: "tales-from-the-crypt-vhs",
+        thumbnail: "https://archive.org/services/img/tales-from-the-crypt-vhs",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SONG OF THE SOUTH  (1946)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions live-action/animated musical directed by Harve Foster & Wilfred Jackson.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "song-of-the-south-1946",
+    type: "movie",
+    title: "Song of the South",
+    years: "1946",
+    genre: ["Animation", "Family", "Musical", "Drama"],
+    rating: "G",
+    score: 6.6,
+    description:
+      "Young Johnny goes to live on his grandmother's plantation in the post-Civil War South, where he befriends the warm-hearted storyteller Uncle Remus. Through animated tales of Br'er Rabbit, Br'er Fox, and Br'er Bear, Uncle Remus shares timeless lessons about life, friendship, and keeping spirits high. Disney's pioneering blend of live action and animation gave the world the beloved song 'Zip-a-Dee-Doo-Dah'.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "song-of-the-south-1946-full",
+        title: "Song of the South",
+        season: 0,
+        episode: 0,
+        year: 1946,
+        duration: "94 min",
+        description:
+          "Johnny befriends Uncle Remus on a Georgia plantation and discovers the wisdom hidden in his animated tales of the wily Br'er Rabbit.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1946 - Song of the South.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     ALICE IN WONDERLAND  (1951)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated fantasy directed by Clyde Geronimi, Wilfred Jackson & Hamilton Luske.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "alice-in-wonderland-1951",
+    type: "movie",
+    title: "Alice in Wonderland",
+    years: "1951",
+    genre: ["Animation", "Family", "Fantasy", "Musical"],
+    rating: "G",
+    score: 7.3,
+    description:
+      "Young, curious Alice tumbles down a rabbit hole into Wonderland — a topsy-turvy realm filled with peculiar creatures and impossible logic. From tea parties with the Mad Hatter and the March Hare to a high-stakes croquet match with the temperamental Queen of Hearts, Alice must find her way home while navigating a world where nothing makes sense. Disney's 13th animated classic brings Lewis Carroll's beloved nonsense adventure to vivid, whimsical life.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "alice-in-wonderland-1951-full",
+        title: "Alice in Wonderland",
+        season: 0,
+        episode: 0,
+        year: 1951,
+        duration: "75 min",
+        description:
+          "Alice follows the White Rabbit into a fantastical underground world where she encounters talking animals, a mad tea party, and an irascible Queen who demands everyone's head.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1951 - Alice in Wonderland.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     PETER PAN  (1953)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated fantasy directed by Clyde Geronimi, Wilfred Jackson & Hamilton Luske.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "peter-pan-1953",
+    type: "movie",
+    title: "Peter Pan",
+    years: "1953",
+    genre: ["Animation", "Family", "Fantasy", "Adventure"],
+    rating: "G",
+    score: 7.3,
+    description:
+      "Wendy, Michael, and John Darling are whisked away by the boy who never grows up — Peter Pan — to the magical Neverland, where mermaids splash, the Lost Boys roam, and adventure lurks around every corner. Standing in the way of a perfect childhood paradise is the scheming Captain Hook, who has a score to settle with Peter and his trusty crocodile. Disney's 14th animated feature brings J.M. Barrie's beloved tale to life with unforgettable songs including 'You Can Fly' and 'Following the Leader'.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "peter-pan-1953-full",
+        title: "Peter Pan",
+        season: 0,
+        episode: 0,
+        year: 1953,
+        duration: "77 min",
+        description:
+          "The Darling children fly with Peter Pan to Neverland for a magical adventure, battling the villainous Captain Hook and his pirate crew.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1953 - Peter Pan.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE ARISTOCATS  (1970)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated musical directed by Wolfgang Reitherman.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-aristocats-1970",
+    type: "movie",
+    title: "The Aristocats",
+    years: "1970",
+    genre: ["Animation", "Family", "Musical", "Comedy"],
+    rating: "G",
+    score: 7.1,
+    description:
+      "In turn-of-the-century Paris, a prim and proper house cat named Duchess and her three kittens — Toulouse, Berlioz, and Marie — are the beloved pets of a wealthy retired opera singer who intends to leave her entire fortune to them. When the scheming butler Edgar learns of the plan, he kidnaps the cats and abandons them in the French countryside. Their only hope for home is Thomas O'Malley, a smooth-talking alley cat, and a band of jazz-playing feline friends. The last Disney animated feature personally approved by Walt Disney himself.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "the-aristocats-1970-full",
+        title: "The Aristocats",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "78 min",
+        description:
+          "Aristocratic Parisian cats Duchess and her kittens must find their way home with the help of a charming alley cat after a jealous butler leaves them stranded in the countryside.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1970 - The Aristocats.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     PETE'S DRAGON  (1977)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions live-action/animated musical directed by Don Chaffey.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "petes-dragon-1977",
+    type: "movie",
+    title: "Pete's Dragon",
+    years: "1977",
+    genre: ["Animation", "Family", "Musical", "Fantasy"],
+    rating: "G",
+    score: 6.6,
+    description:
+      "Young orphan Pete arrives in the small Maine fishing village of Passamaquoddy with an unlikely companion: Elliott, a lovable, bumbling, smoke-breathing dragon who is invisible to most adults. Taken in by kindly lighthouse keeper Nora and her father Lampie, Pete slowly finds a family — but the greedy Gogans who once owned him, and a scheming snake-oil salesman, threaten to tear them apart. A charming blend of live-action and hand-drawn animation, featuring songs by Al Kasha and Joel Hirschhorn.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "petes-dragon-1977-full",
+        title: "Pete's Dragon",
+        season: 0,
+        episode: 0,
+        year: 1977,
+        duration: "128 min",
+        description:
+          "Orphan Pete and his invisible dragon Elliott seek a real home in a Maine fishing village, facing villains and winning hearts along the way.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1977 - Pete's Dragon.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE RESCUERS  (1977)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated adventure directed by Wolfgang Reitherman.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-rescuers-1977",
+    type: "movie",
+    title: "The Rescuers",
+    years: "1977",
+    genre: ["Animation", "Family", "Adventure"],
+    rating: "G",
+    score: 7.0,
+    description:
+      "When a message in a bottle is discovered by the Rescue Aid Society — an international mouse organization headquartered beneath the United Nations — brave Hungarian delegate Miss Bianca and her reluctant partner Bernard are dispatched to locate a missing orphan girl named Penny. Their investigation leads them to the treacherous Devil's Bayou, where the villainous Medusa is forcing Penny to retrieve a priceless diamond from a dangerous cave. Featuring the voices of Bob Newhart and Eva Gabor, with songs by Sammy Fain.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "the-rescuers-1977-full",
+        title: "The Rescuers",
+        season: 0,
+        episode: 0,
+        year: 1977,
+        duration: "78 min",
+        description:
+          "Mouse agents Miss Bianca and Bernard race to rescue orphan Penny from the clutches of the villainous Madame Medusa in the Louisiana bayou.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1977 - The Rescuers.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE MANY ADVENTURES OF WINNIE THE POOH  (1977)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Productions animated compilation directed by John Lounsbery & Wolfgang Reitherman.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "many-adventures-of-winnie-the-pooh-1977",
+    type: "movie",
+    title: "The Many Adventures of Winnie the Pooh",
+    years: "1977",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "G",
+    score: 7.3,
+    description:
+      "Deep in the Hundred Acre Wood, the lovable, honey-obsessed Winnie the Pooh and his friends — Piglet, Eeyore, Tigger, Rabbit, Owl, Kanga, and Roo — embark on a series of gentle, heartwarming adventures. This beloved compilation brings together three classic featurettes: Winnie the Pooh and the Honey Tree, Winnie the Pooh and the Blustery Day, and Winnie the Pooh and Tigger Too. Based on the classic stories by A. A. Milne, with narration by Sebastian Cabot and songs by the Sherman Brothers.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "many-adventures-of-winnie-the-pooh-1977-full",
+        title: "The Many Adventures of Winnie the Pooh",
+        season: 0,
+        episode: 0,
+        year: 1977,
+        duration: "74 min",
+        description:
+          "Three classic featurettes follow Pooh and friends through honey hunts, blustery days, and Tigger's bouncy misadventures in the Hundred Acre Wood.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1977 - The Many Adventures of Winnie the Pooh.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     OLIVER & COMPANY  (1988)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Pictures animated musical directed by George Scribner.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "oliver-and-company-1988",
+    type: "movie",
+    title: "Oliver & Company",
+    years: "1988",
+    genre: ["Animation", "Family", "Musical", "Adventure"],
+    rating: "G",
+    score: 6.7,
+    description:
+      "A loose Disney retelling of Charles Dickens' Oliver Twist, set on the streets of New York City. Oliver, a scrappy orphan kitten, falls in with a gang of streetwise dogs led by the smooth-talking Dodger, all working for the down-on-his-luck Fagin. When Oliver is adopted by a wealthy girl named Jenny, his two very different worlds collide — and the villainous loan shark Sykes threatens everyone he loves. Featuring an upbeat pop soundtrack with songs performed by Billy Joel, Bette Midler, and Huey Lewis.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "oliver-and-company-1988-full",
+        title: "Oliver & Company",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "74 min",
+        description:
+          "Orphan kitten Oliver joins a gang of New York street dogs and must navigate life between his new canine family and the wealthy girl who adopts him.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1988 - Oliver & Company.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     A GOOFY MOVIE  (1995)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Walt Disney Pictures animated comedy directed by Kevin Lima.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "a-goofy-movie-1995",
+    type: "movie",
+    title: "A Goofy Movie",
+    years: "1995",
+    genre: ["Animation", "Family", "Comedy", "Musical"],
+    rating: "G",
+    score: 7.0,
+    description:
+      "Goofy's teenage son Max is on the verge of winning over his crush Roxanne when his well-meaning but hopelessly embarrassing dad derails his plans with a cross-country fishing vacation. As the unlikely duo careens from one mishap to the next — encountering Bigfoot along the way — Max and Goofy must find their way back to each other before the trip tears them apart for good. Featuring the voice talents of Bill Farmer and Jason Marsden, with an original soundtrack including the Powerline anthem \"I 2 I.\"",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "a-goofy-movie-1995-full",
+        title: "A Goofy Movie",
+        season: 0,
+        episode: 0,
+        year: 1995,
+        duration: "78 min",
+        description:
+          "Goofy takes his embarrassed teenage son Max on a cross-country fishing trip, and the two navigate their strained relationship along the road.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1995 - A Goofy Movie.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WHO FRAMED ROGER RABBIT  (1988)
+     Single feature film — archive identifier: schoolproject2_20200406
+     Dir. Robert Zemeckis. Live-action/animation hybrid starring Bob Hoskins.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "who-framed-roger-rabbit-1988",
+    type: "movie",
+    title: "Who Framed Roger Rabbit",
+    years: "1988",
+    genre: ["Animation", "Comedy", "Mystery", "Family"],
+    rating: "PG",
+    score: 7.7,
+    description:
+      "In a 1947 Hollywood where animated Toons live alongside humans, hard-drinking private eye Eddie Valiant is hired to investigate a cheating scandal involving cartoon star Roger Rabbit. When the studio head is murdered and Roger is framed for the crime, Eddie reluctantly teams up with the frantic rabbit to expose the real villain: the sinister Judge Doom, who has a deadly plan to destroy the Toons' home of Toontown. A groundbreaking live-action and animation hybrid from director Robert Zemeckis and producer Steven Spielberg, featuring beloved characters from both Disney and Warner Bros. in the same frame for the first time.",
+    thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+    featured: false,
+    episodes: [
+      {
+        id: "who-framed-roger-rabbit-1988-full",
+        title: "Who Framed Roger Rabbit",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "104 min",
+        description:
+          "Private eye Eddie Valiant must clear Roger Rabbit's name and uncover the true killer behind a Hollywood murder plot targeting Toontown.",
+        archiveId: "schoolproject2_20200406",
+        archiveFile: "1988 - Who Framed Roger Rabbit.mp4",
+        thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  {
+    id: "mtv-saturday-night-concert-reo-speedwagon-1981",
+    type: "concert",
+    title: "MTV Saturday Night Concert: REO Speedwagon — Live Infidelity (1981)",
+    years: "1981",
+    genre: ["Music", "Concert", "Rock"],
+    rating: "TV-PG",
+    score: 8.5,
+    description:
+      "MTV's very first Saturday Night Concert, broadcast on August 8, 1981 — just one week after the network's historic launch. The program features REO Speedwagon performing their celebrated live album Hi Infidelity in full, captured at the peak of the band's commercial success. A landmark artifact of early MTV and a time-capsule of the fledgling cable music channel in its opening days, complete with original network bumpers and era-defining production.",
+    thumbnail: "https://archive.org/services/img/mtv-8-8-81-first-ever-saturday-night-concert-reo-speedwagon-live-infidelity",
+    featured: false,
+    episodes: [
+      {
+        id: "mtv-1981-reo-speedwagon-full-concert",
+        title: "REO Speedwagon: Live Infidelity — MTV Saturday Night Concert (August 8, 1981)",
+        season: 0,
+        episode: 0,
+        year: 1981,
+        duration: "60 min",
+        description: "MTV's first-ever Saturday Night Concert special, airing August 8, 1981. REO Speedwagon performs their Hi Infidelity concert in full, one week after MTV's launch on August 1, 1981.",
+        archiveId: "mtv-8-8-81-first-ever-saturday-night-concert-reo-speedwagon-live-infidelity",
+        thumbnail: "https://archive.org/services/img/mtv-8-8-81-first-ever-saturday-night-concert-reo-speedwagon-live-infidelity",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
