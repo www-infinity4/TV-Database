@@ -2513,6 +2513,132 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE INCREDIBLE HULK (1966 Animated Series)
+     Archive identifier: the-incredble-hulk-1966-complete-series-english
+     Part of The Marvel Super Heroes anthology. Each episode
+     comprises three ~7-minute segments adapted from Stan Lee &
+     Jack Kirby's early Hulk comics.
+     Season 1 (1966): 13 episodes
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "incredible-hulk-1966",
+    title: "The Incredible Hulk (1966)",
+    years: "1966",
+    genre: ["Action", "Sci-Fi", "Animated"],
+    rating: "TV-G",
+    score: 7.0,
+    description:
+      "The first animated incarnation of Marvel's gamma-irradiated behemoth. Physicist Dr. Bruce Banner's accidental exposure to a gamma bomb explosion transforms him into the raging, near-invincible Hulk whenever danger strikes. Adapted faithfully from the early Stan Lee and Jack Kirby comics, each episode tells three serialised stories pitting Banner, Rick Jones, and Betty Ross against villains such as the Leader, the Toadmen, Metal Master, and Tyrannus.",
+    thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+    featured: false,
+    episodes: [
+      {
+        id: "hulk66-s01e01",
+        title: "The Origin of the Hulk / Enter the Gorgon / To Be a Man",
+        season: 1, episode: 1, year: 1966, duration: "22 min",
+        description: "Dr. Bruce Banner saves teenager Rick Jones from a gamma bomb blast and is irradiated, triggering his first transformation; the monstrous Gorgon arrives in America to battle the Hulk; Banner attempts to help the Gorgon find a cure for his deformity.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e02",
+        title: "Terror of the Toadmen / Wanted for Treason / Hulk Runs Amok",
+        season: 1, episode: 2, year: 1966, duration: "22 min",
+        description: "Magnetism-wielding alien Toadmen invade Earth and capture Banner; the U.S. military brands Bruce Banner a traitor in the wake of the Toadmen's assault; the Hulk is hunted by General Ross's forces across the country.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e03",
+        title: "A Titan Rides the Train / The Horde of Humanoids / On the Rampage!",
+        season: 1, episode: 3, year: 1966, duration: "22 min",
+        description: "The Leader's synthetic Humanoids hijack a train carrying one of Banner's inventions; the Leader prepares a full-scale invasion with his Humanoid army while Banner is held captive; the Hulk battles the Humanoid horde and reverts to Banner in the chaos.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e04",
+        title: "The Power of Dr. Banner / Where Strides the Behemoth / Back from the Dead",
+        season: 1, episode: 4, year: 1966, duration: "22 min",
+        description: "The military hunts Banner for crimes attributed to the Hulk and he fights to prove his innocence; the Hulk flees to the Himalayas but is captured and reverted to Banner; Banner sees a chance to save Major Talbot and to rid himself of the Hulk forever.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e05",
+        title: "Micro-Monsters / The Lair of the Leader / To Live Again",
+        season: 1, episode: 5, year: 1966, duration: "22 min",
+        description: "The Hulk battles the Leader's forces to rescue Rick Jones from miniaturised monsters; the Hulk is trapped inside the Leader's high-tech subterranean lair while Rick faces mortal danger; the final battle for Banner's Absorbatron — a device capable of absorbing a nuclear explosion.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e06",
+        title: "Brawn Against Brain / Captured at Last / Enter the Chameleon",
+        season: 1, episode: 6, year: 1966, duration: "22 min",
+        description: "The Hulk clashes with the intellect-driven Leader in a battle where raw power meets cunning strategy; the military finally succeeds in capturing the Hulk; the shape-shifting Chameleon infiltrates Banner's circle, impersonating allies to defeat the Hulk from within.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e07",
+        title: "Within This Monster Dwells a Man / Another World, Another Foe / The Wisdom of the Watcher",
+        season: 1, episode: 7, year: 1966, duration: "22 min",
+        description: "The Hulk's internal struggle between Banner's intellect and the monster's rage reaches a crisis point; a new interdimensional threat emerges to challenge the Hulk; the cosmic Watcher observes Banner's dilemma and imparts wisdom about the duality of human nature.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e08",
+        title: "The Space Phantom / Sting of the Wasp / Exit the Hulk",
+        season: 1, episode: 8, year: 1966, duration: "22 min",
+        description: "The alien Space Phantom, who can assume anyone's form, sows chaos and pits the Hulk against the Avengers; the Wasp enters the fray as the Avengers confront the shape-shifting interloper; the Hulk's uneasy alliance with Earth's Mightiest Heroes collapses and he departs alone.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e09",
+        title: "Hulk vs. Metal Master / The Master Tests His Metal / Mind Over Metal",
+        season: 1, episode: 9, year: 1966, duration: "22 min",
+        description: "The extraterrestrial Metal Master — with power over every metal on Earth — arrives and the Hulk's brute strength proves no match; Metal Master tests his powers on humanity's infrastructure; Banner's scientific genius devises the only weapon capable of defeating an enemy immune to the Hulk's fists.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e10",
+        title: "The Ringmaster / Captive of the Circus / The Grand Finale",
+        season: 1, episode: 10, year: 1966, duration: "22 min",
+        description: "The sinister Ringmaster uses his hypnotic disc to enslave the Hulk and force him to perform in his criminal circus; the Hulk struggles to break free while helpless to resist the Ringmaster's mental control; the dramatic showdown inside the big top brings the Ringmaster's reign of terror to an end.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e11",
+        title: "Enter Tyrannus / Beauty and the Beast / They Dwell in the Depths",
+        season: 1, episode: 11, year: 1966, duration: "22 min",
+        description: "The Hulk is dragged into the subterranean kingdom of the immortal Roman emperor Tyrannus; Betty Ross is captured and the Hulk must navigate Tyrannus's underground realm to rescue her; the Hulk battles monstrous creatures lurking in the earth's deep passages to find his way back to the surface.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e12",
+        title: "Terror of the T-Gun / I Against a World / Bruce Banner is the Hulk",
+        season: 1, episode: 12, year: 1966, duration: "22 min",
+        description: "A terrifying new gamma weapon called the T-Gun threatens to destroy everything Banner has worked to protect; cornered by both enemies and the military, Banner faces the world alone; the truth about Bruce Banner's double identity edges ever closer to exposure.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+      {
+        id: "hulk66-s01e13",
+        title: "The Man Called Boomerang / Hulk Intervenes / Less Than Monster, More Than Man",
+        season: 1, episode: 13, year: 1966, duration: "22 min",
+        description: "The villainous Boomerang — a supersonic assassin armed with explosive shells — challenges the Hulk in the season finale; the Hulk must intervene in a crisis that tests whether brute strength alone is enough; the series concludes with a meditation on Banner's duality — less than the monster the world fears, yet more than merely human.",
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE INCREDIBLE HULK (1994 Animated Series)
      Archive identifier: incredible-hulk-1994-complete-series
      UPN animated series produced by Marvel Films Animation.
@@ -2699,6 +2825,38 @@ const SHOWS = [
         description: "In the series finale, a catastrophic fault line threatens to split the Earth apart — only the Hulk's immeasurable strength can save the planet.",
         archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 20,
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE ERUPTION OF MT. ST. HELENS  (1980)
+     Archive identifier: the-eruption-of-mt-st-helens-1980
+     Television documentary produced by KATU (Portland, OR) and
+     KOMO-TV (Seattle, WA) capturing the May 18, 1980 eruption.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "eruption-of-mt-st-helens-1980",
+    type: "movie",
+    title: "The Eruption of Mt. St. Helens",
+    years: "1980",
+    genre: ["Documentary", "History"],
+    rating: "TV-G",
+    score: 8.0,
+    description:
+      "A gripping television documentary produced by Portland's KATU and Seattle's KOMO-TV in the immediate aftermath of the catastrophic May 18, 1980 eruption of Mount St. Helens. Combining on-the-ground news footage with scientific narration, the film documents the seismic buildup, the cataclysmic lateral blast that flattened hundreds of square miles of forest, the massive pyroclastic flows and lahars, and the human stories of evacuation, survival, and loss. An invaluable piece of broadcast journalism history.",
+    thumbnail: "https://archive.org/services/img/the-eruption-of-mt-st-helens-1980",
+    featured: false,
+    episodes: [
+      {
+        id: "eruption-mt-st-helens-1980-full",
+        title: "The Eruption of Mt. St. Helens",
+        season: 0,
+        episode: 0,
+        year: 1980,
+        duration: "50 min",
+        description: "News footage and narration chronicle the seismic buildup, the devastating May 18 lateral blast, and the immediate human and environmental aftermath of the most destructive volcanic eruption in U.S. recorded history.",
+        archiveId: "the-eruption-of-mt-st-helens-1980",
+        thumbnail: "https://archive.org/services/img/the-eruption-of-mt-st-helens-1980",
       },
     ],
   },
