@@ -2924,6 +2924,38 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     NIRVANA MTV UNPLUGGED IN NEW YORK  (1993)
+     Archive identifier: Nirvana_Unplugged_Unedited_1993
+     Unedited recording of the November 18, 1993 taping at
+     Sony Music Studios, New York City.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "nirvana-unplugged-1993",
+    type: "movie",
+    title: "Nirvana: MTV Unplugged in New York",
+    years: "1993",
+    genre: ["Music", "Documentary"],
+    rating: "TV-PG",
+    score: 9.6,
+    description:
+      "Recorded on November 18, 1993 at Sony Music Studios in New York City, Nirvana's landmark MTV Unplugged performance is widely regarded as one of the greatest live concerts ever captured on film. Kurt Cobain, Krist Novoselic, and Dave Grohl — augmented by Pat Smear and cellist Lori Goldston — delivered an intimate, candle-lit set heavy on deep cuts, covers (David Bowie, The Vaselines, Lead Belly, Meat Puppets), and raw acoustic arrangements that revealed new dimensions in Cobain's songwriting. Broadcast on MTV on December 14, 1993, it remains a definitive document of both the band and the era. This is the unedited full recording of the taping.",
+    thumbnail: "https://archive.org/services/img/Nirvana_Unplugged_Unedited_1993",
+    featured: false,
+    episodes: [
+      {
+        id: "nirvana-unplugged-1993-full",
+        title: "MTV Unplugged in New York (Unedited)",
+        season: 0,
+        episode: 0,
+        year: 1993,
+        duration: "75 min",
+        description: "The complete unedited taping of Nirvana's historic MTV Unplugged session, recorded November 18, 1993 at Sony Music Studios, New York.",
+        archiveId: "Nirvana_Unplugged_Unedited_1993",
+        thumbnail: "https://archive.org/services/img/Nirvana_Unplugged_Unedited_1993",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
