@@ -533,6 +533,34 @@
     });
   });
 
+  /* ── "See All" buttons ── */
+  function activateOnEnterOrSpace(btn) {
+    btn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); btn.click(); }
+    });
+  }
+
+  document.querySelectorAll(".section-more[data-see-genre]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const genre = btn.dataset.seeGenre;
+      const pill = document.querySelector('.genre-pill[data-genre="' + CSS.escape(genre) + '"]');
+      if (pill) {
+        pill.click();
+        const main = document.getElementById("main-content");
+        if (main) main.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+    activateOnEnterOrSpace(btn);
+  });
+
+  document.querySelectorAll(".section-more[data-see-section]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const section = document.getElementById(btn.dataset.seeSection);
+      if (section) section.scrollIntoView({ behavior: "smooth" });
+    });
+    activateOnEnterOrSpace(btn);
+  });
+
   /* ── Helpers ── */
   function escHTML(str) {
     return String(str)
@@ -1212,21 +1240,6 @@
       sendAIMessage();
     });
   });
-
-  /* Sidebar sign-in button listeners (already in updateUIForUser) */
-  const sidebarSigninBtn2 = $("sidebar-signin-btn");
-  if (sidebarSigninBtn2) {
-    sidebarSigninBtn2.addEventListener("click", () => {
-      const sidebar2 = $("sidebar");
-      const sidebarBg = $("sidebar-backdrop");
-      const hbtn = $("hamburger-btn");
-      if (sidebar2) sidebar2.classList.remove("open");
-      if (sidebarBg) sidebarBg.classList.remove("open");
-      if (hbtn) hbtn.setAttribute("aria-expanded", "false");
-      document.body.style.overflow = "";
-      openAuthModal("signin");
-    });
-  }
 
   /* ─────────────────────────────────────────────────────────────
      ESCAPE KEY — close all overlays
