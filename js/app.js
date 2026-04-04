@@ -351,7 +351,7 @@
     let base =
       "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
     if (episode.archiveFile) {
-      base += "/" + encodeURIComponent(episode.archiveFile);
+      base += "/" + episode.archiveFile.split("/").map(encodeURIComponent).join("/");
     }
     const params = new URLSearchParams({ autoplay: "1" });
     if (typeof episode.archiveIndex === "number") {
@@ -986,7 +986,7 @@
       return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?autoplay=1";
     }
     let base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
-    if (episode.archiveFile) base += "/" + encodeURIComponent(episode.archiveFile);
+    if (episode.archiveFile) base += "/" + episode.archiveFile.split("/").map(encodeURIComponent).join("/");
     const params = new URLSearchParams({ autoplay: "1" });
     if (typeof episode.archiveIndex === "number") params.set("index", String(episode.archiveIndex));
     return base + "?" + params.toString();
