@@ -149,7 +149,7 @@
         <input id="search-input" type="search" placeholder="Search the galaxy…" aria-label="Search TV shows" autocomplete="off" spellcheck="false" />
         <button id="clear-search" class="sr-only" aria-label="Clear search">✕</button>
       </div>
-      <div id="nav-wallet" class="nav__wallet" title="Your StarCoins" style="display:none">
+      <div id="nav-wallet" class="nav__wallet" title="Your StarCoins">
         ⭐ <span id="nav-token-count">0</span>
       </div>
       <button id="hamburger-btn" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
@@ -214,6 +214,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-movies">🎬 Classic Movies</h2>
         <span class="section-more" tabindex="0" role="button" data-see-genre="Movies">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-movies" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -221,6 +225,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-featured">⭐ Featured Classics</h2>
         <span class="section-more" tabindex="0" role="button" data-see-genre="all">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-featured" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -228,6 +236,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-drama">🎭 Drama</h2>
         <span class="section-more" tabindex="0" role="button" data-see-genre="Drama">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-drama" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -235,6 +247,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-comedy">😂 Comedy</h2>
         <span class="section-more" tabindex="0" role="button" data-see-genre="Comedy">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-comedy" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -242,6 +258,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-scifi">🚀 Sci-Fi &amp; Fantasy</h2>
         <span class="section-more" tabindex="0" role="button" data-see-genre="Sci-Fi">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-scifi" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -249,6 +269,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-crime">🔍 Crime &amp; Mystery</h2>
         <span class="section-more" tabindex="0" role="button" data-see-genre="Crime">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-crime" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -256,6 +280,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-family">👨‍👩‍👧‍👦 Family</h2>
         <span class="section-more" tabindex="0" role="button" data-see-genre="Family">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-family" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -263,6 +291,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-70s">📼 1970s Favorites</h2>
         <span class="section-more" tabindex="0" role="button" data-see-section="row-70s-section">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-70s" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -270,6 +302,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-80s">📼 1980s Hits</h2>
         <span class="section-more" tabindex="0" role="button" data-see-section="row-80s-section">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-80s" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -277,6 +313,10 @@
       <div class="section-header">
         <h2 class="section-title" id="lbl-90s">📼 1990s Classics</h2>
         <span class="section-more" tabindex="0" role="button" data-see-section="row-90s-section">See All</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-90s" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>

@@ -96,18 +96,20 @@
   }
 
   /* ── Rows ── */
+  function byScore(a, b) { return (b.score || 0) - (a.score || 0); }
+
   function initRows() {
-    renderRow(DOM.rowFeatured, getFeaturedShows());
+    renderRow(DOM.rowFeatured, getFeaturedShows().slice().sort(byScore));
     renderEpisodeRow(DOM.rowDueSouth, getShowById("due-south"));
-    renderRow(DOM.rowMovies, getMovies());
-    renderRow(DOM.rowDrama, getShowsByGenre("Drama"));
-    renderRow(DOM.rowComedy, getShowsByGenre("Comedy"));
-    renderRow(DOM.rowScifi, getShowsByGenre("Sci-Fi"));
-    renderRow(DOM.rowCrime, getShowsByGenre("Crime"));
-    renderRow(DOM.rowFamily, getShowsByGenre("Family"));
-    renderRow(DOM.row70s, getShowsByDecade(1970));
-    renderRow(DOM.row80s, getShowsByDecade(1980));
-    renderRow(DOM.row90s, getShowsByDecade(1990));
+    renderRow(DOM.rowMovies, getMovies().slice().sort(byScore));
+    renderRow(DOM.rowDrama, getShowsByGenre("Drama").slice().sort(byScore));
+    renderRow(DOM.rowComedy, getShowsByGenre("Comedy").slice().sort(byScore));
+    renderRow(DOM.rowScifi, getShowsByGenre("Sci-Fi").slice().sort(byScore));
+    renderRow(DOM.rowCrime, getShowsByGenre("Crime").slice().sort(byScore));
+    renderRow(DOM.rowFamily, getShowsByGenre("Family").slice().sort(byScore));
+    renderRow(DOM.row70s, getShowsByDecade(1970).slice().sort(byScore));
+    renderRow(DOM.row80s, getShowsByDecade(1980).slice().sort(byScore));
+    renderRow(DOM.row90s, getShowsByDecade(1990).slice().sort(byScore));
   }
 
   function renderRow(container, shows) {
@@ -377,7 +379,7 @@
         s.title.toLowerCase().includes(q) ||
         s.genre.some((g) => g.toLowerCase().includes(q)) ||
         s.description.toLowerCase().includes(q)
-    );
+    ).slice().sort(byScore);
 
     DOM.searchResultsTitle.innerHTML =
       'Results for <strong>"' + escHTML(q) + '"</strong> — ' + results.length + " show" + (results.length !== 1 ? "s" : "");
@@ -407,11 +409,11 @@
 
   function filterByGenre(genre) {
     state.activeGenre = genre;
-    const shows = genre === "all" ? SHOWS : getShowsByGenre(genre);
+    const shows = (genre === "all" ? getFeaturedShows() : getShowsByGenre(genre)).slice().sort(byScore);
 
     /* Re-render the featured row with filtered results */
     if (DOM.rowFeatured) {
-      renderRow(DOM.rowFeatured, genre === "all" ? getFeaturedShows() : shows);
+      renderRow(DOM.rowFeatured, shows);
     }
   }
 
@@ -767,7 +769,8 @@
     } else {
       if (sidebarUsername) sidebarUsername.textContent = "Guest";
       if (sidebarTokens)  sidebarTokens.textContent   = "0";
-      if (navWallet)      navWallet.style.display      = "none";
+      if (navWallet)      navWallet.style.display      = "flex";
+      if (navTokenCount)  navTokenCount.textContent    = "0";
       if (signinBtn)      signinBtn.style.display      = "";
       if (signoutBtn)     signoutBtn.style.display     = "none";
     }

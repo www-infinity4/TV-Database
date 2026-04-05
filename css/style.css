@@ -798,9 +798,11 @@ ul { list-style: none; }
   .nav__search input { width: 120px; }
   .hero__title { font-size: 1.8rem; }
   .hero__btns .btn { padding: 9px 18px; font-size: .85rem; }
-  .show-card { flex: 0 0 155px; }
+  .show-card { flex: 0 0 calc(50vw - 20px); }
+  .card-row { padding: 4px 12px 14px; gap: 8px; }
   .modal { border-radius: 0; }
   .modal__hero { height: 180px; }
+  .search-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ── Episode Season Badge (on card thumbnail) ── */
