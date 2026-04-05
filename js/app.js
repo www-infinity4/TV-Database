@@ -379,7 +379,7 @@
         s.title.toLowerCase().includes(q) ||
         s.genre.some((g) => g.toLowerCase().includes(q)) ||
         s.description.toLowerCase().includes(q)
-    ).slice().sort(byScore);
+    ).sort(byScore);
 
     DOM.searchResultsTitle.innerHTML =
       'Results for <strong>"' + escHTML(q) + '"</strong> — ' + results.length + " show" + (results.length !== 1 ? "s" : "");
