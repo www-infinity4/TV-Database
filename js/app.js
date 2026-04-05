@@ -100,7 +100,7 @@
 
   function initRows() {
     renderRow(DOM.rowFeatured, getFeaturedShows().slice().sort(byScore));
-    renderEpisodeRow(DOM.rowDueSouth, getShowById("due-south"));
+    renderEpisodeRow(DOM.rowDueSouth, getShowById("due-south"), 0, 1);
     renderRow(DOM.rowMovies, getMovies().slice().sort(byScore));
     renderRow(DOM.rowDrama, getShowsByGenre("Drama").slice().sort(byScore));
     renderRow(DOM.rowComedy, getShowsByGenre("Comedy").slice().sort(byScore));

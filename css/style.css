@@ -291,7 +291,7 @@ ul { list-style: none; }
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
 }
 .card-row::-webkit-scrollbar { display: none; }
 
@@ -310,7 +310,9 @@ ul { list-style: none; }
   color: var(--text-primary);
 }
 .scroll-btn.right { right: 0; background: linear-gradient(to left, var(--bg-dark), transparent); }
-.card-row-wrap:hover .scroll-btn { opacity: 1; }
+.card-row-wrap:hover .scroll-btn,
+.card-row-wrap:focus-within .scroll-btn { opacity: 1; }
+@media (hover: none) { .scroll-btn { opacity: 0.7; } }
 .scroll-btn:hover { opacity: 1 !important; }
 
 /* ── Show Card ── */
