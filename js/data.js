@@ -3812,6 +3812,701 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     WARGAMES  (1983)
+     YouTube identifier: LCJpNmo4px0  (rent / buy on YouTube Movies)
+     A young hacker accidentally connects to a military supercomputer
+     and nearly starts World War III. Dir. John Badham.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "wargames-1983",
+    type: "movie",
+    title: "WarGames",
+    years: "1983",
+    genre: ["Drama", "Sci-Fi", "Thriller"],
+    rating: "PG",
+    score: 7.1,
+    description:
+      "High-school hacker David Lightman dials into what he thinks is a video-game company and instead reaches a top-secret NORAD supercomputer called WOPR — programmed to run nuclear-war simulations. When WOPR mistakes the session for real and begins counting down to a Soviet first-strike, David must race the clock to convince the machine that 'the only winning move is not to play.' Stars Matthew Broderick, Dabney Coleman, and Ally Sheedy.",
+    thumbnail: "https://img.youtube.com/vi/LCJpNmo4px0/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "wargames-1983-full",
+        title: "WarGames",
+        season: 0,
+        episode: 0,
+        year: 1983,
+        duration: "114 min",
+        description:
+          "A teenage hacker unwittingly triggers a real nuclear-launch sequence after connecting to a military AI. Rent or buy on YouTube Movies.",
+        youtubeId: "LCJpNmo4px0",
+        thumbnail: "https://img.youtube.com/vi/LCJpNmo4px0/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SNEAKERS  (1992)
+     YouTube identifier: Qy9XYQBBIJ4  (rent / buy on YouTube Movies)
+     A team of security experts is blackmailed into stealing a
+     codebreaking device with the power to access any system.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "sneakers-1992",
+    type: "movie",
+    title: "Sneakers",
+    years: "1992",
+    genre: ["Drama", "Comedy", "Thriller"],
+    rating: "PG-13",
+    score: 7.1,
+    description:
+      "Martin Bishop leads a ragtag team of benign security consultants who break into corporations to test their defenses. When government agents blackmail Martin into stealing a mysterious black box, he discovers the device can decrypt every code ever created — and the people who want it back will stop at nothing. An intelligent, witty tech-heist with a stellar ensemble: Robert Redford, Dan Aykroyd, Ben Kingsley, River Phoenix, and Sidney Poitier.",
+    thumbnail: "https://img.youtube.com/vi/Qy9XYQBBIJ4/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "sneakers-1992-full",
+        title: "Sneakers",
+        season: 0,
+        episode: 0,
+        year: 1992,
+        duration: "126 min",
+        description:
+          "A team of security consultants is blackmailed into stealing an all-powerful codebreaking device in this sharp, witty tech-heist. Rent or buy on YouTube Movies.",
+        youtubeId: "Qy9XYQBBIJ4",
+        thumbnail: "https://img.youtube.com/vi/Qy9XYQBBIJ4/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     HACKERS  (1995)
+     YouTube identifier: k7KNOyL8XX0  (rent / buy on YouTube Movies)
+     A group of young hackers stumbles onto a massive corporate
+     conspiracy. Dir. Iain Softley.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "hackers-1995",
+    type: "movie",
+    title: "Hackers",
+    years: "1995",
+    genre: ["Drama", "Thriller", "Crime"],
+    rating: "PG-13",
+    score: 6.3,
+    description:
+      "Teenage hacker Dade Murphy — call sign Zero Cool — moves to New York and falls in with a crew of elite keyboard cowboys. When they accidentally stumble across a massive embezzlement scheme masterminded by the villainous corporate hacker known as The Plague, the kids become the target of a federal manhunt. Featuring Jonah Miller, Jesse Bradford, and a career-making turn from Angelina Jolie, the film is a stylish, neon-drenched snapshot of 1990s underground hacking culture.",
+    thumbnail: "https://img.youtube.com/vi/k7KNOyL8XX0/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "hackers-1995-full",
+        title: "Hackers",
+        season: 0,
+        episode: 0,
+        year: 1995,
+        duration: "107 min",
+        description:
+          "Teen hackers uncover a corporate conspiracy and become targets of a federal investigation in this iconic 90s cyber-thriller. Rent or buy on YouTube Movies.",
+        youtubeId: "k7KNOyL8XX0",
+        thumbnail: "https://img.youtube.com/vi/k7KNOyL8XX0/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE NET  (1995)
+     YouTube identifier: As4gzzCQJ84  (rent / buy on YouTube Movies)
+     An internet-savvy programmer has her entire identity erased.
+     Stars Sandra Bullock.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-net-1995",
+    type: "movie",
+    title: "The Net",
+    years: "1995",
+    genre: ["Thriller", "Drama"],
+    rating: "PG-13",
+    score: 5.8,
+    description:
+      "Angela Bennett is a reclusive computer programmer who stumbles upon a conspiracy while investigating a strange software glitch for a friend. Within days her identity is erased — her records replaced with those of a wanted criminal — and she is left with no money, no past, and no way to prove who she is. One of the first mainstream Hollywood thrillers to explore online identity theft, internet espionage, and the fragility of digital lives. Stars Sandra Bullock, Jeremy Northam, and Dennis Miller.",
+    thumbnail: "https://img.youtube.com/vi/As4gzzCQJ84/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "the-net-1995-full",
+        title: "The Net",
+        season: 0,
+        episode: 0,
+        year: 1995,
+        duration: "114 min",
+        description:
+          "A programmer's digital identity is stolen and replaced by that of a criminal in this prescient early-internet thriller. Rent or buy on YouTube Movies.",
+        youtubeId: "As4gzzCQJ84",
+        thumbnail: "https://img.youtube.com/vi/As4gzzCQJ84/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     ANTITRUST  (2001)
+     YouTube identifier: FP_eg7jG1jM  (rent / buy on YouTube Movies)
+     A young programmer uncovers a deadly conspiracy at a
+     software giant. Stars Ryan Phillippe.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "antitrust-2001",
+    type: "movie",
+    title: "Antitrust",
+    years: "2001",
+    genre: ["Drama", "Thriller"],
+    rating: "PG-13",
+    score: 6.0,
+    description:
+      "Milo Hoffman is a brilliant young Stanford programmer recruited to join NURV, the most powerful software company on Earth, run by the charismatic Gary Winston. As Milo rises fast inside the company he begins to notice a disturbing pattern: every time NURV needs a critical piece of code, a young independent programmer mysteriously dies. When he digs deeper he discovers a conspiracy that implicates everyone around him — including his closest friends. A thinly veiled cautionary tale about tech-monopoly hubris. Stars Ryan Phillippe, Tim Robbins, and Rachael Leigh Cook.",
+    thumbnail: "https://img.youtube.com/vi/FP_eg7jG1jM/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "antitrust-2001-full",
+        title: "Antitrust",
+        season: 0,
+        episode: 0,
+        year: 2001,
+        duration: "108 min",
+        description:
+          "A young programmer discovers his dream employer is murdering open-source coders to steal their work in this Silicon Valley conspiracy thriller. Rent or buy on YouTube Movies.",
+        youtubeId: "FP_eg7jG1jM",
+        thumbnail: "https://img.youtube.com/vi/FP_eg7jG1jM/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE SOCIAL NETWORK  (2010)
+     YouTube identifier: 60MeS2FnlBc  (rent / buy on YouTube Movies)
+     The founding of Facebook, directed by David Fincher.
+     Stars Jesse Eisenberg as Mark Zuckerberg.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-social-network-2010",
+    type: "movie",
+    title: "The Social Network",
+    years: "2010",
+    genre: ["Drama", "Biography"],
+    rating: "PG-13",
+    score: 7.8,
+    description:
+      "In October 2003 Harvard sophomore Mark Zuckerberg writes code for a people-rating site in a single night — and the idea spirals into the social platform that will connect a billion people and make him the youngest billionaire in history. Told through parallel depositions from two lawsuits — one from his co-founder, one from the Winklevoss twins — David Fincher's razor-sharp drama dissects genius, betrayal, and the cost of ambition. Aaron Sorkin's screenplay won the Oscar; the film is the definitive portrait of Silicon Valley's founding mythology. Stars Jesse Eisenberg, Andrew Garfield, Justin Timberlake, and Armie Hammer.",
+    thumbnail: "https://img.youtube.com/vi/60MeS2FnlBc/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "the-social-network-2010-full",
+        title: "The Social Network",
+        season: 0,
+        episode: 0,
+        year: 2010,
+        duration: "120 min",
+        description:
+          "David Fincher's Oscar-winning drama traces the birth of Facebook through betrayal, genius, and competing lawsuits. Rent or buy on YouTube Movies.",
+        youtubeId: "60MeS2FnlBc",
+        thumbnail: "https://img.youtube.com/vi/60MeS2FnlBc/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     TRIUMPH OF THE NERDS  (1996)
+     Archive identifier: triumph_of_the_nerds
+     Three-part PBS documentary by Robert X. Cringely on the
+     birth of the personal computer industry.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "triumph-of-the-nerds-1996",
+    type: "documentary",
+    title: "Triumph of the Nerds: The Rise of Accidental Empires",
+    years: "1996",
+    genre: ["Documentary", "Technology", "History"],
+    rating: "NR",
+    score: 8.4,
+    description:
+      "Robert X. Cringely's celebrated three-part PBS documentary chronicles how a handful of passionate, often socially awkward young men accidentally invented the personal computer and, in doing so, created one of the greatest fortunes in history. Featuring extensive original interviews with Steve Jobs, Bill Gates, Steve Wozniak, and the pioneers of Apple, Microsoft, Xerox PARC, and the PC revolution, the film traces the arc from the Homebrew Computer Club in a Menlo Park garage to the worldwide empire of the IBM-compatible PC. Essential viewing for anyone who uses a computer.",
+    thumbnail: "https://archive.org/services/img/triumph_of_the_nerds",
+    featured: false,
+    episodes: [
+      {
+        id: "triumph-of-the-nerds-1996-full",
+        title: "Triumph of the Nerds: The Rise of Accidental Empires",
+        season: 0,
+        episode: 0,
+        year: 1996,
+        duration: "165 min",
+        description:
+          "Three-part PBS documentary featuring Steve Jobs, Bill Gates, and the pioneers who accidentally built the personal computer industry.",
+        archiveId: "triumph_of_the_nerds",
+        thumbnail: "https://archive.org/services/img/triumph_of_the_nerds",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     REVOLUTION OS  (2001)
+     Archive identifier: RevolutionOS_201610  (public domain)
+     Documentary tracing the history of GNU, Linux, and the
+     open-source software movement. Dir. J.T.S. Moore.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "revolution-os-2001",
+    type: "documentary",
+    title: "Revolution OS",
+    years: "2001",
+    genre: ["Documentary", "Technology"],
+    rating: "NR",
+    score: 7.4,
+    description:
+      "How did a loose band of computer programmers — led by passionate idealists like Richard Stallman and Linus Torvalds — topple the dominance of Microsoft and create a free operating system used by hundreds of millions of people? J.T.S. Moore's documentary traces the history of GNU, Linux, and the open-source movement from their countercultural roots to billion-dollar server infrastructure, featuring interviews with Linus Torvalds, Richard Stallman, Bruce Perens, Eric Raymond, and the founders of Red Hat, VA Linux, and Cygnus. Free to watch on the Internet Archive.",
+    thumbnail: "https://archive.org/services/img/RevolutionOS_201610",
+    featured: false,
+    episodes: [
+      {
+        id: "revolution-os-2001-full",
+        title: "Revolution OS",
+        season: 0,
+        episode: 0,
+        year: 2001,
+        duration: "86 min",
+        description:
+          "The story of GNU, Linux, and open-source software told by the people who built it — from Richard Stallman's GNU Manifesto to Linus Torvalds' kernel. Free on Internet Archive.",
+        archiveId: "RevolutionOS_201610",
+        thumbnail: "https://archive.org/services/img/RevolutionOS_201610",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     NERDS 2.0.1: A BRIEF HISTORY OF THE INTERNET  (1998)
+     Archive identifier: Nerds2.0.1  (PBS, free on Internet Archive)
+     Three-part PBS follow-up to Triumph of the Nerds, tracing
+     the rise of the Internet. Dir. Robert X. Cringely.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "nerds-2-0-1-1998",
+    type: "documentary",
+    title: "Nerds 2.0.1: A Brief History of the Internet",
+    years: "1998",
+    genre: ["Documentary", "Technology", "History"],
+    rating: "NR",
+    score: 8.1,
+    description:
+      "Robert X. Cringely's follow-up to Triumph of the Nerds charts the next revolution: the birth of the Internet. Starting with ARPANET and the military researchers who first linked computers over phone lines, the three-part PBS series follows the network through the development of TCP/IP, the World Wide Web, the browser wars between Netscape and Microsoft, and the explosive dot-com boom. Features candid interviews with the engineers, visionaries, and venture capitalists who built the online world. Free to watch on the Internet Archive.",
+    thumbnail: "https://archive.org/services/img/Nerds2.0.1",
+    featured: false,
+    episodes: [
+      {
+        id: "nerds-2-0-1-1998-full",
+        title: "Nerds 2.0.1: A Brief History of the Internet",
+        season: 0,
+        episode: 0,
+        year: 1998,
+        duration: "170 min",
+        description:
+          "From ARPANET to the browser wars — Robert X. Cringely's three-part PBS series on the birth and explosive growth of the Internet. Free on Internet Archive.",
+        archiveId: "Nerds2.0.1",
+        thumbnail: "https://archive.org/services/img/Nerds2.0.1",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     COSMOS: A PERSONAL VOYAGE  (1980)
+     Archive identifier: cosmos1980  (Carl Sagan / PBS)
+     Carl Sagan's legendary 13-part journey through the universe.
+     Free on the Internet Archive.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "cosmos-1980",
+    type: "documentary",
+    title: "Cosmos: A Personal Voyage",
+    years: "1980",
+    genre: ["Documentary", "Science", "Space"],
+    rating: "NR",
+    score: 9.3,
+    description:
+      "Astronomer Carl Sagan takes viewers on a breathtaking 13-episode journey across the history of science and the vastness of the universe. From the shores of the cosmic ocean to the evolution of the human brain, Sagan weaves together astrophysics, biology, history, and philosophy into a unified narrative of our place in the cosmos. Filmed on location around the world and featuring iconic music by Vangelis, Cosmos remains the most-watched public television series in history and one of the most important science programmes ever made. Free to stream on the Internet Archive.",
+    thumbnail: "https://archive.org/services/img/cosmos1980",
+    featured: true,
+    episodes: [
+      {
+        id: "cosmos-1980-full",
+        title: "Cosmos: A Personal Voyage — Complete Series",
+        season: 0,
+        episode: 0,
+        year: 1980,
+        duration: "13 episodes · approx. 60 min each",
+        description:
+          "All 13 episodes of Carl Sagan's landmark PBS series — a voyage from the Big Bang to the future of intelligence in the universe. Free on Internet Archive.",
+        archiveId: "cosmos1980",
+        thumbnail: "https://archive.org/services/img/cosmos1980",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     CONNECTIONS  (1978)
+     Archive identifier: ConnectionswithJamesBurke  (BBC)
+     James Burke's landmark 10-part documentary series on the
+     surprising links between historical scientific discoveries.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "connections-1978",
+    type: "documentary",
+    title: "Connections",
+    years: "1978",
+    genre: ["Documentary", "Science", "History"],
+    rating: "NR",
+    score: 9.0,
+    description:
+      "Science historian James Burke presents one of the most original documentary series ever made: a 10-episode journey through the unexpected and often astonishing links between historical events, scientific discoveries, and technological inventions across centuries. Burke leaps from the Black Death to the atom bomb, from the plough to the computer chip, demonstrating that nothing in history is isolated — every breakthrough is a chain reaction of prior ideas. Brilliantly written, witty, and endlessly thought-provoking. Free on the Internet Archive.",
+    thumbnail: "https://archive.org/services/img/ConnectionswithJamesBurke",
+    featured: false,
+    episodes: [
+      {
+        id: "connections-1978-full",
+        title: "Connections — Complete Series",
+        season: 0,
+        episode: 0,
+        year: 1978,
+        duration: "10 episodes · approx. 50 min each",
+        description:
+          "James Burke's BBC masterpiece — 10 episodes tracing the surprising connections between historical events and the inventions that changed the world. Free on Internet Archive.",
+        archiveId: "ConnectionswithJamesBurke",
+        thumbnail: "https://archive.org/services/img/ConnectionswithJamesBurke",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE DAY THE UNIVERSE CHANGED  (1985)
+     Archive identifier: The.Day.The.Universe.Changed.1985  (BBC)
+     James Burke's follow-up series on how fundamental shifts in
+     scientific knowledge changed the world.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-day-the-universe-changed-1985",
+    type: "documentary",
+    title: "The Day the Universe Changed",
+    years: "1985",
+    genre: ["Documentary", "Science", "History"],
+    rating: "NR",
+    score: 9.0,
+    description:
+      "James Burke's brilliant follow-up to Connections explores ten pivotal moments in history when a new scientific or philosophical idea so fundamentally altered our understanding of the world that it effectively 'changed the universe.' Episodes span Gutenberg's printing press, the Scientific Revolution, Newton's mechanics, Darwin's evolution, Freudian psychology, and the computer age — each examined for the profound social and cultural upheaval that followed. Burke's electrifying delivery and fearless leaping across centuries make this essential intellectual television. Free on the Internet Archive.",
+    thumbnail: "https://archive.org/services/img/The.Day.The.Universe.Changed.1985",
+    featured: false,
+    episodes: [
+      {
+        id: "the-day-the-universe-changed-1985-full",
+        title: "The Day the Universe Changed — Complete Series",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "10 episodes · approx. 50 min each",
+        description:
+          "James Burke's BBC follow-up to Connections — ten episodes on the discoveries that so changed our understanding of the world they altered history forever. Free on Internet Archive.",
+        archiveId: "The.Day.The.Universe.Changed.1985",
+        thumbnail: "https://archive.org/services/img/The.Day.The.Universe.Changed.1985",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     STARTUP.COM  (2001)
+     YouTube identifier: mpIlPZfXAqo
+     Fly-on-the-wall documentary following the rise and fall of
+     govWorks.com during the dot-com boom. Dir. Chris Hegedus
+     & Jehane Noujaim.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "startup-com-2001",
+    type: "documentary",
+    title: "Startup.com",
+    years: "2001",
+    genre: ["Documentary", "Technology", "Drama"],
+    rating: "R",
+    score: 7.3,
+    description:
+      "Directors Chris Hegedus and Jehane Noujaim were given unprecedented access to follow two childhood friends — Kaleil Isaza Tuzman and Tom Herman — as they launched govWorks.com, a site letting Americans pay parking tickets online. Filmed over 18 months with raw, vérité intimacy, Startup.com captures the electric optimism of the dot-com boom and then its brutal collapse — friendships disintegrating under investor pressure, burn rates, and the dot-com crash of 2000. One of the most honest records of Silicon Valley ambition ever put on film.",
+    thumbnail: "https://img.youtube.com/vi/mpIlPZfXAqo/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "startup-com-2001-full",
+        title: "Startup.com",
+        season: 0,
+        episode: 0,
+        year: 2001,
+        duration: "103 min",
+        description:
+          "A fly-on-the-wall documentary following two friends as they build — and lose — a dot-com startup during the height of the internet bubble.",
+        youtubeId: "mpIlPZfXAqo",
+        thumbnail: "https://img.youtube.com/vi/mpIlPZfXAqo/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     MICRO MEN  (2009)
+     YouTube identifier: XXBxV6-zamM
+     BBC dramatised documentary on the British home-computer
+     boom, following the rivalry between Clive Sinclair and
+     Chris Curry.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "micro-men-2009",
+    type: "documentary",
+    title: "Micro Men",
+    years: "2009",
+    genre: ["Documentary", "Drama", "Technology"],
+    rating: "NR",
+    score: 7.8,
+    description:
+      "Alexander Armstrong and Martin Freeman star in this BBC dramatised documentary about the fierce personal and commercial rivalry between Clive Sinclair (the visionary, eccentric inventor of the Sinclair ZX81 and Spectrum) and Chris Curry (his former protégé who co-founded Acorn Computers and produced the BBC Micro). Set against the astonishing early-1980s boom in British home computing, the film traces how two fiercely competitive firms simultaneously shaped the childhoods of a generation and laid the foundation for Britain's technology industry — until the market finally chose its winner.",
+    thumbnail: "https://img.youtube.com/vi/XXBxV6-zamM/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "micro-men-2009-full",
+        title: "Micro Men",
+        season: 0,
+        episode: 0,
+        year: 2009,
+        duration: "60 min",
+        description:
+          "Alexander Armstrong and Martin Freeman star in the BBC's dramatised account of the Sinclair vs. Acorn rivalry that ignited the British home-computer revolution.",
+        youtubeId: "XXBxV6-zamM",
+        thumbnail: "https://img.youtube.com/vi/XXBxV6-zamM/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SOLARIS  (1972)
+     YouTube identifier: Z8ZhQPaw4rE
+     Official Mosfilm upload — free to watch on YouTube with
+     English subtitles. Dir. Andrei Tarkovsky.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "solaris-1972",
+    type: "movie",
+    title: "Solaris",
+    years: "1972",
+    genre: ["Sci-Fi", "Drama"],
+    rating: "NR",
+    score: 8.1,
+    description:
+      "Psychologist Kris Kelvin is sent to investigate strange crew behaviour aboard a space station orbiting the enigmatic ocean planet Solaris — a world that has the power to materialise the deepest memories and psychological wounds of those above it. Confronted by a physical manifestation of his dead wife, Kelvin must grapple with questions of consciousness, love, and what it means to be human. Andrei Tarkovsky's masterpiece is the most meditative and philosophical science fiction film ever made — slower and richer than anything Hollywood produced before or since. Official Mosfilm upload, free to watch on YouTube with English subtitles.",
+    thumbnail: "https://img.youtube.com/vi/Z8ZhQPaw4rE/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "solaris-1972-full",
+        title: "Solaris",
+        season: 0,
+        episode: 0,
+        year: 1972,
+        duration: "167 min",
+        description:
+          "Tarkovsky's visionary sci-fi masterpiece about a psychologist confronted by his dead wife aboard a space station orbiting a sentient alien ocean. Free on YouTube (official Mosfilm upload, English subtitles).",
+        youtubeId: "Z8ZhQPaw4rE",
+        thumbnail: "https://img.youtube.com/vi/Z8ZhQPaw4rE/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     CLOSE ENCOUNTERS OF THE THIRD KIND  (1977)
+     YouTube identifier: DMTvyrUewck  (Director's Cut — rent / buy)
+     Spielberg's awe-inspiring first contact film.
+     Stars Richard Dreyfuss, François Truffaut.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "close-encounters-1977",
+    type: "movie",
+    title: "Close Encounters of the Third Kind",
+    years: "1977",
+    genre: ["Sci-Fi", "Drama"],
+    rating: "PG",
+    score: 7.6,
+    description:
+      "Indiana utility worker Roy Neary becomes obsessed with a strange shape he cannot name after witnessing lights in the night sky — a vision shared by strangers across the world and by French scientist Claude Lacombe, who is quietly tracking a pattern of mysterious events. Steven Spielberg's breathtaking first-contact masterpiece builds to one of cinema's most awe-inspiring finales, capturing humanity's hunger for meaning and the terrifying wonder of the unknown. Stars Richard Dreyfuss and François Truffaut, with unforgettable music by John Williams. Rent or buy the Director's Cut on YouTube Movies.",
+    thumbnail: "https://img.youtube.com/vi/DMTvyrUewck/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "close-encounters-1977-full",
+        title: "Close Encounters of the Third Kind (Director's Cut)",
+        season: 0,
+        episode: 0,
+        year: 1977,
+        duration: "137 min",
+        description:
+          "Spielberg's landmark first-contact film — a power-company worker is drawn toward a mysterious mountain and a life-changing encounter with the unknown. Rent or buy on YouTube Movies.",
+        youtubeId: "DMTvyrUewck",
+        thumbnail: "https://img.youtube.com/vi/DMTvyrUewck/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE ANDROMEDA STRAIN  (1971)
+     YouTube identifier: GGypuIl7Ddw  (rent / buy on YouTube Movies)
+     Robert Wise's slow-burn scientific thriller about a team of
+     scientists racing to contain a lethal alien microbe.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-andromeda-strain-1971",
+    type: "movie",
+    title: "The Andromeda Strain",
+    years: "1971",
+    genre: ["Sci-Fi", "Thriller", "Drama"],
+    rating: "G",
+    score: 7.2,
+    description:
+      "When an entire small town in Arizona is found dead within hours of a military satellite crashing nearby, a team of scientists is rushed to a top-secret underground facility called Wildfire. Under extreme quarantine conditions they have 48 hours to identify and neutralise the alien microorganism — code-named Andromeda — before it spreads and wipes out humanity. Robert Wise's gripping adaptation of Michael Crichton's debut novel is a model of scientific procedural filmmaking: methodical, intelligent, and terrifying in its plausibility. Stars Arthur Hill, David Wayne, James Olson, and Kate Reid.",
+    thumbnail: "https://img.youtube.com/vi/GGypuIl7Ddw/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "the-andromeda-strain-1971-full",
+        title: "The Andromeda Strain",
+        season: 0,
+        episode: 0,
+        year: 1971,
+        duration: "131 min",
+        description:
+          "Scientists race against the clock to contain a lethal alien microbe in Robert Wise's meticulous adaptation of Michael Crichton's novel. Rent or buy on YouTube Movies.",
+        youtubeId: "GGypuIl7Ddw",
+        thumbnail: "https://img.youtube.com/vi/GGypuIl7Ddw/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     APOLLO 13  (1995)
+     YouTube identifier: rCK3tBK6IRA  (rent / buy on YouTube Movies)
+     Ron Howard's drama recreating the near-catastrophic Apollo 13
+     mission. Stars Tom Hanks, Bill Paxton, Kevin Bacon.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "apollo-13-1995",
+    type: "movie",
+    title: "Apollo 13",
+    years: "1995",
+    genre: ["Drama", "History", "Space"],
+    rating: "PG",
+    score: 7.6,
+    description:
+      "On April 13, 1970, 200,000 miles from Earth, an oxygen tank inside Apollo 13 explodes. Commander Jim Lovell, Jack Swigert, and Fred Haise must abandon their moon landing and fight to survive — using their damaged spacecraft's lunar module as a lifeboat — while NASA engineers on the ground work round the clock to bring them home. Ron Howard's riveting drama, acclaimed for its technical accuracy and visceral authenticity, won two Academy Awards and stands as the definitive cinematic account of the most successful space failure in history. Stars Tom Hanks, Bill Paxton, Kevin Bacon, Gary Sinise, and Ed Harris. Rent or buy on YouTube Movies.",
+    thumbnail: "https://img.youtube.com/vi/rCK3tBK6IRA/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "apollo-13-1995-full",
+        title: "Apollo 13",
+        season: 0,
+        episode: 0,
+        year: 1995,
+        duration: "140 min",
+        description:
+          "Tom Hanks leads the crew of the crippled Apollo 13 spacecraft in Ron Howard's acclaimed recreation of NASA's greatest rescue mission. Rent or buy on YouTube Movies.",
+        youtubeId: "rCK3tBK6IRA",
+        thumbnail: "https://img.youtube.com/vi/rCK3tBK6IRA/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     CONTACT  (1997)
+     YouTube identifier: i7na-m_Mw0U  (rent / buy on YouTube Movies)
+     Jodie Foster as radio astronomer Dr. Ellie Arroway, who
+     detects the first confirmed signal from extraterrestrial life.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "contact-1997",
+    type: "movie",
+    title: "Contact",
+    years: "1997",
+    genre: ["Sci-Fi", "Drama"],
+    rating: "PG",
+    score: 7.5,
+    description:
+      "Radio astronomer Dr. Eleanor Arroway has spent her career pointing antennas at the stars and listening. When a signal carrying complex blueprints is received from the Vega star system, the world erupts in scientific and religious debate over what it means and who should respond. Robert Zemeckis's thoughtful adaptation of Carl Sagan's novel refuses easy answers, asking instead what it would mean — scientifically, spiritually, and personally — to truly make contact with another intelligence. A rare science-fiction film that takes both science and faith seriously. Stars Jodie Foster, Matthew McConaughey, James Woods, and John Hurt. Rent or buy on YouTube Movies.",
+    thumbnail: "https://img.youtube.com/vi/i7na-m_Mw0U/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "contact-1997-full",
+        title: "Contact",
+        season: 0,
+        episode: 0,
+        year: 1997,
+        duration: "150 min",
+        description:
+          "A radio astronomer detects the first confirmed alien signal and fights to be the one humanity sends to meet them. Based on Carl Sagan's novel. Rent or buy on YouTube Movies.",
+        youtubeId: "i7na-m_Mw0U",
+        thumbnail: "https://img.youtube.com/vi/i7na-m_Mw0U/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     GATTACA  (1997)
+     YouTube identifier: d1Zxt28ff-E  (rent / buy on YouTube Movies)
+     In a genetically stratified future, a man born of natural
+     conception masquerades as a valid to reach the stars.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "gattaca-1997",
+    type: "movie",
+    title: "Gattaca",
+    years: "1997",
+    genre: ["Sci-Fi", "Drama", "Thriller"],
+    rating: "PG-13",
+    score: 7.8,
+    description:
+      "In the near future, genetic engineering determines your destiny. Vincent Freeman was conceived naturally — 'invalid' by society's standards — yet dreams of travelling to the stars. Borrowing the identity of Jerome Morrow, a genetically superior former swimmer, he infiltrates GATTACA Aerospace Corporation and earns a seat on an interplanetary mission. When a murder investigation threatens to expose him, he must outrun both detectives and his own biology. Andrew Niccol's visually stunning debut is the most thoughtful film ever made about genetic determinism, identity, and the stubborn will of the human spirit. Stars Ethan Hawke, Uma Thurman, and Jude Law. Rent or buy on YouTube Movies.",
+    thumbnail: "https://img.youtube.com/vi/d1Zxt28ff-E/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "gattaca-1997-full",
+        title: "Gattaca",
+        season: 0,
+        episode: 0,
+        year: 1997,
+        duration: "112 min",
+        description:
+          "A genetically 'inferior' man assumes the identity of a 'valid' to pursue his dream of space travel in this cerebral thriller about DNA, identity, and human will. Rent or buy on YouTube Movies.",
+        youtubeId: "d1Zxt28ff-E",
+        thumbnail: "https://img.youtube.com/vi/d1Zxt28ff-E/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE ABYSS  (1989)
+     YouTube identifier: jCz-BzkGctU  (rent / buy on YouTube Movies)
+     James Cameron's deep-sea sci-fi epic about an underwater
+     drilling crew that makes first contact with alien life.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-abyss-1989",
+    type: "movie",
+    title: "The Abyss",
+    years: "1989",
+    genre: ["Sci-Fi", "Drama", "Adventure"],
+    rating: "PG-13",
+    score: 7.6,
+    description:
+      "When a US nuclear submarine is mysteriously disabled in the Caribbean, a Navy SEAL team is sent to investigate — hitching a ride with the crew of an experimental deep-sea oil-drilling platform. Thousands of feet below the surface, in total darkness and crushing pressure, the crew encounters something extraordinary: a benign non-terrestrial intelligence living in the deepest ocean trenches. James Cameron's visually groundbreaking underwater epic is a film of enormous ambition, featuring the first-ever computer-generated water creature and one of cinema's most emotionally devastating endings. Stars Ed Harris, Mary Elizabeth Mastrantonio, and Michael Biehn. Rent or buy on YouTube Movies.",
+    thumbnail: "https://img.youtube.com/vi/jCz-BzkGctU/hqdefault.jpg",
+    featured: false,
+    episodes: [
+      {
+        id: "the-abyss-1989-full",
+        title: "The Abyss",
+        season: 0,
+        episode: 0,
+        year: 1989,
+        duration: "140 min",
+        description:
+          "James Cameron's deep-sea sci-fi epic — a drilling crew thousands of feet underwater encounters a benign alien intelligence. Rent or buy on YouTube Movies.",
+        youtubeId: "jCz-BzkGctU",
+        thumbnail: "https://img.youtube.com/vi/jCz-BzkGctU/hqdefault.jpg",
+      },
+    ],
+  },
   {
     id: "mtv-saturday-night-concert-reo-speedwagon-1981",
     type: "concert",
