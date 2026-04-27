@@ -383,7 +383,61 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
-     CHROME BUILT-IN AI (Gemini Nano)
+     POLLINATIONS.AI  (primary — 100 % free, no API key, real LLM)
+     Uses the OpenAI-compatible chat endpoint. No authentication,
+     CORS-enabled, backed by GPT-4o-mini.
+     ──────────────────────────────────────────────────────────── */
+
+  /**
+   * Build an OpenAI-format messages array: system prompt + conversation
+   * history + the new user message. This is what ChatGPT/Gemini calls use,
+   * giving Cosmo full memory of the conversation.
+   */
+  function buildMessages(userText) {
+    const history = _convHistory.slice(-MAX_CONV_HISTORY).map((m) => ({
+      role: m.role === "user" ? "user" : "assistant",
+      content: m.text,
+    }));
+    return [
+      { role: "system",    content: buildSystemPrompt() },
+      ...history,
+      { role: "user",      content: userText },
+    ];
+  }
+
+  /**
+   * Call Pollinations.ai text generation API.
+   * Returns the response string, or null if the request fails.
+   * Aborts after 20 seconds to avoid hanging indefinitely.
+   */
+  async function _callPollinations(messages) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20000);
+    try {
+      const res = await fetch("https://text.pollinations.ai/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages,
+          model:   "openai",   /* Pollinations model identifier — maps to GPT-4o-mini */
+          seed:    -1,
+          private: true,       /* do not log conversations */
+        }),
+        signal: controller.signal,
+      });
+      if (!res.ok) return null;
+      const text = (await res.text()).trim();
+      return text || null;
+    } catch (_) {
+      /* Network unavailable, service down, or request aborted — callers fall through */
+      return null;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     CHROME BUILT-IN AI (Gemini Nano) — secondary fallback
      Tries window.LanguageModel (Chrome 131+) then the older
      window.ai.languageModel shim. Falls back silently.
      ──────────────────────────────────────────────────────────── */
@@ -568,9 +622,16 @@
   }
 
   async function generatePopInText(showId, showTitle, epTitle) {
+    const userPrompt = `Generate ONE casual watch-along comment (2 sentences max) about watching "${showTitle}" — episode "${epTitle}". Sound like a friend texting, excited, maybe drop a surprising trivia fact. No lists, no headers, just natural speech.`;
+    /* Try Pollinations first */
+    const pollinResponse = await _callPollinations([
+      { role: "system", content: buildSystemPrompt() },
+      { role: "user",   content: userPrompt },
+    ]);
+    if (pollinResponse) return pollinResponse;
+    /* Chrome AI fallback */
     if (_aiReady && _aiSession) {
-      const prompt = `Generate ONE casual watch-along comment (2 sentences max) about watching "${showTitle}" — episode "${epTitle}". Sound like a friend texting, excited, maybe drop a surprising trivia fact. No lists, no headers, just natural speech.`;
-      const ai = await _promptAI(prompt);
+      const ai = await _promptAI(userPrompt);
       if (ai) return ai;
     }
     return getPopIn(showId, showTitle);
@@ -582,21 +643,32 @@
      ──────────────────────────────────────────────────────────── */
 
   async function chat(userMessage) {
-    /* Try Chrome AI first */
+    /* 1. Try Pollinations.ai — free, no API key, real LLM with full
+          conversation memory (works just like ChatGPT / Gemini). */
+    const pollinResponse = await _callPollinations(buildMessages(userMessage));
+    if (pollinResponse) {
+      _convHistory.push({ role: "user",      text: userMessage });
+      _convHistory.push({ role: "assistant", text: pollinResponse });
+      if (_convHistory.length > MAX_CONV_HISTORY) _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
+      saveConvHistory();
+      return pollinResponse;
+    }
+
+    /* 2. Try Chrome Built-in AI (Gemini Nano) if available. */
     if (_aiReady && _aiSession) {
       const aiResponse = await _promptAI(userMessage);
       if (aiResponse) {
-        /* Store in conversation history */
-        _convHistory.push({ role: "user", text: userMessage });
+        _convHistory.push({ role: "user",      text: userMessage });
         _convHistory.push({ role: "assistant", text: aiResponse });
         if (_convHistory.length > MAX_CONV_HISTORY) _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
         saveConvHistory();
         return aiResponse;
       }
     }
-    /* Fallback: rule-based */
+
+    /* 3. Rule-based fallback — always works, no network needed. */
     const response = generateResponse(userMessage);
-    _convHistory.push({ role: "user", text: userMessage });
+    _convHistory.push({ role: "user",      text: userMessage });
     _convHistory.push({ role: "assistant", text: response });
     if (_convHistory.length > MAX_CONV_HISTORY) _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
     saveConvHistory();
@@ -605,11 +677,11 @@
 
   /* ── Public API ── */
   global.StarQuestAI = {
-    /** Call once on page load to attempt Chrome AI init */
+    /** Call once on page load to attempt Chrome AI init (secondary engine) */
     init: initChromeAI,
 
-    /** Returns true if Chrome Gemini Nano is active */
-    isAIMode() { return _aiReady; },
+    /** Always true — Pollinations.ai is available in every browser */
+    isAIMode() { return true; },
 
     /** Set currently-playing context so Cosmo knows what you're watching */
     setContext(showId, showTitle, epTitle) {
@@ -642,9 +714,16 @@
 
   /* Auto-init on load */
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => { loadConvHistory(); initChromeAI(); });
+    document.addEventListener("DOMContentLoaded", () => {
+      loadConvHistory();
+      /* Pollinations.ai is always available — show AI badge right away */
+      document.dispatchEvent(new CustomEvent("starquest:ai-ready"));
+      /* Also try Chrome Built-in AI as secondary engine */
+      initChromeAI();
+    });
   } else {
     loadConvHistory();
+    document.dispatchEvent(new CustomEvent("starquest:ai-ready"));
     initChromeAI();
   }
 

@@ -1467,14 +1467,21 @@
         ? "Watching " + _currentShowTitle + " on StarQuest ⭐ — classic TV galaxy!"
         : "Check out StarQuest ⭐ — free classic TV!";
 
-      if (navigator.share) {
-        navigator.share({ title: "StarQuest", text, url }).catch(() => {});
-      } else {
+      const copyFallback = () => {
         navigator.clipboard.writeText(url + " — " + text).then(() => {
           showTokenToast("Link copied! 🔗");
         }).catch(() => {
           prompt("Copy this link to share:", url);
         });
+      };
+
+      if (navigator.share) {
+        /* When the native share dialog is cancelled or unsupported, fall
+           through to the clipboard/prompt fallback so the user always gets
+           visible feedback and the share credit is still meaningful. */
+        navigator.share({ title: "StarQuest", text, url }).catch(copyFallback);
+      } else {
+        copyFallback();
       }
 
       /* Award share credits */
@@ -1516,11 +1523,10 @@
   const sidebarCosmoBtn = $("sidebar-cosmo-btn");
   const sidebarAIBadge  = $("sidebar-ai-badge");
 
-  /* Update AI mode badge when Chrome AI activates */
   document.addEventListener("starquest:ai-ready", () => {
     /* Show AI badge in the panel header */
     const subtitle = $("ai-panel-subtitle") || document.querySelector(".ai-panel__subtitle");
-    if (subtitle) subtitle.textContent = "⚡ Gemini AI · Ask me anything!";
+    if (subtitle) subtitle.textContent = "⚡ AI Powered · Ask me anything!";
     if (sidebarAIBadge) sidebarAIBadge.style.display = "";
   });
 
