@@ -1176,6 +1176,8 @@
      WALLET CARD RENDER
      Shows big balance and share-progress bar in the sidebar.
      ──────────────────────────────────────────────────────────── */
+  const SHARES_PER_COIN = 10;  /* shares required to earn 1 StarCoin */
+
   function renderWalletCard(user) {
     const balEl   = $("wallet-balance-big");
     const shareEl = $("wallet-share-count");
@@ -1186,8 +1188,8 @@
     const pending = (user && user.pendingShareCredits) || 0;
 
     if (balEl)   balEl.textContent  = tokens;
-    if (shareEl) shareEl.textContent = pending + " / 10";
-    if (barEl)   barEl.style.width  = Math.min(100, (pending / 10) * 100) + "%";
+    if (shareEl) shareEl.textContent = pending + " / " + SHARES_PER_COIN;
+    if (barEl)   barEl.style.width  = Math.min(100, (pending / SHARES_PER_COIN) * 100) + "%";
     if (wrapEl)  wrapEl.setAttribute("aria-valuenow", pending);
   }
 

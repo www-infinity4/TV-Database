@@ -391,11 +391,12 @@
   let _aiSession      = null;   /* Chrome AI session */
   let _aiReady        = false;  /* true once session confirmed working */
   let _aiInitPending  = false;
-  let _convHistory    = [];     /* [{role:"user"|"assistant", text}] — last 12 */
+  let _convHistory    = [];     /* [{role:"user"|"assistant", text}] */
   let _currentContext = null;   /* {show, episode} being watched right now */
   let _popInTimers    = [];     /* setTimeout handles for watch-along pop-ins */
 
-  const CONV_KEY = "starquest_cosmo_conv";
+  const CONV_KEY          = "starquest_cosmo_conv";
+  const MAX_CONV_HISTORY  = 24;  /* maximum stored conversation turns */
 
   function saveConvHistory() {
     try { localStorage.setItem(CONV_KEY, JSON.stringify(_convHistory)); } catch (_) {}
@@ -406,7 +407,7 @@
       const raw = localStorage.getItem(CONV_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) _convHistory = parsed.slice(-24);
+        if (Array.isArray(parsed)) _convHistory = parsed.slice(-MAX_CONV_HISTORY);
       }
     } catch (_) {}
   }
@@ -588,7 +589,7 @@
         /* Store in conversation history */
         _convHistory.push({ role: "user", text: userMessage });
         _convHistory.push({ role: "assistant", text: aiResponse });
-        if (_convHistory.length > 24) _convHistory = _convHistory.slice(-24);
+        if (_convHistory.length > MAX_CONV_HISTORY) _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
         saveConvHistory();
         return aiResponse;
       }
@@ -597,7 +598,7 @@
     const response = generateResponse(userMessage);
     _convHistory.push({ role: "user", text: userMessage });
     _convHistory.push({ role: "assistant", text: response });
-    if (_convHistory.length > 24) _convHistory = _convHistory.slice(-24);
+    if (_convHistory.length > MAX_CONV_HISTORY) _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
     saveConvHistory();
     return response;
   }
