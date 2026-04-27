@@ -54,6 +54,9 @@
 
     playerPage: document.getElementById("player-page"),
     playerFrame: document.getElementById("player-frame"),
+    playerVideo: document.getElementById("player-video"),
+    playerError: document.getElementById("player-error"),
+    playerErrorLink: document.getElementById("player-error-link"),
     playerBack: document.getElementById("player-back"),
     playerEpTitle: document.getElementById("player-ep-title"),
     playerLoading: document.getElementById("player-loading"),
@@ -312,49 +315,82 @@
   function openPlayer(episode, showTitle) {
     state.currentEpisode = episode;
 
-    DOM.playerEpTitle.textContent =
-      showTitle + " — " + "S" + episode.season + "E" + episode.episode + ": " + episode.title;
-
-    /* Build the embed URL — uses the archive.org embed endpoint.
-       The player wraps this in our own UI so the underlying source
-       is not visible to the viewer. */
-    const embedUrl = buildEmbedUrl(episode);
-    DOM.playerFrame.src = embedUrl;
+    const isSpecial = episode.season === 0;
+    const seasonLabel = isSpecial ? "Movie" : "S" + episode.season + "E" + episode.episode;
+    DOM.playerEpTitle.textContent = showTitle + " — " + seasonLabel + ": " + episode.title;
 
     DOM.playerPage.classList.add("open");
     DOM.playerLoading.style.display = "flex";
+    DOM.playerError.style.display = "none";
     document.body.style.overflow = "hidden";
 
-    DOM.playerFrame.onload = () => {
-      DOM.playerLoading.style.display = "none";
-    };
+    if (typeof episode.archiveFile === "string" && episode.archiveId) {
+      /* Use a native <video> element with the direct archive.org download URL.
+         This plays the file on-site without the embed player's restrictions. */
+      const directUrl = buildArchiveDirectUrl(episode.archiveId, episode.archiveFile);
+
+      DOM.playerFrame.style.display = "none";
+      DOM.playerFrame.src = "about:blank";
+      DOM.playerVideo.style.display = "block";
+      DOM.playerVideo.src = directUrl;
+
+      DOM.playerVideo.oncanplay = () => {
+        DOM.playerLoading.style.display = "none";
+      };
+      DOM.playerVideo.onerror = () => {
+        DOM.playerLoading.style.display = "none";
+        DOM.playerVideo.style.display = "none";
+        DOM.playerError.style.display = "flex";
+        DOM.playerErrorLink.href = "https://archive.org/details/" + encodeURIComponent(episode.archiveId);
+      };
+    } else {
+      /* Fall back to iframe embed for YouTube or archive.org items without a specific file */
+      const embedUrl = buildEmbedUrl(episode);
+      DOM.playerVideo.style.display = "none";
+      DOM.playerVideo.src = "";
+      DOM.playerFrame.style.display = "block";
+      DOM.playerFrame.src = embedUrl;
+
+      DOM.playerFrame.addEventListener("load", () => {
+        DOM.playerLoading.style.display = "none";
+      }, { once: true });
+    }
   }
 
   function closePlayer() {
     DOM.playerPage.classList.remove("open");
     DOM.playerFrame.src = "about:blank";
+    DOM.playerFrame.style.display = "block";
+    DOM.playerVideo.src = "";
+    DOM.playerVideo.style.display = "none";
+    DOM.playerError.style.display = "none";
     document.body.style.overflow = "";
   }
 
   DOM.playerBack.addEventListener("click", closePlayer);
 
   /**
-   * Build the video embed URL.
+   * Build a direct archive.org download URL for a specific file within an item.
+   * Used to play video via a native <video> element, bypassing embed restrictions.
+   */
+  function buildArchiveDirectUrl(archiveId, archiveFile) {
+    return "https://archive.org/download/" +
+      encodeURIComponent(archiveId) + "/" +
+      archiveFile.split("/").map(encodeURIComponent).join("/");
+  }
+
+  /**
+   * Build the iframe embed URL for YouTube or archive.org items without a file path.
    * When an episode has a youtubeId, a YouTube embed URL is returned.
    * When an episode has an archiveIndex, the archive.org playlist index
    * parameter is used to jump directly to that episode.
-   * The iframe is sandboxed within our UI so viewers see our branding.
    */
   function buildEmbedUrl(episode) {
     if (episode.youtubeId) {
       const params = new URLSearchParams({ autoplay: "1" });
       return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
     }
-    let base =
-      "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
-    if (episode.archiveFile) {
-      base += "/" + episode.archiveFile.split("/").map(encodeURIComponent).join("/");
-    }
+    const base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
     const params = new URLSearchParams({ autoplay: "1" });
     if (typeof episode.archiveIndex === "number") {
       params.set("index", String(episode.archiveIndex));
@@ -962,6 +998,9 @@
     /* Delegate to the existing player logic in the first IIFE */
     const playerPage  = $("player-page");
     const playerFrame = $("player-frame");
+    const playerVideo = $("player-video");
+    const playerError = $("player-error");
+    const playerErrorLink = $("player-error-link");
     const playerTitle = $("player-ep-title");
     const playerLoad  = $("player-loading");
     if (!playerFrame || !playerPage) return;
@@ -969,17 +1008,42 @@
     _currentEpisode  = ep;
     _currentShowTitle = showTitle;
 
-    const seasonLabel = ep.season === 0 ? "Pilot" : "S" + ep.season + "E" + ep.episode;
+    const isSpecial = ep.season === 0;
+    const seasonLabel = isSpecial ? "Movie" : "S" + ep.season + "E" + ep.episode;
     if (playerTitle) playerTitle.textContent = showTitle + " — " + seasonLabel + ": " + ep.title;
 
-    const url = buildPlayerUrl(ep);
-    playerFrame.src = url;
     playerPage.classList.add("open");
     if (playerLoad) playerLoad.style.display = "flex";
+    if (playerError) playerError.style.display = "none";
     document.body.style.overflow = "hidden";
-    if (playerFrame.onload === null) {
+
+    if (typeof ep.archiveFile === "string" && ep.archiveId) {
+      /* Use direct <video> element with archive.org download URL */
+      const directUrl = "https://archive.org/download/" +
+        encodeURIComponent(ep.archiveId) + "/" +
+        ep.archiveFile.split("/").map(encodeURIComponent).join("/");
+
+      playerFrame.style.display = "none";
+      playerFrame.src = "about:blank";
+      if (playerVideo) {
+        playerVideo.style.display = "block";
+        playerVideo.src = directUrl;
+        playerVideo.oncanplay = () => { if (playerLoad) playerLoad.style.display = "none"; };
+        playerVideo.onerror = () => {
+          if (playerLoad) playerLoad.style.display = "none";
+          playerVideo.style.display = "none";
+          if (playerError) playerError.style.display = "flex";
+          if (playerErrorLink) playerErrorLink.href = "https://archive.org/details/" + encodeURIComponent(ep.archiveId);
+        };
+      }
+    } else {
+      const url = buildPlayerUrl(ep);
+      if (playerVideo) { playerVideo.style.display = "none"; playerVideo.src = ""; }
+      playerFrame.style.display = "block";
+      playerFrame.src = url;
       playerFrame.addEventListener("load", () => { if (playerLoad) playerLoad.style.display = "none"; }, { once: true });
     }
+
     startWatchTimer(ep, showTitle);
     addToHistoryNow(ep, showTitle);
   }
@@ -988,8 +1052,7 @@
     if (episode.youtubeId) {
       return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?autoplay=1";
     }
-    let base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
-    if (episode.archiveFile) base += "/" + episode.archiveFile.split("/").map(encodeURIComponent).join("/");
+    const base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
     const params = new URLSearchParams({ autoplay: "1" });
     if (typeof episode.archiveIndex === "number") params.set("index", String(episode.archiveIndex));
     return base + "?" + params.toString();
