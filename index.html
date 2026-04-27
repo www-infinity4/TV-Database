@@ -94,6 +94,32 @@
         </div>
       </div>
     </div>
+
+    <!-- STARWALLET CARD -->
+    <div class="sidebar-wallet-card" id="sidebar-wallet-card">
+      <div class="wallet-card__header">
+        <span class="wallet-card__icon" aria-hidden="true">⭐</span>
+        <span class="wallet-card__title">StarWallet</span>
+      </div>
+      <div class="wallet-card__balance-row">
+        <span id="wallet-balance-big" class="wallet-balance-big">0</span>
+        <span class="wallet-balance-label">StarCoins</span>
+      </div>
+      <div class="wallet-card__progress" title="Shares toward next StarCoin">
+        <div class="wallet-progress__label">
+          <span>🔗 Shares toward next coin</span>
+          <span id="wallet-share-count" class="wallet-share-count">0 / 10</span>
+        </div>
+        <div class="wallet-progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="wallet-progress-bar-wrap">
+          <div id="wallet-share-bar" class="wallet-progress__fill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="wallet-card__earn-hints">
+        <span>📺 +1 coin / hour watched</span>
+        <span>🔗 +1 coin / 10 shares</span>
+      </div>
+    </div>
+
     <nav class="sidebar-nav" aria-label="Sidebar navigation">
       <button id="sidebar-signin-btn" class="sidebar-nav__item">
         <span>👤</span> Sign In / Register
@@ -120,19 +146,23 @@
         <p class="history-empty" id="history-empty">Your history will appear here once you start watching!</p>
       </div>
     </div>
+    <!-- COSMO CONVERSATION HISTORY -->
+    <div class="sidebar-section" id="sidebar-cosmo-section">
+      <div class="sidebar-section__heading">
+        <span>🤖</span> Cosmo Chat
+        <button id="sidebar-cosmo-clear" class="sidebar-clear" title="Clear Cosmo chat history" aria-label="Clear Cosmo chat history">🗑</button>
+      </div>
+      <div id="sidebar-convo-preview" class="convo-preview" role="log" aria-label="Recent Cosmo messages">
+        <p class="history-empty" id="convo-empty">Start a chat with Cosmo — ask about any classic show!</p>
+      </div>
+      <button id="sidebar-continue-chat" class="sidebar-continue-chat">💬 Continue Chat with Cosmo</button>
+    </div>
+
     <div class="sidebar-section">
       <div class="sidebar-section__heading"><span>⭐</span> StarCoin Ledger</div>
       <div id="ledger-list" class="ledger-list" role="list" aria-label="Token transactions">
         <p class="history-empty" id="ledger-empty">Earn StarCoins by watching and sharing!</p>
       </div>
-    </div>
-    <div class="sidebar-earn">
-      <div class="sidebar-earn__title">How to Earn ⭐</div>
-      <ul class="sidebar-earn__list">
-        <li>📺 1 StarCoin per hour of watching</li>
-        <li>🔗 1 StarCoin per 10 shares</li>
-        <li>🔓 Unlock PPV content coming soon!</li>
-      </ul>
     </div>
   </aside>
 

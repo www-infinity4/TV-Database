@@ -395,6 +395,22 @@
   let _currentContext = null;   /* {show, episode} being watched right now */
   let _popInTimers    = [];     /* setTimeout handles for watch-along pop-ins */
 
+  const CONV_KEY = "starquest_cosmo_conv";
+
+  function saveConvHistory() {
+    try { localStorage.setItem(CONV_KEY, JSON.stringify(_convHistory)); } catch (_) {}
+  }
+
+  function loadConvHistory() {
+    try {
+      const raw = localStorage.getItem(CONV_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) _convHistory = parsed.slice(-24);
+      }
+    } catch (_) {}
+  }
+
   /* Compact catalogue description for the system prompt */
   function buildCatalogueBlurb() {
     if (typeof SHOWS === "undefined") return "";
@@ -573,6 +589,7 @@
         _convHistory.push({ role: "user", text: userMessage });
         _convHistory.push({ role: "assistant", text: aiResponse });
         if (_convHistory.length > 24) _convHistory = _convHistory.slice(-24);
+        saveConvHistory();
         return aiResponse;
       }
     }
@@ -581,6 +598,7 @@
     _convHistory.push({ role: "user", text: userMessage });
     _convHistory.push({ role: "assistant", text: response });
     if (_convHistory.length > 24) _convHistory = _convHistory.slice(-24);
+    saveConvHistory();
     return response;
   }
 
@@ -609,16 +627,23 @@
     /** Generate a pop-in comment for the current show */
     generatePopIn: generatePopInText,
 
-    /** Clear conversation memory */
-    clearHistory() { _convHistory = []; },
+    /** Clear conversation memory (and localStorage) */
+    clearHistory() {
+      _convHistory = [];
+      try { localStorage.removeItem(CONV_KEY); } catch (_) {}
+    },
+
+    /** Return a copy of the current conversation history */
+    getHistory() { return _convHistory.slice(); },
 
     name: "Cosmo",
   };
 
   /* Auto-init on load */
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initChromeAI);
+    document.addEventListener("DOMContentLoaded", () => { loadConvHistory(); initChromeAI(); });
   } else {
+    loadConvHistory();
     initChromeAI();
   }
 

@@ -998,6 +998,7 @@
     }
     renderHistoryList();
     renderLedgerList();
+    renderWalletCard(user);
   }
 
   /* Token update event */
@@ -1028,6 +1029,8 @@
     document.body.style.overflow = "hidden";
     renderHistoryList();
     renderLedgerList();
+    renderWalletCard(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
+    renderConvoHistory();
   }
 
   function closeSidebar() {
@@ -1166,6 +1169,79 @@
         <span class="ledger-item__balance">bal: ${escHTMLSQ(String(tx.balance))}</span>
       `;
       list.appendChild(el);
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     WALLET CARD RENDER
+     Shows big balance and share-progress bar in the sidebar.
+     ──────────────────────────────────────────────────────────── */
+  function renderWalletCard(user) {
+    const balEl   = $("wallet-balance-big");
+    const shareEl = $("wallet-share-count");
+    const barEl   = $("wallet-share-bar");
+    const wrapEl  = $("wallet-progress-bar-wrap");
+
+    const tokens  = (user && user.tokens) || 0;
+    const pending = (user && user.pendingShareCredits) || 0;
+
+    if (balEl)   balEl.textContent  = tokens;
+    if (shareEl) shareEl.textContent = pending + " / 10";
+    if (barEl)   barEl.style.width  = Math.min(100, (pending / 10) * 100) + "%";
+    if (wrapEl)  wrapEl.setAttribute("aria-valuenow", pending);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     COSMO CONVERSATION HISTORY (sidebar preview)
+     ──────────────────────────────────────────────────────────── */
+  function renderConvoHistory() {
+    const preview = $("sidebar-convo-preview");
+    const empty   = $("convo-empty");
+    if (!preview) return;
+
+    /* Remove previous rendered messages (not the empty placeholder) */
+    Array.from(preview.querySelectorAll(".convo-preview__msg")).forEach((el) => el.remove());
+
+    const history = (typeof StarQuestAI !== "undefined") ? StarQuestAI.getHistory() : [];
+    /* Show last 6 entries (3 exchanges) */
+    const recent = history.slice(-6);
+
+    if (!recent.length) {
+      if (empty) empty.style.display = "";
+      return;
+    }
+    if (empty) empty.style.display = "none";
+
+    recent.forEach((entry) => {
+      const el = document.createElement("div");
+      el.className = "convo-preview__msg convo-preview__msg--" + (entry.role === "user" ? "user" : "bot");
+      el.innerHTML =
+        '<span class="convo-preview__avatar" aria-hidden="true">' +
+          (entry.role === "user" ? "👤" : "🤖") +
+        '</span>' +
+        '<span class="convo-preview__text">' + escHTMLSQ(entry.text) + '</span>';
+      preview.appendChild(el);
+    });
+  }
+
+  /* Wire up sidebar Cosmo clear button */
+  const sidebarCosmoClear = $("sidebar-cosmo-clear");
+  if (sidebarCosmoClear) {
+    sidebarCosmoClear.addEventListener("click", () => {
+      if (typeof StarQuestAI !== "undefined") StarQuestAI.clearHistory();
+      /* Also clear the AI panel messages so it restarts cleanly */
+      const aiMessages = $("ai-messages");
+      if (aiMessages) aiMessages.innerHTML = "";
+      renderConvoHistory();
+    });
+  }
+
+  /* Wire up "Continue Chat" button */
+  const sidebarContinueChat = $("sidebar-continue-chat");
+  if (sidebarContinueChat) {
+    sidebarContinueChat.addEventListener("click", () => {
+      closeSidebar();
+      openAIPanel();
     });
   }
 
@@ -1473,6 +1549,8 @@
     `;
     aiMessages.appendChild(msg);
     aiMessages.scrollTop = aiMessages.scrollHeight;
+    /* Keep sidebar preview in sync if sidebar is open */
+    if (sidebar && sidebar.classList.contains("open")) renderConvoHistory();
   }
 
   async function sendAIMessage() {
