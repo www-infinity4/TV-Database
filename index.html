@@ -107,6 +107,9 @@
       <a href="https://archive.org/details/tv" target="_blank" rel="noopener noreferrer" class="sidebar-nav__item">
         <span>📼</span> Internet Archive TV Vault <span class="sidebar-nav__ext">↗</span>
       </a>
+      <button id="sidebar-cosmo-btn" class="sidebar-nav__item">
+        <span>🤖</span> Chat with Cosmo <span id="sidebar-ai-badge" class="sidebar-ai-badge" style="display:none">AI</span>
+      </button>
     </nav>
     <div class="sidebar-section">
       <div class="sidebar-section__heading">
@@ -199,6 +202,20 @@
 
   <!-- CONTENT ROWS -->
   <main id="main-content">
+
+    <!-- FOR YOU ROW — hidden until user has watch history -->
+    <section class="content-section content-section--for-you" id="for-you-section" aria-labelledby="lbl-for-you" style="display:none">
+      <div class="section-header">
+        <h2 class="section-title" id="lbl-for-you">🎯 Picked For You</h2>
+        <span class="section-more for-you-genre-label" id="for-you-genre-label"></span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-for-you" role="list"></div>
+        <button class="scroll-btn right" aria-label="Scroll right">›</button>
+      </div>
+    </section>
+
     <section class="content-section content-section--spotlight" aria-labelledby="lbl-due-south" id="due-south-section">
       <div class="section-header">
         <h2 class="section-title" id="lbl-due-south">🍁 Due South <span style="font-weight:400;color:var(--text-muted);font-size:.85rem;">1994–1998 · 67 Episodes</span></h2>
@@ -392,6 +409,15 @@
       <div id="player-loading" class="player-loading" aria-live="polite">
         <div class="player-spinner" aria-hidden="true"></div>
         <span class="player-loading-text">Loading…</span>
+      </div>
+      <!-- COSMO POP-IN — slides in during playback with a watch-along comment -->
+      <div id="cosmo-popin" class="cosmo-popin" style="display:none" aria-live="polite">
+        <div class="cosmo-popin__avatar">🤖</div>
+        <div class="cosmo-popin__body">
+          <div class="cosmo-popin__name">Cosmo</div>
+          <div id="cosmo-popin-text" class="cosmo-popin__text"></div>
+        </div>
+        <button id="cosmo-popin-close" class="cosmo-popin__close" aria-label="Dismiss">✕</button>
       </div>
     </div>
   </div>

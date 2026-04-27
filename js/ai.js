@@ -1,7 +1,13 @@
 /**
- * StarQuest — AI Companion (Rule-based SLM)
- * A fully client-side knowledge base about the shows, movies, and TV history
- * in the StarQuest catalogue. No external API required.
+ * StarQuest — AI Companion (Cosmo)
+ * Primary engine: Chrome Built-in AI (Gemini Nano via window.LanguageModel).
+ * Fallback: rich rule-based knowledge base — works in every browser.
+ *
+ * Features:
+ *  - Real conversation memory (last 12 exchanges)
+ *  - Context injection: knows what you are currently watching
+ *  - Watch-along pop-ins: Cosmo pops up mid-episode with a comment
+ *  - Personalized recommendations based on user genre affinity
  */
 
 (function (global) {
@@ -376,9 +382,244 @@
     return pickRandom(KNOWLEDGE.unknown);
   }
 
+  /* ─────────────────────────────────────────────────────────────
+     CHROME BUILT-IN AI (Gemini Nano)
+     Tries window.LanguageModel (Chrome 131+) then the older
+     window.ai.languageModel shim. Falls back silently.
+     ──────────────────────────────────────────────────────────── */
+
+  let _aiSession      = null;   /* Chrome AI session */
+  let _aiReady        = false;  /* true once session confirmed working */
+  let _aiInitPending  = false;
+  let _convHistory    = [];     /* [{role:"user"|"assistant", text}] — last 12 */
+  let _currentContext = null;   /* {show, episode} being watched right now */
+  let _popInTimers    = [];     /* setTimeout handles for watch-along pop-ins */
+
+  /* Compact catalogue description for the system prompt */
+  function buildCatalogueBlurb() {
+    if (typeof SHOWS === "undefined") return "";
+    const sample = SHOWS.slice(0, 30).map((s) =>
+      `${s.title} (${s.years}, ${s.genre.join("/")})`
+    ).join("; ");
+    return "StarQuest catalogue includes: " + sample + (SHOWS.length > 30 ? " and more." : ".");
+  }
+
+  function buildSystemPrompt() {
+    const cat = buildCatalogueBlurb();
+    const ctx = _currentContext
+      ? `\nThe user is currently watching: ${_currentContext.show} — "${_currentContext.episode}".`
+      : "";
+    return (
+      "You are Cosmo, the AI companion for StarQuest — a free classic TV & movies streaming site featuring 1950s–1990s content from archive.org.\n" +
+      "You are like a knowledgeable best friend who has watched every show. You speak casually, naturally, and with genuine enthusiasm — like texting a friend.\n" +
+      "You drop trivia and behind-the-scenes facts as if you just remembered them mid-conversation. Keep replies SHORT (2-4 sentences) unless the user asks for more.\n" +
+      "You react with personality: 'Dude, did you see that?!', 'Oh man this episode is wild', 'Fun fact —', etc.\n" +
+      "You never give robotic encyclopedia entries. You never make up episode timestamps or fake facts.\n" +
+      "StarCoins are earned by watching (1/hour) and sharing (1 per 10 shares). They will unlock pay-per-view content.\n" +
+      cat + ctx
+    );
+  }
+
+  async function initChromeAI() {
+    if (_aiInitPending || _aiReady) return;
+    _aiInitPending = true;
+    try {
+      /* Try new Chrome 131+ API */
+      if (typeof LanguageModel !== "undefined") {
+        const avail = await LanguageModel.availability();
+        if (avail === "readily" || avail === "after-download") {
+          _aiSession = await LanguageModel.create({ systemPrompt: buildSystemPrompt() });
+          _aiReady = true;
+          _notifyAIReady();
+          return;
+        }
+      }
+      /* Try older window.ai shim (Chrome 127–130) */
+      if (window.ai && window.ai.languageModel) {
+        const caps = await window.ai.languageModel.capabilities();
+        if (caps.available === "readily" || caps.available === "after-download") {
+          _aiSession = await window.ai.languageModel.create({ systemPrompt: buildSystemPrompt() });
+          _aiReady = true;
+          _notifyAIReady();
+        }
+      }
+    } catch (_) {
+      /* Chrome AI unavailable — silent fallback to rule-based */
+    } finally {
+      _aiInitPending = false;
+    }
+  }
+
+  function _notifyAIReady() {
+    document.dispatchEvent(new CustomEvent("starquest:ai-ready"));
+  }
+
+  /* Rebuild session when context changes (new show opened) */
+  async function _rebuildSession() {
+    if (!_aiReady) return;
+    try {
+      if (typeof LanguageModel !== "undefined") {
+        _aiSession = await LanguageModel.create({ systemPrompt: buildSystemPrompt() });
+      } else if (window.ai && window.ai.languageModel) {
+        _aiSession = await window.ai.languageModel.create({ systemPrompt: buildSystemPrompt() });
+      }
+    } catch (_) { _aiReady = false; }
+  }
+
+  /* Prompt Chrome AI with conversation history injected as context */
+  async function _promptAI(userMessage) {
+    if (!_aiSession) return null;
+    /* Build a brief history prefix so the model has context */
+    const historyText = _convHistory.slice(-8).map((m) =>
+      (m.role === "user" ? "User: " : "Cosmo: ") + m.text
+    ).join("\n");
+    const fullPrompt = historyText ? historyText + "\nUser: " + userMessage : userMessage;
+    try {
+      const result = await _aiSession.prompt(fullPrompt);
+      return result ? result.trim() : null;
+    } catch (_) {
+      _aiReady = false;
+      return null;
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     WATCH-ALONG POP-INS
+     Per-show pre-written comments used when Chrome AI is off.
+     ──────────────────────────────────────────────────────────── */
+
+  const POPINS = {
+    "due-south": [
+      "Dude, Fraser is literally the most polite human on television — this Mountie never loses his cool 😂",
+      "Fun fact: Diefenbaker was played by multiple wolf-dogs throughout the series. Wolf stunt doubles are a real job!",
+      "Paul Gross wrote, produced AND composed music for this show. The man did everything himself.",
+      "They filmed this in Toronto but set it in Chicago. Toronto standing in for the Windy City the whole time!",
+    ],
+    "real-ghostbusters": [
+      "The reason it's called 'The REAL Ghostbusters' is wild — a totally different Ghostbusters cartoon already existed from the 70s!",
+      "J. Michael Straczynski — the guy who later created Babylon 5 — wrote a ton of the best episodes here.",
+      "Bill Murray got Lorenzo Music fired from voicing Peter Venkman. Murray called the studio and complained personally 😬",
+    ],
+    "twilight-zone": [
+      "Rod Serling wrote 92 of the 156 original episodes BY HIMSELF. That's insane output.",
+      "CBS rejected the original pilot. Serling rewrote it and they picked it up — good call, CBS.",
+      "Robert Redford, Dennis Hopper, and Burt Reynolds all appeared in this before they were huge.",
+    ],
+    mash: [
+      "This show ran 11 seasons. The actual Korean War lasted 3 years. TV math is wild.",
+      "The series finale drew 106 million viewers in 1983. Nothing has touched that record in decades.",
+      "Alan Alda is the only cast member who appeared in all 11 seasons. Legend.",
+    ],
+    cheers: [
+      "Cheers almost got cancelled after its first season due to terrible ratings. Imagine that universe.",
+      "Frasier was literally supposed to be a one-episode character. One episode. And got his own spinoff.",
+      "The exterior bar shot is a real pub in Boston. It's literally called 'Cheers' now because of tourists.",
+    ],
+    seinfeld: [
+      "Larry David's rule for this show was 'no hugging, no learning.' Every character stays exactly who they are.",
+      "NBC called the pilot 'too New York, too Jewish' and almost didn't pick it up. Can you imagine?",
+      "Jerry Seinfeld turned down $5 million per episode to end the show. He walked away from $100M+ a season.",
+    ],
+    columbo: [
+      "'Just one more thing…' — Peter Falk improvised that catchphrase almost every single time.",
+      "Columbo's wife is mentioned in almost every episode but you never once see her on screen.",
+      "Steven Spielberg directed the very first Columbo TV movie. He was 24 years old.",
+    ],
+    "x-men": [
+      "The X-Men theme was rejected by the network but fans went absolutely crazy for it. Network overruled.",
+      "This show tackled civil rights and discrimination more directly than basically any other kids' show of the era.",
+      "The Phoenix Saga episodes are considered some of the finest animated storytelling ever made — for any age.",
+    ],
+    "star-trek": [
+      "The Vulcan salute was invented by Leonard Nimoy himself — based on a Jewish priestly blessing gesture.",
+      "NBC almost cancelled Star Trek after season 1. A fan letter campaign literally saved the show.",
+      "Nichelle Nichols considered leaving until Martin Luther King Jr. personally asked her to stay. Respect.",
+    ],
+  };
+
+  function getPopIn(showId, showTitle) {
+    const key = (showId || "").toLowerCase().replace(/[^a-z0-9]/g, "-");
+    const list = POPINS[key];
+    if (list && list.length) return pickRandom(list);
+    /* Generic fallback */
+    const generics = [
+      `You know what's wild about ${showTitle}? Every episode was a completely different production challenge.`,
+      `${showTitle} — this is genuinely one of the most underrated things you can watch for free anywhere.`,
+      `The people who made ${showTitle} had no idea it would still be this watchable decades later.`,
+    ];
+    return pickRandom(generics);
+  }
+
+  async function generatePopInText(showId, showTitle, epTitle) {
+    if (_aiReady && _aiSession) {
+      const prompt = `Generate ONE casual watch-along comment (2 sentences max) about watching "${showTitle}" — episode "${epTitle}". Sound like a friend texting, excited, maybe drop a surprising trivia fact. No lists, no headers, just natural speech.`;
+      const ai = await _promptAI(prompt);
+      if (ai) return ai;
+    }
+    return getPopIn(showId, showTitle);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     MAIN CHAT FUNCTION
+     Returns a Promise<string> always.
+     ──────────────────────────────────────────────────────────── */
+
+  async function chat(userMessage) {
+    /* Try Chrome AI first */
+    if (_aiReady && _aiSession) {
+      const aiResponse = await _promptAI(userMessage);
+      if (aiResponse) {
+        /* Store in conversation history */
+        _convHistory.push({ role: "user", text: userMessage });
+        _convHistory.push({ role: "assistant", text: aiResponse });
+        if (_convHistory.length > 24) _convHistory = _convHistory.slice(-24);
+        return aiResponse;
+      }
+    }
+    /* Fallback: rule-based */
+    const response = generateResponse(userMessage);
+    _convHistory.push({ role: "user", text: userMessage });
+    _convHistory.push({ role: "assistant", text: response });
+    if (_convHistory.length > 24) _convHistory = _convHistory.slice(-24);
+    return response;
+  }
+
   /* ── Public API ── */
   global.StarQuestAI = {
-    chat: generateResponse,
-    name: KNOWLEDGE.personality.name,
+    /** Call once on page load to attempt Chrome AI init */
+    init: initChromeAI,
+
+    /** Returns true if Chrome Gemini Nano is active */
+    isAIMode() { return _aiReady; },
+
+    /** Set currently-playing context so Cosmo knows what you're watching */
+    setContext(showId, showTitle, epTitle) {
+      _currentContext = { showId, show: showTitle, episode: epTitle || "" };
+      if (_aiReady) _rebuildSession();
+    },
+
+    /** Clear context when player closes */
+    clearContext() {
+      _currentContext = null;
+    },
+
+    /** Main chat entry point — always returns a Promise<string> */
+    chat,
+
+    /** Generate a pop-in comment for the current show */
+    generatePopIn: generatePopInText,
+
+    /** Clear conversation memory */
+    clearHistory() { _convHistory = []; },
+
+    name: "Cosmo",
   };
+
+  /* Auto-init on load */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initChromeAI);
+  } else {
+    initChromeAI();
+  }
+
 })(window);
