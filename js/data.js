@@ -3821,6 +3821,7 @@ const SHOWS = [
   {
     id: "wargames-1983",
     type: "movie",
+    payToWatch: true,
     title: "WarGames",
     years: "1983",
     genre: ["Drama", "Sci-Fi", "Thriller"],
@@ -3854,6 +3855,7 @@ const SHOWS = [
   {
     id: "sneakers-1992",
     type: "movie",
+    payToWatch: true,
     title: "Sneakers",
     years: "1992",
     genre: ["Drama", "Comedy", "Thriller"],
@@ -3887,6 +3889,7 @@ const SHOWS = [
   {
     id: "hackers-1995",
     type: "movie",
+    payToWatch: true,
     title: "Hackers",
     years: "1995",
     genre: ["Drama", "Thriller", "Crime"],
@@ -3920,6 +3923,7 @@ const SHOWS = [
   {
     id: "the-net-1995",
     type: "movie",
+    payToWatch: true,
     title: "The Net",
     years: "1995",
     genre: ["Thriller", "Drama"],
@@ -3953,6 +3957,7 @@ const SHOWS = [
   {
     id: "antitrust-2001",
     type: "movie",
+    payToWatch: true,
     title: "Antitrust",
     years: "2001",
     genre: ["Drama", "Thriller"],
@@ -3986,6 +3991,7 @@ const SHOWS = [
   {
     id: "the-social-network-2010",
     type: "movie",
+    payToWatch: true,
     title: "The Social Network",
     years: "2010",
     genre: ["Drama", "Biography"],
@@ -4318,6 +4324,7 @@ const SHOWS = [
   {
     id: "close-encounters-1977",
     type: "movie",
+    payToWatch: true,
     title: "Close Encounters of the Third Kind",
     years: "1977",
     genre: ["Sci-Fi", "Drama"],
@@ -4351,6 +4358,7 @@ const SHOWS = [
   {
     id: "the-andromeda-strain-1971",
     type: "movie",
+    payToWatch: true,
     title: "The Andromeda Strain",
     years: "1971",
     genre: ["Sci-Fi", "Thriller", "Drama"],
@@ -4384,6 +4392,7 @@ const SHOWS = [
   {
     id: "apollo-13-1995",
     type: "movie",
+    payToWatch: true,
     title: "Apollo 13",
     years: "1995",
     genre: ["Drama", "History", "Space"],
@@ -4417,6 +4426,7 @@ const SHOWS = [
   {
     id: "contact-1997",
     type: "movie",
+    payToWatch: true,
     title: "Contact",
     years: "1997",
     genre: ["Sci-Fi", "Drama"],
@@ -4450,6 +4460,7 @@ const SHOWS = [
   {
     id: "gattaca-1997",
     type: "movie",
+    payToWatch: true,
     title: "Gattaca",
     years: "1997",
     genre: ["Sci-Fi", "Drama", "Thriller"],
@@ -4483,6 +4494,7 @@ const SHOWS = [
   {
     id: "the-abyss-1989",
     type: "movie",
+    payToWatch: true,
     title: "The Abyss",
     years: "1989",
     genre: ["Sci-Fi", "Drama", "Adventure"],

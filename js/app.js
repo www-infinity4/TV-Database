@@ -101,18 +101,29 @@
   /* ── Rows ── */
   function byScore(a, b) { return (b.score || 0) - (a.score || 0); }
 
+  /**
+   * Sort comparator: free content first (by score), pay-to-watch items pushed
+   * to the very back so they never appear before freely watchable content.
+   */
+  function byScoreFreeFirst(a, b) {
+    const aPay = a.payToWatch ? 1 : 0;
+    const bPay = b.payToWatch ? 1 : 0;
+    if (aPay !== bPay) return aPay - bPay;   /* free before pay */
+    return byScore(a, b);                    /* within each group: higher score first */
+  }
+
   function initRows() {
-    renderRow(DOM.rowFeatured, getFeaturedShows().slice().sort(byScore));
+    renderRow(DOM.rowFeatured, getFeaturedShows().slice().sort(byScoreFreeFirst));
     renderEpisodeRow(DOM.rowDueSouth, getShowById("due-south"), 0, 1);
-    renderRow(DOM.rowMovies, getMovies().slice().sort(byScore));
-    renderRow(DOM.rowDrama, getShowsByGenre("Drama").slice().sort(byScore));
-    renderRow(DOM.rowComedy, getShowsByGenre("Comedy").slice().sort(byScore));
-    renderRow(DOM.rowScifi, getShowsByGenre("Sci-Fi").slice().sort(byScore));
-    renderRow(DOM.rowCrime, getShowsByGenre("Crime").slice().sort(byScore));
-    renderRow(DOM.rowFamily, getShowsByGenre("Family").slice().sort(byScore));
-    renderRow(DOM.row70s, getShowsByDecade(1970).slice().sort(byScore));
-    renderRow(DOM.row80s, getShowsByDecade(1980).slice().sort(byScore));
-    renderRow(DOM.row90s, getShowsByDecade(1990).slice().sort(byScore));
+    renderRow(DOM.rowMovies, getMovies().slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowDrama, getShowsByGenre("Drama").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowComedy, getShowsByGenre("Comedy").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowScifi, getShowsByGenre("Sci-Fi").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowCrime, getShowsByGenre("Crime").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowFamily, getShowsByGenre("Family").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.row70s, getShowsByDecade(1970).slice().sort(byScoreFreeFirst));
+    renderRow(DOM.row80s, getShowsByDecade(1980).slice().sort(byScoreFreeFirst));
+    renderRow(DOM.row90s, getShowsByDecade(1990).slice().sort(byScoreFreeFirst));
   }
 
   function renderRow(container, shows) {
@@ -181,14 +192,19 @@
   }
   function createShowCard(show) {
     const card = document.createElement("div");
-    card.className = "show-card";
+    card.className = "show-card" + (show.payToWatch ? " show-card--pay" : "");
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
     card.setAttribute("aria-label",
-      show.type === "movie" ? "Watch " + show.title : "View " + show.title);
+      show.payToWatch
+        ? "Rent or buy " + show.title + " on YouTube"
+        : show.type === "movie" ? "Watch " + show.title : "View " + show.title);
 
-    const movieBadge = show.type === "movie"
+    const movieBadge = show.type === "movie" && !show.payToWatch
       ? '<div class="ep-season-badge movie-badge">🎬 MOVIE</div>'
+      : "";
+    const payBadge = show.payToWatch
+      ? '<div class="ep-season-badge pay-badge">💳 RENT/BUY</div>'
       : "";
 
     card.innerHTML = `
@@ -202,9 +218,9 @@
           <span>${escHTML(show.title)}</span>
         </div>
         <div class="show-card__play-overlay" aria-hidden="true">
-          <div class="play-icon-circle">▶</div>
+          <div class="play-icon-circle">${show.payToWatch ? "↗" : "▶"}</div>
         </div>
-        ${movieBadge}
+        ${movieBadge}${payBadge}
       </div>
       <div class="show-card__info">
         <div class="show-card__title" title="${escAttr(show.title)}">${escHTML(show.title)}</div>
@@ -216,8 +232,19 @@
       </div>
     `;
 
-    if (show.type === "movie" && show.episodes && show.episodes.length > 0) {
-      /* Movies play directly — no intermediate modal */
+    if (show.payToWatch) {
+      /* Open YouTube in a new tab — never try to play inline */
+      const ep = show.episodes && show.episodes[0];
+      const ytUrl = ep && ep.youtubeId
+        ? "https://www.youtube.com/watch?v=" + encodeURIComponent(ep.youtubeId)
+        : "https://www.youtube.com/results?search_query=" + encodeURIComponent(show.title);
+      const go = () => window.open(ytUrl, "_blank", "noopener,noreferrer");
+      card.addEventListener("click", go);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+      });
+    } else if (show.type === "movie" && show.episodes && show.episodes.length > 0) {
+      /* Free movies play directly — no intermediate modal */
       const play = () => openPlayer(show.episodes[0], show.title);
       card.addEventListener("click", play);
       card.addEventListener("keydown", (e) => {
@@ -275,11 +302,13 @@
     }
 
     show.episodes.forEach((ep, i) => {
+      const isPayEp = !!(ep.youtubeId && show.payToWatch);
       const item = document.createElement("div");
-      item.className = "episode-item";
+      item.className = "episode-item" + (isPayEp ? " episode-item--pay" : "");
       item.setAttribute("role", "button");
       item.setAttribute("tabindex", "0");
-      item.setAttribute("aria-label", "Play episode " + ep.title);
+      item.setAttribute("aria-label",
+        isPayEp ? "Rent or buy " + ep.title + " on YouTube" : "Play episode " + ep.title);
 
       item.innerHTML = `
         <span class="episode-num">${i + 1}</span>
@@ -294,18 +323,26 @@
           <div class="episode-desc">${escHTML(ep.description)}</div>
         </div>
         <span class="episode-duration">${escHTML(ep.duration)}</span>
-        <div class="episode-play" aria-hidden="true">▶</div>
+        <div class="episode-play" aria-hidden="true">${isPayEp ? "💳" : "▶"}</div>
       `;
 
-      const play = () => {
-        closeModal();
-        openPlayer(ep, show.title);
-      };
-
-      item.addEventListener("click", play);
-      item.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
-      });
+      if (isPayEp) {
+        const ytUrl = "https://www.youtube.com/watch?v=" + encodeURIComponent(ep.youtubeId);
+        const go = () => { closeModal(); window.open(ytUrl, "_blank", "noopener,noreferrer"); };
+        item.addEventListener("click", go);
+        item.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+        });
+      } else {
+        const play = () => {
+          closeModal();
+          openPlayer(ep, show.title);
+        };
+        item.addEventListener("click", play);
+        item.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
+        });
+      }
 
       DOM.modalEpisodes.appendChild(item);
     });
@@ -415,7 +452,7 @@
         s.title.toLowerCase().includes(q) ||
         s.genre.some((g) => g.toLowerCase().includes(q)) ||
         s.description.toLowerCase().includes(q)
-    ).sort(byScore);
+    ).sort(byScoreFreeFirst);
 
     DOM.searchResultsTitle.innerHTML =
       'Results for <strong>"' + escHTML(q) + '"</strong> — ' + results.length + " show" + (results.length !== 1 ? "s" : "");
@@ -445,7 +482,7 @@
 
   function filterByGenre(genre) {
     state.activeGenre = genre;
-    const shows = (genre === "all" ? getFeaturedShows() : getShowsByGenre(genre)).slice().sort(byScore);
+    const shows = (genre === "all" ? getFeaturedShows() : getShowsByGenre(genre)).slice().sort(byScoreFreeFirst);
 
     /* Re-render the featured row with filtered results */
     if (DOM.rowFeatured) {

@@ -849,6 +849,33 @@ ul { list-style: none; }
   letter-spacing: .6px;
 }
 
+/* ── Rent/Buy badge & dimmed card ── */
+.pay-badge {
+  background: rgba(120,80,0,.92);
+  color: #ffd27f;
+  letter-spacing: .5px;
+}
+
+/* Slightly desaturate and dim pay-to-watch cards so free content stands out */
+.show-card--pay {
+  opacity: .72;
+  filter: grayscale(30%);
+}
+.show-card--pay:hover,
+.show-card--pay:focus-within {
+  opacity: .9;
+  filter: grayscale(10%);
+}
+
+/* Pay-to-watch episode row inside modal */
+.episode-item--pay {
+  opacity: .7;
+}
+.episode-item--pay:hover,
+.episode-item--pay:focus-within {
+  opacity: .9;
+}
+
 /* ── All-Episodes Modal ── */
 .all-eps-backdrop {
   display: none;
