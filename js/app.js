@@ -475,8 +475,8 @@
       DOM.playerFrame.style.display = "none";
       DOM.playerFrame.src = "about:blank";
       DOM.playerVideo.style.display = "block";
-      DOM.playerVideo.src = directUrl;
-
+      /* Register handlers before assigning src so no stale queued event
+         from a prior load can slip through and trigger the wrong handler. */
       DOM.playerVideo.oncanplay = () => {
         DOM.playerLoading.style.display = "none";
       };
@@ -486,11 +486,15 @@
         DOM.playerError.style.display = "flex";
         DOM.playerErrorLink.href = "https://archive.org/details/" + encodeURIComponent(episode.archiveId);
       };
+      DOM.playerVideo.src = directUrl;
     } else {
       /* Fall back to iframe embed for YouTube or archive.org items without a specific file */
       const embedUrl = buildEmbedUrl(episode);
+      DOM.playerVideo.oncanplay = null;
+      DOM.playerVideo.onerror = null;
       DOM.playerVideo.style.display = "none";
-      DOM.playerVideo.src = "";
+      DOM.playerVideo.removeAttribute("src");
+      DOM.playerVideo.load();
       DOM.playerFrame.style.display = "block";
       DOM.playerFrame.src = embedUrl;
 
@@ -507,7 +511,14 @@
     DOM.playerPage.classList.remove("open");
     DOM.playerFrame.src = "about:blank";
     DOM.playerFrame.style.display = "block";
-    DOM.playerVideo.src = "";
+    /* Clear handlers before resetting the video element so that the async
+       error event triggered by clearing the src doesn't fire the previous
+       onerror and falsely show the "can't be displayed" overlay. */
+    DOM.playerVideo.oncanplay = null;
+    DOM.playerVideo.onerror = null;
+    DOM.playerVideo.pause();
+    DOM.playerVideo.removeAttribute("src");
+    DOM.playerVideo.load();
     DOM.playerVideo.style.display = "none";
     DOM.playerError.style.display = "none";
     document.body.style.overflow = "";
@@ -1294,7 +1305,7 @@
       playerFrame.src = "about:blank";
       if (playerVideo) {
         playerVideo.style.display = "block";
-        playerVideo.src = directUrl;
+        /* Register handlers before assigning src — same reason as openPlayer above */
         playerVideo.oncanplay = () => { if (playerLoad) playerLoad.style.display = "none"; };
         playerVideo.onerror = () => {
           if (playerLoad) playerLoad.style.display = "none";
@@ -1302,10 +1313,17 @@
           if (playerError) playerError.style.display = "flex";
           if (playerErrorLink) playerErrorLink.href = "https://archive.org/details/" + encodeURIComponent(ep.archiveId);
         };
+        playerVideo.src = directUrl;
       }
     } else {
       const url = buildPlayerUrl(ep);
-      if (playerVideo) { playerVideo.style.display = "none"; playerVideo.src = ""; }
+      if (playerVideo) {
+        playerVideo.oncanplay = null;
+        playerVideo.onerror = null;
+        playerVideo.style.display = "none";
+        playerVideo.removeAttribute("src");
+        playerVideo.load();
+      }
       playerFrame.style.display = "block";
       playerFrame.src = url;
       playerFrame.addEventListener("load", () => { if (playerLoad) playerLoad.style.display = "none"; }, { once: true });
