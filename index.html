@@ -383,6 +383,12 @@
     </div>
     <div class="player-wrap">
       <iframe id="player-frame" class="player-frame" src="about:blank" title="Video Player" allowfullscreen allow="autoplay; fullscreen; encrypted-media" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+      <video id="player-video" class="player-video" controls autoplay preload="metadata" style="display:none"></video>
+      <div id="player-error" class="player-error" style="display:none" aria-live="polite">
+        <div class="player-error__icon" aria-hidden="true">📺</div>
+        <p class="player-error__msg">This video is not available for direct streaming.</p>
+        <a id="player-error-link" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Watch on Archive.org ↗</a>
+      </div>
       <div id="player-loading" class="player-loading" aria-live="polite">
         <div class="player-spinner" aria-hidden="true"></div>
         <span class="player-loading-text">Loading…</span>
