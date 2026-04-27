@@ -64,6 +64,9 @@
     rowDueSouth: document.getElementById("row-due-south"),
     rowMovies: document.getElementById("row-movies"),
     rowFamily: document.getElementById("row-family"),
+    rowForYou: document.getElementById("row-for-you"),
+    forYouSection: document.getElementById("for-you-section"),
+    forYouGenreLabel: document.getElementById("for-you-genre-label"),
     allEpsBackdrop: document.getElementById("all-eps-backdrop"),
     allEpsTabs: document.getElementById("all-eps-tabs"),
     allEpsList: document.getElementById("all-eps-list"),
@@ -73,11 +76,100 @@
     genrePills: document.querySelectorAll(".genre-pill"),
   };
 
-  /* ── Hero ── */
+  /* ── Personalization helpers ── */
+
+  /**
+   * Build a genre-affinity map from the user's watch history.
+   * Each watched episode's show genres are tallied by count.
+   * Returns an object like { "Sci-Fi": 5, "Drama": 3, … }
+   */
+  function buildAffinityProfile() {
+    if (typeof StarQuestAuth === "undefined") return {};
+    const history = StarQuestAuth.getHistory();
+    if (!history || !history.length) return {};
+    const profile = {};
+    history.forEach((item) => {
+      /* Find the show this episode belongs to */
+      const showTitle = (item.showTitle || "").toLowerCase();
+      const show = (typeof SHOWS !== "undefined")
+        ? SHOWS.find((s) => s.title.toLowerCase() === showTitle)
+        : null;
+      if (!show || !show.genre) return;
+      show.genre.forEach((g) => {
+        profile[g] = (profile[g] || 0) + 1;
+      });
+    });
+    return profile;
+  }
+
+  /** Score a show against a genre affinity profile (0 = no match, higher = better fit) */
+  function affinityScore(show, profile) {
+    if (!show.genre || !Object.keys(profile).length) return 0;
+    return show.genre.reduce((sum, g) => sum + (profile[g] || 0), 0);
+  }
+
+  /** Top genre label from an affinity profile */
+  function topGenre(profile) {
+    const entries = Object.entries(profile);
+    if (!entries.length) return null;
+    entries.sort((a, b) => b[1] - a[1]);
+    return entries[0][0];
+  }
+
+  /** Sort factory: personalized — free-first, then genre affinity desc, then score desc */
+  function byPersonalized(profile) {
+    return function (a, b) {
+      const aPay = a.payToWatch ? 1 : 0;
+      const bPay = b.payToWatch ? 1 : 0;
+      if (aPay !== bPay) return aPay - bPay;
+      const aAff = affinityScore(a, profile);
+      const bAff = affinityScore(b, profile);
+      if (bAff !== aAff) return bAff - aAff;
+      return (b.score || 0) - (a.score || 0);
+    };
+  }
+
+  /** Render (or hide) the For You section based on current user history */
+  function renderForYouRow() {
+    if (!DOM.rowForYou || !DOM.forYouSection) return;
+    const profile = buildAffinityProfile();
+    const hasHistory = Object.keys(profile).length > 0;
+
+    if (!hasHistory) {
+      DOM.forYouSection.style.display = "none";
+      return;
+    }
+
+    /* Show section */
+    DOM.forYouSection.style.display = "";
+
+    /* Top genre label */
+    const top = topGenre(profile);
+    if (DOM.forYouGenreLabel && top) {
+      DOM.forYouGenreLabel.textContent = "Based on your " + top + " history";
+    }
+
+    /* Build personalized list: all shows scored, top 16 */
+    const sorted = (typeof SHOWS !== "undefined" ? SHOWS.slice() : [])
+      .filter((s) => !s.payToWatch)
+      .sort(byPersonalized(profile))
+      .slice(0, 16);
+
+    renderRow(DOM.rowForYou, sorted);
+  }
+
+
   function initHero() {
     const featured = getFeaturedShows();
     if (!featured.length) return;
-    const show = featured[Math.floor(Math.random() * featured.length)];
+    /* If user has watch history, pick the highest-affinity featured show */
+    const profile = buildAffinityProfile();
+    let show;
+    if (Object.keys(profile).length) {
+      show = featured.slice().sort(byPersonalized(profile))[0];
+    } else {
+      show = featured[Math.floor(Math.random() * featured.length)];
+    }
     renderHero(show);
   }
 
@@ -101,18 +193,30 @@
   /* ── Rows ── */
   function byScore(a, b) { return (b.score || 0) - (a.score || 0); }
 
+  /**
+   * Sort comparator: free content first (by score), pay-to-watch items pushed
+   * to the very back so they never appear before freely watchable content.
+   */
+  function byScoreFreeFirst(a, b) {
+    const aPay = a.payToWatch ? 1 : 0;
+    const bPay = b.payToWatch ? 1 : 0;
+    if (aPay !== bPay) return aPay - bPay;   /* free before pay */
+    return byScore(a, b);                    /* within each group: higher score first */
+  }
+
   function initRows() {
-    renderRow(DOM.rowFeatured, getFeaturedShows().slice().sort(byScore));
+    renderForYouRow();
+    renderRow(DOM.rowFeatured, getFeaturedShows().slice().sort(byScoreFreeFirst));
     renderEpisodeRow(DOM.rowDueSouth, getShowById("due-south"), 0, 1);
-    renderRow(DOM.rowMovies, getMovies().slice().sort(byScore));
-    renderRow(DOM.rowDrama, getShowsByGenre("Drama").slice().sort(byScore));
-    renderRow(DOM.rowComedy, getShowsByGenre("Comedy").slice().sort(byScore));
-    renderRow(DOM.rowScifi, getShowsByGenre("Sci-Fi").slice().sort(byScore));
-    renderRow(DOM.rowCrime, getShowsByGenre("Crime").slice().sort(byScore));
-    renderRow(DOM.rowFamily, getShowsByGenre("Family").slice().sort(byScore));
-    renderRow(DOM.row70s, getShowsByDecade(1970).slice().sort(byScore));
-    renderRow(DOM.row80s, getShowsByDecade(1980).slice().sort(byScore));
-    renderRow(DOM.row90s, getShowsByDecade(1990).slice().sort(byScore));
+    renderRow(DOM.rowMovies, getMovies().slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowDrama, getShowsByGenre("Drama").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowComedy, getShowsByGenre("Comedy").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowScifi, getShowsByGenre("Sci-Fi").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowCrime, getShowsByGenre("Crime").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowFamily, getShowsByGenre("Family").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.row70s, getShowsByDecade(1970).slice().sort(byScoreFreeFirst));
+    renderRow(DOM.row80s, getShowsByDecade(1980).slice().sort(byScoreFreeFirst));
+    renderRow(DOM.row90s, getShowsByDecade(1990).slice().sort(byScoreFreeFirst));
   }
 
   function renderRow(container, shows) {
@@ -181,14 +285,19 @@
   }
   function createShowCard(show) {
     const card = document.createElement("div");
-    card.className = "show-card";
+    card.className = "show-card" + (show.payToWatch ? " show-card--pay" : "");
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
     card.setAttribute("aria-label",
-      show.type === "movie" ? "Watch " + show.title : "View " + show.title);
+      show.payToWatch
+        ? "Rent or buy " + show.title + " on YouTube"
+        : show.type === "movie" ? "Watch " + show.title : "View " + show.title);
 
-    const movieBadge = show.type === "movie"
+    const movieBadge = show.type === "movie" && !show.payToWatch
       ? '<div class="ep-season-badge movie-badge">🎬 MOVIE</div>'
+      : "";
+    const payBadge = show.payToWatch
+      ? '<div class="ep-season-badge pay-badge">💳 RENT/BUY</div>'
       : "";
 
     card.innerHTML = `
@@ -202,9 +311,9 @@
           <span>${escHTML(show.title)}</span>
         </div>
         <div class="show-card__play-overlay" aria-hidden="true">
-          <div class="play-icon-circle">▶</div>
+          <div class="play-icon-circle">${show.payToWatch ? "↗" : "▶"}</div>
         </div>
-        ${movieBadge}
+        ${movieBadge}${payBadge}
       </div>
       <div class="show-card__info">
         <div class="show-card__title" title="${escAttr(show.title)}">${escHTML(show.title)}</div>
@@ -216,8 +325,19 @@
       </div>
     `;
 
-    if (show.type === "movie" && show.episodes && show.episodes.length > 0) {
-      /* Movies play directly — no intermediate modal */
+    if (show.payToWatch) {
+      /* Open YouTube in a new tab — never try to play inline */
+      const ep = show.episodes && show.episodes[0];
+      const ytUrl = ep && ep.youtubeId
+        ? "https://www.youtube.com/watch?v=" + encodeURIComponent(ep.youtubeId)
+        : "https://www.youtube.com/results?search_query=" + encodeURIComponent(show.title);
+      const go = () => window.open(ytUrl, "_blank", "noopener,noreferrer");
+      card.addEventListener("click", go);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+      });
+    } else if (show.type === "movie" && show.episodes && show.episodes.length > 0) {
+      /* Free movies play directly — no intermediate modal */
       const play = () => openPlayer(show.episodes[0], show.title);
       card.addEventListener("click", play);
       card.addEventListener("keydown", (e) => {
@@ -275,11 +395,13 @@
     }
 
     show.episodes.forEach((ep, i) => {
+      const isPayEp = !!(ep.youtubeId && show.payToWatch);
       const item = document.createElement("div");
-      item.className = "episode-item";
+      item.className = "episode-item" + (isPayEp ? " episode-item--pay" : "");
       item.setAttribute("role", "button");
       item.setAttribute("tabindex", "0");
-      item.setAttribute("aria-label", "Play episode " + ep.title);
+      item.setAttribute("aria-label",
+        isPayEp ? "Rent or buy " + ep.title + " on YouTube" : "Play episode " + ep.title);
 
       item.innerHTML = `
         <span class="episode-num">${i + 1}</span>
@@ -294,24 +416,34 @@
           <div class="episode-desc">${escHTML(ep.description)}</div>
         </div>
         <span class="episode-duration">${escHTML(ep.duration)}</span>
-        <div class="episode-play" aria-hidden="true">▶</div>
+        <div class="episode-play" aria-hidden="true">${isPayEp ? "💳" : "▶"}</div>
       `;
 
-      const play = () => {
-        closeModal();
-        openPlayer(ep, show.title);
-      };
-
-      item.addEventListener("click", play);
-      item.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
-      });
+      if (isPayEp) {
+        const ytUrl = "https://www.youtube.com/watch?v=" + encodeURIComponent(ep.youtubeId);
+        const go = () => { closeModal(); window.open(ytUrl, "_blank", "noopener,noreferrer"); };
+        item.addEventListener("click", go);
+        item.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+        });
+      } else {
+        const play = () => {
+          closeModal();
+          openPlayer(ep, show.title);
+        };
+        item.addEventListener("click", play);
+        item.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
+        });
+      }
 
       DOM.modalEpisodes.appendChild(item);
     });
   }
 
   /* ── Player ── */
+  let _popInTimer = null;
+
   function openPlayer(episode, showTitle) {
     state.currentEpisode = episode;
 
@@ -323,6 +455,17 @@
     DOM.playerLoading.style.display = "flex";
     DOM.playerError.style.display = "none";
     document.body.style.overflow = "hidden";
+
+    /* Tell Cosmo what we're watching */
+    const show = (typeof SHOWS !== "undefined")
+      ? SHOWS.find((s) => s.title === showTitle) : null;
+    if (typeof StarQuestAI !== "undefined") {
+      StarQuestAI.setContext(show ? show.id : null, showTitle, episode.title);
+    }
+
+    /* Schedule Cosmo pop-in after 35 seconds */
+    if (_popInTimer) clearTimeout(_popInTimer);
+    _popInTimer = setTimeout(() => showCosmoPopIn(show, showTitle, episode), 35000);
 
     if (typeof episode.archiveFile === "string" && episode.archiveId) {
       /* Use a native <video> element with the direct archive.org download URL.
@@ -358,6 +501,9 @@
   }
 
   function closePlayer() {
+    if (_popInTimer) { clearTimeout(_popInTimer); _popInTimer = null; }
+    hideCosmoPopIn();
+    if (typeof StarQuestAI !== "undefined") StarQuestAI.clearContext();
     DOM.playerPage.classList.remove("open");
     DOM.playerFrame.src = "about:blank";
     DOM.playerFrame.style.display = "block";
@@ -367,7 +513,47 @@
     document.body.style.overflow = "";
   }
 
+  /* ── Cosmo pop-in during playback ── */
+  function showCosmoPopIn(show, showTitle, episode) {
+    const popEl = document.getElementById("cosmo-popin");
+    const textEl = document.getElementById("cosmo-popin-text");
+    if (!popEl || !textEl) return;
+
+    const showId = show ? show.id : null;
+    const epTitle = episode ? episode.title : "";
+
+    const display = (text) => {
+      textEl.textContent = text;
+      popEl.style.display = "flex";
+      popEl.classList.add("cosmo-popin--in");
+      /* Auto-dismiss after 10 seconds */
+      setTimeout(hideCosmoPopIn, 10000);
+    };
+
+    if (typeof StarQuestAI !== "undefined") {
+      StarQuestAI.generatePopIn(showId, showTitle, epTitle).then(display).catch(() => {
+        display("Enjoying the show? I've got all the behind-the-scenes secrets — ask me anything! 🤖");
+      });
+    } else {
+      display("Enjoying the show? Ask Cosmo about behind-the-scenes secrets! 🤖");
+    }
+  }
+
+  function hideCosmoPopIn() {
+    const popEl = document.getElementById("cosmo-popin");
+    if (popEl) {
+      popEl.classList.remove("cosmo-popin--in");
+      setTimeout(() => { popEl.style.display = "none"; }, 300);
+    }
+  }
+
+  /* Close pop-in button */
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "cosmo-popin-close") hideCosmoPopIn();
+  });
+
   DOM.playerBack.addEventListener("click", closePlayer);
+
 
   /**
    * Build a direct archive.org download URL for a specific file within an item.
@@ -415,7 +601,7 @@
         s.title.toLowerCase().includes(q) ||
         s.genre.some((g) => g.toLowerCase().includes(q)) ||
         s.description.toLowerCase().includes(q)
-    ).sort(byScore);
+    ).sort(byScoreFreeFirst);
 
     DOM.searchResultsTitle.innerHTML =
       'Results for <strong>"' + escHTML(q) + '"</strong> — ' + results.length + " show" + (results.length !== 1 ? "s" : "");
@@ -445,7 +631,7 @@
 
   function filterByGenre(genre) {
     state.activeGenre = genre;
-    const shows = (genre === "all" ? getFeaturedShows() : getShowsByGenre(genre)).slice().sort(byScore);
+    const shows = (genre === "all" ? getFeaturedShows() : getShowsByGenre(genre)).slice().sort(byScoreFreeFirst);
 
     /* Re-render the featured row with filtered results */
     if (DOM.rowFeatured) {
@@ -820,6 +1006,9 @@
   });
   document.addEventListener("starquest:history-updated", () => {
     renderHistoryList();
+    /* Re-render For You row and hero with updated affinity */
+    if (typeof renderForYouRow === "function") renderForYouRow();
+    if (typeof initHero === "function") initHero();
   });
 
   /* ─────────────────────────────────────────────────────────────
@@ -1228,9 +1417,23 @@
   const aiMessages    = $("ai-messages");
   const aiInput       = $("ai-input");
   const aiSend        = $("ai-send");
+  const sidebarCosmoBtn = $("sidebar-cosmo-btn");
+  const sidebarAIBadge  = $("sidebar-ai-badge");
+
+  /* Update AI mode badge when Chrome AI activates */
+  document.addEventListener("starquest:ai-ready", () => {
+    /* Show AI badge in the panel header */
+    const subtitle = $("ai-panel-subtitle") || document.querySelector(".ai-panel__subtitle");
+    if (subtitle) subtitle.textContent = "⚡ Gemini AI · Ask me anything!";
+    if (sidebarAIBadge) sidebarAIBadge.style.display = "";
+  });
 
   if (aiFab) aiFab.addEventListener("click", toggleAIPanel);
   if (aiPanelClose) aiPanelClose.addEventListener("click", closeAIPanel);
+  if (sidebarCosmoBtn) sidebarCosmoBtn.addEventListener("click", () => {
+    closeSidebar();
+    openAIPanel();
+  });
 
   function toggleAIPanel() {
     if (!aiPanel) return;
@@ -1248,9 +1451,10 @@
     aiPanel.style.flexDirection = "column";
     /* Greet if no messages yet */
     if (aiMessages && aiMessages.children.length === 0) {
-      appendAIMessage("bot", typeof StarQuestAI !== "undefined"
+      const greeting = (typeof StarQuestAI !== "undefined")
         ? StarQuestAI.chat("hello")
-        : "Hi! I'm Cosmo, StarQuest's AI companion. Ask me about any classic show!");
+        : Promise.resolve("Hi! I'm Cosmo, StarQuest's AI companion. Ask me about any classic show!");
+      Promise.resolve(greeting).then((text) => appendAIMessage("bot", text));
     }
     if (aiInput) aiInput.focus();
   }
@@ -1271,25 +1475,26 @@
     aiMessages.scrollTop = aiMessages.scrollHeight;
   }
 
-  function sendAIMessage() {
+  async function sendAIMessage() {
     if (!aiInput) return;
     const text = aiInput.value.trim();
     if (!text) return;
     appendAIMessage("user", text);
     aiInput.value = "";
-    /* Typing indicator */
+    /* Typing indicator stays until AI responds */
     const typingEl = document.createElement("div");
     typingEl.className = "ai-msg ai-msg--bot";
-    typingEl.innerHTML = '<div class="ai-msg__avatar">🤖</div><div class="ai-msg__bubble">…</div>';
-    if (aiMessages) aiMessages.appendChild(typingEl);
-    if (aiMessages) aiMessages.scrollTop = aiMessages.scrollHeight;
-    setTimeout(() => {
-      typingEl.remove();
-      const response = (typeof StarQuestAI !== "undefined")
+    typingEl.innerHTML = '<div class="ai-msg__avatar">🤖</div><div class="ai-msg__bubble ai-typing">…</div>';
+    if (aiMessages) { aiMessages.appendChild(typingEl); aiMessages.scrollTop = aiMessages.scrollHeight; }
+    /* Minimum visual delay + wait for AI response */
+    const [response] = await Promise.all([
+      (typeof StarQuestAI !== "undefined")
         ? StarQuestAI.chat(text)
-        : "I don't have that information right now. Try asking about a specific classic show!";
-      appendAIMessage("bot", response);
-    }, 600);
+        : Promise.resolve("I don't have that info right now. Try asking about a specific classic show!"),
+      new Promise((r) => setTimeout(r, 500)),
+    ]);
+    typingEl.remove();
+    appendAIMessage("bot", response);
   }
 
   if (aiSend) aiSend.addEventListener("click", sendAIMessage);
