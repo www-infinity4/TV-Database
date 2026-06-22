@@ -93,7 +93,7 @@
     if (!ep || typeof ep !== "object") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
-    return !!ep.archiveId;
+    return !!ep.archiveId && typeof ep.archiveIndex === "number";
   }
 
   function isShowAvailable(show) {
@@ -972,7 +972,7 @@
     if (typeof ep.archiveFile === "string" && ep.archiveFile) {
       return EXT_PLAYABLE.test(ep.archiveFile) ? "working" : "not directly streamable";
     }
-    if (typeof ep.archiveIndex === "number") return "external fallback only";
+    if (ep.archiveId && typeof ep.archiveIndex === "number") return "external fallback only";
     return "file missing";
   }
 
@@ -1586,7 +1586,7 @@
     if (!ep || typeof ep !== "object") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i.test(ep.archiveFile);
-    return !!ep.archiveId;
+    return !!ep.archiveId && typeof ep.archiveIndex === "number";
   }
 
   /* Intercept player back button to stop timer */
