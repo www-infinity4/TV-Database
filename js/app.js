@@ -77,85 +77,119 @@
   };
 
   /* ── Personalization helpers ── */
+  const EXT_PLAYABLE = /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i;
 
-  /**
-   * Build a genre-affinity map from the user's watch history.
-   * Each watched episode's show genres are tallied by count.
-   * Returns an object like { "Sci-Fi": 5, "Drama": 3, … }
-   */
-  function buildAffinityProfile() {
-    if (typeof StarQuestAuth === "undefined") return {};
+  function showDecade(show) {
+    const year = parseInt(String(show.years || "").split("–")[0], 10);
+    if (!Number.isFinite(year)) return "";
+    return Math.floor(year / 10) * 10 + "s";
+  }
+
+  function buildEpisodeId(ep, show) {
+    return (show && show.id ? show.id : "unknown") + "|S" + ep.season + "E" + ep.episode;
+  }
+
+  function isEpisodePlayable(ep) {
+    if (!ep || typeof ep !== "object") return false;
+    if (ep.youtubeId) return true;
+    if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
+    return !!ep.archiveId && typeof ep.archiveIndex === "number";
+  }
+
+  function isShowAvailable(show) {
+    if (!show || !Array.isArray(show.episodes) || !show.episodes.length) return false;
+    return show.episodes.some(isEpisodePlayable);
+  }
+
+  function historyStats() {
+    if (typeof StarQuestAuth === "undefined") return null;
     const history = StarQuestAuth.getHistory();
-    if (!history || !history.length) return {};
-    const profile = {};
-    history.forEach((item) => {
-      /* Find the show this episode belongs to */
-      const showTitle = (item.showTitle || "").toLowerCase();
-      const show = (typeof SHOWS !== "undefined")
-        ? SHOWS.find((s) => s.title.toLowerCase() === showTitle)
-        : null;
-      if (!show || !show.genre) return;
-      show.genre.forEach((g) => {
-        profile[g] = (profile[g] || 0) + 1;
-      });
+    if (!history.length) return null;
+    const genre = {};
+    const decade = {};
+    const series = {};
+    const completedBySeries = {};
+    const recent = new Set();
+    const watchedShows = new Set();
+    history.forEach((item, idx) => {
+      const g = item.genre || "";
+      if (g) genre[g] = (genre[g] || 0) + 1;
+      const d = item.decade || "";
+      if (d) decade[d] = (decade[d] || 0) + 1;
+      const sid = item.showId || "";
+      if (sid) {
+        series[sid] = (series[sid] || 0) + 1;
+        if (item.completed) completedBySeries[sid] = (completedBySeries[sid] || 0) + 1;
+        watchedShows.add(sid);
+      }
+      if (idx < 8 && item.episodeId) recent.add(item.episodeId);
     });
-    return profile;
+    return { history, genre, decade, series, completedBySeries, recent, watchedShows };
   }
 
-  /** Score a show against a genre affinity profile (0 = no match, higher = better fit) */
-  function affinityScore(show, profile) {
-    if (!show.genre || !Object.keys(profile).length) return 0;
-    return show.genre.reduce((sum, g) => sum + (profile[g] || 0), 0);
+  function scoreShowForUser(show, stats) {
+    if (!stats) return { score: show.score || 0, reason: "Starter pick from a different era and genre." };
+    const genreAffinity = (show.genre || []).reduce((sum, g) => sum + (stats.genre[g] || 0), 0);
+    const decadeKey = showDecade(show);
+    const decadeAffinity = stats.decade[decadeKey] || 0;
+    const seriesAffinity = stats.series[show.id] || 0;
+    const completionAffinity = stats.completedBySeries[show.id] || 0;
+    const repeatViewing = Math.max(0, seriesAffinity - 1);
+    const unexploredBonus = stats.watchedShows.has(show.id) ? 0 : 1;
+    const completedPenalty = completionAffinity > 2 ? 1 : 0;
+    const recentlyWatchedPenalty = show.episodes.some((ep) => stats.recent.has(buildEpisodeId(ep, show))) ? 1 : 0;
+    const score =
+      genreAffinity * 30 +
+      decadeAffinity * 18 +
+      seriesAffinity * 22 +
+      completionAffinity * 15 +
+      repeatViewing * 8 +
+      unexploredBonus * 8 -
+      recentlyWatchedPenalty * 25 -
+      completedPenalty * 30 +
+      (show.score || 0);
+    const leadGenre = (show.genre && show.genre[0]) || "classic";
+    const reason = stats.watchedShows.has(show.id)
+      ? "Picked because you watch " + decadeKey + " " + leadGenre.toLowerCase() + " and revisit this series."
+      : "Picked because you watch " + decadeKey + " " + leadGenre.toLowerCase() + " and completed similar episodes.";
+    return { score, reason };
   }
 
-  /** Top genre label from an affinity profile */
-  function topGenre(profile) {
-    const entries = Object.entries(profile);
-    if (!entries.length) return null;
-    entries.sort((a, b) => b[1] - a[1]);
-    return entries[0][0];
-  }
-
-  /** Sort factory: personalized — free-first, then genre affinity desc, then score desc */
-  function byPersonalized(profile) {
+  function byPersonalized(stats, reasonMap) {
     return function (a, b) {
-      const aPay = a.payToWatch ? 1 : 0;
-      const bPay = b.payToWatch ? 1 : 0;
+      const aPay = a.starCoinCost > 0 ? 1 : 0;
+      const bPay = b.starCoinCost > 0 ? 1 : 0;
       if (aPay !== bPay) return aPay - bPay;
-      const aAff = affinityScore(a, profile);
-      const bAff = affinityScore(b, profile);
-      if (bAff !== aAff) return bAff - aAff;
-      return (b.score || 0) - (a.score || 0);
+      const aScore = scoreShowForUser(a, stats);
+      const bScore = scoreShowForUser(b, stats);
+      reasonMap[a.id] = aScore.reason;
+      reasonMap[b.id] = bScore.reason;
+      if (bScore.score !== aScore.score) return bScore.score - aScore.score;
+      return String(a.title || "").localeCompare(String(b.title || ""));
     };
   }
 
-  /** Render (or hide) the For You section based on current user history */
   function renderForYouRow() {
     if (!DOM.rowForYou || !DOM.forYouSection) return;
-    const profile = buildAffinityProfile();
-    const hasHistory = Object.keys(profile).length > 0;
-
-    if (!hasHistory) {
-      DOM.forYouSection.style.display = "none";
-      return;
-    }
-
-    /* Show section */
-    DOM.forYouSection.style.display = "";
-
-    /* Top genre label */
-    const top = topGenre(profile);
-    if (DOM.forYouGenreLabel && top) {
-      DOM.forYouGenreLabel.textContent = "Based on your " + top + " history";
-    }
-
-    /* Build personalized list: all shows scored, top 16 */
-    const sorted = (typeof SHOWS !== "undefined" ? SHOWS.slice() : [])
-      .filter((s) => !s.payToWatch)
-      .sort(byPersonalized(profile))
+    const reasonEl = document.getElementById("for-you-reason");
+    const stats = historyStats();
+    const reasonMap = {};
+    const candidates = (typeof SHOWS !== "undefined" ? SHOWS.slice() : [])
+      .filter(isShowAvailable)
+      .sort(byPersonalized(stats, reasonMap))
       .slice(0, 16);
-
-    renderRow(DOM.rowForYou, sorted);
+    DOM.forYouSection.style.display = "";
+    renderRow(DOM.rowForYou, candidates);
+    const first = candidates[0];
+    if (DOM.forYouGenreLabel) {
+      DOM.forYouGenreLabel.textContent = stats ? "History-weighted picks" : "Starter picks";
+    }
+    if (reasonEl) {
+      reasonEl.textContent = first ? (reasonMap[first.id] || "Starter picks from across genres and decades.") : "No available recommendations yet.";
+    }
+    document.dispatchEvent(new CustomEvent("starquest:recommendations-updated", {
+      detail: { hasHistory: !!stats, recommendations: candidates.map((show) => show.id) }
+    }));
   }
 
 
@@ -198,8 +232,8 @@
    * to the very back so they never appear before freely watchable content.
    */
   function byScoreFreeFirst(a, b) {
-    const aPay = a.payToWatch ? 1 : 0;
-    const bPay = b.payToWatch ? 1 : 0;
+    const aPay = (a.starCoinCost || 0) > 0 ? 1 : 0;
+    const bPay = (b.starCoinCost || 0) > 0 ? 1 : 0;
     if (aPay !== bPay) return aPay - bPay;   /* free before pay */
     return byScore(a, b);                    /* within each group: higher score first */
   }
@@ -284,21 +318,32 @@
     return card;
   }
   function createShowCard(show) {
+    const unlockCost = Number.isFinite(Number(show.starCoinCost))
+      ? Math.max(0, Math.trunc(Number(show.starCoinCost)))
+      : (show.payToWatch ? 3 : 0);
+    const contentId = "show:" + show.id;
+    const isUnlocked = unlockCost <= 0 || (typeof StarQuestAuth !== "undefined" && StarQuestAuth.isContentUnlocked(contentId));
+    const isLocked = unlockCost > 0 && !isUnlocked;
+    const showUnavailable = !isShowAvailable(show);
     const card = document.createElement("div");
-    card.className = "show-card" + (show.payToWatch ? " show-card--pay" : "");
+    card.className = "show-card" + (isLocked ? " show-card--pay" : "");
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
     card.setAttribute("aria-label",
-      show.payToWatch
-        ? "Rent or buy " + show.title + " on YouTube"
+      isLocked
+        ? "Unlock " + show.title + " for " + unlockCost + " StarCoins"
+        : showUnavailable
+          ? show.title + " is unavailable"
         : show.type === "movie" ? "Watch " + show.title : "View " + show.title);
 
     const movieBadge = show.type === "movie" && !show.payToWatch
       ? '<div class="ep-season-badge movie-badge">🎬 MOVIE</div>'
       : "";
-    const payBadge = show.payToWatch
-      ? '<div class="ep-season-badge pay-badge">💳 RENT/BUY</div>'
-      : "";
+    const payBadge = isLocked
+      ? '<div class="ep-season-badge pay-badge">🔒 ' + unlockCost + ' ⭐</div>'
+      : (unlockCost > 0
+        ? '<div class="ep-season-badge movie-badge">✅ Unlocked</div>'
+        : "");
 
     card.innerHTML = `
       <div class="show-card__thumb">
@@ -322,19 +367,62 @@
           <span class="show-card__genre">${escHTML(show.genre[0])}</span>
           <span>${escHTML(show.years)}</span>
         </div>
+        ${showUnavailable ? '<div class="history-empty" style="display:block;margin-top:4px;">Unavailable</div>' : ""}
+        ${isLocked ? '<button class="btn btn-primary unlock-btn" type="button" style="margin-top:6px">Unlock • ' + escHTML(String(unlockCost)) + ' ⭐</button>' : ""}
+        ${unlockCost > 0 && !isLocked ? '<div class="history-empty" style="display:block;margin-top:4px;">Unlocked</div>' : ""}
       </div>
     `;
 
-    if (show.payToWatch) {
-      /* Open YouTube in a new tab — never try to play inline */
-      const ep = show.episodes && show.episodes[0];
-      const ytUrl = ep && ep.youtubeId
-        ? "https://www.youtube.com/watch?v=" + encodeURIComponent(ep.youtubeId)
-        : "https://www.youtube.com/results?search_query=" + encodeURIComponent(show.title);
-      const go = () => window.open(ytUrl, "_blank", "noopener,noreferrer");
-      card.addEventListener("click", go);
+    const unlockBtn = card.querySelector(".unlock-btn");
+    if (unlockBtn) {
+      unlockBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
+          document.dispatchEvent(new CustomEvent("starquest:require-auth"));
+          return;
+        }
+        const unlockResult = StarQuestAuth.unlockContent(contentId, unlockCost, show.title);
+        if (!unlockResult.ok) {
+          const balance = StarQuestAuth.getBalance();
+          document.dispatchEvent(new CustomEvent("starquest:toast", {
+            detail: { message: "Need " + unlockCost + " StarCoins (balance: " + balance + ")." }
+          }));
+          return;
+        }
+        document.dispatchEvent(new CustomEvent("starquest:toast", {
+          detail: { message: unlockResult.alreadyUnlocked ? "Already unlocked." : "Unlocked " + show.title + "!" }
+        }));
+        initRows();
+      });
+    }
+
+    if (showUnavailable) {
+      const noPlay = (e) => {
+        e.preventDefault();
+        document.dispatchEvent(new CustomEvent("starquest:toast", {
+          detail: { message: "This content is currently unavailable." }
+        }));
+      };
+      card.addEventListener("click", noPlay);
       card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+        if (e.key === "Enter" || e.key === " ") noPlay(e);
+      });
+    } else if (isLocked) {
+      const promptUnlock = (e) => {
+        e.preventDefault();
+        if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
+          document.dispatchEvent(new CustomEvent("starquest:require-auth"));
+          return;
+        }
+        const balance = StarQuestAuth.getBalance();
+        document.dispatchEvent(new CustomEvent("starquest:toast", {
+          detail: { message: show.title + " costs " + unlockCost + " StarCoins. Balance: " + balance + "." }
+        }));
+      };
+      card.addEventListener("click", promptUnlock);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") promptUnlock(e);
       });
     } else if (show.type === "movie" && show.episodes && show.episodes.length > 0) {
       /* Free movies play directly — no intermediate modal */
@@ -394,14 +482,24 @@
       return;
     }
 
+    const showCost = Number.isFinite(Number(show.starCoinCost))
+      ? Math.max(0, Math.trunc(Number(show.starCoinCost)))
+      : (show.payToWatch ? 3 : 0);
+    const isUnlocked = showCost <= 0 || (typeof StarQuestAuth !== "undefined" && StarQuestAuth.isContentUnlocked("show:" + show.id));
+
     show.episodes.forEach((ep, i) => {
-      const isPayEp = !!(ep.youtubeId && show.payToWatch);
+      const isPlayable = isEpisodePlayable(ep);
+      const isLockedEp = showCost > 0 && !isUnlocked;
       const item = document.createElement("div");
-      item.className = "episode-item" + (isPayEp ? " episode-item--pay" : "");
+      item.className = "episode-item" + (isLockedEp ? " episode-item--pay" : "");
       item.setAttribute("role", "button");
       item.setAttribute("tabindex", "0");
       item.setAttribute("aria-label",
-        isPayEp ? "Rent or buy " + ep.title + " on YouTube" : "Play episode " + ep.title);
+        !isPlayable
+          ? "Unavailable episode " + ep.title
+          : isLockedEp
+            ? "Unlock " + show.title + " to watch " + ep.title
+            : "Play episode " + ep.title);
 
       item.innerHTML = `
         <span class="episode-num">${i + 1}</span>
@@ -416,15 +514,31 @@
           <div class="episode-desc">${escHTML(ep.description)}</div>
         </div>
         <span class="episode-duration">${escHTML(ep.duration)}</span>
-        <div class="episode-play" aria-hidden="true">${isPayEp ? "💳" : "▶"}</div>
+        <div class="episode-play" aria-hidden="true">${!isPlayable ? "⛔" : (isLockedEp ? "🔒" : "▶")}</div>
       `;
 
-      if (isPayEp) {
-        const ytUrl = "https://www.youtube.com/watch?v=" + encodeURIComponent(ep.youtubeId);
-        const go = () => { closeModal(); window.open(ytUrl, "_blank", "noopener,noreferrer"); };
-        item.addEventListener("click", go);
+      if (!isPlayable) {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.dispatchEvent(new CustomEvent("starquest:toast", {
+            detail: { message: "This episode is unavailable." }
+          }));
+        });
+      } else if (isLockedEp) {
+        const promptUnlock = (e) => {
+          e.preventDefault();
+          if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
+            document.dispatchEvent(new CustomEvent("starquest:require-auth"));
+            return;
+          }
+          const balance = StarQuestAuth.getBalance();
+          document.dispatchEvent(new CustomEvent("starquest:toast", {
+            detail: { message: show.title + " costs " + showCost + " StarCoins. Balance: " + balance + "." }
+          }));
+        };
+        item.addEventListener("click", promptUnlock);
         item.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+          if (e.key === "Enter" || e.key === " ") promptUnlock(e);
         });
       } else {
         const play = () => {
@@ -445,6 +559,35 @@
   let _popInTimer = null;
 
   function openPlayer(episode, showTitle) {
+    const showForEpisode = (typeof SHOWS !== "undefined")
+      ? SHOWS.find((s) => s.title === showTitle)
+      : null;
+    const showCost = showForEpisode
+      ? (Number.isFinite(Number(showForEpisode.starCoinCost))
+        ? Math.max(0, Math.trunc(Number(showForEpisode.starCoinCost)))
+        : (showForEpisode.payToWatch ? 3 : 0))
+      : 0;
+    if (showForEpisode && showCost > 0) {
+      const contentId = "show:" + showForEpisode.id;
+      const unlocked = (typeof StarQuestAuth !== "undefined") && StarQuestAuth.isContentUnlocked(contentId);
+      if (!unlocked) {
+        if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
+          document.dispatchEvent(new CustomEvent("starquest:require-auth"));
+        } else {
+          const balance = StarQuestAuth.getBalance();
+          document.dispatchEvent(new CustomEvent("starquest:toast", {
+            detail: { message: showForEpisode.title + " costs " + showCost + " StarCoins. Balance: " + balance + "." }
+          }));
+        }
+        return;
+      }
+    }
+    if (!isEpisodePlayable(episode)) {
+      document.dispatchEvent(new CustomEvent("starquest:toast", {
+        detail: { message: "This content is currently unavailable." }
+      }));
+      return;
+    }
     state.currentEpisode = episode;
 
     const isSpecial = episode.season === 0;
@@ -571,6 +714,7 @@
    * Used to play video via a native <video> element, bypassing embed restrictions.
    */
   function buildArchiveDirectUrl(archiveId, archiveFile) {
+    if (!archiveId || !archiveFile) return "";
     return "https://archive.org/download/" +
       encodeURIComponent(archiveId) + "/" +
       archiveFile.split("/").map(encodeURIComponent).join("/");
@@ -587,9 +731,10 @@
       const params = new URLSearchParams({ autoplay: "1" });
       return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
     }
+    if (!episode.archiveId) return "about:blank";
     const base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
     const params = new URLSearchParams({ autoplay: "1" });
-    if (typeof episode.archiveIndex === "number") {
+    if (typeof episode.archiveIndex === "number" && !episode.archiveFile) {
       params.set("index", String(episode.archiveIndex));
     }
     return base + "?" + params.toString();
@@ -821,7 +966,36 @@
     };
   }
 
+  function archiveValidationStatus(ep) {
+    if (!ep.archiveId && !ep.youtubeId) return "identifier missing";
+    if (ep.youtubeId) return "external fallback only";
+    if (typeof ep.archiveFile === "string" && ep.archiveFile) {
+      return EXT_PLAYABLE.test(ep.archiveFile) ? "working" : "not directly streamable";
+    }
+    if (ep.archiveId && typeof ep.archiveIndex === "number") return "external fallback only";
+    return "file missing";
+  }
+
+  window.StarQuestArchiveValidationReport = function () {
+    const rows = [];
+    (SHOWS || []).forEach((show) => {
+      (show.episodes || []).forEach((ep) => {
+        rows.push({
+          showId: show.id,
+          episodeId: buildEpisodeId(ep, show),
+          title: ep.title,
+          status: archiveValidationStatus(ep),
+          archiveId: ep.archiveId || "",
+          archiveFile: ep.archiveFile || "",
+        });
+      });
+    });
+    return rows;
+  };
+
   /* ── Init ── */
+  window.renderForYouRow = renderForYouRow;
+  window.initHero = initHero;
   initHero();
   initRows();
 })();
@@ -901,6 +1075,10 @@
     authBackdrop.classList.remove("open");
     clearAuthErrors();
   }
+
+  document.addEventListener("starquest:require-auth", () => {
+    openAuthModal("signin");
+  });
 
   function showAuthPanel(panel) {
     if (panel === "signin") {
@@ -1010,17 +1188,33 @@
     renderHistoryList();
     renderLedgerList();
     renderWalletCard(user);
+    renderUnlockedContent(user);
   }
 
   /* Token update event */
   document.addEventListener("starquest:tokens-updated", (e) => {
-    updateUIForUser(e.detail.user);
+    updateUIForUser(e.detail && e.detail.user ? e.detail.user : StarQuestAuth.currentUser());
   });
   document.addEventListener("starquest:history-updated", () => {
     renderHistoryList();
     /* Re-render For You row and hero with updated affinity */
     if (typeof renderForYouRow === "function") renderForYouRow();
     if (typeof initHero === "function") initHero();
+  });
+  document.addEventListener("starquest:auth-changed", () => {
+    updateUIForUser(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
+    if (typeof renderForYouRow === "function") renderForYouRow();
+    if (typeof initHero === "function") initHero();
+  });
+  document.addEventListener("starquest:content-unlocked", () => {
+    renderUnlockedContent(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
+    if (typeof renderForYouRow === "function") renderForYouRow();
+  });
+  document.addEventListener("starquest:watch-progress", () => {
+    renderWalletCard(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
+  });
+  document.addEventListener("starquest:share-progress", () => {
+    renderWalletCard(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
   });
 
   /* ─────────────────────────────────────────────────────────────
@@ -1068,11 +1262,9 @@
   if (clearHistoryBtn) {
     clearHistoryBtn.addEventListener("click", () => {
       if (typeof StarQuestAuth === "undefined") return;
-      const user = StarQuestAuth.currentUser();
-      if (!user) return;
+      if (!StarQuestAuth.currentUser()) return;
       if (!confirm("Clear your entire watch history?")) return;
-      user.watchHistory = [];
-      StarQuestAuth.saveUser(user);
+      StarQuestAuth.clearHistory();
       renderHistoryList();
     });
   }
@@ -1103,7 +1295,7 @@
       el.setAttribute("tabindex", "0");
       el.setAttribute("aria-label", "Resume " + item.epTitle);
 
-      const time = formatRelativeTime(item.watchedAt);
+      const time = formatRelativeTime(item.lastWatchedAt || item.startedAt || Date.now());
       const thumb = item.thumbnail || "";
 
       el.innerHTML = `
@@ -1169,14 +1361,44 @@
       if (empty) empty.style.display = "";
       return;
     }
+
+    function renderUnlockedContent(user) {
+      const list = $("unlocked-content-list");
+      const empty = $("unlocked-content-empty");
+      if (!list) return;
+      Array.from(list.querySelectorAll(".ledger-item")).forEach((el) => el.remove());
+      const items = (user && typeof StarQuestAuth !== "undefined") ? StarQuestAuth.getUnlockedContent() : [];
+      if (!items.length) {
+        if (empty) empty.style.display = "";
+        return;
+      }
+      if (empty) empty.style.display = "none";
+      items.slice(0, 20).forEach((item) => {
+        const el = document.createElement("div");
+        el.className = "ledger-item";
+        el.innerHTML = `
+          <span class="ledger-item__reason">${escHTMLSQ(item.title || item.contentId)}</span>
+          <span class="ledger-item__amount">${escHTMLSQ(String(item.cost || 0))} ⭐</span>
+        `;
+        list.appendChild(el);
+      });
+    }
     if (empty) empty.style.display = "none";
 
     ledger.forEach((tx) => {
+      const amount = Number(tx.amount) || 0;
+      const sign = amount >= 0 ? "+" : "−";
+      const labelByType = {
+        watch_reward: "watch reward",
+        share_reward: "share reward",
+        content_unlock: "content unlock",
+      };
+      const label = tx.label || labelByType[tx.type] || "administrator/migration adjustment";
       const el = document.createElement("div");
       el.className = "ledger-item";
       el.innerHTML = `
-        <span class="ledger-item__amount">+${escHTMLSQ(String(tx.amount))} ⭐</span>
-        <span class="ledger-item__reason">${escHTMLSQ(tx.reason)}</span>
+        <span class="ledger-item__amount">${sign}${escHTMLSQ(String(Math.abs(amount)))} ⭐</span>
+        <span class="ledger-item__reason">${escHTMLSQ(label)} · ${escHTMLSQ(tx.reason || "")}</span>
         <span class="ledger-item__balance">bal: ${escHTMLSQ(String(tx.balance))}</span>
       `;
       list.appendChild(el);
@@ -1194,14 +1416,28 @@
     const shareEl = $("wallet-share-count");
     const barEl   = $("wallet-share-bar");
     const wrapEl  = $("wallet-progress-bar-wrap");
+    const watchEl = $("wallet-watch-count");
+    const watchBarEl = $("wallet-watch-bar");
+    const watchWrapEl = $("wallet-watch-progress-wrap");
+    const lifetimeEl = $("wallet-lifetime-shares");
+    const starPowerEl = $("wallet-star-power");
 
     const tokens  = (user && user.tokens) || 0;
     const pending = (user && user.pendingShareCredits) || 0;
+    const lifetimeShares = (user && user.shareCount) || 0;
+    const eligible = (user && user.eligibleWatchSeconds) || 0;
+    const rewarded = (user && user.rewardedWatchSeconds) || 0;
+    const watchRemainder = Math.max(0, eligible - rewarded) % 3600;
 
     if (balEl)   balEl.textContent  = tokens;
     if (shareEl) shareEl.textContent = pending + " / " + SHARES_PER_COIN;
     if (barEl)   barEl.style.width  = Math.min(100, (pending / SHARES_PER_COIN) * 100) + "%";
     if (wrapEl)  wrapEl.setAttribute("aria-valuenow", pending);
+    if (watchEl) watchEl.textContent = watchRemainder + " / 3600s";
+    if (watchBarEl) watchBarEl.style.width = Math.min(100, (watchRemainder / 3600) * 100) + "%";
+    if (watchWrapEl) watchWrapEl.setAttribute("aria-valuenow", watchRemainder);
+    if (lifetimeEl) lifetimeEl.textContent = "🔗 Lifetime shares: " + lifetimeShares;
+    if (starPowerEl) starPowerEl.textContent = "✨ Star Power (sharing): " + Math.floor(lifetimeShares / SHARES_PER_COIN);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1263,9 +1499,8 @@
      We patch the player open/close via a custom event from the
      first IIFE, and watch via an interval timer.
      ──────────────────────────────────────────────────────────── */
-  let _watchStartTime = null;
-  let _watchTimer     = null;
-  let _secondsWatched = 0;
+  let _watchTimer = null;
+  let _watchTracker = null;
 
   /* Listen for play-episode event (from history list items) */
   document.addEventListener("starquest:play-episode", (e) => {
@@ -1282,6 +1517,10 @@
     const playerTitle = $("player-ep-title");
     const playerLoad  = $("player-loading");
     if (!playerFrame || !playerPage) return;
+    if (!isEpisodePlayableSQ(ep)) {
+      showTokenToast("This content is currently unavailable.");
+      return;
+    }
 
     _currentEpisode  = ep;
     _currentShowTitle = showTitle;
@@ -1341,6 +1580,13 @@
     const params = new URLSearchParams({ autoplay: "1" });
     if (typeof episode.archiveIndex === "number") params.set("index", String(episode.archiveIndex));
     return base + "?" + params.toString();
+  }
+
+  function isEpisodePlayableSQ(ep) {
+    if (!ep || typeof ep !== "object") return false;
+    if (ep.youtubeId) return true;
+    if (typeof ep.archiveFile === "string" && ep.archiveId) return /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i.test(ep.archiveFile);
+    return !!ep.archiveId && typeof ep.archiveIndex === "number";
   }
 
   /* Intercept player back button to stop timer */
@@ -1413,26 +1659,69 @@
 
   function startWatchTimer(ep, showTitle) {
     stopWatchTimer();
-    _watchStartTime = Date.now();
-    _secondsWatched = 0;
-    /* Every 60 seconds, check if an hour has accumulated */
-    _watchTimer = setInterval(() => {
-      _secondsWatched += 60;
-      /* Award 1 token per hour (3600s) */
-      if (_secondsWatched > 0 && _secondsWatched % 3600 === 0) {
-        if (typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentUser()) {
-          StarQuestAuth.addTokens(1, "1 hour watched");
-          showPlayerTokenNotif();
-          showTokenToast("⭐ +1 StarCoin for watching!");
-        }
+    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return;
+    if (!ep) return;
+    const show = findShowForEpisode(ep);
+    const episodeId = show ? (show.id + "|S" + ep.season + "E" + ep.episode) : (showTitle + "|" + ep.id);
+    const playerVideo = $("player-video");
+    if (!playerVideo) return;
+
+    _watchTracker = {
+      episodeId,
+      lastTime: Number(playerVideo.currentTime) || 0,
+      seeking: false,
+      duration: Math.max(0, Math.trunc(Number(playerVideo.duration) || 0)),
+      showId: show ? show.id : "",
+      showTitle: showTitle || (show && show.title) || "Unknown Show",
+      epTitle: ep.title || "Episode",
+      genre: show && show.genre ? show.genre[0] : "",
+      decade: show ? (Math.floor(parseInt(String(show.years || "").split("–")[0], 10) / 10) * 10 + "s") : "",
+      tags: show && show.genre ? show.genre.slice(0, 4) : [],
+      thumbnail: ep.thumbnail || (show && show.thumbnail) || "",
+      watchedSeconds: Math.max(0, Math.trunc(Number(StarQuestAuth.getWatchPosition(episodeId)) || 0)),
+    };
+
+    playerVideo.onseeking = () => { if (_watchTracker) _watchTracker.seeking = true; };
+    playerVideo.onseeked = () => {
+      if (_watchTracker) {
+        _watchTracker.seeking = false;
+        _watchTracker.lastTime = Number(playerVideo.currentTime) || _watchTracker.lastTime;
       }
-    }, 60000);
+    };
+
+    _watchTimer = setInterval(() => {
+      if (!_watchTracker) return;
+      if (document.visibilityState !== "visible") return;
+      if (playerVideo.paused || playerVideo.ended) return;
+      if (_watchTracker.seeking) return;
+      const rate = Number(playerVideo.playbackRate) || 1;
+      if (rate < 0.75 || rate > 1.25) return;
+
+      const nowTime = Number(playerVideo.currentTime) || 0;
+      const delta = nowTime - _watchTracker.lastTime;
+      _watchTracker.lastTime = nowTime;
+      if (!Number.isFinite(delta) || delta <= 0 || delta > 2) return;
+
+      _watchTracker.watchedSeconds += delta;
+      StarQuestAuth.saveWatchPosition(_watchTracker.episodeId, Math.floor(_watchTracker.watchedSeconds));
+      StarQuestAuth.updateHistoryProgress(_watchTracker.episodeId, Math.floor(_watchTracker.watchedSeconds), _watchTracker.duration);
+      const watchResult = StarQuestAuth.recordWatchProgress(_watchTracker.episodeId, delta, {
+        episodeId: _watchTracker.episodeId,
+        watchedSeconds: Math.floor(_watchTracker.watchedSeconds),
+        duration: _watchTracker.duration,
+      });
+
+      if (watchResult && watchResult.ok && watchResult.awarded > 0) {
+        showPlayerTokenNotif();
+        showTokenToast("⭐ +" + watchResult.awarded + " StarCoin for watch-time!");
+      }
+    }, 1000);
   }
 
   function stopWatchTimer() {
-    if (_watchTimer) { clearInterval(_watchTimer); _watchTimer = null; }
-    _watchStartTime = null;
-    _secondsWatched = 0;
+    if (_watchTimer) clearInterval(_watchTimer);
+    _watchTimer = null;
+    _watchTracker = null;
   }
 
   function addToHistoryNow(ep, showTitle) {
@@ -1441,7 +1730,26 @@
     const show = findShowForEpisode(ep);
     const showId = (show && show.id) ? show.id : "unknown";
     const episodeId = showId + "|S" + ep.season + "E" + ep.episode;
-    StarQuestAuth.addToHistory(episodeId, showTitle, ep.title, ep.thumbnail);
+    const startYear = parseInt(String((show && show.years) || "").split("–")[0], 10);
+    const decade = Number.isFinite(startYear) ? (Math.floor(startYear / 10) * 10 + "s") : "";
+    const duration = Math.max(0, Math.trunc((Number(ep.duration) || parseInt(String(ep.duration || "0"), 10)) * 60));
+    StarQuestAuth.addToHistory({
+      episodeId,
+      showId,
+      showTitle,
+      epTitle: ep.title,
+      thumbnail: ep.thumbnail,
+      genre: show && show.genre ? show.genre[0] : "",
+      decade,
+      tags: show && Array.isArray(show.genre) ? show.genre.slice(0, 4) : [],
+      watchedSeconds: Math.max(0, StarQuestAuth.getWatchPosition(episodeId)),
+      duration,
+      completionRate: 0,
+      startedAt: Date.now(),
+      lastWatchedAt: Date.now(),
+      completed: false,
+      playCount: 1,
+    });
   }
 
   function findShowForEpisode(ep) {
@@ -1461,39 +1769,51 @@
      ──────────────────────────────────────────────────────────── */
   const shareBtn = $("player-share-btn");
   if (shareBtn) {
-    shareBtn.addEventListener("click", () => {
+    shareBtn.addEventListener("click", async () => {
       const url = window.location.href;
       const text = _currentShowTitle
         ? "Watching " + _currentShowTitle + " on StarQuest ⭐ — classic TV galaxy!"
         : "Check out StarQuest ⭐ — free classic TV!";
+      const contentId = (_currentEpisode && _currentShowTitle)
+        ? (_currentShowTitle + "|" + (_currentEpisode.id || _currentEpisode.title || "episode"))
+        : "unknown-content";
+      const rewardShare = (verified) => {
+        if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return;
+        const shareResult = StarQuestAuth.recordShare(contentId, { verified });
+        if (!shareResult.ok) {
+          if (shareResult.error === "share_cooldown") {
+            showTokenToast("Share progress cooldown active for this content.");
+          }
+          return;
+        }
+        if (shareResult.awarded > 0) {
+          showTokenToast("⭐ +1 StarCoin from sharing (prototype).");
+        } else {
+          const remaining = shareResult.sharesPerCoin - shareResult.progressToNextCoin;
+          showTokenToast("🔗 Shared (" + (verified ? "verified" : "unverified local") + "). " + remaining + " more for a StarCoin.");
+        }
+      };
 
       const copyFallback = () => {
         navigator.clipboard.writeText(url + " — " + text).then(() => {
-          showTokenToast("Link copied! 🔗");
+          showTokenToast("Link copied (unverified local share).");
+          rewardShare(false);
         }).catch(() => {
           prompt("Copy this link to share:", url);
+          showTokenToast("Unverified local share fallback used.");
+          rewardShare(false);
         });
       };
 
       if (navigator.share) {
-        /* When the native share dialog is cancelled or unsupported, fall
-           through to the clipboard/prompt fallback so the user always gets
-           visible feedback and the share credit is still meaningful. */
-        navigator.share({ title: "StarQuest", text, url }).catch(copyFallback);
+        try {
+          await navigator.share({ title: "StarQuest", text, url });
+          rewardShare(true);
+        } catch {
+          showTokenToast("Share canceled — no reward granted.");
+        }
       } else {
         copyFallback();
-      }
-
-      /* Award share credits */
-      if (typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentUser()) {
-        const awarded = StarQuestAuth.recordShare();
-        if (awarded) {
-          showTokenToast("⭐ +1 StarCoin for 10 shares!");
-        } else {
-          const user = StarQuestAuth.currentUser();
-          const remaining = 10 - (user.pendingShareCredits || 0);
-          showTokenToast("🔗 Shared! " + remaining + " more for a StarCoin!");
-        }
       }
     });
   }
@@ -1510,6 +1830,10 @@
     document.body.appendChild(toast);
     setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3000);
   }
+  document.addEventListener("starquest:toast", (e) => {
+    if (!e.detail || !e.detail.message) return;
+    showTokenToast(e.detail.message);
+  });
 
   /* ─────────────────────────────────────────────────────────────
      AI COMPANION — COSMO
