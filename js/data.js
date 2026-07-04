@@ -10471,6 +10471,102 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     HOUSE OF DARK SHADOWS  (1970)
+     Archive identifier: house-of-dark-shadows-1970
+     Feature-film spin-off of the Dark Shadows television series.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "house-of-dark-shadows-1970",
+    type: "movie",
+    title: "House of Dark Shadows (1970)",
+    years: "1970",
+    genre: ["Horror", "Drama", "Mystery"],
+    rating: "PG",
+    score: 6.9,
+    description:
+      "Dan Curtis's gothic horror feature spins the cult television soap Dark Shadows into a standalone vampire tragedy. After being accidentally released from his coffin at Collinwood, Barnabas Collins resumes his predatory hunt while becoming obsessed with Maggie Evans, believing she is the reincarnation of his lost love Josette. A moody blend of romance, bloodlust, and family doom, the film condenses the series' supernatural melodrama into a macabre big-screen chiller.",
+    thumbnail: "https://archive.org/services/img/house-of-dark-shadows-1970",
+    featured: false,
+    episodes: [
+      {
+        id: "house-of-dark-shadows-1970-full",
+        title: "House of Dark Shadows",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "97 min",
+        description:
+          "Barnabas Collins escapes his long imprisonment and terrorises his descendants while seeking a cure for vampirism in this 1970 Dark Shadows feature-film spin-off.",
+        archiveId: "house-of-dark-shadows-1970",
+        thumbnail: "https://archive.org/services/img/house-of-dark-shadows-1970",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     LET IT BE  (1970)
+     Archive identifier: Let_It_Be_1970_film
+     Documentary chronicling The Beatles' final album sessions.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "let-it-be-1970",
+    type: "documentary",
+    title: "Let It Be (1970)",
+    years: "1970",
+    genre: ["Music", "Documentary", "Rock"],
+    rating: "G",
+    score: 8.1,
+    description:
+      "Michael Lindsay-Hogg's intimate documentary follows The Beatles through the January 1969 rehearsals and recording sessions that produced Let It Be, capturing both flashes of creative brilliance and the interpersonal strain of a band nearing its end. Shot in a loose fly-on-the-wall style, it culminates in the group's famous unannounced rooftop performance at Apple Corps — their final public concert together and one of the defining moments in rock-film history.",
+    thumbnail: "https://archive.org/services/img/Let_It_Be_1970_film",
+    featured: false,
+    episodes: [
+      {
+        id: "let-it-be-1970-full",
+        title: "Let It Be",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "81 min",
+        description:
+          "The Beatles rehearse, record, argue, and finally take the roof at Apple Corps in this candid documentary of the sessions behind Let It Be.",
+        archiveId: "Let_It_Be_1970_film",
+        thumbnail: "https://archive.org/services/img/Let_It_Be_1970_film",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     VHS RECORDING 91 TAPE 1  (1990–1991)
+     Archive identifier: VHSRecording91Tape1
+     Off-air/cable compilation including a Knots Landing episode.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "vhs-recording-91-tape-1",
+    type: "vhs",
+    title: "VHS Tape — Prime Target, A Chorus Line & Knots Landing (1990–1991)",
+    years: "1990–1991",
+    genre: ["Drama", "Music", "Soap Opera", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.8,
+    description:
+      "A five-hour EP-mode home VHS compilation recorded around the 1990–1991 new year from Miami-area television sources. The tape preserves the made-for-TV action thriller Prime Target from WTVJ/NBC, the film adaptation of A Chorus Line from HBO, and the Knots Landing episode \"The Unknown\" from WCIX/CBS, making it both a broad snapshot of turn-of-the-decade television viewing and the soap-opera-related item you first pointed out.",
+    thumbnail: "https://archive.org/services/img/VHSRecording91Tape1",
+    featured: false,
+    episodes: [
+      {
+        id: "vhs-recording-91-tape-1-full",
+        title: "Full Tape — Prime Target, A Chorus Line & Knots Landing",
+        season: 0,
+        episode: 0,
+        year: 1991,
+        duration: "300 min",
+        description:
+          "Late-1990/early-1991 VHS compilation featuring Prime Target, A Chorus Line, and Knots Landing: \"The Unknown,\" captured from Miami-area broadcasts and cable feeds.",
+        archiveId: "VHSRecording91Tape1",
+        thumbnail: "https://archive.org/services/img/VHSRecording91Tape1",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
