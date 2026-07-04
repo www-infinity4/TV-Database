@@ -11083,6 +11083,198 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     HEATHCLIFF AND THE CATILLAC CATS  (1984–1988)
+     First-run syndication animated series produced by DiC
+     Entertainment. 65 half-hour episodes, each containing two
+     segments: a Heathcliff segment and a Catillac Cats segment.
+     Archive identifier: heathcliff-and-the-catillac-cats-1984-complete-series
+     archiveIndex maps to sequential episode number (0-based).
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "heathcliff-and-the-catillac-cats",
+    type: "tv",
+    title: "Heathcliff and the Catillac Cats",
+    years: "1984–1988",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "TV-G",
+    score: 7.4,
+    description:
+      "The mischievous orange tabby Heathcliff terrorises the neighbourhood of Westfinster in short comedic adventures, while a second segment follows the Catillac Cats — Riff, Mungo, Hector, Wordsworth, and Cleo — a gang of streetwise alley cats who rule Pussycat Junkyard from their prized Cadillac. Produced by DiC Entertainment and aired in first-run syndication, the series ran 65 episodes from 1984 to 1988.",
+    thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+    featured: false,
+    episodes: [
+      {
+        id: "hcc-s01e01",
+        title: "Garbage Monster / Brush with Fame",
+        season: 1,
+        episode: 1,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff turns neighbourhood rubbish into a towering garbage creature to frighten away rivals. Then the Catillac Cats attempt to muscle their way into the art world when Cleo paints a portrait that causes a sensation across Pussycat Junkyard.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e02",
+        title: "Heathcliff's Rival / Tag Team",
+        season: 1,
+        episode: 2,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "A slick new tomcat arrives in Westfinster and challenges Heathcliff for the affections of Sonja and the run of the neighbourhood. Meanwhile, Riff and Mungo enter a wrestling tournament convinced the championship trophy will earn them the respect — and free food — they crave.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e03",
+        title: "The Big Boo / Something's Fishy",
+        season: 1,
+        episode: 3,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff discovers an abandoned house rumoured to be haunted and uses the ghost stories to keep the neighbourhood dogs at bay. Across town, the Catillac Cats hatch an elaborate scheme to hijack a delivery truck loaded with the finest canned tuna.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e04",
+        title: "Bink's New Car / The Perfect Crime",
+        season: 1,
+        episode: 4,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Grandpa Nutmeg's grandson Iggy and his friend Bink get their hands on a go-kart, and Heathcliff promptly commandeers it for a high-speed joyride through Westfinster. The Catillac Cats plan an elaborate heist on the neighbourhood fish market — but Wordsworth's over-complicated blueprint leads to predictably chaotic results.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e05",
+        title: "Football Follies / Fur Frenzy",
+        season: 1,
+        episode: 5,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff infiltrates a neighbourhood football game and single-pawedly disrupts both teams in pursuit of the half-time hot-dog cart. Riff convinces the gang to enter a pet show in disguise — only for the competition to turn into a full-scale junkyard stampede.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e06",
+        title: "Skateboard Scam / Cat Nappers",
+        season: 1,
+        episode: 6,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff takes up skateboarding to impress Sonja and immediately makes mortal enemies of every dog on wheels in the neighbourhood. The Catillac Cats discover that Cleo has been catnapped by a theatrical agent who intends to make her a TV star — whether she likes it or not.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e07",
+        title: "The Winner / Catillac Racers",
+        season: 1,
+        episode: 7,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff enters every competition in Westfinster determined to win a trophy — even the ones he wasn't invited to. Meanwhile Riff bets the Catillac itself in a street race against a rival gang and must scramble to reclaim the car before sundown.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e08",
+        title: "Rockula / The Big Scheme",
+        season: 1,
+        episode: 8,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff stumbles onto a horror-movie film set and is mistaken for the lead monster, sending the entire crew fleeing the lot. Hector talks the Catillac Cats into running a neighbourhood protection racket — offering to guard Pussycat Junkyard from hazards entirely of their own making.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e09",
+        title: "Dog Day After School / Show Stoppers",
+        season: 1,
+        episode: 9,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "A gang of bulldogs blockades Iggy's school and only Heathcliff can outwit them — though his methods cause almost as much chaos as the dogs themselves. The Catillac Cats volunteer as stagehands for a neighbourhood talent show, turning the curtain-raiser into an involuntary audition.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e10",
+        title: "The Catfish / Wordsworth's Poem",
+        season: 1,
+        episode: 10,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff and a grumpy catfish wage a battle of wills at the local fishing pond, with Grandpa caught in the crossfire. Wordsworth submits an epic ode to tuna to a poetry contest and drags the rest of the Catillac Cats into a very reluctant reading tour.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e11",
+        title: "The Big Sleep / Mungo's Muscles",
+        season: 1,
+        episode: 11,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff fakes a string of ailments to avoid the neighbourhood vet, accidentally convincing everyone in Westfinster he is gravely ill. Mungo discovers a mail-order muscle-building kit and uses his new strength to settle every score in Pussycat Junkyard — until the kit's side-effects kick in.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e12",
+        title: "Love Thy Neighbour / Riff's Big Date",
+        season: 1,
+        episode: 12,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "A new family moves in next door with a pampered show-cat, and Heathcliff must decide whether to torment his new neighbour or recruit her as an ally against the neighbourhood dogs. Riff prepares an elaborate romantic evening for Cleo, only for every member of the Catillac Cats gang to accidentally join the date.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e13",
+        title: "Gone Fishin' / The Great Junkyard Race",
+        season: 1,
+        episode: 13,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff stows away on Grandpa Nutmeg's fishing trip and proceeds to commandeer the boat, the bait, and the catch. The Catillac Cats enter the Catillac in a demolition derby-style junkyard race that quickly threatens to leave them without a car at all.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE DUKES OF HAZZARD  (1979–1985)
      Christmas episode archive identifier: dukes-xmas
      "The Great Santa Claus Chase" — Season 3, Episode 9,
