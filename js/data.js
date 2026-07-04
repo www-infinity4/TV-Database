@@ -11056,6 +11056,7 @@ const SHOWS = [
      ──────────────────────────────────────────────────────────── */
   {
     id: "saturday-supercade",
+    type: "tv",
     title: "Saturday Supercade",
     years: "1983–1984",
     genre: ["Animation", "Family", "Comedy"],
@@ -11089,6 +11090,7 @@ const SHOWS = [
      ──────────────────────────────────────────────────────────── */
   {
     id: "dukes-of-hazzard",
+    type: "tv",
     title: "The Dukes of Hazzard",
     years: "1979–1985",
     genre: ["Action", "Comedy", "Adventure"],
