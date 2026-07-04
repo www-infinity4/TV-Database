@@ -5837,6 +5837,40 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     HALLOWEEN CARTOONS 1985
+     VHS compilation of Halloween-themed animated programming
+     from 1985.
+     Archive identifier: halloween-cartoons-1985
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "halloween-cartoons-1985",
+    type: "movie",
+    title: "Halloween Cartoons 1985",
+    years: "1985",
+    genre: ["Animation", "Family", "Holiday"],
+    rating: "TV-G",
+    score: 7.2,
+    description:
+      "A beloved Halloween-season VHS compilation capturing spooky animated programming from 1985. Featuring a mix of classic Halloween-themed cartoon shorts and segments, the tape is an authentic time capsule of mid-1980s seasonal television — ghosts, witches, jack-o'-lanterns, and mischievous monsters all present and accounted for.",
+    thumbnail: "https://archive.org/services/img/halloween-cartoons-1985",
+    featured: false,
+    episodes: [
+      {
+        id: "halloween-cartoons-1985-full",
+        title: "Halloween Cartoons 1985",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "varies",
+        description:
+          "Halloween-themed animated programming compiled from 1985 seasonal television broadcasts — a spooky assortment of cartoon shorts and segments perfect for the trick-or-treat season.",
+        archiveId: "halloween-cartoons-1985",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/halloween-cartoons-1985",
+      },
+    ],
+  },
   {
     id: "black-cauldron-1985",
     type: "movie",
