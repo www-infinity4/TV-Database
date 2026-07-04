@@ -10497,8 +10497,9 @@ const SHOWS = [
         year: 1970,
         duration: "97 min",
         description:
-          "Barnabas Collins escapes his long imprisonment and terrorises his descendants while seeking a cure for vampirism in this 1970 Dark Shadows feature-film spin-off.",
+          "Barnabas Collins escapes his long imprisonment and terrorizes his descendants while seeking a cure for vampirism in this 1970 Dark Shadows feature-film spin-off.",
         archiveId: "house-of-dark-shadows-1970",
+        archiveIndex: 0,
         thumbnail: "https://archive.org/services/img/house-of-dark-shadows-1970",
       },
     ],
@@ -10531,6 +10532,7 @@ const SHOWS = [
         description:
           "The Beatles rehearse, record, argue, and finally take the roof at Apple Corps in this candid documentary of the sessions behind Let It Be.",
         archiveId: "Let_It_Be_1970_film",
+        archiveIndex: 0,
         thumbnail: "https://archive.org/services/img/Let_It_Be_1970_film",
       },
     ],
@@ -10563,6 +10565,7 @@ const SHOWS = [
         description:
           "Late-1990/early-1991 VHS compilation featuring Prime Target, A Chorus Line, and Knots Landing: \"The Unknown,\" captured from Miami-area broadcasts and cable feeds.",
         archiveId: "VHSRecording91Tape1",
+        archiveIndex: 0,
         thumbnail: "https://archive.org/services/img/VHSRecording91Tape1",
       },
     ],
@@ -10582,7 +10585,7 @@ const SHOWS = [
     rating: "TV-PG",
     score: 7.9,
     description:
-      "A nearly six-hour off-air VHS recording from KELO-TV in Sioux Falls, South Dakota, preserving an evening of late-1980s American television complete with original commercials and news breaks. The tape includes episodes or portions of Knots Landing and Dynasty, plus the CBS Tuesday Movie presentation of Murphy's Romance and additional material identified as Sharing Richard. As a home-recorded snapshot of network programming, advertising, and primetime soap-opera culture in 1988, it offers exactly the kind of archival broadcast ephemera this collection highlights.",
+      "A six-hour off-air VHS recording from KELO-TV in Sioux Falls, South Dakota, preserving an evening of late-1980s American television complete with original commercials and news breaks. The tape includes episodes or portions of Knots Landing and Dynasty, plus the CBS Tuesday Movie presentation of Murphy's Romance and additional material identified as Sharing Richard. As a home-recorded snapshot of network programming, advertising, and primetime soap-opera culture in 1988, it offers exactly the kind of archival broadcast ephemera this collection highlights.",
     thumbnail: "https://archive.org/services/img/vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
     featured: false,
     episodes: [
@@ -10596,7 +10599,74 @@ const SHOWS = [
         description:
           "Six-hour KELO off-air VHS from 1988 featuring Knots Landing, Dynasty, the CBS Tuesday Movie Murphy's Romance, and period commercials/news breaks.",
         archiveId: "vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
+        archiveIndex: 0,
         thumbnail: "https://archive.org/services/img/vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     KNOTS LANDING / TODAY (PARTIAL, SAS-7)  (1989)
+     Archive identifier: knots-landing-nbc-sunday-today-partial-sas-7-31-07-89
+     Partial Australian off-air recording featuring Knots Landing.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "knots-landing-sas7-1989-07-31-partial",
+    type: "vhs",
+    title: "Knots Landing / Today (Partial, SAS-7, July 31 1989)",
+    years: "1989",
+    genre: ["Drama", "Soap Opera", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.6,
+    description:
+      "A partial off-air capture from Australia's SAS-7/Channel Seven dated July 31, 1989. The recording preserves the final 26 minutes of Knots Landing followed by the opening 22 minutes of Today, along with a rich layer of station continuity, promos, and commercials for late-1980s Australian television. Even in incomplete form, it is a vivid snapshot of how the prime-time soap travelled internationally and how local broadcasters packaged imported American drama.",
+    thumbnail: "https://archive.org/services/img/knots-landing-nbc-sunday-today-partial-sas-7-31-07-89",
+    featured: false,
+    episodes: [
+      {
+        id: "knots-landing-sas7-1989-07-31-partial-full",
+        title: "Knots Landing / Today (Partial Broadcast)",
+        season: 0,
+        episode: 0,
+        year: 1989,
+        duration: "48 min",
+        description:
+          "Partial July 31, 1989 SAS-7 recording with the end of Knots Landing, the start of Today, and original Australian promos and commercials.",
+        archiveId: "knots-landing-nbc-sunday-today-partial-sas-7-31-07-89",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/knots-landing-nbc-sunday-today-partial-sas-7-31-07-89",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     KNOTS LANDING — CBS / WOC (INCOMPLETE)  (1991)
+     Archive identifier: Knots_Landing_CBS_WOC_1991-05-09_Incomplete
+     Incomplete off-air broadcast with original commercials.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "knots-landing-cbs-woc-1991-05-09-incomplete",
+    type: "vhs",
+    title: "Knots Landing (CBS/WOC, May 9 1991, Incomplete)",
+    years: "1991",
+    genre: ["Drama", "Soap Opera", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.7,
+    description:
+      "An incomplete VHS preservation of Knots Landing as aired on CBS via WOC on May 9, 1991, complete with original commercial breaks from the broadcast night. Captured near the end of the series' twelfth season, the recording offers another valuable slice of prime-time soap-opera history and the kind of unfiltered network-TV atmosphere that only off-air tapes preserve.",
+    thumbnail: "https://archive.org/services/img/Knots_Landing_CBS_WOC_1991-05-09_Incomplete",
+    featured: false,
+    episodes: [
+      {
+        id: "knots-landing-cbs-woc-1991-05-09-incomplete-full",
+        title: "Knots Landing (May 9, 1991 Broadcast, Incomplete)",
+        season: 12,
+        episode: 0,
+        year: 1991,
+        duration: "60 min",
+        description:
+          "Incomplete May 9, 1991 off-air Knots Landing broadcast from CBS/WOC with original commercials intact.",
+        archiveId: "Knots_Landing_CBS_WOC_1991-05-09_Incomplete",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/Knots_Landing_CBS_WOC_1991-05-09_Incomplete",
       },
     ],
   },
