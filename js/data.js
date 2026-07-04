@@ -2143,6 +2143,40 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     MORE 1990 SATURDAY MORNING CBS CARTOONS — FULL BROADCAST
+     Off-air VHS recording of the CBS Saturday Morning cartoon
+     block from July 1990, with original period commercials.
+     Archive identifier: videoplayback_20230812
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "cbs-saturday-morning-1990",
+    type: "movie",
+    title: "More 1990 Saturday Morning (CBS) Cartoons Full Broadcast",
+    years: "1990",
+    genre: ["Animation", "Family", "Kids"],
+    rating: "TV-Y",
+    score: 8.0,
+    description:
+      "A rare off-air VHS recording of the full CBS Saturday Morning cartoon block from July 1990, complete with original period commercials. The tape captures the complete lineup as it aired: Jim Henson's Muppet Babies, Garfield and Friends, Teenage Mutant Ninja Turtles, Bill & Ted's Excellent Adventures, Pee-Wee's Playhouse, Dink the Little Dinosaur, and CBS Storybreak — a perfect time-capsule of the golden age of Saturday morning television.",
+    thumbnail: "https://archive.org/services/img/videoplayback_20230812",
+    featured: false,
+    episodes: [
+      {
+        id: "cbs-saturday-morning-1990-tape",
+        title: "More 1990 Saturday Morning (CBS) Cartoons Full Broadcast",
+        season: 0,
+        episode: 0,
+        year: 1990,
+        duration: "varies",
+        description:
+          "Full CBS Saturday Morning broadcast from July 1990 with original commercials. Features Muppet Babies, Garfield and Friends, Teenage Mutant Ninja Turtles, Bill & Ted's Excellent Adventures, Pee-Wee's Playhouse, Dink the Little Dinosaur, and CBS Storybreak.",
+        archiveId: "videoplayback_20230812",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/videoplayback_20230812",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      FOX KIDS VHS OFF-AIRS WOC  (1992–94)
      Collection of off-air VHS recordings of FOX Kids and ABC Saturday
      Morning programming captured from WOC (Davenport, IA) and other
