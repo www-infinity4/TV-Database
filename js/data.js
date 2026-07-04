@@ -1051,7 +1051,7 @@ const SHOWS = [
         title: "The Care Bears in the Land Without Feelings",
         season: 0,
         episode: 0,
-        year: 1984,
+        year: 1983,
         duration: "24 min",
         description:
           "Professor Coldheart lures a runaway boy named Kevin to his Land Without Feelings. The Care Bears race to save Kevin and show him — and Coldheart — that caring matters.",
