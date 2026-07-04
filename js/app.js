@@ -78,6 +78,13 @@
 
   /* ── Personalization helpers ── */
   const EXT_PLAYABLE = /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i;
+  const TV_FIRST_TYPES = new Set(["tv", "series", "show", "soap", "vhs"]);
+  /* Strong bias so "For You" feels like a TV shelf first and only falls back
+     to non-series items when the playable catalogue has nothing better. */
+  const TV_SHOW_BOOST = 40;
+  const NON_TV_PENALTY = -35;
+  const COSMO_POPIN_SCHEDULE_MS = [12000, 45000, 90000];
+  const COSMO_POPIN_DISMISS_MS = 14000;
 
   function showDecade(show) {
     const year = parseInt(String(show.years || "").split("–")[0], 10);
@@ -99,6 +106,19 @@
   function isShowAvailable(show) {
     if (!show || !Array.isArray(show.episodes) || !show.episodes.length) return false;
     return show.episodes.some(isEpisodePlayable);
+  }
+
+  function getPrimaryEpisode(show) {
+    if (!show || !Array.isArray(show.episodes)) return null;
+    return show.episodes.find(isEpisodePlayable) || show.episodes[0] || null;
+  }
+
+  function isTvFirstShow(show) {
+    if (!show || !Array.isArray(show.episodes) || !show.episodes.length) return false;
+    const type = String(show.type || "").toLowerCase();
+    if (TV_FIRST_TYPES.has(type)) return true;
+    if (!type) return show.episodes.length > 1;
+    return !["movie", "documentary", "music-video", "concert"].includes(type);
   }
 
   function historyStats() {
@@ -138,6 +158,8 @@
     const unexploredBonus = stats.watchedShows.has(show.id) ? 0 : 1;
     const completedPenalty = completionAffinity > 2 ? 1 : 0;
     const recentlyWatchedPenalty = show.episodes.some((ep) => stats.recent.has(buildEpisodeId(ep, show))) ? 1 : 0;
+    const tvExperienceBoost = isTvFirstShow(show) ? TV_SHOW_BOOST : NON_TV_PENALTY;
+    const episodicBonus = Math.min(24, Math.max(0, show.episodes.length - 1) * 3);
     const score =
       genreAffinity * 30 +
       decadeAffinity * 18 +
@@ -147,6 +169,8 @@
       unexploredBonus * 8 -
       recentlyWatchedPenalty * 25 -
       completedPenalty * 30 +
+      tvExperienceBoost +
+      episodicBonus +
       (show.score || 0);
     const leadGenre = (show.genre && show.genre[0]) || "classic";
     const reason = stats.watchedShows.has(show.id)
@@ -174,15 +198,17 @@
     const reasonEl = document.getElementById("for-you-reason");
     const stats = historyStats();
     const reasonMap = {};
-    const candidates = (typeof SHOWS !== "undefined" ? SHOWS.slice() : [])
-      .filter(isShowAvailable)
-      .sort(byPersonalized(stats, reasonMap))
-      .slice(0, 16);
+    const available = (typeof SHOWS !== "undefined" ? SHOWS.slice() : []).filter(isShowAvailable);
+    const primary = available.filter(isTvFirstShow).sort(byPersonalized(stats, reasonMap));
+    const secondary = available
+      .filter((show) => !isTvFirstShow(show))
+      .sort(byPersonalized(stats, reasonMap));
+    const candidates = primary.concat(secondary).slice(0, 16);
     DOM.forYouSection.style.display = "";
     renderRow(DOM.rowForYou, candidates);
     const first = candidates[0];
     if (DOM.forYouGenreLabel) {
-      DOM.forYouGenreLabel.textContent = stats ? "History-weighted picks" : "Starter picks";
+      DOM.forYouGenreLabel.textContent = stats ? "Series & Shows for You" : "Starter TV picks";
     }
     if (reasonEl) {
       reasonEl.textContent = first ? (reasonMap[first.id] || "Starter picks from across genres and decades.") : "No available recommendations yet.";
@@ -194,7 +220,7 @@
 
 
   function initHero() {
-    const featured = getFeaturedShows();
+    const featured = getFeaturedShows().filter(isShowAvailable);
     if (!featured.length) return;
     /* If user has watch history, pick the highest-affinity featured show */
     const profile = historyStats();
@@ -217,8 +243,9 @@
     DOM.heroGenres.textContent = show.genre.join(" · ");
 
     DOM.heroPlayBtn.onclick = () => {
-      if (show.episodes && show.episodes.length > 0) {
-        openPlayer(show.episodes[0], show.title);
+      const episode = getPrimaryEpisode(show);
+      if (episode) {
+        openPlayer(episode, show.title);
       }
     };
     DOM.heroInfoBtn.onclick = () => openModal(show);
@@ -256,7 +283,7 @@
   function renderRow(container, shows) {
     if (!container) return;
     container.innerHTML = "";
-    shows.forEach((show) => {
+    shows.filter(isShowAvailable).forEach((show) => {
       container.appendChild(createShowCard(show));
     });
   }
@@ -426,7 +453,10 @@
       });
     } else if (show.type === "movie" && show.episodes && show.episodes.length > 0) {
       /* Free movies play directly — no intermediate modal */
-      const play = () => openPlayer(show.episodes[0], show.title);
+      const play = () => {
+        const episode = getPrimaryEpisode(show);
+        if (episode) openPlayer(episode, show.title);
+      };
       card.addEventListener("click", play);
       card.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
@@ -556,7 +586,26 @@
   }
 
   /* ── Player ── */
-  let _popInTimer = null;
+  let _popInTimers = [];
+  let _popInHideTimer = null;
+
+  function clearCosmoPopInTimers() {
+    _popInTimers.forEach((timer) => clearTimeout(timer));
+    _popInTimers = [];
+    if (_popInHideTimer) {
+      clearTimeout(_popInHideTimer);
+      _popInHideTimer = null;
+    }
+  }
+
+  function attemptInstantPlayback() {
+    const playPromise = DOM.playerVideo.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch((err) => {
+        console.debug("StarQuest autoplay blocked or delayed:", err);
+      });
+    }
+  }
 
   function openPlayer(episode, showTitle) {
     const showForEpisode = (typeof SHOWS !== "undefined")
@@ -597,6 +646,7 @@
     DOM.playerPage.classList.add("open");
     DOM.playerLoading.style.display = "flex";
     DOM.playerError.style.display = "none";
+    document.body.classList.add("player-open");
     document.body.style.overflow = "hidden";
 
     /* Tell Cosmo what we're watching */
@@ -606,9 +656,11 @@
       StarQuestAI.setContext(show ? show.id : null, showTitle, episode.title);
     }
 
-    /* Schedule Cosmo pop-in after 35 seconds */
-    if (_popInTimer) clearTimeout(_popInTimer);
-    _popInTimer = setTimeout(() => showCosmoPopIn(show, showTitle, episode), 35000);
+    /* Give Cosmo more to say during playback */
+    clearCosmoPopInTimers();
+    COSMO_POPIN_SCHEDULE_MS.forEach((delay) => {
+      _popInTimers.push(setTimeout(() => showCosmoPopIn(show, showTitle, episode), delay));
+    });
 
     if (typeof episode.archiveFile === "string" && episode.archiveId) {
       /* Use a native <video> element with the direct archive.org download URL.
@@ -618,10 +670,12 @@
       DOM.playerFrame.style.display = "none";
       DOM.playerFrame.src = "about:blank";
       DOM.playerVideo.style.display = "block";
+      DOM.playerVideo.preload = "auto";
       /* Register handlers before assigning src so no stale queued event
          from a prior load can slip through and trigger the wrong handler. */
       DOM.playerVideo.oncanplay = () => {
         DOM.playerLoading.style.display = "none";
+        attemptInstantPlayback();
       };
       DOM.playerVideo.onerror = () => {
         DOM.playerLoading.style.display = "none";
@@ -630,9 +684,12 @@
         DOM.playerErrorLink.href = "https://archive.org/details/" + encodeURIComponent(episode.archiveId);
       };
       DOM.playerVideo.src = directUrl;
+      DOM.playerVideo.load();
+      attemptInstantPlayback();
     } else {
       /* Fall back to iframe embed for YouTube or archive.org items without a specific file */
       const embedUrl = buildEmbedUrl(episode);
+      DOM.playerVideo.onloadedmetadata = null;
       DOM.playerVideo.oncanplay = null;
       DOM.playerVideo.onerror = null;
       DOM.playerVideo.style.display = "none";
@@ -648,15 +705,17 @@
   }
 
   function closePlayer() {
-    if (_popInTimer) { clearTimeout(_popInTimer); _popInTimer = null; }
+    clearCosmoPopInTimers();
     hideCosmoPopIn();
     if (typeof StarQuestAI !== "undefined") StarQuestAI.clearContext();
     DOM.playerPage.classList.remove("open");
     DOM.playerFrame.src = "about:blank";
     DOM.playerFrame.style.display = "block";
+    document.body.classList.remove("player-open");
     /* Clear handlers before resetting the video element so that the async
        error event triggered by clearing the src doesn't fire the previous
        onerror and falsely show the "can't be displayed" overlay. */
+    DOM.playerVideo.onloadedmetadata = null;
     DOM.playerVideo.oncanplay = null;
     DOM.playerVideo.onerror = null;
     DOM.playerVideo.pause();
@@ -680,8 +739,9 @@
       textEl.textContent = text;
       popEl.style.display = "flex";
       popEl.classList.add("cosmo-popin--in");
-      /* Auto-dismiss after 10 seconds */
-      setTimeout(hideCosmoPopIn, 10000);
+      /* Auto-dismiss after 14 seconds */
+      if (_popInHideTimer) clearTimeout(_popInHideTimer);
+      _popInHideTimer = setTimeout(hideCosmoPopIn, COSMO_POPIN_DISMISS_MS);
     };
 
     if (typeof StarQuestAI !== "undefined") {
@@ -695,6 +755,10 @@
 
   function hideCosmoPopIn() {
     const popEl = document.getElementById("cosmo-popin");
+    if (_popInHideTimer) {
+      clearTimeout(_popInHideTimer);
+      _popInHideTimer = null;
+    }
     if (popEl) {
       popEl.classList.remove("cosmo-popin--in");
       setTimeout(() => { popEl.style.display = "none"; }, 300);
@@ -757,7 +821,7 @@
         s.title.toLowerCase().includes(q) ||
         s.genre.some((g) => g.toLowerCase().includes(q)) ||
         s.description.toLowerCase().includes(q)
-    ).sort(byScoreFreeFirst);
+    ).filter(isShowAvailable).sort(byScoreFreeFirst);
 
     DOM.searchResultsTitle.innerHTML =
       'Results for <strong>"' + escHTML(q) + '"</strong> — ' + results.length + " show" + (results.length !== 1 ? "s" : "");
@@ -787,7 +851,10 @@
 
   function filterByGenre(genre) {
     state.activeGenre = genre;
-    const shows = (genre === "all" ? getFeaturedShows() : getShowsByGenre(genre)).slice().sort(byScoreFreeFirst);
+    const shows = (genre === "all" ? getFeaturedShows() : getShowsByGenre(genre))
+      .filter(isShowAvailable)
+      .slice()
+      .sort(byScoreFreeFirst);
 
     /* Re-render the featured row with filtered results */
     if (DOM.rowFeatured) {

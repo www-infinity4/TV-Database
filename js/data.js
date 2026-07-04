@@ -1026,6 +1026,41 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE CARE BEARS IN THE LAND WITHOUT FEELINGS  (1983)
+     Single TV special — archive identifier:
+       the-care-bears-in-the-land-without-feelings-1983-etc._202109
+     Original VHS release containing the ~24-min special that
+     introduced the Care Bears to television audiences.
+     The first Care Bears production; villain is Professor Coldheart.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "care-bears-land-without-feelings-1983",
+    type: "movie",
+    title: "The Care Bears in the Land Without Feelings",
+    years: "1983",
+    genre: ["Animation", "Family", "Fantasy"],
+    rating: "G",
+    score: 6.5,
+    description:
+      "When a boy named Kevin runs away from home and stumbles into the clutches of the cold-hearted Professor Coldheart, the Care Bears journey to the icy Land Without Feelings to rescue him and remind everyone that caring is the most powerful force in the world. The very first Care Bears television special, introducing Tenderheart Bear and the full cast of Care Bears.",
+    thumbnail: "https://archive.org/services/img/the-care-bears-in-the-land-without-feelings-1983-etc._202109",
+    featured: false,
+    episodes: [
+      {
+        id: "care-bears-land-without-feelings-1983-full",
+        title: "The Care Bears in the Land Without Feelings",
+        season: 0,
+        episode: 0,
+        year: 1983,
+        duration: "24 min",
+        description:
+          "Professor Coldheart lures a runaway boy named Kevin to his Land Without Feelings. The Care Bears race to save Kevin and show him — and Coldheart — that caring matters.",
+        archiveId: "the-care-bears-in-the-land-without-feelings-1983-etc._202109",
+        thumbnail: "https://archive.org/services/img/the-care-bears-in-the-land-without-feelings-1983-etc._202109",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE CARE BEARS BATTLE THE FREEZE MACHINE  (1984)
      Single TV special — archive identifier:
        the-care-bears-battle-the-freeze-machine-1984-etc.
@@ -1057,6 +1092,76 @@ const SHOWS = [
           "Professor Coldheart kidnaps Hugs and Tugs and plans to freeze the world. The Care Bears must save the baby bears and teach a bullied boy about caring.",
         archiveId: "the-care-bears-battle-the-freeze-machine-1984-etc.",
         thumbnail: "https://archive.org/services/img/the-care-bears-battle-the-freeze-machine-1984-etc.",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     M  (1931)
+     Single feature film — archive identifier:
+       fritz-langs-m-1931-restored-movie-720p-hd
+     Dir. Fritz Lang. Nero-Film AG. Germany. 117 min.
+     Peter Lorre's career-defining performance as Hans Beckert.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "fritz-lang-m-1931",
+    type: "movie",
+    title: "M",
+    years: "1931",
+    genre: ["Crime", "Thriller", "Drama"],
+    rating: "Not Rated",
+    score: 8.4,
+    description:
+      "Fritz Lang's landmark German expressionist masterpiece — and his first sound film — follows the desperate manhunt for Hans Beckert (Peter Lorre), a serial killer preying on children in a Weimar-era German city. As the police clamp down on all criminal activity in their search, the city's organised underworld — their operations paralysed by the heat — launches its own parallel investigation, ultimately putting Beckert on trial before a kangaroo court of criminals in a bombed-out factory. A devastating meditation on mob justice, psychological compulsion, and the nature of guilt. Lorre's performance — the haunting whistling of Edvard Grieg's \"In the Hall of the Mountain King\" — is one of cinema's most iconic. Restored 720p HD print.",
+    thumbnail: "https://archive.org/services/img/fritz-langs-m-1931-restored-movie-720p-hd",
+    featured: true,
+    episodes: [
+      {
+        id: "fritz-lang-m-1931-full",
+        title: "M",
+        season: 0,
+        episode: 0,
+        year: 1931,
+        duration: "117 min",
+        description:
+          "A city is gripped by terror as a child murderer strikes repeatedly. With police failing to catch him, the criminal underworld conducts its own hunt — culminating in a harrowing underground trial. Peter Lorre's breakthrough role. Restored HD print.",
+        archiveId: "fritz-langs-m-1931-restored-movie-720p-hd",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/fritz-langs-m-1931-restored-movie-720p-hd",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SCREAM OF FEAR  (1961)
+     Single feature film — archive identifier: scream-of-fear
+     Also released as "Taste of Fear" (UK). Dir. Seth Holt.
+     Hammer Film Productions. Stars Susan Strasberg,
+     Ronald Lewis, Ann Todd, Christopher Lee. 82 min.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "scream-of-fear-1961",
+    type: "movie",
+    title: "Scream of Fear",
+    years: "1961",
+    genre: ["Horror", "Thriller", "Mystery"],
+    rating: "Not Rated",
+    score: 7.7,
+    description:
+      "Penny Appleby (Susan Strasberg), a wheelchair-bound young woman, travels to the South of France to visit her wealthy father — only to find him absent and a strange new stepmother, Jane (Ann Todd), and her companion Dr. Gerrard (Christopher Lee) in residence. When Penny begins discovering her father's corpse in different locations around the estate, only to have it vanish without a trace each time, she wonders if she is losing her mind — or if someone is driving her to it. One of Hammer Film Productions' finest psychological thrillers, modelled on Hitchcock and boasting a genuinely shocking twist ending. Directed by Seth Holt.",
+    thumbnail: "https://archive.org/services/img/scream-of-fear",
+    featured: false,
+    episodes: [
+      {
+        id: "scream-of-fear-1961-full",
+        title: "Scream of Fear",
+        season: 0,
+        episode: 0,
+        year: 1961,
+        duration: "82 min",
+        description:
+          "A wheelchair-bound woman visiting her father's French villa keeps seeing his corpse — only for it to disappear each time. Is she being driven mad, or is something sinister afoot? Hammer's most accomplished psychological thriller.",
+        archiveId: "scream-of-fear",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/scream-of-fear",
       },
     ],
   },
@@ -1155,6 +1260,261 @@ const SHOWS = [
           "The Care Bears travel to Earth to help two orphaned children and stop an evil spirit from draining the world of love and friendship.",
         archiveId: "the-care-bears-movie-vestron-video-original-1985-release_202109",
         thumbnail: "https://archive.org/services/img/the-care-bears-movie-vestron-video-original-1985-release_202109",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE BERENSTAIN BEARS  (1985)
+     CBS animated series produced by Nelvana. 13 episodes aired
+     January–September 1985. Each half-hour episode contains two
+     back-to-back story segments adapted from Stan and Jan
+     Berenstain's beloved children's books.
+     Archive identifier: the-berenstain-bears-1985
+     archiveIndex maps to sequential episode (0-based).
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-berenstain-bears-1985",
+    type: "tv",
+    title: "The Berenstain Bears",
+    years: "1985",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "TV-G",
+    score: 7.3,
+    description:
+      "Based on Stan and Jan Berenstain's bestselling children's book series, this Nelvana-produced CBS animated series follows the Bear family — Papa Bear, Mama Bear, Brother Bear, and Sister Bear — through everyday adventures in Bear Country. Each episode pairs two stories adapted directly from the beloved books, gently exploring themes of honesty, friendship, sharing, and growing up. Thirteen episodes aired on CBS in 1985.",
+    thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+    featured: false,
+    episodes: [
+      {
+        id: "bb-s01e01",
+        title: "The Messy Room / Too Much TV",
+        season: 1,
+        episode: 1,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Mama Bear reaches her limit with the cubs' chaotic bedroom and declares that it must be cleaned — sparking a negotiation about who owns what and where it goes. Then the whole Bear family gets hooked on television and neglects everything else until Papa Bear pulls the plug.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e02",
+        title: "The Sitter / In the Dark",
+        season: 1,
+        episode: 2,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "When Mama and Papa go out for the evening, the cubs are left with a babysitter and discover that staying home without their parents is not as scary as they imagined. Then Sister Bear confesses she is afraid of the dark, and the family finds gentle ways to help her feel safe at night.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e03",
+        title: "The Truth / Strangers",
+        season: 1,
+        episode: 3,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother and Sister accidentally break Mama's favorite lamp and try to cover it up — learning the hard way that telling the truth is always better than a coverup. Then Mama and Papa teach the cubs important rules about talking to strangers they do not know.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e04",
+        title: "Go to School / The New Baby",
+        season: 1,
+        episode: 4,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother Bear is nervous about his very first day of school, and Mama walks him through what to expect — from making new friends to learning the rules of the classroom. Then Mama announces she is expecting a new cub, and Brother must adjust to the idea of sharing his family.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e05",
+        title: "Moving Day / Visit the Dentist",
+        season: 1,
+        episode: 5,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "When the Bear family moves to a grand new tree house, Brother and Sister worry about leaving their friends and familiar surroundings behind. Then Brother develops a toothache and both cubs must face their fears during a trip to the Bear Country dentist.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e06",
+        title: "Too Much Junk Food / The Bad Habit",
+        season: 1,
+        episode: 6,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Papa Bear's love of junk food lands the whole family in trouble when Dr. Grizzly delivers a stern warning about healthy eating habits. Then Sister's nail-biting habit embarrasses her in public and the family rallies together to help her break it.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e07",
+        title: "No Girls Allowed / The Trouble with Friends",
+        season: 1,
+        episode: 7,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother Bear and his friends build a clubhouse with a \"No Girls Allowed\" sign — until Sister challenges the rule and proves she belongs. Then Sister makes a new best friend whose bossy behavior starts causing real problems in Bear Country.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e08",
+        title: "The Gimmies / Learn About Sharing",
+        season: 1,
+        episode: 8,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "A trip to the toy store turns disastrous when the cubs demand every single thing they see — and Mama Bear has finally had enough of the \"gimmies.\" Later the cubs struggle to share their most prized possessions and discover that generosity feels better than hoarding.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e09",
+        title: "The Spooky Old Tree / The Double Dare",
+        season: 1,
+        episode: 9,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Three brave little bears venture into the spooky old tree on a dare, discovering that courage means facing your fears one step at a time. Then Brother accepts a reckless double-dare from a classmate and learns that real bravery is knowing when to walk away.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e10",
+        title: "Go to Camp / The Week at Grandma's",
+        season: 1,
+        episode: 10,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother and Sister head off to summer camp full of anxiety, only to find it is one of the best experiences of their young lives. Then Mama and Papa take a rare adults-only holiday while the cubs spend a wonderful week with Gramps and Gran.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e11",
+        title: "The Homework Hassle / The In-Crowd",
+        season: 1,
+        episode: 11,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother Bear puts off his homework night after night until the pile becomes overwhelming — and Papa's well-meaning help only makes things worse. Then Sister desperately wants to fit in with the popular crowd at school, even if it means acting like someone she is not.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e12",
+        title: "The Bears' Vacation / The Bear Detectives",
+        season: 1,
+        episode: 12,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "The Bear family heads off on a seaside vacation, but Papa's stubborn refusal to follow the safety rules turns a fun trip into a series of near-disasters. Then Brother and Sister set up their own detective agency to solve a mysterious case of missing honey jars.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e13",
+        title: "The Bears' Christmas / Count Their Blessings",
+        season: 1,
+        episode: 13,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "The cubs write an impossibly long letter to Santa Claus, and Papa attempts to show them the true spirit of giving by delivering gifts to the less fortunate bears of Bear Country. Then as the year ends, the whole family reflects on what they are truly grateful for.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     LITTLE MUPPET MONSTERS  (1985)
+     CBS animated/live-action hybrid series. Only 3 of 8 produced
+     episodes aired (September–October 1985) before cancellation.
+     Each episode featured live-action Muppet Monster wrap-arounds
+     hosting animated cartoon segments.
+     Archive identifier: little-muppet-monsters
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "little-muppet-monsters",
+    type: "tv",
+    title: "Little Muppet Monsters",
+    years: "1985",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "TV-G",
+    score: 5.9,
+    description:
+      "One of the rarest entries in Muppet history, Little Muppet Monsters paired live-action puppet segments — featuring three lovable monster siblings, Tug, Molly, and Boo, who live behind a wall in the Muppet Theater — with animated cartoon inserts featuring the Muppet Babies characters. CBS canceled the series after only three of the eight produced episodes aired in the fall of 1985, making it the shortest-lived Muppet television production ever. The surviving episodes are a fascinating curio for fans of the Muppet universe.",
+    thumbnail: "https://archive.org/services/img/little-muppet-monsters",
+    featured: false,
+    episodes: [
+      {
+        id: "lmm-s01e01",
+        title: "Episode 1",
+        season: 1,
+        episode: 1,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Monster siblings Tug, Molly, and Boo introduce themselves from their home behind the wall of the Muppet Theater, hosting animated Muppet Babies cartoon segments in between their live-action puppet adventures. The premiere establishes the show's unusual hybrid format.",
+        archiveId: "little-muppet-monsters",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/little-muppet-monsters",
+      },
+      {
+        id: "lmm-s01e02",
+        title: "Episode 2",
+        season: 1,
+        episode: 2,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Tug, Molly, and Boo continue their behind-the-scenes adventures in the Muppet Theater while introducing another round of animated Muppet Babies segments. The monsters' friendly chaos provides a warm live-action counterpoint to the animated sequences.",
+        archiveId: "little-muppet-monsters",
+        archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/little-muppet-monsters",
+      },
+      {
+        id: "lmm-s01e03",
+        title: "Episode 3",
+        season: 1,
+        episode: 3,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "The third and final episode to air before CBS canceled the series. Tug, Molly, and Boo host the last of the broadcast Muppet Babies animated segments, unaware that the show would not return — making this episode a bittersweet footnote in Muppet television history.",
+        archiveId: "little-muppet-monsters",
+        archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/little-muppet-monsters",
       },
     ],
   },
@@ -1853,6 +2213,40 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     MORE 1990 SATURDAY MORNING CBS CARTOONS — FULL BROADCAST
+     Off-air VHS recording of the CBS Saturday Morning cartoon
+     block from July 1990, with original period commercials.
+     Archive identifier: videoplayback_20230812
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "cbs-saturday-morning-1990",
+    type: "movie",
+    title: "More 1990 Saturday Morning (CBS) Cartoons Full Broadcast",
+    years: "1990",
+    genre: ["Animation", "Family", "Kids"],
+    rating: "TV-Y",
+    score: 8.0,
+    description:
+      "A rare off-air VHS recording of the full CBS Saturday Morning cartoon block from July 1990, complete with original period commercials. The tape captures the complete lineup as it aired: Jim Henson's Muppet Babies, Garfield and Friends, Teenage Mutant Ninja Turtles, Bill & Ted's Excellent Adventures, Pee-Wee's Playhouse, Dink the Little Dinosaur, and CBS Storybreak — a perfect time-capsule of the golden age of Saturday morning television.",
+    thumbnail: "https://archive.org/services/img/videoplayback_20230812",
+    featured: false,
+    episodes: [
+      {
+        id: "cbs-saturday-morning-1990-tape",
+        title: "More 1990 Saturday Morning (CBS) Cartoons Full Broadcast",
+        season: 0,
+        episode: 0,
+        year: 1990,
+        duration: "varies",
+        description:
+          "Full CBS Saturday Morning broadcast from July 1990 with original commercials. Features Muppet Babies, Garfield and Friends, Teenage Mutant Ninja Turtles, Bill & Ted's Excellent Adventures, Pee-Wee's Playhouse, Dink the Little Dinosaur, and CBS Storybreak.",
+        archiveId: "videoplayback_20230812",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/videoplayback_20230812",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      FOX KIDS VHS OFF-AIRS WOC  (1992–94)
      Collection of off-air VHS recordings of FOX Kids and ABC Saturday
      Morning programming captured from WOC (Davenport, IA) and other
@@ -1919,6 +2313,112 @@ const SHOWS = [
           "Full VHS recording of the CBS Saturday Morning block from WEYI (1992–93), featuring Disney's Raw Toonage, The Little Mermaid (\"Double Bubble\"), Teenage Mutant Ninja Turtles (\"Super Irma\"), Cyber C.O.P.S., Goofy's Guide to the Olympics, and original era commercials.",
         archiveId: "vts-01-1_20230709_0957",
         thumbnail: "https://archive.org/services/img/vts-01-1_20230709_0957",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     1986 VHS CARTOON MIX  (cartoonsoscarsvhs)
+     Homemade 1986 VHS compilation tape mixing Disney cartoons,
+     holiday specials, and animated TV features — a personal
+     time-capsule of mid-1980s children's television.
+     Archive identifier: cartoonsoscarsvhs
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "cartoons-oscars-vhs-1986",
+    type: "movie",
+    title: "1986 VHS Cartoon Mix",
+    years: "1986",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "TV-G",
+    score: 7.1,
+    description:
+      "A charming homemade 1986 VHS compilation tape capturing the golden age of mid-1980s children's animation. The tape assembles a personal mix of Disney favourites and broadcast specials, including the \"Disney Goes to the Oscars\" retrospective segment celebrating Disney's Academy Award legacy; the beloved Peanuts Halloween special \"It's the Easter Beagle, Charlie Brown\"; the feature-length \"Droids: The Great Heep,\" a Star Wars animated adventure following R2-D2 and C-3PO; and a selection of classic Disney shorts featuring Winnie the Pooh, Donald Duck, and Pluto. A genuine time-capsule of a childhood spent in front of the VCR.",
+    thumbnail: "https://archive.org/services/img/cartoonsoscarsvhs",
+    featured: false,
+    episodes: [
+      {
+        id: "cartoons-oscars-vhs-1986-full",
+        title: "1986 VHS Cartoon Mix",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "varies",
+        description:
+          "Homemade VHS mix featuring \"Disney Goes to the Oscars,\" \"It's the Easter Beagle, Charlie Brown,\" \"Droids: The Great Heep,\" and classic Disney shorts with Winnie the Pooh, Donald Duck, and Pluto.",
+        archiveId: "cartoonsoscarsvhs",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/cartoonsoscarsvhs",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WALT DISNEY CARTOON CLASSICS: LIMITED GOLD EDITION — DAISY  (1984)
+     Walt Disney Home Video VHS compilation featuring classic
+     Daisy Duck shorts from Disney's golden age of animation.
+     Archive identifier:
+       walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "disney-cartoon-classics-daisy-1984",
+    type: "movie",
+    title: "Walt Disney Cartoon Classics: Limited Gold Edition — Daisy",
+    years: "1984",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.8,
+    description:
+      "A cherished 1984 Walt Disney Home Video Limited Gold Edition VHS showcasing golden-age animated shorts centred on Daisy Duck. Features \"Donald's Dilemma\" (1947), in which a bump on the head turns Donald into a crooning sensation while Daisy desperately tries to reclaim her sweetheart; \"Cured Duck\" (1945), where Donald attempts anger-management for Daisy's sake with predictably explosive results; \"Donald's Double Trouble\" (1946), in which Donald hires his suave look-alike to court Daisy on his behalf; and \"Sleepy Time Donald\" (1947), where a sleepwalking Donald keeps Daisy on her toes across the whole neighborhood.",
+    thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
+    featured: false,
+    episodes: [
+      {
+        id: "disney-cartoon-classics-daisy-1984-full",
+        title: "Walt Disney Cartoon Classics: Limited Gold Edition — Daisy",
+        season: 0,
+        episode: 0,
+        year: 1984,
+        duration: "30 min",
+        description:
+          "Four classic Daisy Duck shorts: \"Donald's Dilemma\" (1947), \"Cured Duck\" (1945), \"Donald's Double Trouble\" (1946), and \"Sleepy Time Donald\" (1947).",
+        archiveId: "walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WALT DISNEY CARTOON CLASSICS: SILLY SYMPHONIES — ANIMAL TALES  (1986)
+     Walt Disney Home Video VHS. The final release in the original
+     Cartoon Classics series. Six animal-themed Silly Symphony
+     shorts from 1930–1936.
+     Archive identifier:
+       walt-disney-cartoon-classics-silly-symphonies-animal-tales-1986-vhs
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "disney-silly-symphonies-animal-tales-1986",
+    type: "movie",
+    title: "Walt Disney Cartoon Classics: Silly Symphonies — Animal Tales",
+    years: "1986",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.7,
+    description:
+      "The final release in Walt Disney Home Video's original Cartoon Classics series gathers six animal-themed Silly Symphonies from Disney's golden age. \"Monkey Melodies\" (1930) sets jungle creatures swinging to a musical beat; \"The Spider and the Fly\" (1931) spins a cautionary web of song and dance; \"Peculiar Penguins\" (1934) follows a pair of Antarctic lovebirds on an underwater courtship; \"Cock o' the Walk\" (1935) pits a boastful rooster against a barnyard turkey in a battle of spurs and bravado; \"More Kittens\" (1936) revisits the three kittens from \"Three Orphan Kittens\" in a new seasonal adventure; and \"Elmer Elephant\" (1936) tells the heartwarming story of a young elephant whose long trunk is laughed at — until it saves the day.",
+    thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-silly-symphonies-animal-tales-1986-vhs",
+    featured: false,
+    episodes: [
+      {
+        id: "disney-silly-symphonies-animal-tales-1986-full",
+        title: "Walt Disney Cartoon Classics: Silly Symphonies — Animal Tales",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "35 min",
+        description:
+          "Six Silly Symphony shorts: \"Monkey Melodies\" (1930), \"The Spider and the Fly\" (1931), \"Peculiar Penguins\" (1934), \"Cock o' the Walk\" (1935), \"More Kittens\" (1936), and \"Elmer Elephant\" (1936).",
+        archiveId: "walt-disney-cartoon-classics-silly-symphonies-animal-tales-1986-vhs",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-silly-symphonies-animal-tales-1986-vhs",
       },
     ],
   },
@@ -2907,6 +3407,7 @@ const SHOWS = [
      ──────────────────────────────────────────────────────────── */
   {
     id: "guiding-light",
+    type: "tv",
     title: "Guiding Light",
     years: "1952–2009",
     genre: ["Drama", "Soap Opera"],
@@ -3206,6 +3707,19 @@ const SHOWS = [
         archiveId: "frankenstein-1931-english",
         thumbnail: "https://archive.org/services/img/frankenstein-1931-english",
       },
+      {
+        id: "frankenstein-1931-restored",
+        title: "Frankenstein (Restored 720p HD)",
+        season: 0,
+        episode: 0,
+        year: 1931,
+        duration: "70 min",
+        description:
+          "A restored presentation of James Whale's 1931 horror landmark, preserving Boris Karloff's iconic Monster in a cleaner 720p source.",
+        archiveId: "frankenstein-1931-restored-movie-720p-hd",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/frankenstein-1931-restored-movie-720p-hd",
+      },
     ],
   },
   /* ────────────────────────────────────────────────────────────
@@ -3250,6 +3764,34 @@ const SHOWS = [
      The original monster-crossover film, uniting Universal's Wolf Man
      and Frankenstein franchises. Dir. Roy William Neill.
      ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-wolf-man-1941",
+    type: "movie",
+    title: "The Wolf Man (1941)",
+    years: "1941",
+    genre: ["Horror", "Fantasy", "Drama"],
+    rating: "NR",
+    score: 7.2,
+    description:
+      "After returning to his ancestral home in Wales, Larry Talbot is bitten while trying to save a woman from a wolf attack and soon learns he has inherited a terrible curse. Transformed into a doomed werewolf by the full moon, Larry becomes one of Universal horror's most tragic monsters. Directed by George Waggner and starring Lon Chaney Jr., The Wolf Man established much of the modern werewolf mythos.",
+    thumbnail: "https://archive.org/services/img/the-wolf-man-1941_202106",
+    featured: false,
+    episodes: [
+      {
+        id: "the-wolf-man-1941-full",
+        title: "The Wolf Man",
+        season: 0,
+        episode: 0,
+        year: 1941,
+        duration: "70 min",
+        description:
+          "Larry Talbot becomes the victim of a werewolf curse and struggles to protect others from the monster he becomes under the full moon.",
+        archiveId: "the-wolf-man-1941_202106",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/the-wolf-man-1941_202106",
+      },
+    ],
+  },
   {
     id: "frankenstein-meets-the-wolf-man-1943",
     type: "movie",
@@ -5470,6 +6012,74 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     HALLOWEEN CARTOONS 1985
+     VHS compilation of Halloween-themed animated programming
+     from 1985.
+     Archive identifier: halloween-cartoons-1985
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "halloween-cartoons-1985",
+    type: "movie",
+    title: "Halloween Cartoons 1985",
+    years: "1985",
+    genre: ["Animation", "Family", "Holiday"],
+    rating: "TV-G",
+    score: 7.2,
+    description:
+      "A beloved Halloween-season VHS compilation capturing spooky animated programming from 1985. Featuring a mix of classic Halloween-themed cartoon shorts and segments, the tape is an authentic time capsule of mid-1980s seasonal television — ghosts, witches, jack-o'-lanterns, and mischievous monsters all present and accounted for.",
+    thumbnail: "https://archive.org/services/img/halloween-cartoons-1985",
+    featured: false,
+    episodes: [
+      {
+        id: "halloween-cartoons-1985-full",
+        title: "Halloween Cartoons 1985",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "varies",
+        description:
+          "Halloween-themed animated programming compiled from 1985 seasonal television broadcasts — a spooky assortment of cartoon shorts and segments perfect for the trick-or-treat season.",
+        archiveId: "halloween-cartoons-1985",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/halloween-cartoons-1985",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE LEGEND OF SLEEPY HOLLOW  (1986 VHS REPRINT)
+     Walt Disney Home Video VHS of the classic 1949 Disney
+     featurette, paired with two Halloween-themed bonus shorts.
+     Archive identifier: 75v_20211031
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "legend-of-sleepy-hollow-1986-vhs",
+    type: "movie",
+    title: "The Legend of Sleepy Hollow (1986 VHS)",
+    years: "1986",
+    genre: ["Animation", "Comedy", "Family", "Holiday"],
+    rating: "G",
+    score: 7.9,
+    description:
+      "A 1986 Walt Disney Home Video reprint pairing three beloved Halloween-themed animated classics. The centerpiece is \"The Legend of Sleepy Hollow\" (1949), narrated by Bing Crosby — the tale of timid schoolmaster Ichabod Crane, his rivalry with brawny Brom Bones over the lovely Katrina Van Tassel, and his terrifying midnight encounter with the Headless Horseman on the road home from a Halloween party. Two bonus shorts complete the spooky program: \"Lonesome Ghosts\" (1937), in which Mickey, Donald, and Goofy's ghost-exterminating business is turned against them by a trio of mischievous spirits; and \"Trick or Treat\" (1952), where Huey, Dewey, and Louie team up with the witch Hazel to get revenge on Uncle Donald for spoiling their Halloween candy.",
+    thumbnail: "https://archive.org/services/img/75v_20211031",
+    featured: false,
+    episodes: [
+      {
+        id: "sleepy-hollow-1986-vhs-full",
+        title: "The Legend of Sleepy Hollow / Lonesome Ghosts / Trick or Treat",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "52 min",
+        description:
+          "Three Disney Halloween classics: \"The Legend of Sleepy Hollow\" (1949, narrated by Bing Crosby), \"Lonesome Ghosts\" (1937, Mickey, Donald & Goofy), and \"Trick or Treat\" (1952, Donald Duck & Witch Hazel).",
+        archiveId: "75v_20211031",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/75v_20211031",
+      },
+    ],
+  },
   {
     id: "black-cauldron-1985",
     type: "movie",
@@ -5493,6 +6103,42 @@ const SHOWS = [
         archiveId: "schoolproject2_20200406",
         archiveFile: "1985 - The Black Cauldron.mp4",
         thumbnail: "https://archive.org/services/img/schoolproject2_20200406",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SESAME STREET PRESENTS: FOLLOW THAT BIRD  (1985)
+     Theatrical feature film. Released August 2, 1985.
+     Directed by Ken Kwapis. Warner Bros./Children's Television
+     Workshop. Big Bird sets off on a cross-country adventure.
+     Archive identifier:
+       sesame.-street.-presents-follow.that.-bird.-1985.-web-dl.x-264-fgt
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "follow-that-bird-1985",
+    type: "movie",
+    title: "Sesame Street Presents: Follow That Bird",
+    years: "1985",
+    genre: ["Comedy", "Family", "Musical"],
+    rating: "G",
+    score: 7.3,
+    description:
+      "The beloved Sesame Street gang hits the open road in their first theatrical feature film. When a well-meaning social worker places Big Bird with the Dodo family in Illinois — a \"real bird family\" — Big Bird grows homesick and runs away to find his way back to Sesame Street. While his friends pile into a bus to find him, the villainous Sleaze Brothers (Joe Flaherty and Dave Thomas) capture Big Bird and paint him blue for their carnival act. A warm, funny, and surprisingly moving road-trip adventure featuring the full Sesame Street cast alongside celebrity cameos from John Candy, Chevy Chase, Sandra Bernhard, Charles Grodin, and Waylon Jennings.",
+    thumbnail: "https://archive.org/services/img/sesame.-street.-presents-follow.that.-bird.-1985.-web-dl.x-264-fgt",
+    featured: false,
+    episodes: [
+      {
+        id: "follow-that-bird-1985-full",
+        title: "Sesame Street Presents: Follow That Bird",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "88 min",
+        description:
+          "Big Bird leaves Sesame Street for a new family in Illinois, grows homesick, and must find his way home — while the Sleaze Brothers try to make him the star of their carnival and his friends race across the country to rescue him.",
+        archiveId: "sesame.-street.-presents-follow.that.-bird.-1985.-web-dl.x-264-fgt",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/sesame.-street.-presents-follow.that.-bird.-1985.-web-dl.x-264-fgt",
       },
     ],
   },
@@ -10437,6 +11083,1295 @@ const SHOWS = [
         description: "A high-voltage electronics engineer builds an extremely powerful laser device and tests it on various materials in a series of dramatic demonstrations.",
         youtubeId: "5qNFnvWWkyg",
         thumbnail: "https://img.youtube.com/vi/5qNFnvWWkyg/hqdefault.jpg",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     LITTLE BIG MAN  (1970)
+     Archive identifier: little-big-man-1970_202511
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "little-big-man-1970",
+    type: "movie",
+    title: "Little Big Man (1970)",
+    years: "1970",
+    genre: ["Western", "Drama", "Adventure"],
+    rating: "PG",
+    score: 7.8,
+    description:
+      "Arthur Penn's sweeping revisionist Western follows 121-year-old Jack Crabb (Dustin Hoffman) as he recounts his extraordinary life — raised by Cheyenne, scout for General Custer, and the sole white survivor of the Battle of Little Bighorn. One of the first Hollywood films to portray Native Americans with dignity, it blends dark comedy, adventure, and tragedy into a landmark portrait of the American frontier.",
+    thumbnail: "https://archive.org/services/img/little-big-man-1970_202511",
+    featured: false,
+    episodes: [
+      {
+        id: "little-big-man-1970-full",
+        title: "Little Big Man",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "139 min",
+        description:
+          "Dustin Hoffman stars as Jack Crabb, a 121-year-old man who recounts a life spent between two worlds — raised by Cheyenne and shaped by the violent clash of cultures on the American frontier, culminating at the Battle of Little Bighorn.",
+        archiveId: "little-big-man-1970_202511",
+        thumbnail: "https://archive.org/services/img/little-big-man-1970_202511",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     HOUSE OF DARK SHADOWS  (1970)
+     Archive identifier: house-of-dark-shadows-1970
+     Feature-film spin-off of the Dark Shadows television series.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "house-of-dark-shadows-1970",
+    type: "movie",
+    title: "House of Dark Shadows (1970)",
+    years: "1970",
+    genre: ["Horror", "Drama", "Mystery"],
+    rating: "PG",
+    score: 6.9,
+    description:
+      "Dan Curtis's gothic horror feature spins the cult television soap Dark Shadows into a standalone vampire tragedy. After being accidentally released from his coffin at Collinwood, Barnabas Collins resumes his predatory hunt while becoming obsessed with Maggie Evans, believing she is the reincarnation of his lost love Josette. A moody blend of romance, bloodlust, and family doom, the film condenses the series' supernatural melodrama into a macabre big-screen chiller.",
+    thumbnail: "https://archive.org/services/img/house-of-dark-shadows-1970",
+    featured: false,
+    episodes: [
+      {
+        id: "house-of-dark-shadows-1970-full",
+        title: "House of Dark Shadows",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "97 min",
+        description:
+          "Barnabas Collins escapes his long imprisonment and terrorizes his descendants while seeking a cure for vampirism in this 1970 Dark Shadows feature-film spin-off.",
+        archiveId: "house-of-dark-shadows-1970",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/house-of-dark-shadows-1970",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     LET IT BE  (1970)
+     Archive identifier: Let_It_Be_1970_film
+     Documentary chronicling The Beatles' final album sessions.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "let-it-be-1970",
+    type: "documentary",
+    title: "Let It Be (1970)",
+    years: "1970",
+    genre: ["Music", "Documentary", "Rock"],
+    rating: "G",
+    score: 8.1,
+    description:
+      "Michael Lindsay-Hogg's intimate documentary follows The Beatles through the January 1969 rehearsals and recording sessions that produced Let It Be, capturing both flashes of creative brilliance and the interpersonal strain of a band nearing its end. Shot in a loose fly-on-the-wall style, it culminates in the group's famous unannounced rooftop performance at Apple Corps — their final public concert together and one of the defining moments in rock-film history.",
+    thumbnail: "https://archive.org/services/img/Let_It_Be_1970_film",
+    featured: false,
+    episodes: [
+      {
+        id: "let-it-be-1970-full",
+        title: "Let It Be",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "81 min",
+        description:
+          "The Beatles rehearse, record, argue, and finally take the roof at Apple Corps in this candid documentary of the sessions behind Let It Be.",
+        archiveId: "Let_It_Be_1970_film",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/Let_It_Be_1970_film",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     VHS RECORDING 91 TAPE 1  (1990–1991)
+     Archive identifier: VHSRecording91Tape1
+     Off-air/cable compilation including a Knots Landing episode.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "vhs-recording-91-tape-1",
+    type: "vhs",
+    title: "VHS Tape — Prime Target, A Chorus Line & Knots Landing (1990–1991)",
+    years: "1990–1991",
+    genre: ["Drama", "Music", "Soap Opera", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.8,
+    description:
+      "A five-hour EP-mode home VHS compilation recorded around the 1990–1991 new year from Miami-area television sources. The tape preserves the made-for-TV action thriller Prime Target from WTVJ/NBC, the film adaptation of A Chorus Line from HBO, and the Knots Landing episode \"The Unknown\" from WCIX/CBS, making it both a broad snapshot of turn-of-the-decade television viewing and the soap-opera-related item you first pointed out.",
+    thumbnail: "https://archive.org/services/img/VHSRecording91Tape1",
+    featured: false,
+    episodes: [
+      {
+        id: "vhs-recording-91-tape-1-full",
+        title: "Full Tape — Prime Target, A Chorus Line & Knots Landing",
+        season: 0,
+        episode: 0,
+        year: 1991,
+        duration: "300 min",
+        description:
+          "Late-1990/early-1991 VHS compilation featuring Prime Target, A Chorus Line, and Knots Landing: \"The Unknown,\" captured from Miami-area broadcasts and cable feeds.",
+        archiveId: "VHSRecording91Tape1",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/VHSRecording91Tape1",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     KELO VHS TAPE  (1988)
+     Archive identifier:
+       vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard
+     Late-1980s off-air compilation anchored by soap operas.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "kelo-1988-knots-landing-dynasty-vhs",
+    type: "vhs",
+    title: "VHS Tape — KELO 1988: Knots Landing, Dynasty & CBS Tuesday Movie",
+    years: "1988",
+    genre: ["Drama", "Soap Opera", "Romance", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.9,
+    description:
+      "A six-hour off-air VHS recording from KELO-TV in Sioux Falls, South Dakota, preserving an evening of late-1980s American television complete with original commercials and news breaks. The tape includes episodes or portions of Knots Landing and Dynasty, plus the CBS Tuesday Movie presentation of Murphy's Romance and additional material identified as Sharing Richard. As a home-recorded snapshot of network programming, advertising, and primetime soap-opera culture in 1988, it offers exactly the kind of archival broadcast ephemera this collection highlights.",
+    thumbnail: "https://archive.org/services/img/vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
+    featured: false,
+    episodes: [
+      {
+        id: "kelo-1988-knots-landing-dynasty-vhs-full",
+        title: "Full Tape — KELO 1988: Knots Landing, Dynasty & Murphy's Romance",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "360 min",
+        description:
+          "Six-hour KELO off-air VHS from 1988 featuring Knots Landing, Dynasty, the CBS Tuesday Movie Murphy's Romance, and period commercials/news breaks.",
+        archiveId: "vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     KNOTS LANDING / TODAY (PARTIAL, SAS-7)  (1989)
+     Archive identifier: knots-landing-nbc-sunday-today-partial-sas-7-31-07-89
+     Partial Australian off-air recording featuring Knots Landing.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "knots-landing-sas7-1989-07-31-partial",
+    type: "vhs",
+    title: "Knots Landing / Today (Partial, SAS-7, July 31 1989)",
+    years: "1989",
+    genre: ["Drama", "Soap Opera", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.6,
+    description:
+      "A partial off-air capture from Australia's SAS-7/Channel Seven dated July 31, 1989. The recording preserves the final 26 minutes of Knots Landing followed by the opening 22 minutes of Today, along with a rich layer of station continuity, promos, and commercials for late-1980s Australian television. Even in incomplete form, it is a vivid snapshot of how the prime-time soap travelled internationally and how local broadcasters packaged imported American drama.",
+    thumbnail: "https://archive.org/services/img/knots-landing-nbc-sunday-today-partial-sas-7-31-07-89",
+    featured: false,
+    episodes: [
+      {
+        id: "knots-landing-sas7-1989-07-31-partial-full",
+        title: "Knots Landing / Today (Partial Broadcast)",
+        season: 0,
+        episode: 0,
+        year: 1989,
+        duration: "48 min",
+        description:
+          "Partial July 31, 1989 SAS-7 recording with the end of Knots Landing, the start of Today, and original Australian promos and commercials.",
+        archiveId: "knots-landing-nbc-sunday-today-partial-sas-7-31-07-89",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/knots-landing-nbc-sunday-today-partial-sas-7-31-07-89",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     KNOTS LANDING — CBS / WOC (INCOMPLETE)  (1991)
+     Archive identifier: Knots_Landing_CBS_WOC_1991-05-09_Incomplete
+     Incomplete off-air broadcast with original commercials.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "knots-landing-cbs-woc-1991-05-09-incomplete",
+    type: "vhs",
+    title: "Knots Landing (CBS/WOC, May 9 1991, Incomplete)",
+    years: "1991",
+    genre: ["Drama", "Soap Opera", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.7,
+    description:
+      "An incomplete VHS preservation of Knots Landing as aired on CBS via WOC on May 9, 1991, complete with original commercial breaks from the broadcast night. Captured near the end of the series' twelfth season, the recording offers another valuable slice of prime-time soap-opera history and the kind of unfiltered network-TV atmosphere that only off-air tapes preserve.",
+    thumbnail: "https://archive.org/services/img/Knots_Landing_CBS_WOC_1991-05-09_Incomplete",
+    featured: false,
+    episodes: [
+      {
+        id: "knots-landing-cbs-woc-1991-05-09-incomplete-full",
+        title: "Knots Landing (May 9, 1991 Broadcast, Incomplete)",
+        season: 12,
+        episode: 0,
+        year: 1991,
+        duration: "60 min",
+        description:
+          "Incomplete May 9, 1991 off-air Knots Landing broadcast from CBS/WOC with original commercials intact.",
+        archiveId: "Knots_Landing_CBS_WOC_1991-05-09_Incomplete",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/Knots_Landing_CBS_WOC_1991-05-09_Incomplete",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     KNOTS LANDING — ATN-7 (INCOMPLETE)  (1986)
+     Archive identifier: knots-landing-incomplete-atn-7-16-08-86
+     Incomplete Australian off-air recording with promos/commercials.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "knots-landing-atn7-1986-08-16-incomplete",
+    type: "vhs",
+    title: "Knots Landing (ATN-7, August 16 1986, Incomplete)",
+    years: "1986",
+    genre: ["Drama", "Soap Opera", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.5,
+    description:
+      "An incomplete off-air VHS recording of Knots Landing from Channel Seven Sydney (ATN-7), dated August 16, 1986. Only the first 24 minutes of the episode survive, but the tape also preserves a rich layer of Australian promos and commercial breaks — including spots for Punky Brewster, Sons & Daughters, product advertising, and other period programming. Even in fragmentary form, it is a fascinating international time capsule of how the series aired abroad.",
+    thumbnail: "https://archive.org/services/img/knots-landing-incomplete-atn-7-16-08-86",
+    featured: false,
+    episodes: [
+      {
+        id: "knots-landing-atn7-1986-08-16-incomplete-full",
+        title: "Knots Landing (ATN-7 Broadcast, Incomplete)",
+        season: 8,
+        episode: 0,
+        year: 1986,
+        duration: "24 min",
+        description:
+          "First 24 minutes of an August 16, 1986 ATN-7 Knots Landing broadcast, preserved with original Australian promos and commercials.",
+        archiveId: "knots-landing-incomplete-atn-7-16-08-86",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/knots-landing-incomplete-atn-7-16-08-86",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     INSPECTOR GADGET  (1983–1986)
+     Archive identifier: inspector-gadget-go-go-gadget-series
+     Animated comedy-adventure series created by Bruno Bianchi,
+     Andy Heyward, and Jean Chalopin.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "inspector-gadget-1983",
+    type: "tv",
+    title: "Inspector Gadget",
+    years: "1983–1986",
+    genre: ["Animation", "Comedy", "Adventure", "Family", "Kids"],
+    rating: "TV-Y7",
+    score: 7.4,
+    description:
+      "The bumbling but well-meaning cyborg detective Inspector Gadget takes on the sinister schemes of Dr. Claw and M.A.D. with help from his resourceful niece Penny and loyal dog Brain. This classic 1980s animated series blends slapstick comedy, spy capers, and gadget-fueled chaos in every mission.",
+    thumbnail: "https://archive.org/services/img/inspector-gadget-go-go-gadget-series",
+    featured: false,
+    episodes: [
+      {
+        id: "inspector-gadget-1983-s01e01",
+        title: "Inspector Gadget (Archive Series Entry)",
+        season: 1,
+        episode: 1,
+        year: 1983,
+        duration: "22 min",
+        description:
+          "A classic Inspector Gadget episode from the Archive series collection featuring Gadget, Penny, and Brain taking on Dr. Claw and M.A.D.",
+        archiveId: "inspector-gadget-go-go-gadget-series",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/inspector-gadget-go-go-gadget-series",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     DUNGEONS & DRAGONS  (1983–1985)
+     Archive identifier:
+       dungeons-dragons-1983-s-02-e-01-the-girl-who-dreamed-tomorrow-1080p-hd-upscale
+     Classic animated fantasy adventure series.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "dungeons-dragons-1983",
+    type: "tv",
+    title: "Dungeons & Dragons",
+    years: "1983–1985",
+    genre: ["Animation", "Fantasy", "Adventure", "Kids", "Family"],
+    rating: "TV-Y7",
+    score: 8.0,
+    description:
+      "A group of kids are transported to the magical Realm and must survive dangerous quests while trying to find their way home, guided by the mysterious Dungeon Master.",
+    thumbnail:
+      "https://archive.org/services/img/dungeons-dragons-1983-s-02-e-01-the-girl-who-dreamed-tomorrow-1080p-hd-upscale",
+    featured: false,
+    episodes: [
+      {
+        id: "dungeons-dragons-1983-s02e01",
+        title: "The Girl Who Dreamed Tomorrow",
+        season: 2,
+        episode: 1,
+        year: 1984,
+        duration: "24 min",
+        description:
+          "The friends encounter Terri, a girl with prophetic dreams that reveal future dangers, forcing the party to race against fate to survive.",
+        archiveId: "dungeons-dragons-1983-s-02-e-01-the-girl-who-dreamed-tomorrow-1080p-hd-upscale",
+        archiveIndex: 0,
+        thumbnail:
+          "https://archive.org/services/img/dungeons-dragons-1983-s-02-e-01-the-girl-who-dreamed-tomorrow-1080p-hd-upscale",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     READING RAINBOW  (1983–2006)
+     Archive collection: ReadingRainbowTVSeries
+     Each episode is an individual item on the Internet Archive.
+     Identifiers follow the pattern ReadingRainbow[SS][EE].
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "reading-rainbow",
+    type: "tv",
+    title: "Reading Rainbow",
+    years: "1983–2006",
+    genre: ["Educational", "Family", "Kids"],
+    rating: "TV-G",
+    score: 9.0,
+    description:
+      "Hosted by LeVar Burton, Reading Rainbow inspires children to read by bringing beloved picture books to life through stunning visuals, celebrity narrators, and young reviewers. Each episode centers on a featured book and explores its themes through field trips, demonstrations, and joyful storytelling.",
+    thumbnail: "https://archive.org/services/img/ReadingRainbow0101",
+    featured: true,
+    episodes: [
+      /* ── Season 1 (1983) ── */
+      {
+        id: "rr-s01e01", title: "Tight Times", season: 1, episode: 1,
+        year: 1983, duration: "30 min",
+        description: "LeVar explores ways to have fun on a tight budget, featuring the book Tight Times by Barbara Shook Hazen about a boy learning to cope with his family's financial struggles.",
+        archiveId: "ReadingRainbow0101", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0101",
+      },
+      {
+        id: "rr-s01e02", title: "Miss Nelson Is Back", season: 1, episode: 2,
+        year: 1983, duration: "30 min",
+        description: "When their teacher is out sick, a class of rowdy students must deal with the return of the terrifying Miss Viola Swamp. Based on the book by Harry Allard and James Marshall.",
+        archiveId: "ReadingRainbow0102", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0102",
+      },
+      {
+        id: "rr-s01e03", title: "Bea and Mr. Jones", season: 1, episode: 3,
+        year: 1983, duration: "30 min",
+        description: "LeVar tries out new identities as a kindergartner and her father swap places for a day. Based on the book by Amy Schwartz, exploring imagination and empathy.",
+        archiveId: "ReadingRainbow0103", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0103",
+      },
+      {
+        id: "rr-s01e04", title: "Bringing the Rain to Kapiti Plain", season: 1, episode: 4,
+        year: 1983, duration: "30 min",
+        description: "A young Kenyan herdsman finds a way to bring rain to his drought-stricken land. Based on the rhythmic Nandi folktale retold by Verna Aardema, with a field trip exploring weather.",
+        archiveId: "ReadingRainbow0104", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0104",
+      },
+      {
+        id: "rr-s01e05", title: "Louis the Fish", season: 1, episode: 5,
+        year: 1983, duration: "30 min",
+        description: "A miserable butcher dreams of being a fish, and one day his dream comes true. Based on the surreal picture book by Arthur Yorinks, with LeVar exploring marine life.",
+        archiveId: "ReadingRainbow0105", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0105",
+      },
+      {
+        id: "rr-s01e06", title: "Digging Up Dinosaurs", season: 1, episode: 6,
+        year: 1983, duration: "30 min",
+        description: "LeVar visits Dinosaur National Monument and explores how paleontologists uncover dinosaur bones. Features the book Digging Up Dinosaurs by Aliki.",
+        archiveId: "ReadingRainbow0106", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0106",
+      },
+      {
+        id: "rr-s01e07", title: "Liang and the Magic Paintbrush", season: 1, episode: 7,
+        year: 1983, duration: "30 min",
+        description: "A poor Chinese boy's magic paintbrush brings everything he draws to life. Based on the book by Demi, with a field trip celebrating Chinese-American art and culture.",
+        archiveId: "ReadingRainbow0107", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0107",
+      },
+      {
+        id: "rr-s01e08", title: "Gila Monsters Meet You at the Airport", season: 1, episode: 8,
+        year: 1983, duration: "30 min",
+        description: "A New York City boy dreads moving out West, convinced it is full of fearsome creatures. Based on the book by Marjorie Weinman Sharmat, with LeVar exploring desert wildlife.",
+        archiveId: "ReadingRainbow0108", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0108",
+      },
+      {
+        id: "rr-s01e09", title: "Three Days on a River in a Red Canoe", season: 1, episode: 9,
+        year: 1983, duration: "30 min",
+        description: "A family embarks on a camping and canoeing trip and enjoys the wonders of the outdoors. Based on the book by Vera B. Williams, with LeVar joining a river adventure.",
+        archiveId: "ReadingRainbow0109", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0109",
+      },
+      {
+        id: "rr-s01e10", title: "The Gift of the Sacred Dog", season: 1, episode: 10,
+        year: 1983, duration: "30 min",
+        description: "A young Native American boy prays for help for his starving people and receives the gift of the horse. Based on the book by Paul Goble, celebrating Plains Indian culture and legend.",
+        archiveId: "ReadingRainbow0110", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0110",
+      },
+      {
+        id: "rr-s01e11", title: "Gregory the Terrible Eater", season: 1, episode: 11,
+        year: 1983, duration: "30 min",
+        description: "Gregory the goat refuses to eat garbage like a normal goat and insists on fruits and vegetables, much to his parents' alarm. Based on the book by Mitchell Sharmat, with a look at nutrition.",
+        archiveId: "ReadingRainbow0111", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0111",
+      },
+      {
+        id: "rr-s01e12", title: "Three by the Sea", season: 1, episode: 12,
+        year: 1983, duration: "30 min",
+        description: "Three friends spend a day at the beach and take turns telling each other stories. Based on the book by Edward Marshall, exploring storytelling, creativity, and cooperation.",
+        archiveId: "ReadingRainbow0112", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0112",
+      },
+      {
+        id: "rr-s01e13", title: "Arthur's Eyes", season: 1, episode: 13,
+        year: 1983, duration: "30 min",
+        description: "Arthur the aardvark gets glasses and struggles with teasing from classmates, learning to accept himself. Based on the book by Marc Brown, with LeVar exploring the importance of vision care.",
+        archiveId: "ReadingRainbow0113", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0113",
+      },
+      {
+        id: "rr-s01e14", title: "The Day Jimmy's Boa Ate the Wash", season: 1, episode: 14,
+        year: 1983, duration: "30 min",
+        description: "A girl recounts an increasingly absurd chain of events that happened on a class trip to a farm. Based on the hilarious book by Trinka Hakes Noble, with LeVar visiting a real farm.",
+        archiveId: "ReadingRainbow0114", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0114",
+      },
+      {
+        id: "rr-s01e15", title: "Ty's One-Man Band", season: 1, episode: 15,
+        year: 1983, duration: "30 min",
+        description: "A mysterious one-legged stranger arrives in a small town and creates music from everyday objects. Based on the book by Mildred Pitts Walter, celebrating the joy of music and creativity.",
+        archiveId: "ReadingRainbow0115", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0115",
+      },
+      /* ── Season 2 (1984) ── */
+      {
+        id: "rr-s02e01", title: "Hot-Air Henry", season: 2, episode: 1,
+        year: 1984, duration: "30 min",
+        description: "A Siamese cat stows away on a hot-air balloon and takes a high-flying adventure. Based on the book by Mary Calhoun, with LeVar exploring the world of hot-air ballooning.",
+        archiveId: "ReadingRainbow0201", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0201",
+      },
+      {
+        id: "rr-s02e02", title: "Simon's Book", season: 2, episode: 2,
+        year: 1984, duration: "30 min",
+        description: "A boy falls asleep while drawing and his character comes to life in the story. Based on the imaginative book by Henrik Drescher, with a look at the art of illustration.",
+        archiveId: "ReadingRainbow0202", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0202",
+      },
+      {
+        id: "rr-s02e03", title: "Ox-Cart Man", season: 2, episode: 3,
+        year: 1984, duration: "30 min",
+        description: "A New England farmer loads his ox cart and travels to market to sell everything his family has made. Based on the Caldecott Medal book by Donald Hall, exploring colonial American life.",
+        archiveId: "ReadingRainbow0203", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0203",
+      },
+      {
+        id: "rr-s02e04", title: "Mystery on the Docks", season: 2, episode: 4,
+        year: 1984, duration: "30 min",
+        description: "Ralph the rat is an opera-loving short-order cook whose favorite opera singer is kidnapped. Based on the musical mystery book by Thacher Hurd, with a behind-the-scenes look at opera.",
+        archiveId: "ReadingRainbow0204", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0204",
+      },
+      {
+        id: "rr-s02e05", title: "A Chair for My Mother", season: 2, episode: 5,
+        year: 1984, duration: "30 min",
+        description: "A young girl, her mother, and grandmother save their coins to buy a big, comfortable chair after losing their furniture in a fire. Based on the Caldecott Honor book by Vera B. Williams.",
+        archiveId: "ReadingRainbow0205", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0205",
+      },
+      /* ── Season 3 (1985) ── */
+      {
+        id: "rr-s03e01", title: "Paul Bunyan", season: 3, episode: 1,
+        year: 1985, duration: "30 min",
+        description: "The legendary giant lumberjack and his enormous blue ox Babe roam across America performing impossible feats. Based on the tall tale retold by Steven Kellogg, celebrating American folklore.",
+        archiveId: "ReadingRainbow0301", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0301",
+      },
+      {
+        id: "rr-s03e02", title: "The Patchwork Quilt", season: 3, episode: 2,
+        year: 1985, duration: "30 min",
+        description: "A young girl helps her ailing grandmother finish a quilt that tells the story of their family. Based on the book by Valerie Flournoy, with LeVar exploring the art and history of quilting.",
+        archiveId: "ReadingRainbow0302", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0302",
+      },
+      {
+        id: "rr-s03e03", title: "Hill of Fire", season: 3, episode: 3,
+        year: 1985, duration: "30 min",
+        description: "A Mexican farmer witnesses the birth of a volcano in his corn field — the true story of the Paricutín volcano. Based on the book by Thomas P. Lewis, with a look at how volcanoes form.",
+        archiveId: "ReadingRainbow0303", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0303",
+      },
+      {
+        id: "rr-s03e04", title: "The Tortoise and the Hare", season: 3, episode: 4,
+        year: 1985, duration: "30 min",
+        description: "Aesop's classic fable of the slow but steady tortoise who outpaces the overconfident hare. Based on Janet Stevens' retelling, with LeVar exploring lessons on perseverance and fair play.",
+        archiveId: "ReadingRainbow0304", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0304",
+      },
+      {
+        id: "rr-s03e05", title: "Perfect the Pig", season: 3, episode: 5,
+        year: 1985, duration: "30 min",
+        description: "A little pig wishes to grow wings and fly and one day his wish comes true, leading to adventures and friendship. Based on the book by Susan Jeschke, with a look at animal care.",
+        archiveId: "ReadingRainbow0305", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0305",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SATURDAY SUPERCADE  (1983–1984)
+     Archive identifier: youtube-JYYzz8BUg9E
+     Full 1983 broadcast recording (commercials included).
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "saturday-supercade",
+    type: "tv",
+    title: "Saturday Supercade",
+    years: "1983–1984",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "TV-G",
+    score: 7.1,
+    description:
+      "CBS's beloved Saturday-morning animated anthology starring characters from the golden age of arcade games. Each episode features multiple short segments following Donkey Kong, Frogger, Q*bert, Pitfall Harry, and others in all-new comedic adventures.",
+    thumbnail: "https://archive.org/services/img/youtube-JYYzz8BUg9E",
+    featured: false,
+    episodes: [
+      {
+        id: "ssc-s01-archive",
+        title: "Saturday Supercade — 1983 Broadcast Recording",
+        season: 1,
+        episode: 1,
+        year: 1983,
+        duration: "varies",
+        description:
+          "Archived recording of the 1983 CBS run of Saturday Supercade, featuring Donkey Kong, Frogger, Donkey Kong Jr., Pitfall!, and Q*bert segments — commercials included.",
+        archiveId: "youtube-JYYzz8BUg9E",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/youtube-JYYzz8BUg9E",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THOMAS THE TANK ENGINE & FRIENDS  (1984–1998)
+     BBC/ITV children's series based on the Railway Series books
+     by Rev. W. Awdry. Narrated by Ringo Starr (Series 1–2) and
+     then Michael Angelis (UK) / George Carlin (US, Series 3–7).
+     Archive identifier (Series 1–5):
+       thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98
+     archiveIndex maps to sequential episode number (0-based) within
+     the archive item's file listing.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "thomas-the-tank-engine",
+    type: "tv",
+    title: "Thomas the Tank Engine & Friends",
+    years: "1984–1998",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "TV-G",
+    score: 8.1,
+    description:
+      "Based on Rev. W. Awdry's beloved Railway Series books, Thomas the Tank Engine & Friends follows the adventures of Thomas and his engine companions — James, Gordon, Henry, Percy, and many more — on the Island of Sodor. Narrated by Ringo Starr for the first two series, the gentle stop-motion series taught generations of children lessons about friendship, responsibility, and hard work. Series 1–5 aired from 1984 to 1998.",
+    thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+    featured: false,
+    episodes: [
+      /* ── Series 1 (1984) ── */
+      {
+        id: "ttef-s01e01",
+        title: "Thomas and Gordon",
+        season: 1,
+        episode: 1,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Thomas the small tank engine is tired of his job shunting coaches in the yard and longs to pull a train. He teases the big engine Gordon about getting tired, but Gordon soon teaches Thomas a lesson he won't forget.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e02",
+        title: "Edward and Gordon",
+        season: 1,
+        episode: 2,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Kind old Edward is given a chance to pull a train, but Gordon mocks him for being too slow. When Gordon breaks down on a hill, only Edward is willing to push him to the top, earning the big engine's respect.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e03",
+        title: "The Sad Story of Henry",
+        season: 1,
+        episode: 3,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Henry the green engine stops in a tunnel because he is afraid the rain will spoil his paint. He refuses to come out, and the Fat Controller has him bricked up inside as punishment — a cautionary tale about vanity.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e04",
+        title: "Edward, Gordon and Henry",
+        season: 1,
+        episode: 4,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Gordon's axle breaks down, leaving the express stranded. The Fat Controller releases Henry from the tunnel to rescue the coaches — Henry's first chance to prove he can be a Really Useful Engine.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e05",
+        title: "Thomas's Train",
+        season: 1,
+        episode: 5,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Thomas finally gets to pull a train on his own — but in his excitement he races away before the coaches are coupled on and ends up on the main line without them, causing confusion across the whole railway.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e06",
+        title: "Thomas and the Trucks",
+        season: 1,
+        episode: 6,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Thomas is pleased to be given a goods train, but the troublesome trucks push him faster and faster down the hill until he crashes through the buffers at the harbour. Thomas learns that goods trains require just as much care as passenger coaches.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e07",
+        title: "Thomas and the Breakdown Train",
+        season: 1,
+        episode: 7,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "James the red engine crashes and blocks the main line. Thomas, who has been left minding the breakdown train, must rescue James and clear the line — his first real chance to be a Really Useful Engine.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e08",
+        title: "James and the coaches",
+        season: 1,
+        episode: 8,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "James is given old wooden coaches for his first proper passenger run and complains bitterly. When a leaking coach hose causes him to brake sharply and rip the coach's side off, the Fat Controller is most displeased.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e09",
+        title: "Troublesome Trucks",
+        season: 1,
+        episode: 9,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "James is still sulking in the shed after his mishap. Gordon and Henry refuse to shunt James's trucks, insisting it is beneath them. Thomas cheerfully does the job — demonstrating that no honest work is too small for a Really Useful Engine.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e10",
+        title: "James and the express",
+        season: 1,
+        episode: 10,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "James is at last allowed to pull the express and sets off full of pride. But his inexperience with the heavy train nearly leads to disaster, and only the quick thinking of his driver saves the day.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e11",
+        title: "Thomas and the Guard",
+        season: 1,
+        episode: 11,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Thomas's guard is left behind at the station. Thomas sets off without him and cannot stop properly because only the guard has the brake van. The runaway branch-line adventure teaches Thomas the importance of the whole team.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e12",
+        title: "Thomas Goes Fishing",
+        season: 1,
+        episode: 12,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Thomas passes a river every day and wishes he could stop to fish like the people on the bank. When his water pump fails and he must take on water from the river, he gets rather more fish than he bargained for.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e13",
+        title: "Thomas, Terence and the Snow",
+        season: 1,
+        episode: 13,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "When the first snow of winter falls, Thomas mocks Terence the Tractor's caterpillar tracks. But a heavy snowfall blocks Thomas's line and it is Terence who must rescue him — teaching Thomas not to judge others.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e14",
+        title: "Thomas and Bertie",
+        season: 1,
+        episode: 14,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Bertie the Bus challenges Thomas to a race. Thomas is determined to beat him, speeding along his branch line while Bertie takes the road. The close-run contest delights the Fat Controller and becomes the talk of Sodor.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 13,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e15",
+        title: "Tenders and Turntables",
+        season: 1,
+        episode: 15,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Gordon, Henry, and James travel to a big station far away. Without a turntable large enough for tender engines, they must run backwards home — and discover it is far harder and more undignified than they imagined.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 14,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e16",
+        title: "Trouble in the Shed",
+        season: 1,
+        episode: 16,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Gordon, Henry, and James go on strike and refuse to leave the shed. Thomas has to do all the work on his own, causing such disruption that the Fat Controller is forced to bring in a new engine — Edward — to restore order.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 15,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e17",
+        title: "Percy Runs Away",
+        season: 1,
+        episode: 17,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Percy the small green engine is tricked by the bigger engines into believing he must go fast to avoid a signal check. He races out of the shed and along the line until his driver and fireman manage to slow him down.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 16,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e18",
+        title: "Coal",
+        season: 1,
+        episode: 18,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Henry's special Welsh coal runs out and he must burn ordinary coal, which gives him a terrible cough and makes him very slow. The Fat Controller tries every remedy until the right coal is found and Henry is restored to full strength.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 17,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e19",
+        title: "The Flying Kipper",
+        season: 1,
+        episode: 19,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Henry is given the special honour of pulling the Flying Kipper fish train through the cold winter night. A frozen signal leaves the line set to the wrong track and Henry crashes into a goods train, putting him in the works for a much-needed rebuild.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 18,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s01e20",
+        title: "Whistles and Sneezes",
+        season: 1,
+        episode: 20,
+        year: 1984,
+        duration: "5 min",
+        description:
+          "Henry comes back from the works gleaming and improved, but he now has a habit of sneezing coal dust onto other engines. Gordon and James are furious until Henry's sneezing saves the day when a runaway horse blocks the line.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 19,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      /* ── Series 2 (1986) ── */
+      {
+        id: "ttef-s02e01",
+        title: "Percy and the Signal",
+        season: 2,
+        episode: 1,
+        year: 1986,
+        duration: "5 min",
+        description:
+          "Percy tells Gordon about the importance of signals, but is then tricked by the big engines into misreading one. He speeds into a goods siding and crashes into a load of lime — turning him ghostly white and teaching him not to be too clever.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 20,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s02e02",
+        title: "Duck Takes Charge",
+        season: 2,
+        episode: 2,
+        year: 1986,
+        duration: "5 min",
+        description:
+          "Duck the Great Western engine arrives on Sodor and soon clashes with the bigger engines, who try to boss him around. Duck politely but firmly tells them that on his part of the railway, engines do as they are told — by the Fat Controller.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 21,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s02e03",
+        title: "Percy and Harold",
+        season: 2,
+        episode: 3,
+        year: 1986,
+        duration: "5 min",
+        description:
+          "Harold the helicopter brags that railways are slow and out of date. Percy challenges him to a race and, with his driver giving him full steam, beats Harold to the harbour — proving that a good engine can still hold its own against modern machines.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 22,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s02e04",
+        title: "The Diseasel",
+        season: 2,
+        episode: 4,
+        year: 1986,
+        duration: "5 min",
+        description:
+          "A new diesel engine nicknamed 'Diseasel' arrives on Sodor and causes trouble by slyly making the other engines look bad. Duck refuses to be fooled and exposes the diesel's tricks to the Fat Controller.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 23,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s02e05",
+        title: "Better Late Than Never",
+        season: 2,
+        episode: 5,
+        year: 1986,
+        duration: "5 min",
+        description:
+          "James loses time helping a farmer whose sheep have strayed onto the line. He arrives late at the junction and finds Gordon very impatient — but a kind word from Edward reminds the engines that being helpful is always worth a delay.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 24,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s02e06",
+        title: "Break Van",
+        season: 2,
+        episode: 6,
+        year: 1986,
+        duration: "5 min",
+        description:
+          "Donald and Douglas, the Scottish twin engines, arrive on Sodor on trial. Only one can stay. The other engines try to help them keep their jobs, and a brave act of rescue by one of the twins finally convinces the Fat Controller to keep them both.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 25,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      /* ── Series 3 (1991) ── */
+      {
+        id: "ttef-s03e01",
+        title: "A Scarf for Percy",
+        season: 3,
+        episode: 1,
+        year: 1991,
+        duration: "5 min",
+        description:
+          "On a cold winter morning Percy borrows a passenger's scarf to keep his boiler warm, but it catches in his wheels and causes a minor derailment. Percy learns that borrowed things must be treated with extra care.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 36,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s03e02",
+        title: "Buzz Buzz",
+        season: 3,
+        episode: 2,
+        year: 1991,
+        duration: "5 min",
+        description:
+          "A wasps' nest hidden in a truck causes chaos when the wasps escape and sting the engines and their crews. Thomas's quick thinking gets the truck to a siding before the situation becomes a full railway emergency.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 37,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s03e03",
+        title: "Diesel's Devious Deed",
+        season: 3,
+        episode: 3,
+        year: 1991,
+        duration: "5 min",
+        description:
+          "Diesel returns to Sodor and spreads lies about Duck to the trucks, turning them against him. The Fat Controller discovers the truth and sends Diesel away while Duck's good name is restored.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 38,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s03e04",
+        title: "Thomas, Percy and the Dragon",
+        season: 3,
+        episode: 4,
+        year: 1991,
+        duration: "5 min",
+        description:
+          "Thomas and Percy scare each other with ghost stories. When they spot a Chinese dragon float being transported for a festival, both engines think their stories have come true — and each is convinced the other is just as frightened as himself.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 39,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      /* ── Series 4 (1994) ── */
+      {
+        id: "ttef-s04e01",
+        title: "Wrong Road",
+        season: 4,
+        episode: 1,
+        year: 1994,
+        duration: "5 min",
+        description:
+          "Gordon boasts that he always knows the right road. When a mix-up at a junction sends him down the wrong branch line, he must eat humble pie and ask Thomas and Percy to help him turn around.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 52,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s04e02",
+        title: "Oliver Owns Up",
+        season: 4,
+        episode: 2,
+        year: 1994,
+        duration: "5 min",
+        description:
+          "Oliver the Great Western engine makes an embarrassing mistake with the trucks and tries to hide it. With encouragement from Duck, he confesses to the Fat Controller — discovering that honesty is always the better course.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 53,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s04e03",
+        title: "Sleeping Beauty",
+        season: 4,
+        episode: 3,
+        year: 1994,
+        duration: "5 min",
+        description:
+          "A rusty old coach named Henrietta is rediscovered in a siding. Toby is given the job of bringing her back into service, and together they make the branch line complete once more.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 54,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      /* ── Series 5 (1995–1998) ── */
+      {
+        id: "ttef-s05e01",
+        title: "Percy's Promise",
+        season: 5,
+        episode: 1,
+        year: 1995,
+        duration: "5 min",
+        description:
+          "Percy promises to collect a group of children from a fair. When a storm washes out part of the line, Percy pushes through flood water to keep his word — arriving soaking wet but right on time, to everyone's delight.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 65,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s05e02",
+        title: "Thomas and the Rumours",
+        season: 5,
+        episode: 2,
+        year: 1995,
+        duration: "5 min",
+        description:
+          "Rumours spread around Sodor that the engines are to be replaced by buses. Each engine worries and passes the story along, growing wilder with each telling — until the Fat Controller reveals the truth and peace is restored.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 66,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+      {
+        id: "ttef-s05e03",
+        title: "Toby's Tightrope",
+        season: 5,
+        episode: 3,
+        year: 1995,
+        duration: "5 min",
+        description:
+          "Toby the tram engine must cross a narrow, rickety viaduct on his branch line. The other engines think he is too slow and old-fashioned, but only Toby can navigate the tricky crossing — and his careful precision saves the day.",
+        archiveId: "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+        archiveIndex: 67,
+        thumbnail: "https://archive.org/services/img/thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     HEATHCLIFF AND THE CATILLAC CATS  (1984–1988)
+     First-run syndication animated series produced by DiC
+     Entertainment. 65 half-hour episodes, each containing two
+     segments: a Heathcliff segment and a Catillac Cats segment.
+     Archive identifier: heathcliff-and-the-catillac-cats-1984-complete-series
+     archiveIndex maps to sequential episode number (0-based).
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "heathcliff-and-the-catillac-cats",
+    type: "tv",
+    title: "Heathcliff and the Catillac Cats",
+    years: "1984–1988",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "TV-G",
+    score: 7.4,
+    description:
+      "The mischievous orange tabby Heathcliff terrorizes the neighborhood of Westfinster in short comedic adventures, while a second segment follows the Catillac Cats — Riff, Mungo, Hector, Wordsworth, and Cleo — a gang of streetwise alley cats who rule Pussycat Junkyard from their prized Cadillac. Produced by DiC Entertainment and aired in first-run syndication, the series ran 65 episodes from 1984 to 1988.",
+    thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+    featured: false,
+    episodes: [
+      {
+        id: "hcc-s01e01",
+        title: "Garbage Monster / Brush with Fame",
+        season: 1,
+        episode: 1,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff turns neighborhood garbage into a towering garbage creature to frighten away rivals. Then the Catillac Cats attempt to muscle their way into the art world when Cleo paints a portrait that causes a sensation across Pussycat Junkyard.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e02",
+        title: "Heathcliff's Rival / Tag Team",
+        season: 1,
+        episode: 2,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "A slick new tomcat arrives in Westfinster and challenges Heathcliff for the affections of Sonja and the run of the neighborhood. Meanwhile, Riff and Mungo enter a wrestling tournament convinced the championship trophy will earn them the respect — and free food — they crave.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e03",
+        title: "The Big Boo / Something's Fishy",
+        season: 1,
+        episode: 3,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff discovers an abandoned house rumored to be haunted and uses the ghost stories to keep the neighborhood dogs at bay. Across town, the Catillac Cats hatch an elaborate scheme to hijack a delivery truck loaded with the finest canned tuna.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e04",
+        title: "Bink's New Car / The Perfect Crime",
+        season: 1,
+        episode: 4,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Grandpa Nutmeg's grandson Iggy and his friend Bink get their hands on a go-kart, and Heathcliff promptly commandeers it for a high-speed joyride through Westfinster. The Catillac Cats plan an elaborate heist on the neighborhood fish market — but Wordsworth's over-complicated blueprint leads to predictably chaotic results.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e05",
+        title: "Football Follies / Fur Frenzy",
+        season: 1,
+        episode: 5,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff infiltrates a neighborhood football game and single-pawedly disrupts both teams in pursuit of the half-time hot-dog cart. Riff convinces the gang to enter a pet show in disguise — only for the competition to turn into a full-scale junkyard stampede.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e06",
+        title: "Skateboard Scam / Cat Nappers",
+        season: 1,
+        episode: 6,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff takes up skateboarding to impress Sonja and immediately makes mortal enemies of every dog on wheels in the neighborhood. The Catillac Cats discover that Cleo has been catnapped by a theatrical agent who intends to make her a TV star — whether she likes it or not.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e07",
+        title: "The Winner / Catillac Racers",
+        season: 1,
+        episode: 7,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff enters every competition in Westfinster determined to win a trophy — even the ones he wasn't invited to. Meanwhile Riff bets the Catillac itself in a street race against a rival gang and must scramble to reclaim the car before sundown.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e08",
+        title: "Rockula / The Big Scheme",
+        season: 1,
+        episode: 8,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff stumbles onto a horror-movie film set and is mistaken for the lead monster, sending the entire crew fleeing the lot. Hector talks the Catillac Cats into running a neighborhood protection racket — offering to guard Pussycat Junkyard from hazards entirely of their own making.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e09",
+        title: "Dog Day After School / Show Stoppers",
+        season: 1,
+        episode: 9,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "A gang of bulldogs blockades Iggy's school and only Heathcliff can outwit them — though his methods cause almost as much chaos as the dogs themselves. The Catillac Cats volunteer as stagehands for a neighborhood talent show, turning the curtain-raiser into an involuntary audition.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e10",
+        title: "The Catfish / Wordsworth's Poem",
+        season: 1,
+        episode: 10,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff and a grumpy catfish wage a battle of wills at the local fishing pond, with Grandpa caught in the crossfire. Wordsworth submits an epic ode to tuna to a poetry contest and drags the rest of the Catillac Cats into a very reluctant reading tour.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e11",
+        title: "The Big Sleep / Mungo's Muscles",
+        season: 1,
+        episode: 11,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff fakes a string of ailments to avoid the neighborhood vet, accidentally convincing everyone in Westfinster he is gravely ill. Mungo discovers a mail-order muscle-building kit and uses his new strength to settle every score in Pussycat Junkyard — until the kit's side-effects kick in.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e12",
+        title: "Love Thy Neighbour / Riff's Big Date",
+        season: 1,
+        episode: 12,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "A new family moves in next door with a pampered show-cat, and Heathcliff must decide whether to torment his new neighbor or recruit her as an ally against the neighborhood dogs. Riff prepares an elaborate romantic evening for Cleo, only for every member of the Catillac Cats gang to accidentally join the date.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+      {
+        id: "hcc-s01e13",
+        title: "Gone Fishin' / The Great Junkyard Race",
+        season: 1,
+        episode: 13,
+        year: 1984,
+        duration: "22 min",
+        description:
+          "Heathcliff stows away on Grandpa Nutmeg's fishing trip and proceeds to commandeer the boat, the bait, and the catch. The Catillac Cats enter the Catillac in a demolition derby-style junkyard race that quickly threatens to leave them without a car at all.",
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
+        archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE DUKES OF HAZZARD  (1979–1985)
+     Christmas episode archive identifier: dukes-xmas
+     "The Great Santa Claus Chase" — Season 3, Episode 9,
+     originally aired December 18, 1981 on CBS.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "dukes-of-hazzard",
+    type: "tv",
+    title: "The Dukes of Hazzard",
+    years: "1979–1985",
+    genre: ["Action", "Comedy", "Adventure"],
+    rating: "TV-PG",
+    score: 7.2,
+    description:
+      "Bo and Luke Duke, their cousin Daisy, and Uncle Jesse continually outwit the corrupt Boss Hogg and bumbling Sheriff Rosco P. Coltrane across Hazzard County, Georgia — with plenty of car chases in their iconic orange Dodge Charger, the General Lee.",
+    thumbnail: "https://archive.org/services/img/dukes-xmas",
+    featured: false,
+    episodes: [
+      {
+        id: "doh-s03e09",
+        title: "The Great Santa Claus Chase",
+        season: 3,
+        episode: 9,
+        year: 1981,
+        duration: "48 min",
+        description:
+          "Boss Hogg schemes to steal charity money collected for Hazzard County's Christmas celebration. Bo, Luke, and Daisy race to stop him in a festive holiday chase that puts the General Lee up against a sleigh's worth of trouble.",
+        archiveId: "dukes-xmas",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/dukes-xmas",
       },
     ],
   },
