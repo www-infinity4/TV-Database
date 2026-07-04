@@ -1194,6 +1194,199 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE BERENSTAIN BEARS  (1985)
+     CBS animated series produced by Nelvana. 13 episodes aired
+     January–September 1985. Each half-hour episode contains two
+     back-to-back story segments adapted from Stan and Jan
+     Berenstain's beloved children's books.
+     Archive identifier: the-berenstain-bears-1985
+     archiveIndex maps to sequential episode (0-based).
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-berenstain-bears-1985",
+    type: "tv",
+    title: "The Berenstain Bears",
+    years: "1985",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "TV-G",
+    score: 7.3,
+    description:
+      "Based on Stan and Jan Berenstain's bestselling children's book series, this Nelvana-produced CBS animated series follows the Bear family — Papa Bear, Mama Bear, Brother Bear, and Sister Bear — through everyday adventures in Bear Country. Each episode pairs two stories adapted directly from the beloved books, gently exploring themes of honesty, friendship, sharing, and growing up. Thirteen episodes aired on CBS in 1985.",
+    thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+    featured: false,
+    episodes: [
+      {
+        id: "bb-s01e01",
+        title: "The Messy Room / Too Much TV",
+        season: 1,
+        episode: 1,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Mama Bear reaches her limit with the cubs' chaotic bedroom and declares that it must be cleaned — sparking a negotiation about who owns what and where it goes. Then the whole Bear family gets hooked on television and neglects everything else until Papa Bear pulls the plug.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e02",
+        title: "The Sitter / In the Dark",
+        season: 1,
+        episode: 2,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "When Mama and Papa go out for the evening, the cubs are left with a babysitter and discover that staying home without their parents is not as scary as they imagined. Then Sister Bear confesses she is afraid of the dark, and the family finds gentle ways to help her feel safe at night.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e03",
+        title: "The Truth / Strangers",
+        season: 1,
+        episode: 3,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother and Sister accidentally break Mama's favourite lamp and try to cover it up — learning the hard way that telling the truth is always better than a coverup. Then Mama and Papa teach the cubs important rules about talking to strangers they do not know.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e04",
+        title: "Go to School / The New Baby",
+        season: 1,
+        episode: 4,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother Bear is nervous about his very first day of school, and Mama walks him through what to expect — from making new friends to learning the rules of the classroom. Then Mama announces she is expecting a new cub, and Brother must adjust to the idea of sharing his family.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 3,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e05",
+        title: "Moving Day / Visit the Dentist",
+        season: 1,
+        episode: 5,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "When the Bear family moves to a grand new tree house, Brother and Sister worry about leaving their friends and familiar surroundings behind. Then Brother develops a toothache and both cubs must face their fears during a trip to the Bear Country dentist.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 4,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e06",
+        title: "Too Much Junk Food / The Bad Habit",
+        season: 1,
+        episode: 6,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Papa Bear's love of junk food lands the whole family in trouble when Dr. Grizzly delivers a stern warning about healthy eating habits. Then Sister's nail-biting habit embarrasses her in public and the family rallies together to help her break it.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 5,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e07",
+        title: "No Girls Allowed / The Trouble with Friends",
+        season: 1,
+        episode: 7,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother Bear and his friends build a clubhouse with a \"No Girls Allowed\" sign — until Sister challenges the rule and proves she belongs. Then Sister makes a new best friend whose bossy behaviour starts causing real problems in Bear Country.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 6,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e08",
+        title: "The Gimmies / Learn About Sharing",
+        season: 1,
+        episode: 8,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "A trip to the toy store turns disastrous when the cubs demand every single thing they see — and Mama Bear has finally had enough of the \"gimmies.\" Later the cubs struggle to share their most prized possessions and discover that generosity feels better than hoarding.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 7,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e09",
+        title: "The Spooky Old Tree / The Double Dare",
+        season: 1,
+        episode: 9,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Three brave little bears venture into the spooky old tree on a dare, discovering that courage means facing your fears one step at a time. Then Brother accepts a reckless double-dare from a classmate and learns that real bravery is knowing when to walk away.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 8,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e10",
+        title: "Go to Camp / The Week at Grandma's",
+        season: 1,
+        episode: 10,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother and Sister head off to summer camp full of anxiety, only to find it is one of the best experiences of their young lives. Then Mama and Papa take a rare adults-only holiday while the cubs spend a wonderful week with Gramps and Gran.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 9,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e11",
+        title: "The Homework Hassle / The In-Crowd",
+        season: 1,
+        episode: 11,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Brother Bear puts off his homework night after night until the pile becomes overwhelming — and Papa's well-meaning help only makes things worse. Then Sister desperately wants to fit in with the popular crowd at school, even if it means acting like someone she is not.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 10,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e12",
+        title: "The Bears' Vacation / The Bear Detectives",
+        season: 1,
+        episode: 12,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "The Bear family heads off on a seaside vacation, but Papa's stubborn refusal to follow the safety rules turns a fun trip into a series of near-disasters. Then Brother and Sister set up their own detective agency to solve a mysterious case of missing honey jars.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 11,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+      {
+        id: "bb-s01e13",
+        title: "The Bears' Christmas / Count Their Blessings",
+        season: 1,
+        episode: 13,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "The cubs write an impossibly long letter to Santa Claus, and Papa attempts to show them the true spirit of giving by delivering gifts to the less fortunate bears of Bear Country. Then as the year ends, the whole family reflects on what they are truly grateful for.",
+        archiveId: "the-berenstain-bears-1985",
+        archiveIndex: 12,
+        thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      SUPERMAN II — ABC SUNDAY NIGHT MOVIE BROADCAST  (1985)
      Single feature film — archive identifier: 1985abcsuperman2full
      Recorded live from the ABC Sunday Night Movie, December 29 1985,
