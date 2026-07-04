@@ -10813,6 +10813,42 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     DUNGEONS & DRAGONS  (1983–1985)
+     Archive identifier:
+       dungeons-dragons-1983-s-02-e-01-the-girl-who-dreamed-tomorrow-1080p-hd-upscale
+     Classic animated fantasy adventure series.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "dungeons-dragons-1983",
+    type: "tv",
+    title: "Dungeons & Dragons",
+    years: "1983–1985",
+    genre: ["Animation", "Fantasy", "Adventure", "Kids", "Family"],
+    rating: "TV-Y7",
+    score: 8.0,
+    description:
+      "A group of kids are transported to the magical Realm and must survive dangerous quests while trying to find their way home, guided by the mysterious Dungeon Master.",
+    thumbnail:
+      "https://archive.org/services/img/dungeons-dragons-1983-s-02-e-01-the-girl-who-dreamed-tomorrow-1080p-hd-upscale",
+    featured: false,
+    episodes: [
+      {
+        id: "dungeons-dragons-1983-s02e01",
+        title: "The Girl Who Dreamed Tomorrow",
+        season: 2,
+        episode: 1,
+        year: 1983,
+        duration: "24 min",
+        description:
+          "The friends encounter Terri, a girl with prophetic dreams that reveal future dangers, forcing the party to race against fate to survive.",
+        archiveId: "dungeons-dragons-1983-s-02-e-01-the-girl-who-dreamed-tomorrow-1080p-hd-upscale",
+        archiveIndex: 0,
+        thumbnail:
+          "https://archive.org/services/img/dungeons-dragons-1983-s-02-e-01-the-girl-who-dreamed-tomorrow-1080p-hd-upscale",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
