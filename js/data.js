@@ -1249,7 +1249,7 @@ const SHOWS = [
         year: 1985,
         duration: "30 min",
         description:
-          "Brother and Sister accidentally break Mama's favourite lamp and try to cover it up — learning the hard way that telling the truth is always better than a coverup. Then Mama and Papa teach the cubs important rules about talking to strangers they do not know.",
+          "Brother and Sister accidentally break Mama's favorite lamp and try to cover it up — learning the hard way that telling the truth is always better than a coverup. Then Mama and Papa teach the cubs important rules about talking to strangers they do not know.",
         archiveId: "the-berenstain-bears-1985",
         archiveIndex: 2,
         thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
@@ -1301,7 +1301,7 @@ const SHOWS = [
         year: 1985,
         duration: "30 min",
         description:
-          "Brother Bear and his friends build a clubhouse with a \"No Girls Allowed\" sign — until Sister challenges the rule and proves she belongs. Then Sister makes a new best friend whose bossy behaviour starts causing real problems in Bear Country.",
+          "Brother Bear and his friends build a clubhouse with a \"No Girls Allowed\" sign — until Sister challenges the rule and proves she belongs. Then Sister makes a new best friend whose bossy behavior starts causing real problems in Bear Country.",
         archiveId: "the-berenstain-bears-1985",
         archiveIndex: 6,
         thumbnail: "https://archive.org/services/img/the-berenstain-bears-1985",
@@ -1403,7 +1403,7 @@ const SHOWS = [
     rating: "TV-G",
     score: 5.9,
     description:
-      "One of the rarest entries in Muppet history, Little Muppet Monsters paired live-action puppet segments — featuring three lovable monster siblings, Tug, Molly, and Boo, who live behind a wall in the Muppet Theatre — with animated cartoon inserts featuring the Muppet Babies characters. CBS cancelled the series after only three of the eight produced episodes aired in the autumn of 1985, making it the shortest-lived Muppet television production ever. The surviving episodes are a fascinating curio for fans of the Muppet universe.",
+      "One of the rarest entries in Muppet history, Little Muppet Monsters paired live-action puppet segments — featuring three lovable monster siblings, Tug, Molly, and Boo, who live behind a wall in the Muppet Theater — with animated cartoon inserts featuring the Muppet Babies characters. CBS canceled the series after only three of the eight produced episodes aired in the fall of 1985, making it the shortest-lived Muppet television production ever. The surviving episodes are a fascinating curio for fans of the Muppet universe.",
     thumbnail: "https://archive.org/services/img/little-muppet-monsters",
     featured: false,
     episodes: [
@@ -1415,7 +1415,7 @@ const SHOWS = [
         year: 1985,
         duration: "30 min",
         description:
-          "Monster siblings Tug, Molly, and Boo introduce themselves from their home behind the wall of the Muppet Theatre, hosting animated Muppet Babies cartoon segments in between their live-action puppet adventures. The premiere establishes the show's unusual hybrid format.",
+          "Monster siblings Tug, Molly, and Boo introduce themselves from their home behind the wall of the Muppet Theater, hosting animated Muppet Babies cartoon segments in between their live-action puppet adventures. The premiere establishes the show's unusual hybrid format.",
         archiveId: "little-muppet-monsters",
         archiveIndex: 0,
         thumbnail: "https://archive.org/services/img/little-muppet-monsters",
@@ -1428,7 +1428,7 @@ const SHOWS = [
         year: 1985,
         duration: "30 min",
         description:
-          "Tug, Molly, and Boo continue their behind-the-scenes adventures in the Muppet Theatre while introducing another round of animated Muppet Babies segments. The monsters' friendly chaos provides a warm live-action counterpoint to the animated sequences.",
+          "Tug, Molly, and Boo continue their behind-the-scenes adventures in the Muppet Theater while introducing another round of animated Muppet Babies segments. The monsters' friendly chaos provides a warm live-action counterpoint to the animated sequences.",
         archiveId: "little-muppet-monsters",
         archiveIndex: 1,
         thumbnail: "https://archive.org/services/img/little-muppet-monsters",
@@ -1441,7 +1441,7 @@ const SHOWS = [
         year: 1985,
         duration: "30 min",
         description:
-          "The third and final episode to air before CBS cancelled the series. Tug, Molly, and Boo host the last of the broadcast Muppet Babies animated segments, unaware that the show would not return — making this episode a bittersweet footnote in Muppet television history.",
+          "The third and final episode to air before CBS canceled the series. Tug, Molly, and Boo host the last of the broadcast Muppet Babies animated segments, unaware that the show would not return — making this episode a bittersweet footnote in Muppet television history.",
         archiveId: "little-muppet-monsters",
         archiveIndex: 2,
         thumbnail: "https://archive.org/services/img/little-muppet-monsters",
@@ -2228,7 +2228,7 @@ const SHOWS = [
     rating: "G",
     score: 7.8,
     description:
-      "A cherished 1984 Walt Disney Home Video Limited Gold Edition VHS showcasing golden-age animated shorts centred on Daisy Duck. Features \"Donald's Dilemma\" (1947), in which a bump on the head turns Donald into a crooning sensation while Daisy desperately tries to reclaim her sweetheart; \"Cured Duck\" (1945), where Donald attempts anger-management for Daisy's sake with predictably explosive results; \"Donald's Double Trouble\" (1946), in which Donald hires his suave look-alike to court Daisy on his behalf; and \"Sleepy Time Donald\" (1947), where a sleepwalking Donald keeps Daisy on her toes across the whole neighbourhood.",
+      "A cherished 1984 Walt Disney Home Video Limited Gold Edition VHS showcasing golden-age animated shorts centred on Daisy Duck. Features \"Donald's Dilemma\" (1947), in which a bump on the head turns Donald into a crooning sensation while Daisy desperately tries to reclaim her sweetheart; \"Cured Duck\" (1945), where Donald attempts anger-management for Daisy's sake with predictably explosive results; \"Donald's Double Trouble\" (1946), in which Donald hires his suave look-alike to court Daisy on his behalf; and \"Sleepy Time Donald\" (1947), where a sleepwalking Donald keeps Daisy on her toes across the whole neighborhood.",
     thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
     featured: false,
     episodes: [
@@ -11969,7 +11969,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "Heathcliff turns neighbourhood rubbish into a towering garbage creature to frighten away rivals. Then the Catillac Cats attempt to muscle their way into the art world when Cleo paints a portrait that causes a sensation across Pussycat Junkyard.",
+          "Heathcliff turns neighborhood garbage into a towering garbage creature to frighten away rivals. Then the Catillac Cats attempt to muscle their way into the art world when Cleo paints a portrait that causes a sensation across Pussycat Junkyard.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 0,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
@@ -11982,7 +11982,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "A slick new tomcat arrives in Westfinster and challenges Heathcliff for the affections of Sonja and the run of the neighbourhood. Meanwhile, Riff and Mungo enter a wrestling tournament convinced the championship trophy will earn them the respect — and free food — they crave.",
+          "A slick new tomcat arrives in Westfinster and challenges Heathcliff for the affections of Sonja and the run of the neighborhood. Meanwhile, Riff and Mungo enter a wrestling tournament convinced the championship trophy will earn them the respect — and free food — they crave.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 1,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
@@ -11995,7 +11995,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "Heathcliff discovers an abandoned house rumoured to be haunted and uses the ghost stories to keep the neighbourhood dogs at bay. Across town, the Catillac Cats hatch an elaborate scheme to hijack a delivery truck loaded with the finest canned tuna.",
+          "Heathcliff discovers an abandoned house rumored to be haunted and uses the ghost stories to keep the neighborhood dogs at bay. Across town, the Catillac Cats hatch an elaborate scheme to hijack a delivery truck loaded with the finest canned tuna.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 2,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
@@ -12008,7 +12008,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "Grandpa Nutmeg's grandson Iggy and his friend Bink get their hands on a go-kart, and Heathcliff promptly commandeers it for a high-speed joyride through Westfinster. The Catillac Cats plan an elaborate heist on the neighbourhood fish market — but Wordsworth's over-complicated blueprint leads to predictably chaotic results.",
+          "Grandpa Nutmeg's grandson Iggy and his friend Bink get their hands on a go-kart, and Heathcliff promptly commandeers it for a high-speed joyride through Westfinster. The Catillac Cats plan an elaborate heist on the neighborhood fish market — but Wordsworth's over-complicated blueprint leads to predictably chaotic results.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 3,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
@@ -12021,7 +12021,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "Heathcliff infiltrates a neighbourhood football game and single-pawedly disrupts both teams in pursuit of the half-time hot-dog cart. Riff convinces the gang to enter a pet show in disguise — only for the competition to turn into a full-scale junkyard stampede.",
+          "Heathcliff infiltrates a neighborhood football game and single-pawedly disrupts both teams in pursuit of the half-time hot-dog cart. Riff convinces the gang to enter a pet show in disguise — only for the competition to turn into a full-scale junkyard stampede.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 4,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
@@ -12034,7 +12034,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "Heathcliff takes up skateboarding to impress Sonja and immediately makes mortal enemies of every dog on wheels in the neighbourhood. The Catillac Cats discover that Cleo has been catnapped by a theatrical agent who intends to make her a TV star — whether she likes it or not.",
+          "Heathcliff takes up skateboarding to impress Sonja and immediately makes mortal enemies of every dog on wheels in the neighborhood. The Catillac Cats discover that Cleo has been catnapped by a theatrical agent who intends to make her a TV star — whether she likes it or not.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 5,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
@@ -12060,7 +12060,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "Heathcliff stumbles onto a horror-movie film set and is mistaken for the lead monster, sending the entire crew fleeing the lot. Hector talks the Catillac Cats into running a neighbourhood protection racket — offering to guard Pussycat Junkyard from hazards entirely of their own making.",
+          "Heathcliff stumbles onto a horror-movie film set and is mistaken for the lead monster, sending the entire crew fleeing the lot. Hector talks the Catillac Cats into running a neighborhood protection racket — offering to guard Pussycat Junkyard from hazards entirely of their own making.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 7,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
@@ -12073,7 +12073,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "A gang of bulldogs blockades Iggy's school and only Heathcliff can outwit them — though his methods cause almost as much chaos as the dogs themselves. The Catillac Cats volunteer as stagehands for a neighbourhood talent show, turning the curtain-raiser into an involuntary audition.",
+          "A gang of bulldogs blockades Iggy's school and only Heathcliff can outwit them — though his methods cause almost as much chaos as the dogs themselves. The Catillac Cats volunteer as stagehands for a neighborhood talent show, turning the curtain-raiser into an involuntary audition.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 8,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
@@ -12099,7 +12099,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "Heathcliff fakes a string of ailments to avoid the neighbourhood vet, accidentally convincing everyone in Westfinster he is gravely ill. Mungo discovers a mail-order muscle-building kit and uses his new strength to settle every score in Pussycat Junkyard — until the kit's side-effects kick in.",
+          "Heathcliff fakes a string of ailments to avoid the neighborhood vet, accidentally convincing everyone in Westfinster he is gravely ill. Mungo discovers a mail-order muscle-building kit and uses his new strength to settle every score in Pussycat Junkyard — until the kit's side-effects kick in.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 10,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
@@ -12112,7 +12112,7 @@ const SHOWS = [
         year: 1984,
         duration: "22 min",
         description:
-          "A new family moves in next door with a pampered show-cat, and Heathcliff must decide whether to torment his new neighbour or recruit her as an ally against the neighbourhood dogs. Riff prepares an elaborate romantic evening for Cleo, only for every member of the Catillac Cats gang to accidentally join the date.",
+          "A new family moves in next door with a pampered show-cat, and Heathcliff must decide whether to torment his new neighbor or recruit her as an ally against the neighborhood dogs. Riff prepares an elaborate romantic evening for Cleo, only for every member of the Catillac Cats gang to accidentally join the date.",
         archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
         archiveIndex: 11,
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
