@@ -10670,6 +10670,39 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     KNOTS LANDING — ATN-7 (INCOMPLETE)  (1986)
+     Archive identifier: knots-landing-incomplete-atn-7-16-08-86
+     Incomplete Australian off-air recording with promos/commercials.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "knots-landing-atn7-1986-08-16-incomplete",
+    type: "vhs",
+    title: "Knots Landing (ATN-7, August 16 1986, Incomplete)",
+    years: "1986",
+    genre: ["Drama", "Soap Opera", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.5,
+    description:
+      "An incomplete off-air VHS recording of Knots Landing from Channel Seven Sydney (ATN-7), dated August 16, 1986. Only the first 24 minutes of the episode survive, but the tape also preserves a rich layer of Australian promos and commercial breaks — including spots for Punky Brewster, Sons & Daughters, product advertising, and other period programming. Even in fragmentary form, it is a fascinating international time capsule of how the series aired abroad.",
+    thumbnail: "https://archive.org/services/img/knots-landing-incomplete-atn-7-16-08-86",
+    featured: false,
+    episodes: [
+      {
+        id: "knots-landing-atn7-1986-08-16-incomplete-full",
+        title: "Knots Landing (ATN-7 Broadcast, Incomplete)",
+        season: 8,
+        episode: 0,
+        year: 1986,
+        duration: "24 min",
+        description:
+          "First 24 minutes of an August 16, 1986 ATN-7 Knots Landing broadcast, preserved with original Australian promos and commercials.",
+        archiveId: "knots-landing-incomplete-atn-7-16-08-86",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/knots-landing-incomplete-atn-7-16-08-86",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
