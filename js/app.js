@@ -79,6 +79,10 @@
   /* ── Personalization helpers ── */
   const EXT_PLAYABLE = /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i;
   const TV_FIRST_TYPES = new Set(["tv", "series", "show", "soap", "vhs"]);
+  const TV_SHOW_BOOST = 40;
+  const NON_TV_PENALTY = -35;
+  const COSMO_POPIN_SCHEDULE_MS = [12000, 45000, 90000];
+  const COSMO_POPIN_DISMISS_MS = 14000;
 
   function showDecade(show) {
     const year = parseInt(String(show.years || "").split("–")[0], 10);
@@ -152,7 +156,7 @@
     const unexploredBonus = stats.watchedShows.has(show.id) ? 0 : 1;
     const completedPenalty = completionAffinity > 2 ? 1 : 0;
     const recentlyWatchedPenalty = show.episodes.some((ep) => stats.recent.has(buildEpisodeId(ep, show))) ? 1 : 0;
-    const tvExperienceBoost = isTvFirstShow(show) ? 40 : -35;
+    const tvExperienceBoost = isTvFirstShow(show) ? TV_SHOW_BOOST : NON_TV_PENALTY;
     const episodicBonus = Math.min(24, Math.max(0, show.episodes.length - 1) * 3);
     const score =
       genreAffinity * 30 +
@@ -650,7 +654,7 @@
 
     /* Give Cosmo more to say during playback */
     clearCosmoPopInTimers();
-    [12000, 45000, 90000].forEach((delay) => {
+    COSMO_POPIN_SCHEDULE_MS.forEach((delay) => {
       _popInTimers.push(setTimeout(() => showCosmoPopIn(show, showTitle, episode), delay));
     });
 
@@ -737,7 +741,7 @@
       popEl.classList.add("cosmo-popin--in");
       /* Auto-dismiss after 14 seconds */
       if (_popInHideTimer) clearTimeout(_popInHideTimer);
-      _popInHideTimer = setTimeout(hideCosmoPopIn, 14000);
+      _popInHideTimer = setTimeout(hideCosmoPopIn, COSMO_POPIN_DISMISS_MS);
     };
 
     if (typeof StarQuestAI !== "undefined") {
