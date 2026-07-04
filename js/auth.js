@@ -14,9 +14,15 @@
 
   /* ── Secure password hashing using Web Crypto PBKDF2 ── */
 
+  function getCryptoSubtle() {
+    return global && global.crypto && global.crypto.subtle ? global.crypto.subtle : null;
+  }
+
   async function hashPasswordAsync(password, username) {
     const enc = new TextEncoder();
-    const keyMaterial = await crypto.subtle.importKey(
+    const subtle = getCryptoSubtle();
+    if (!subtle) return hashPasswordSync(password, username);
+    const keyMaterial = await subtle.importKey(
       "raw",
       enc.encode(password),
       { name: "PBKDF2" },
@@ -24,7 +30,7 @@
       ["deriveBits"]
     );
     const salt = enc.encode("starquest-v1-" + username.toLowerCase());
-    const bits = await crypto.subtle.deriveBits(
+    const bits = await subtle.deriveBits(
       { name: "PBKDF2", hash: "SHA-256", salt, iterations: 100000 },
       keyMaterial,
       256
@@ -159,9 +165,13 @@
 
   function normalizeUser(user, keyHint) {
     if (!user || typeof user !== "object") return null;
-    const username = String(user.username || "").trim();
+    const username = String(user.username || keyHint || "").trim();
     const key = String(user.key || keyHint || username).trim().toLowerCase();
     if (!key || !username) return null;
+    const passwordHash = String(user.passwordHash || "").trim()
+      || (typeof user.password === "string" && user.password
+        ? hashPasswordSync(user.password, username)
+        : "");
 
     const tokens = Math.max(0, toInt(user.tokens, toInt(user.starCoins, 0)));
     const ledger = [];
@@ -191,7 +201,7 @@
     return {
       username,
       key,
-      passwordHash: String(user.passwordHash || ""),
+      passwordHash,
       joinedAt: toInt(user.joinedAt, Date.now()),
       lastLoginAt: toInt(user.lastLoginAt, Date.now()),
       tokens,
@@ -306,22 +316,23 @@
     },
 
     async register(username, password) {
-      if (!username || username.trim().length < 3) {
+      const cleanUsername = String(username || "").trim();
+      const cleanPassword = String(password || "");
+      if (!cleanUsername || cleanUsername.length < 3) {
         return "Username must be at least 3 characters.";
       }
-      if (!password || password.length < 4) {
+      if (!cleanPassword || cleanPassword.length < 4) {
         return "Password must be at least 4 characters.";
       }
       const users = loadUsers();
-      const cleanUsername = username.trim();
       const key = cleanUsername.toLowerCase();
       if (users[key]) {
         return "Username already taken. Please choose another.";
       }
 
-      const passwordHash = (crypto && crypto.subtle)
-        ? await hashPasswordAsync(password, cleanUsername)
-        : hashPasswordSync(password, cleanUsername);
+      const passwordHash = getCryptoSubtle()
+        ? await hashPasswordAsync(cleanPassword, cleanUsername)
+        : hashPasswordSync(cleanPassword, cleanUsername);
 
       const user = normalizeUser({
         username: cleanUsername,
@@ -351,18 +362,26 @@
     },
 
     async signIn(username, password) {
+      const cleanUsername = String(username || "").trim();
+      const cleanPassword = String(password || "");
+      if (!cleanUsername) {
+        return "Please enter your username.";
+      }
+      if (!cleanPassword) {
+        return "Please enter your password.";
+      }
       const users = loadUsers();
-      const key = username.trim().toLowerCase();
+      const key = cleanUsername.toLowerCase();
       const user = users[key];
       if (!user) {
         return "No account found with that username.";
       }
 
       let candidateHash;
-      if (crypto && crypto.subtle && !String(user.passwordHash || "").startsWith("sync-")) {
-        candidateHash = await hashPasswordAsync(password, username.trim());
+      if (getCryptoSubtle() && !String(user.passwordHash || "").startsWith("sync-")) {
+        candidateHash = await hashPasswordAsync(cleanPassword, cleanUsername);
       } else {
-        candidateHash = hashPasswordSync(password, username.trim());
+        candidateHash = hashPasswordSync(cleanPassword, cleanUsername);
       }
       if (user.passwordHash !== candidateHash) {
         return "Incorrect password.";
