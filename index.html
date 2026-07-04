@@ -7,6 +7,14 @@
   <title>StarQuest ⭐ — Classic TV Galaxy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://archive.org" crossorigin />
+  <link rel="dns-prefetch" href="https://archive.org" />
+  <link rel="preconnect" href="https://www.youtube.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.youtube.com" />
+  <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
+  <link rel="dns-prefetch" href="https://i.ytimg.com" />
+  <link rel="preconnect" href="https://text.pollinations.ai" crossorigin />
+  <link rel="dns-prefetch" href="https://text.pollinations.ai" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
@@ -455,7 +463,7 @@
     </div>
     <div class="player-wrap">
       <iframe id="player-frame" class="player-frame" src="about:blank" title="Video Player" allowfullscreen allow="autoplay; fullscreen; encrypted-media" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
-      <video id="player-video" class="player-video" controls autoplay preload="metadata" style="display:none"></video>
+      <video id="player-video" class="player-video" controls autoplay preload="auto" playsinline style="display:none"></video>
       <div id="player-error" class="player-error" style="display:none" aria-live="polite">
         <div class="player-error__icon" aria-hidden="true">📺</div>
         <p class="player-error__msg">This video is not available for direct streaming.</p>
