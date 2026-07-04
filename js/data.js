@@ -1096,6 +1096,76 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     M  (1931)
+     Single feature film — archive identifier:
+       fritz-langs-m-1931-restored-movie-720p-hd
+     Dir. Fritz Lang. Nero-Film AG. Germany. 117 min.
+     Peter Lorre's career-defining performance as Hans Beckert.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "fritz-lang-m-1931",
+    type: "movie",
+    title: "M",
+    years: "1931",
+    genre: ["Crime", "Thriller", "Drama"],
+    rating: "Not Rated",
+    score: 8.4,
+    description:
+      "Fritz Lang's landmark German expressionist masterpiece — and his first sound film — follows the desperate manhunt for Hans Beckert (Peter Lorre), a serial killer preying on children in a Weimar-era German city. As the police clamp down on all criminal activity in their search, the city's organised underworld — their operations paralysed by the heat — launches its own parallel investigation, ultimately putting Beckert on trial before a kangaroo court of criminals in a bombed-out factory. A devastating meditation on mob justice, psychological compulsion, and the nature of guilt. Lorre's performance — the haunting whistling of Edvard Grieg's \"In the Hall of the Mountain King\" — is one of cinema's most iconic. Restored 720p HD print.",
+    thumbnail: "https://archive.org/services/img/fritz-langs-m-1931-restored-movie-720p-hd",
+    featured: true,
+    episodes: [
+      {
+        id: "fritz-lang-m-1931-full",
+        title: "M",
+        season: 0,
+        episode: 0,
+        year: 1931,
+        duration: "117 min",
+        description:
+          "A city is gripped by terror as a child murderer strikes repeatedly. With police failing to catch him, the criminal underworld conducts its own hunt — culminating in a harrowing underground trial. Peter Lorre's breakthrough role. Restored HD print.",
+        archiveId: "fritz-langs-m-1931-restored-movie-720p-hd",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/fritz-langs-m-1931-restored-movie-720p-hd",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     SCREAM OF FEAR  (1961)
+     Single feature film — archive identifier: scream-of-fear
+     Also released as "Taste of Fear" (UK). Dir. Seth Holt.
+     Hammer Film Productions. Stars Susan Strasberg,
+     Ronald Lewis, Ann Todd, Christopher Lee. 82 min.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "scream-of-fear-1961",
+    type: "movie",
+    title: "Scream of Fear",
+    years: "1961",
+    genre: ["Horror", "Thriller", "Mystery"],
+    rating: "Not Rated",
+    score: 7.7,
+    description:
+      "Penny Appleby (Susan Strasberg), a wheelchair-bound young woman, travels to the South of France to visit her wealthy father — only to find him absent and a strange new stepmother, Jane (Ann Todd), and her companion Dr. Gerrard (Christopher Lee) in residence. When Penny begins discovering her father's corpse in different locations around the estate, only to have it vanish without a trace each time, she wonders if she is losing her mind — or if someone is driving her to it. One of Hammer Film Productions' finest psychological thrillers, modelled on Hitchcock and boasting a genuinely shocking twist ending. Directed by Seth Holt.",
+    thumbnail: "https://archive.org/services/img/scream-of-fear",
+    featured: false,
+    episodes: [
+      {
+        id: "scream-of-fear-1961-full",
+        title: "Scream of Fear",
+        season: 0,
+        episode: 0,
+        year: 1961,
+        duration: "82 min",
+        description:
+          "A wheelchair-bound woman visiting her father's French villa keeps seeing his corpse — only for it to disappear each time. Is she being driven mad, or is something sinister afoot? Hammer's most accomplished psychological thriller.",
+        archiveId: "scream-of-fear",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/scream-of-fear",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      CAT'S EYE  (1985)
      Single feature film — archive identifier: cats-eye-1985-dvdrip
      Stephen King anthology directed by Lewis Teague.
