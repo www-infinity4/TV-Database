@@ -201,7 +201,7 @@
     const profile = historyStats();
     let show;
     if (profile) {
-      show = featured.slice().sort(byPersonalized(profile, {}))[0];
+      show = featured.slice().sort(byPersonalized(profile))[0];
     } else {
       show = featured[Math.floor(Math.random() * featured.length)];
     }
