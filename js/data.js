@@ -10567,6 +10567,39 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     KELO VHS TAPE  (1988)
+     Archive identifier:
+       vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard
+     Late-1980s off-air compilation anchored by soap operas.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "kelo-1988-knots-landing-dynasty-vhs",
+    type: "vhs",
+    title: "VHS Tape — KELO 1988: Knots Landing, Dynasty & CBS Tuesday Movie",
+    years: "1988",
+    genre: ["Drama", "Soap Opera", "Romance", "VHS Recording"],
+    rating: "TV-PG",
+    score: 7.9,
+    description:
+      "A nearly six-hour off-air VHS recording from KELO-TV in Sioux Falls, South Dakota, preserving an evening of late-1980s American television complete with original commercials and news breaks. The tape includes episodes or portions of Knots Landing and Dynasty, plus the CBS Tuesday Movie presentation of Murphy's Romance and additional material identified as Sharing Richard. As a home-recorded snapshot of network programming, advertising, and primetime soap-opera culture in 1988, it offers exactly the kind of archival broadcast ephemera this collection highlights.",
+    thumbnail: "https://archive.org/services/img/vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
+    featured: false,
+    episodes: [
+      {
+        id: "kelo-1988-knots-landing-dynasty-vhs-full",
+        title: "Full Tape — KELO 1988: Knots Landing, Dynasty & Murphy's Romance",
+        season: 0,
+        episode: 0,
+        year: 1988,
+        duration: "360 min",
+        description:
+          "Six-hour KELO off-air VHS from 1988 featuring Knots Landing, Dynasty, the CBS Tuesday Movie Murphy's Romance, and period commercials/news breaks.",
+        archiveId: "vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
+        thumbnail: "https://archive.org/services/img/vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
