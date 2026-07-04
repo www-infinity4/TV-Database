@@ -10440,6 +10440,37 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     LITTLE BIG MAN  (1970)
+     Archive identifier: little-big-man-1970_202511
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "little-big-man-1970",
+    type: "movie",
+    title: "Little Big Man (1970)",
+    years: "1970",
+    genre: ["Western", "Drama", "Adventure"],
+    rating: "PG",
+    score: 7.8,
+    description:
+      "Arthur Penn's sweeping revisionist Western follows 121-year-old Jack Crabb (Dustin Hoffman) as he recounts his extraordinary life — raised by Cheyenne, scout for General Custer, and the sole white survivor of the Battle of Little Bighorn. One of the first Hollywood films to portray Native Americans with dignity, it blends dark comedy, adventure, and tragedy into a landmark portrait of the American frontier.",
+    thumbnail: "https://archive.org/services/img/little-big-man-1970_202511",
+    featured: false,
+    episodes: [
+      {
+        id: "little-big-man-1970-full",
+        title: "Little Big Man",
+        season: 0,
+        episode: 0,
+        year: 1970,
+        duration: "139 min",
+        description:
+          "Dustin Hoffman stars as Jack Crabb, a 121-year-old man who recounts a life spent between two worlds — raised by Cheyenne and shaped by the violent clash of cultures on the American frontier, culminating at the Battle of Little Bighorn.",
+        archiveId: "little-big-man-1970_202511",
+        thumbnail: "https://archive.org/services/img/little-big-man-1970_202511",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
