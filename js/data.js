@@ -10838,7 +10838,7 @@ const SHOWS = [
         title: "The Girl Who Dreamed Tomorrow",
         season: 2,
         episode: 1,
-        year: 1983,
+        year: 1984,
         duration: "24 min",
         description:
           "The friends encounter Terri, a girl with prophetic dreams that reveal future dangers, forcing the party to race against fate to survive.",
