@@ -10850,6 +10850,204 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     READING RAINBOW  (1983–2006)
+     Archive collection: ReadingRainbowTVSeries
+     Each episode is an individual item on the Internet Archive.
+     Identifiers follow the pattern ReadingRainbow[SS][EE].
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "reading-rainbow",
+    title: "Reading Rainbow",
+    years: "1983–2006",
+    genre: ["Educational", "Family", "Kids"],
+    rating: "TV-G",
+    score: 9.0,
+    description:
+      "Hosted by LeVar Burton, Reading Rainbow inspires children to read by bringing beloved picture books to life through stunning visuals, celebrity narrators, and young reviewers. Each episode centers on a featured book and explores its themes through field trips, demonstrations, and joyful storytelling.",
+    thumbnail: "https://archive.org/services/img/ReadingRainbow0101",
+    featured: true,
+    episodes: [
+      /* ── Season 1 (1983) ── */
+      {
+        id: "rr-s01e01", title: "Tight Times", season: 1, episode: 1,
+        year: 1983, duration: "30 min",
+        description: "LeVar explores ways to have fun on a tight budget, featuring the book Tight Times by Barbara Shook Hazen about a boy learning to cope with his family's financial struggles.",
+        archiveId: "ReadingRainbow0101", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0101",
+      },
+      {
+        id: "rr-s01e02", title: "Miss Nelson Is Back", season: 1, episode: 2,
+        year: 1983, duration: "30 min",
+        description: "When their teacher is out sick, a class of rowdy students must deal with the return of the terrifying Miss Viola Swamp. Based on the book by Harry Allard and James Marshall.",
+        archiveId: "ReadingRainbow0102", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0102",
+      },
+      {
+        id: "rr-s01e03", title: "Bea and Mr. Jones", season: 1, episode: 3,
+        year: 1983, duration: "30 min",
+        description: "LeVar tries out new identities as a kindergartner and her father swap places for a day. Based on the book by Amy Schwartz, exploring imagination and empathy.",
+        archiveId: "ReadingRainbow0103", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0103",
+      },
+      {
+        id: "rr-s01e04", title: "Bringing the Rain to Kapiti Plain", season: 1, episode: 4,
+        year: 1983, duration: "30 min",
+        description: "A young Kenyan herdsman finds a way to bring rain to his drought-stricken land. Based on the rhythmic Nandi folktale retold by Verna Aardema, with a field trip exploring weather.",
+        archiveId: "ReadingRainbow0104", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0104",
+      },
+      {
+        id: "rr-s01e05", title: "Louis the Fish", season: 1, episode: 5,
+        year: 1983, duration: "30 min",
+        description: "A miserable butcher dreams of being a fish, and one day his dream comes true. Based on the surreal picture book by Arthur Yorinks, with LeVar exploring marine life.",
+        archiveId: "ReadingRainbow0105", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0105",
+      },
+      {
+        id: "rr-s01e06", title: "Digging Up Dinosaurs", season: 1, episode: 6,
+        year: 1983, duration: "30 min",
+        description: "LeVar visits Dinosaur National Monument and explores how paleontologists uncover dinosaur bones. Features the book Digging Up Dinosaurs by Aliki.",
+        archiveId: "ReadingRainbow0106", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0106",
+      },
+      {
+        id: "rr-s01e07", title: "Liang and the Magic Paintbrush", season: 1, episode: 7,
+        year: 1983, duration: "30 min",
+        description: "A poor Chinese boy's magic paintbrush brings everything he draws to life. Based on the book by Demi, with a field trip celebrating Chinese-American art and culture.",
+        archiveId: "ReadingRainbow0107", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0107",
+      },
+      {
+        id: "rr-s01e08", title: "Gila Monsters Meet You at the Airport", season: 1, episode: 8,
+        year: 1983, duration: "30 min",
+        description: "A New York City boy dreads moving out West, convinced it is full of fearsome creatures. Based on the book by Marjorie Weinman Sharmat, with LeVar exploring desert wildlife.",
+        archiveId: "ReadingRainbow0108", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0108",
+      },
+      {
+        id: "rr-s01e09", title: "Three Days on a River in a Red Canoe", season: 1, episode: 9,
+        year: 1983, duration: "30 min",
+        description: "A family embarks on a camping and canoeing trip and enjoys the wonders of the outdoors. Based on the book by Vera B. Williams, with LeVar joining a river adventure.",
+        archiveId: "ReadingRainbow0109", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0109",
+      },
+      {
+        id: "rr-s01e10", title: "The Gift of the Sacred Dog", season: 1, episode: 10,
+        year: 1983, duration: "30 min",
+        description: "A young Native American boy prays for help for his starving people and receives the gift of the horse. Based on the book by Paul Goble, celebrating Plains Indian culture and legend.",
+        archiveId: "ReadingRainbow0110", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0110",
+      },
+      {
+        id: "rr-s01e11", title: "Gregory the Terrible Eater", season: 1, episode: 11,
+        year: 1983, duration: "30 min",
+        description: "Gregory the goat refuses to eat garbage like a normal goat and insists on fruits and vegetables, much to his parents' alarm. Based on the book by Mitchell Sharmat, with a look at nutrition.",
+        archiveId: "ReadingRainbow0111", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0111",
+      },
+      {
+        id: "rr-s01e12", title: "Three by the Sea", season: 1, episode: 12,
+        year: 1983, duration: "30 min",
+        description: "Three friends spend a day at the beach and take turns telling each other stories. Based on the book by Edward Marshall, exploring storytelling, creativity, and cooperation.",
+        archiveId: "ReadingRainbow0112", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0112",
+      },
+      {
+        id: "rr-s01e13", title: "Arthur's Eyes", season: 1, episode: 13,
+        year: 1983, duration: "30 min",
+        description: "Arthur the aardvark gets glasses and struggles with teasing from classmates, learning to accept himself. Based on the book by Marc Brown, with LeVar exploring the importance of vision care.",
+        archiveId: "ReadingRainbow0113", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0113",
+      },
+      {
+        id: "rr-s01e14", title: "The Day Jimmy's Boa Ate the Wash", season: 1, episode: 14,
+        year: 1983, duration: "30 min",
+        description: "A girl recounts an increasingly absurd chain of events that happened on a class trip to a farm. Based on the hilarious book by Trinka Hakes Noble, with LeVar visiting a real farm.",
+        archiveId: "ReadingRainbow0114", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0114",
+      },
+      {
+        id: "rr-s01e15", title: "Ty's One-Man Band", season: 1, episode: 15,
+        year: 1983, duration: "30 min",
+        description: "A mysterious one-legged stranger arrives in a small town and creates music from everyday objects. Based on the book by Mildred Pitts Walter, celebrating the joy of music and creativity.",
+        archiveId: "ReadingRainbow0115", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0115",
+      },
+      /* ── Season 2 (1984) ── */
+      {
+        id: "rr-s02e01", title: "Hot-Air Henry", season: 2, episode: 1,
+        year: 1984, duration: "30 min",
+        description: "A Siamese cat stows away on a hot-air balloon and takes a high-flying adventure. Based on the book by Mary Calhoun, with LeVar exploring the world of hot-air ballooning.",
+        archiveId: "ReadingRainbow0201", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0201",
+      },
+      {
+        id: "rr-s02e02", title: "Simon's Book", season: 2, episode: 2,
+        year: 1984, duration: "30 min",
+        description: "A boy falls asleep while drawing and his character comes to life in the story. Based on the imaginative book by Henrik Drescher, with a look at the art of illustration.",
+        archiveId: "ReadingRainbow0202", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0202",
+      },
+      {
+        id: "rr-s02e03", title: "Ox-Cart Man", season: 2, episode: 3,
+        year: 1984, duration: "30 min",
+        description: "A New England farmer loads his ox cart and travels to market to sell everything his family has made. Based on the Caldecott Medal book by Donald Hall, exploring colonial American life.",
+        archiveId: "ReadingRainbow0203", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0203",
+      },
+      {
+        id: "rr-s02e04", title: "Mystery on the Docks", season: 2, episode: 4,
+        year: 1984, duration: "30 min",
+        description: "Ralph the rat is an opera-loving short-order cook whose favorite opera singer is kidnapped. Based on the musical mystery book by Thacher Hurd, with a behind-the-scenes look at opera.",
+        archiveId: "ReadingRainbow0204", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0204",
+      },
+      {
+        id: "rr-s02e05", title: "A Chair for My Mother", season: 2, episode: 5,
+        year: 1984, duration: "30 min",
+        description: "A young girl, her mother, and grandmother save their coins to buy a big, comfortable chair after losing their furniture in a fire. Based on the Caldecott Honor book by Vera B. Williams.",
+        archiveId: "ReadingRainbow0205", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0205",
+      },
+      /* ── Season 3 (1985) ── */
+      {
+        id: "rr-s03e01", title: "Paul Bunyan", season: 3, episode: 1,
+        year: 1985, duration: "30 min",
+        description: "The legendary giant lumberjack and his enormous blue ox Babe roam across America performing impossible feats. Based on the tall tale retold by Steven Kellogg, celebrating American folklore.",
+        archiveId: "ReadingRainbow0301", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0301",
+      },
+      {
+        id: "rr-s03e02", title: "The Patchwork Quilt", season: 3, episode: 2,
+        year: 1985, duration: "30 min",
+        description: "A young girl helps her ailing grandmother finish a quilt that tells the story of their family. Based on the book by Valerie Flournoy, with LeVar exploring the art and history of quilting.",
+        archiveId: "ReadingRainbow0302", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0302",
+      },
+      {
+        id: "rr-s03e03", title: "Hill of Fire", season: 3, episode: 3,
+        year: 1985, duration: "30 min",
+        description: "A Mexican farmer witnesses the birth of a volcano in his corn field — the true story of the Paricutín volcano. Based on the book by Thomas P. Lewis, with a look at how volcanoes form.",
+        archiveId: "ReadingRainbow0303", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0303",
+      },
+      {
+        id: "rr-s03e04", title: "The Tortoise and the Hare", season: 3, episode: 4,
+        year: 1985, duration: "30 min",
+        description: "Aesop's classic fable of the slow but steady tortoise who outpaces the overconfident hare. Based on Janet Stevens' retelling, with LeVar exploring lessons on perseverance and fair play.",
+        archiveId: "ReadingRainbow0304", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0304",
+      },
+      {
+        id: "rr-s03e05", title: "Perfect the Pig", season: 3, episode: 5,
+        year: 1985, duration: "30 min",
+        description: "A little pig wishes to grow wings and fly and one day his wish comes true, leading to adventures and friendship. Based on the book by Susan Jeschke, with a look at animal care.",
+        archiveId: "ReadingRainbow0305", archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/ReadingRainbow0305",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE DUKES OF HAZZARD  (1979–1985)
      Christmas episode archive identifier: dukes-xmas
      "The Great Santa Claus Chase" — Season 3, Episode 9,
