@@ -8,6 +8,7 @@
 
   const STORAGE_KEY = "starquest_users";
   const SESSION_KEY = "starquest_session";
+  const SYNC_HASH_PREFIX = "sync-";
   const SHARES_PER_COIN = 10;
   const SHARE_COOLDOWN_MS = 5 * 60 * 1000;
   const WATCH_SECONDS_PER_COIN = 3600;
@@ -380,24 +381,28 @@
       const storedHash = String(user.passwordHash || "");
       const hasSubtle = !!getCryptoSubtle();
       const syncHash = hashPasswordSync(cleanPassword, cleanUsername);
-      const syncHashLegacy = syncHash.startsWith("sync-") ? syncHash.slice(5) : syncHash;
-      const modernHash = (hasSubtle && !storedHash.startsWith("sync-"))
-        ? await hashPasswordAsync(cleanPassword, cleanUsername)
+      const syncHashLegacy = syncHash.startsWith(SYNC_HASH_PREFIX)
+        ? syncHash.slice(SYNC_HASH_PREFIX.length)
+        : "";
+      const isLegacySyncNoPrefix = !!syncHashLegacy && storedHash === syncHashLegacy;
+      const isStoredSyncHash = storedHash.startsWith(SYNC_HASH_PREFIX);
+      let asyncHash = "";
+      if (hasSubtle && (!isStoredSyncHash || isLegacySyncNoPrefix)) {
+        asyncHash = await hashPasswordAsync(cleanPassword, cleanUsername);
+      }
+      const modernHash = (hasSubtle && (!isStoredSyncHash || isLegacySyncNoPrefix))
+        ? asyncHash
         : syncHash;
 
-      const matchedLegacySyncNoPrefix = storedHash === syncHashLegacy;
-      const matchedLegacyPlainPassword = storedHash === cleanPassword;
-      const isValidPassword = storedHash === modernHash || matchedLegacySyncNoPrefix || matchedLegacyPlainPassword;
+      const passwordMatches = storedHash === modernHash || isLegacySyncNoPrefix;
 
-      if (!isValidPassword) {
+      if (!passwordMatches) {
         return "Incorrect password.";
       }
 
       user.lastLoginAt = Date.now();
-      if (matchedLegacySyncNoPrefix || matchedLegacyPlainPassword) {
-        user.passwordHash = hasSubtle
-          ? await hashPasswordAsync(cleanPassword, cleanUsername)
-          : syncHash;
+      if (isLegacySyncNoPrefix) {
+        user.passwordHash = hasSubtle ? asyncHash : syncHash;
       }
       users[user.key] = normalizeUser(user, user.key);
       saveUsers(users);
