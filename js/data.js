@@ -1387,6 +1387,68 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     LITTLE MUPPET MONSTERS  (1985)
+     CBS animated/live-action hybrid series. Only 3 of 8 produced
+     episodes aired (September–October 1985) before cancellation.
+     Each episode featured live-action Muppet Monster wrap-arounds
+     hosting animated cartoon segments.
+     Archive identifier: little-muppet-monsters
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "little-muppet-monsters",
+    type: "tv",
+    title: "Little Muppet Monsters",
+    years: "1985",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "TV-G",
+    score: 5.9,
+    description:
+      "One of the rarest entries in Muppet history, Little Muppet Monsters paired live-action puppet segments — featuring three lovable monster siblings, Tug, Molly, and Boo, who live behind a wall in the Muppet Theatre — with animated cartoon inserts featuring the Muppet Babies characters. CBS cancelled the series after only three of the eight produced episodes aired in the autumn of 1985, making it the shortest-lived Muppet television production ever. The surviving episodes are a fascinating curio for fans of the Muppet universe.",
+    thumbnail: "https://archive.org/services/img/little-muppet-monsters",
+    featured: false,
+    episodes: [
+      {
+        id: "lmm-s01e01",
+        title: "Episode 1",
+        season: 1,
+        episode: 1,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Monster siblings Tug, Molly, and Boo introduce themselves from their home behind the wall of the Muppet Theatre, hosting animated Muppet Babies cartoon segments in between their live-action puppet adventures. The premiere establishes the show's unusual hybrid format.",
+        archiveId: "little-muppet-monsters",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/little-muppet-monsters",
+      },
+      {
+        id: "lmm-s01e02",
+        title: "Episode 2",
+        season: 1,
+        episode: 2,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "Tug, Molly, and Boo continue their behind-the-scenes adventures in the Muppet Theatre while introducing another round of animated Muppet Babies segments. The monsters' friendly chaos provides a warm live-action counterpoint to the animated sequences.",
+        archiveId: "little-muppet-monsters",
+        archiveIndex: 1,
+        thumbnail: "https://archive.org/services/img/little-muppet-monsters",
+      },
+      {
+        id: "lmm-s01e03",
+        title: "Episode 3",
+        season: 1,
+        episode: 3,
+        year: 1985,
+        duration: "30 min",
+        description:
+          "The third and final episode to air before CBS cancelled the series. Tug, Molly, and Boo host the last of the broadcast Muppet Babies animated segments, unaware that the show would not return — making this episode a bittersweet footnote in Muppet television history.",
+        archiveId: "little-muppet-monsters",
+        archiveIndex: 2,
+        thumbnail: "https://archive.org/services/img/little-muppet-monsters",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      SUPERMAN II — ABC SUNDAY NIGHT MOVIE BROADCAST  (1985)
      Single feature film — archive identifier: 1985abcsuperman2full
      Recorded live from the ABC Sunday Night Movie, December 29 1985,
@@ -2147,6 +2209,41 @@ const SHOWS = [
           "Full VHS recording of the CBS Saturday Morning block from WEYI (1992–93), featuring Disney's Raw Toonage, The Little Mermaid (\"Double Bubble\"), Teenage Mutant Ninja Turtles (\"Super Irma\"), Cyber C.O.P.S., Goofy's Guide to the Olympics, and original era commercials.",
         archiveId: "vts-01-1_20230709_0957",
         thumbnail: "https://archive.org/services/img/vts-01-1_20230709_0957",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WALT DISNEY CARTOON CLASSICS: LIMITED GOLD EDITION — DAISY  (1984)
+     Walt Disney Home Video VHS compilation featuring classic
+     Daisy Duck shorts from Disney's golden age of animation.
+     Archive identifier:
+       walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "disney-cartoon-classics-daisy-1984",
+    type: "movie",
+    title: "Walt Disney Cartoon Classics: Limited Gold Edition — Daisy",
+    years: "1984",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.8,
+    description:
+      "A cherished 1984 Walt Disney Home Video Limited Gold Edition VHS showcasing golden-age animated shorts centred on Daisy Duck. Features \"Donald's Dilemma\" (1947), in which a bump on the head turns Donald into a crooning sensation while Daisy desperately tries to reclaim her sweetheart; \"Cured Duck\" (1945), where Donald attempts anger-management for Daisy's sake with predictably explosive results; \"Donald's Double Trouble\" (1946), in which Donald hires his suave look-alike to court Daisy on his behalf; and \"Sleepy Time Donald\" (1947), where a sleepwalking Donald keeps Daisy on her toes across the whole neighbourhood.",
+    thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
+    featured: false,
+    episodes: [
+      {
+        id: "disney-cartoon-classics-daisy-1984-full",
+        title: "Walt Disney Cartoon Classics: Limited Gold Edition — Daisy",
+        season: 0,
+        episode: 0,
+        year: 1984,
+        duration: "30 min",
+        description:
+          "Four classic Daisy Duck shorts: \"Donald's Dilemma\" (1947), \"Cured Duck\" (1945), \"Donald's Double Trouble\" (1946), and \"Sleepy Time Donald\" (1947).",
+        archiveId: "walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
       },
     ],
   },
