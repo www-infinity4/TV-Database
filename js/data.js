@@ -3206,6 +3206,19 @@ const SHOWS = [
         archiveId: "frankenstein-1931-english",
         thumbnail: "https://archive.org/services/img/frankenstein-1931-english",
       },
+      {
+        id: "frankenstein-1931-restored",
+        title: "Frankenstein (Restored 720p HD)",
+        season: 0,
+        episode: 0,
+        year: 1931,
+        duration: "70 min",
+        description:
+          "A restored presentation of James Whale's 1931 horror landmark, preserving Boris Karloff's iconic Monster in a cleaner 720p source.",
+        archiveId: "frankenstein-1931-restored-movie-720p-hd",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/frankenstein-1931-restored-movie-720p-hd",
+      },
     ],
   },
   /* ────────────────────────────────────────────────────────────
@@ -3250,6 +3263,34 @@ const SHOWS = [
      The original monster-crossover film, uniting Universal's Wolf Man
      and Frankenstein franchises. Dir. Roy William Neill.
      ──────────────────────────────────────────────────────────── */
+  {
+    id: "the-wolf-man-1941",
+    type: "movie",
+    title: "The Wolf Man (1941)",
+    years: "1941",
+    genre: ["Horror", "Fantasy", "Drama"],
+    rating: "NR",
+    score: 7.2,
+    description:
+      "After returning to his ancestral home in Wales, Larry Talbot is bitten while trying to save a woman from a wolf attack and soon learns he has inherited a terrible curse. Transformed into a doomed werewolf by the full moon, Larry becomes one of Universal horror's most tragic monsters. Directed by George Waggner and starring Lon Chaney Jr., The Wolf Man established much of the modern werewolf mythos.",
+    thumbnail: "https://archive.org/services/img/the-wolf-man-1941_202106",
+    featured: false,
+    episodes: [
+      {
+        id: "the-wolf-man-1941-full",
+        title: "The Wolf Man",
+        season: 0,
+        episode: 0,
+        year: 1941,
+        duration: "70 min",
+        description:
+          "Larry Talbot becomes the victim of a werewolf curse and struggles to protect others from the monster he becomes under the full moon.",
+        archiveId: "the-wolf-man-1941_202106",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/the-wolf-man-1941_202106",
+      },
+    ],
+  },
   {
     id: "frankenstein-meets-the-wolf-man-1943",
     type: "movie",

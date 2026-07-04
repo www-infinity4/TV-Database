@@ -79,6 +79,8 @@
   /* ── Personalization helpers ── */
   const EXT_PLAYABLE = /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i;
   const TV_FIRST_TYPES = new Set(["tv", "series", "show", "soap", "vhs"]);
+  /* Strong bias so "For You" feels like a TV shelf first and only falls back
+     to non-series items when the playable catalogue has nothing better. */
   const TV_SHOW_BOOST = 40;
   const NON_TV_PENALTY = -35;
   const COSMO_POPIN_SCHEDULE_MS = [12000, 45000, 90000];
@@ -206,7 +208,7 @@
     renderRow(DOM.rowForYou, candidates);
     const first = candidates[0];
     if (DOM.forYouGenreLabel) {
-      DOM.forYouGenreLabel.textContent = stats ? "TV-first picks from your history" : "Starter TV picks";
+      DOM.forYouGenreLabel.textContent = stats ? "Series & Shows for You" : "Starter TV picks";
     }
     if (reasonEl) {
       reasonEl.textContent = first ? (reasonMap[first.id] || "Starter picks from across genres and decades.") : "No available recommendations yet.";
@@ -599,7 +601,9 @@
   function attemptInstantPlayback() {
     const playPromise = DOM.playerVideo.play();
     if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch(() => {});
+      playPromise.catch((err) => {
+        console.debug("StarQuest autoplay blocked or delayed:", err);
+      });
     }
   }
 
@@ -667,12 +671,8 @@
       DOM.playerFrame.src = "about:blank";
       DOM.playerVideo.style.display = "block";
       DOM.playerVideo.preload = "auto";
-      DOM.playerVideo.playsInline = true;
       /* Register handlers before assigning src so no stale queued event
          from a prior load can slip through and trigger the wrong handler. */
-      DOM.playerVideo.onloadedmetadata = () => {
-        attemptInstantPlayback();
-      };
       DOM.playerVideo.oncanplay = () => {
         DOM.playerLoading.style.display = "none";
         attemptInstantPlayback();

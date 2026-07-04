@@ -23,7 +23,7 @@
   --transition:   .2s ease;
   --hero-h:       520px;
   --nav-h:        64px;
-  --z-cosmo-popin: 25;
+  --z-cosmo-popin: 25;   /* above player chrome/pop-ins without outranking modal layers */
   --pixel-font:   'Press Start 2P', monospace;
   --body-font:    'Nunito', 'Segoe UI', system-ui, sans-serif;
 }
