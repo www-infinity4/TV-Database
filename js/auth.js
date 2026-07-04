@@ -377,17 +377,28 @@
         return "No account found with that username.";
       }
 
-      let candidateHash;
-      if (getCryptoSubtle() && !String(user.passwordHash || "").startsWith("sync-")) {
-        candidateHash = await hashPasswordAsync(cleanPassword, cleanUsername);
-      } else {
-        candidateHash = hashPasswordSync(cleanPassword, cleanUsername);
-      }
-      if (user.passwordHash !== candidateHash) {
+      const storedHash = String(user.passwordHash || "");
+      const hasSubtle = !!getCryptoSubtle();
+      const syncHash = hashPasswordSync(cleanPassword, cleanUsername);
+      const syncHashLegacy = syncHash.startsWith("sync-") ? syncHash.slice(5) : syncHash;
+      const modernHash = (hasSubtle && !storedHash.startsWith("sync-"))
+        ? await hashPasswordAsync(cleanPassword, cleanUsername)
+        : syncHash;
+
+      const matchedLegacySyncNoPrefix = storedHash === syncHashLegacy;
+      const matchedLegacyPlainPassword = storedHash === cleanPassword;
+      const isValidPassword = storedHash === modernHash || matchedLegacySyncNoPrefix || matchedLegacyPlainPassword;
+
+      if (!isValidPassword) {
         return "Incorrect password.";
       }
 
       user.lastLoginAt = Date.now();
+      if (matchedLegacySyncNoPrefix || matchedLegacyPlainPassword) {
+        user.passwordHash = hasSubtle
+          ? await hashPasswordAsync(cleanPassword, cleanUsername)
+          : syncHash;
+      }
       users[user.key] = normalizeUser(user, user.key);
       saveUsers(users);
       saveSessionForUser(users[user.key], Date.now());
