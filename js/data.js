@@ -2942,6 +2942,7 @@ const SHOWS = [
      ──────────────────────────────────────────────────────────── */
   {
     id: "guiding-light",
+    type: "tv",
     title: "Guiding Light",
     years: "1952–2009",
     genre: ["Drama", "Soap Opera"],
