@@ -1026,6 +1026,41 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     THE CARE BEARS IN THE LAND WITHOUT FEELINGS  (1983)
+     Single TV special — archive identifier:
+       the-care-bears-in-the-land-without-feelings-1983-etc._202109
+     Original VHS release containing the ~24-min special that
+     introduced the Care Bears to television audiences.
+     The first Care Bears production; villain is Professor Coldheart.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "care-bears-land-without-feelings-1983",
+    type: "movie",
+    title: "The Care Bears in the Land Without Feelings",
+    years: "1983",
+    genre: ["Animation", "Family", "Fantasy"],
+    rating: "G",
+    score: 6.5,
+    description:
+      "When a boy named Kevin runs away from home and stumbles into the clutches of the cold-hearted Professor Coldheart, the Care Bears journey to the icy Land Without Feelings to rescue him and remind everyone that caring is the most powerful force in the world. The very first Care Bears television special, introducing Tenderheart Bear and the full cast of Care Bears.",
+    thumbnail: "https://archive.org/services/img/the-care-bears-in-the-land-without-feelings-1983-etc._202109",
+    featured: false,
+    episodes: [
+      {
+        id: "care-bears-land-without-feelings-1983-full",
+        title: "The Care Bears in the Land Without Feelings",
+        season: 0,
+        episode: 0,
+        year: 1983,
+        duration: "24 min",
+        description:
+          "Professor Coldheart lures a runaway boy named Kevin to his Land Without Feelings. The Care Bears race to save Kevin and show him — and Coldheart — that caring matters.",
+        archiveId: "the-care-bears-in-the-land-without-feelings-1983-etc._202109",
+        thumbnail: "https://archive.org/services/img/the-care-bears-in-the-land-without-feelings-1983-etc._202109",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE CARE BEARS BATTLE THE FREEZE MACHINE  (1984)
      Single TV special — archive identifier:
        the-care-bears-battle-the-freeze-machine-1984-etc.
