@@ -10849,6 +10849,39 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     THE DUKES OF HAZZARD  (1979–1985)
+     Christmas episode archive identifier: dukes-xmas
+     "The Great Santa Claus Chase" — Season 3, Episode 9,
+     originally aired December 18, 1981 on CBS.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "dukes-of-hazzard",
+    title: "The Dukes of Hazzard",
+    years: "1979–1985",
+    genre: ["Action", "Comedy", "Adventure"],
+    rating: "TV-PG",
+    score: 7.2,
+    description:
+      "Bo and Luke Duke, their cousin Daisy, and Uncle Jesse continually outwit the corrupt Boss Hogg and bumbling Sheriff Rosco P. Coltrane across Hazzard County, Georgia — with plenty of car chases in their iconic orange Dodge Charger, the General Lee.",
+    thumbnail: "https://archive.org/services/img/dukes-xmas",
+    featured: false,
+    episodes: [
+      {
+        id: "doh-s03e09",
+        title: "The Great Santa Claus Chase",
+        season: 3,
+        episode: 9,
+        year: 1981,
+        duration: "48 min",
+        description:
+          "Boss Hogg schemes to steal charity money collected for Hazzard County's Christmas celebration. Bo, Luke, and Daisy race to stop him in a festive holiday chase that puts the General Lee up against a sleigh's worth of trouble.",
+        archiveId: "dukes-xmas",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/dukes-xmas",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
