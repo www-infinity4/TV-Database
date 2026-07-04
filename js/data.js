@@ -10744,6 +10744,40 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     INSPECTOR GADGET  (1983–1986)
+     Archive identifier: inspector-gadget-go-go-gadget-series
+     Animated comedy-adventure series created by Bruno Bianchi,
+     Andy Heyward, and Jean Chalopin.
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "inspector-gadget-1983",
+    type: "tv",
+    title: "Inspector Gadget",
+    years: "1983–1986",
+    genre: ["Animation", "Comedy", "Adventure", "Family", "Kids"],
+    rating: "TV-Y7",
+    score: 7.4,
+    description:
+      "The bumbling but well-meaning cyborg detective Inspector Gadget takes on the sinister schemes of Dr. Claw and M.A.D. with help from his resourceful niece Penny and loyal dog Brain. This classic 1980s animated series blends slapstick comedy, spy capers, and gadget-fueled chaos in every mission.",
+    thumbnail: "https://archive.org/services/img/inspector-gadget-go-go-gadget-series",
+    featured: false,
+    episodes: [
+      {
+        id: "inspector-gadget-1983-s01e01",
+        title: "Inspector Gadget (Archive Series Entry)",
+        season: 1,
+        episode: 1,
+        year: 1983,
+        duration: "22 min",
+        description:
+          "A classic Inspector Gadget episode from the Archive series collection featuring Gadget, Penny, and Brain taking on Dr. Claw and M.A.D.",
+        archiveId: "inspector-gadget-go-go-gadget-series",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/inspector-gadget-go-go-gadget-series",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
