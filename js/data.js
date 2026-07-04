@@ -11049,6 +11049,38 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     SATURDAY SUPERCADE  (1983–1984)
+     Archive identifier: youtube-JYYzz8BUg9E
+     Full 1983 broadcast recording (commercials included).
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "saturday-supercade",
+    title: "Saturday Supercade",
+    years: "1983–1984",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "TV-G",
+    score: 7.1,
+    description:
+      "CBS's beloved Saturday-morning animated anthology starring characters from the golden age of arcade games. Each episode features multiple short segments following Donkey Kong, Frogger, Q*bert, Pitfall Harry, and others in all-new comedic adventures.",
+    thumbnail: "https://archive.org/services/img/youtube-JYYzz8BUg9E",
+    featured: false,
+    episodes: [
+      {
+        id: "ssc-s01-archive",
+        title: "Saturday Supercade — 1983 Broadcast Recording",
+        season: 1,
+        episode: 1,
+        year: 1983,
+        duration: "varies",
+        description:
+          "Archived recording of the 1983 CBS run of Saturday Supercade, featuring Donkey Kong, Frogger, Donkey Kong Jr., Pitfall!, and Q*bert segments — commercials included.",
+        archiveId: "youtube-JYYzz8BUg9E",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/youtube-JYYzz8BUg9E",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      THE DUKES OF HAZZARD  (1979–1985)
      Christmas episode archive identifier: dukes-xmas
      "The Great Santa Claus Chase" — Season 3, Episode 9,
