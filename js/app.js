@@ -155,7 +155,7 @@
     return { score, reason };
   }
 
-  function byPersonalized(stats, reasonMap) {
+  function byPersonalized(stats, reasonMap = {}) {
     return function (a, b) {
       const aPay = a.starCoinCost > 0 ? 1 : 0;
       const bPay = b.starCoinCost > 0 ? 1 : 0;
@@ -197,10 +197,10 @@
     const featured = getFeaturedShows();
     if (!featured.length) return;
     /* If user has watch history, pick the highest-affinity featured show */
-    const profile = buildAffinityProfile();
+    const profile = historyStats();
     let show;
-    if (Object.keys(profile).length) {
-      show = featured.slice().sort(byPersonalized(profile))[0];
+    if (profile) {
+      show = featured.slice().sort(byPersonalized(profile, {}))[0];
     } else {
       show = featured[Math.floor(Math.random() * featured.length)];
     }
