@@ -155,8 +155,7 @@
     return { score, reason };
   }
 
-  function byPersonalized(stats, reasonMap) {
-    reasonMap = reasonMap || {};
+  function byPersonalized(stats, reasonMap = {}) {
     return function (a, b) {
       const aPay = a.starCoinCost > 0 ? 1 : 0;
       const bPay = b.starCoinCost > 0 ? 1 : 0;
