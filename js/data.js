@@ -2213,6 +2213,41 @@ const SHOWS = [
     ],
   },
   /* ────────────────────────────────────────────────────────────
+     1986 VHS CARTOON MIX  (cartoonsoscarsvhs)
+     Homemade 1986 VHS compilation tape mixing Disney cartoons,
+     holiday specials, and animated TV features — a personal
+     time-capsule of mid-1980s children's television.
+     Archive identifier: cartoonsoscarsvhs
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "cartoons-oscars-vhs-1986",
+    type: "movie",
+    title: "1986 VHS Cartoon Mix",
+    years: "1986",
+    genre: ["Animation", "Family", "Comedy"],
+    rating: "TV-G",
+    score: 7.1,
+    description:
+      "A charming homemade 1986 VHS compilation tape capturing the golden age of mid-1980s children's animation. The tape assembles a personal mix of Disney favourites and broadcast specials, including the \"Disney Goes to the Oscars\" retrospective segment celebrating Disney's Academy Award legacy; the beloved Peanuts Halloween special \"It's the Easter Beagle, Charlie Brown\"; the feature-length \"Droids: The Great Heep,\" a Star Wars animated adventure following R2-D2 and C-3PO; and a selection of classic Disney shorts featuring Winnie the Pooh, Donald Duck, and Pluto. A genuine time-capsule of a childhood spent in front of the VCR.",
+    thumbnail: "https://archive.org/services/img/cartoonsoscarsvhs",
+    featured: false,
+    episodes: [
+      {
+        id: "cartoons-oscars-vhs-1986-full",
+        title: "1986 VHS Cartoon Mix",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "varies",
+        description:
+          "Homemade VHS mix featuring \"Disney Goes to the Oscars,\" \"It's the Easter Beagle, Charlie Brown,\" \"Droids: The Great Heep,\" and classic Disney shorts with Winnie the Pooh, Donald Duck, and Pluto.",
+        archiveId: "cartoonsoscarsvhs",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/cartoonsoscarsvhs",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
      WALT DISNEY CARTOON CLASSICS: LIMITED GOLD EDITION — DAISY  (1984)
      Walt Disney Home Video VHS compilation featuring classic
      Daisy Duck shorts from Disney's golden age of animation.
@@ -2244,6 +2279,42 @@ const SHOWS = [
         archiveId: "walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
         archiveIndex: 0,
         thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     WALT DISNEY CARTOON CLASSICS: SILLY SYMPHONIES — ANIMAL TALES  (1986)
+     Walt Disney Home Video VHS. The final release in the original
+     Cartoon Classics series. Six animal-themed Silly Symphony
+     shorts from 1930–1936.
+     Archive identifier:
+       walt-disney-cartoon-classics-silly-symphonies-animal-tales-1986-vhs
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "disney-silly-symphonies-animal-tales-1986",
+    type: "movie",
+    title: "Walt Disney Cartoon Classics: Silly Symphonies — Animal Tales",
+    years: "1986",
+    genre: ["Animation", "Comedy", "Family"],
+    rating: "G",
+    score: 7.7,
+    description:
+      "The final release in Walt Disney Home Video's original Cartoon Classics series gathers six animal-themed Silly Symphonies from Disney's golden age. \"Monkey Melodies\" (1930) sets jungle creatures swinging to a musical beat; \"The Spider and the Fly\" (1931) spins a cautionary web of song and dance; \"Peculiar Penguins\" (1934) follows a pair of Antarctic lovebirds on an underwater courtship; \"Cock o' the Walk\" (1935) pits a boastful rooster against a barnyard turkey in a battle of spurs and bravado; \"More Kittens\" (1936) revisits the three kittens from \"Three Orphan Kittens\" in a new seasonal adventure; and \"Elmer Elephant\" (1936) tells the heartwarming story of a young elephant whose long trunk is laughed at — until it saves the day.",
+    thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-silly-symphonies-animal-tales-1986-vhs",
+    featured: false,
+    episodes: [
+      {
+        id: "disney-silly-symphonies-animal-tales-1986-full",
+        title: "Walt Disney Cartoon Classics: Silly Symphonies — Animal Tales",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "35 min",
+        description:
+          "Six Silly Symphony shorts: \"Monkey Melodies\" (1930), \"The Spider and the Fly\" (1931), \"Peculiar Penguins\" (1934), \"Cock o' the Walk\" (1935), \"More Kittens\" (1936), and \"Elmer Elephant\" (1936).",
+        archiveId: "walt-disney-cartoon-classics-silly-symphonies-animal-tales-1986-vhs",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/walt-disney-cartoon-classics-silly-symphonies-animal-tales-1986-vhs",
       },
     ],
   },
@@ -5868,6 +5939,40 @@ const SHOWS = [
         archiveId: "halloween-cartoons-1985",
         archiveIndex: 0,
         thumbnail: "https://archive.org/services/img/halloween-cartoons-1985",
+      },
+    ],
+  },
+  /* ────────────────────────────────────────────────────────────
+     THE LEGEND OF SLEEPY HOLLOW  (1986 VHS REPRINT)
+     Walt Disney Home Video VHS of the classic 1949 Disney
+     featurette, paired with two Halloween-themed bonus shorts.
+     Archive identifier: 75v_20211031
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "legend-of-sleepy-hollow-1986-vhs",
+    type: "movie",
+    title: "The Legend of Sleepy Hollow (1986 VHS)",
+    years: "1986",
+    genre: ["Animation", "Comedy", "Family", "Holiday"],
+    rating: "G",
+    score: 7.9,
+    description:
+      "A 1986 Walt Disney Home Video reprint pairing three beloved Halloween-themed animated classics. The centerpiece is \"The Legend of Sleepy Hollow\" (1949), narrated by Bing Crosby — the tale of timid schoolmaster Ichabod Crane, his rivalry with brawny Brom Bones over the lovely Katrina Van Tassel, and his terrifying midnight encounter with the Headless Horseman on the road home from a Halloween party. Two bonus shorts complete the spooky program: \"Lonesome Ghosts\" (1937), in which Mickey, Donald, and Goofy's ghost-exterminating business is turned against them by a trio of mischievous spirits; and \"Trick or Treat\" (1952), where Huey, Dewey, and Louie team up with the witch Hazel to get revenge on Uncle Donald for spoiling their Halloween candy.",
+    thumbnail: "https://archive.org/services/img/75v_20211031",
+    featured: false,
+    episodes: [
+      {
+        id: "sleepy-hollow-1986-vhs-full",
+        title: "The Legend of Sleepy Hollow / Lonesome Ghosts / Trick or Treat",
+        season: 0,
+        episode: 0,
+        year: 1986,
+        duration: "52 min",
+        description:
+          "Three Disney Halloween classics: \"The Legend of Sleepy Hollow\" (1949, narrated by Bing Crosby), \"Lonesome Ghosts\" (1937, Mickey, Donald & Goofy), and \"Trick or Treat\" (1952, Donald Duck & Witch Hazel).",
+        archiveId: "75v_20211031",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/75v_20211031",
       },
     ],
   },
