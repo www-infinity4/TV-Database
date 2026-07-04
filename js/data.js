@@ -5897,6 +5897,42 @@ const SHOWS = [
       },
     ],
   },
+  /* ────────────────────────────────────────────────────────────
+     SESAME STREET PRESENTS: FOLLOW THAT BIRD  (1985)
+     Theatrical feature film. Released August 2, 1985.
+     Directed by Ken Kwapis. Warner Bros./Children's Television
+     Workshop. Big Bird sets off on a cross-country adventure.
+     Archive identifier:
+       sesame.-street.-presents-follow.that.-bird.-1985.-web-dl.x-264-fgt
+     ──────────────────────────────────────────────────────────── */
+  {
+    id: "follow-that-bird-1985",
+    type: "movie",
+    title: "Sesame Street Presents: Follow That Bird",
+    years: "1985",
+    genre: ["Comedy", "Family", "Musical"],
+    rating: "G",
+    score: 7.3,
+    description:
+      "The beloved Sesame Street gang hits the open road in their first theatrical feature film. When a well-meaning social worker places Big Bird with the Dodo family in Illinois — a \"real bird family\" — Big Bird grows homesick and runs away to find his way back to Sesame Street. While his friends pile into a bus to find him, the villainous Sleaze Brothers (Joe Flaherty and Dave Thomas) capture Big Bird and paint him blue for their carnival act. A warm, funny, and surprisingly moving road-trip adventure featuring the full Sesame Street cast alongside celebrity cameos from John Candy, Chevy Chase, Sandra Bernhard, Charles Grodin, and Waylon Jennings.",
+    thumbnail: "https://archive.org/services/img/sesame.-street.-presents-follow.that.-bird.-1985.-web-dl.x-264-fgt",
+    featured: false,
+    episodes: [
+      {
+        id: "follow-that-bird-1985-full",
+        title: "Sesame Street Presents: Follow That Bird",
+        season: 0,
+        episode: 0,
+        year: 1985,
+        duration: "88 min",
+        description:
+          "Big Bird leaves Sesame Street for a new family in Illinois, grows homesick, and must find his way home — while the Sleaze Brothers try to make him the star of their carnival and his friends race across the country to rescue him.",
+        archiveId: "sesame.-street.-presents-follow.that.-bird.-1985.-web-dl.x-264-fgt",
+        archiveIndex: 0,
+        thumbnail: "https://archive.org/services/img/sesame.-street.-presents-follow.that.-bird.-1985.-web-dl.x-264-fgt",
+      },
+    ],
+  },
   {
     id: "brave-little-toaster-1987",
     type: "movie",
