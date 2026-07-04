@@ -10857,6 +10857,7 @@ const SHOWS = [
      ──────────────────────────────────────────────────────────── */
   {
     id: "reading-rainbow",
+    type: "tv",
     title: "Reading Rainbow",
     years: "1983–2006",
     genre: ["Educational", "Family", "Kids"],
