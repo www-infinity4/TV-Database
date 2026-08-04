@@ -135,27 +135,34 @@
     const profile = buildAffinityProfile();
     const hasHistory = Object.keys(profile).length > 0;
 
-    if (!hasHistory) {
-      DOM.forYouSection.style.display = "none";
-      return;
-    }
-
-    /* Show section */
+    /* Always show the section */
     DOM.forYouSection.style.display = "";
 
-    /* Top genre label */
-    const top = topGenre(profile);
-    if (DOM.forYouGenreLabel && top) {
-      DOM.forYouGenreLabel.textContent = "Based on your " + top + " history";
+    if (hasHistory) {
+      /* Top genre label */
+      const top = topGenre(profile);
+      if (DOM.forYouGenreLabel && top) {
+        DOM.forYouGenreLabel.textContent = "Based on your " + top + " history";
+      }
+
+      /* Build personalized list: all shows scored, top 16 */
+      const sorted = (typeof SHOWS !== "undefined" ? SHOWS.slice() : [])
+        .filter((s) => !s.payToWatch)
+        .sort(byPersonalized(profile))
+        .slice(0, 16);
+
+      renderRow(DOM.rowForYou, sorted);
+    } else {
+      /* No history yet — show top-rated free shows as default picks */
+      if (DOM.forYouGenreLabel) {
+        DOM.forYouGenreLabel.textContent = "Top Picks — Start Watching to Personalize";
+      }
+      const topPicks = (typeof SHOWS !== "undefined" ? SHOWS.slice() : [])
+        .filter((s) => !s.payToWatch)
+        .sort(byScore)
+        .slice(0, 16);
+      renderRow(DOM.rowForYou, topPicks);
     }
-
-    /* Build personalized list: all shows scored, top 16 */
-    const sorted = (typeof SHOWS !== "undefined" ? SHOWS.slice() : [])
-      .filter((s) => !s.payToWatch)
-      .sort(byPersonalized(profile))
-      .slice(0, 16);
-
-    renderRow(DOM.rowForYou, sorted);
   }
 
 

@@ -345,18 +345,65 @@
       q.includes("what should i watch") ||
       q.includes("what to watch")
     ) {
+      /* Use actual SHOWS data with personalization if available */
+      if (typeof SHOWS !== "undefined" && SHOWS.length) {
+        /* Build affinity profile from watch history if available */
+        let profile = {};
+        if (typeof StarQuestAuth !== "undefined") {
+          const history = StarQuestAuth.getHistory();
+          if (history && history.length) {
+            history.forEach((item) => {
+              const show = SHOWS.find((s) => s.title.toLowerCase() === (item.showTitle || "").toLowerCase());
+              if (show && show.genre) {
+                show.genre.forEach((g) => { profile[g] = (profile[g] || 0) + 1; });
+              }
+            });
+          }
+        }
+
+        const hasProfile = Object.keys(profile).length > 0;
+        const freeShows = SHOWS.filter((s) => !s.payToWatch && s.score >= 8);
+
+        let picks;
+        if (hasProfile) {
+          /* Sort by genre affinity then score */
+          picks = freeShows
+            .slice()
+            .sort((a, b) => {
+              const aAff = a.genre.reduce((sum, g) => sum + (profile[g] || 0), 0);
+              const bAff = b.genre.reduce((sum, g) => sum + (profile[g] || 0), 0);
+              if (bAff !== aAff) return bAff - aAff;
+              return (b.score || 0) - (a.score || 0);
+            })
+            .slice(0, 3);
+          const topGenreName = Object.entries(profile).sort((a, b) => b[1] - a[1])[0][0];
+          return (
+            "Based on what you've been watching, here are my top picks for you:\n\n" +
+            picks.map((s) => `⭐ **${s.title}** (${s.years}) — ${s.description.slice(0, 80)}…`).join("\n") +
+            `\n\nYou seem to love **${topGenreName}** — you'll especially enjoy ${picks[0].title}! Ask me anything about it.`
+          );
+        } else {
+          /* Top-rated free shows */
+          picks = freeShows
+            .slice()
+            .sort((a, b) => (b.score || 0) - (a.score || 0))
+            .slice(0, 3);
+          return (
+            "Here are StarQuest's top-rated picks to start with:\n\n" +
+            picks.map((s) => `⭐ **${s.title}** (${s.years}) — ${s.description.slice(0, 80)}…`).join("\n") +
+            "\n\nWatch a few episodes and I'll start personalizing these picks just for you! 🎯"
+          );
+        }
+      }
+      /* Fallback if SHOWS not loaded */
       const picks = [
         "🌟 Due South — A charming Canadian Mountie in Chicago. Perfect for mystery-comedy fans!",
         "👻 The Real Ghostbusters — Better than the movie? Many fans think so! Smart writing for all ages.",
-        "🚀 X-Men: The Animated Series — The definitive X-Men story. Tackles real-world prejudice through superheroes.",
         "🕵️ The New Alfred Hitchcock Presents — Masterful suspense anthology. Each episode is a mini-thriller.",
-        "🌲 Northern Exposure — Philosophical, funny, and deeply human. TV's best-kept secret.",
-        "👾 Ghostbusters (1984) — The original and still unbeaten comedy-horror classic.",
-        "🎭 Columbo — The greatest TV detective ever. 'Just one more thing…'",
       ];
       return (
         "Here are some StarQuest picks for you:\n\n" +
-        picks.slice(0, 3).join("\n") +
+        picks.join("\n") +
         "\n\n💡 Ask me about any show for more details!"
       );
     }
@@ -475,8 +522,35 @@
     return "StarQuest catalogue includes: " + sample + (SHOWS.length > 30 ? " and more." : ".");
   }
 
+  /* Build a summary of user watch history for the system prompt */
+  function buildHistoryBlurb() {
+    if (typeof StarQuestAuth === "undefined") return "";
+    const history = StarQuestAuth.getHistory();
+    if (!history || !history.length) return "";
+    /* Count genre preferences */
+    const genreCounts = {};
+    const watchedShows = new Set();
+    history.forEach((item) => {
+      watchedShows.add(item.showTitle);
+      if (typeof SHOWS !== "undefined") {
+        const show = SHOWS.find((s) => s.title.toLowerCase() === (item.showTitle || "").toLowerCase());
+        if (show && show.genre) {
+          show.genre.forEach((g) => { genreCounts[g] = (genreCounts[g] || 0) + 1; });
+        }
+      }
+    });
+    const topGenres = Object.entries(genreCounts).sort((a, b) => b[1] - a[1]).slice(0, 3).map((e) => e[0]);
+    const recentShows = Array.from(watchedShows).slice(0, 5);
+    return (
+      "\nUser watch history: They've watched " + recentShows.join(", ") + "." +
+      (topGenres.length ? " Top genre preferences: " + topGenres.join(", ") + "." : "") +
+      " When recommending, prioritize shows matching these genres and avoid shows they've already watched."
+    );
+  }
+
   function buildSystemPrompt() {
     const cat = buildCatalogueBlurb();
+    const hist = buildHistoryBlurb();
     const ctx = _currentContext
       ? `\nThe user is currently watching: ${_currentContext.show} — "${_currentContext.episode}".`
       : "";
@@ -486,8 +560,9 @@
       "You drop trivia and behind-the-scenes facts as if you just remembered them mid-conversation. Keep replies SHORT (2-4 sentences) unless the user asks for more.\n" +
       "You react with personality: 'Dude, did you see that?!', 'Oh man this episode is wild', 'Fun fact —', etc.\n" +
       "You never give robotic encyclopedia entries. You never make up episode timestamps or fake facts.\n" +
+      "When recommending shows, always reference specific titles from the StarQuest catalogue and explain WHY based on what the user has watched.\n" +
       "StarCoins are earned by watching (1/hour) and sharing (1 per 10 shares). They will unlock pay-per-view content.\n" +
-      cat + ctx
+      cat + hist + ctx
     );
   }
 
