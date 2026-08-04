@@ -83,6 +83,7 @@
      to non-series items when the playable catalogue has nothing better. */
   const TV_SHOW_BOOST = 40;
   const NON_TV_PENALTY = -35;
+  const MAX_HISTORY_ITEMS = 200;
   const COSMO_POPIN_SCHEDULE_MS = [12000, 45000, 90000];
   const COSMO_POPIN_DISMISS_MS = 14000;
 
@@ -123,51 +124,85 @@
 
   function historyStats() {
     if (typeof StarQuestAuth === "undefined") return null;
-    const history = StarQuestAuth.getHistory();
+    const history = StarQuestAuth.getHistory().slice(0, MAX_HISTORY_ITEMS);
     if (!history.length) return null;
     const genre = {};
     const decade = {};
     const series = {};
     const completedBySeries = {};
+    const recencyByShow = {};
+    const recencyByGenre = {};
+    const recencyByDecade = {};
+    const recentShows = new Set();
     const recent = new Set();
     const watchedShows = new Set();
+    const total = history.length;
     history.forEach((item, idx) => {
+      const recencyWeight = Math.max(0.2, 1 - (idx / Math.max(1, total)));
       const g = item.genre || "";
-      if (g) genre[g] = (genre[g] || 0) + 1;
+      if (g) {
+        genre[g] = (genre[g] || 0) + 1;
+        recencyByGenre[g] = (recencyByGenre[g] || 0) + recencyWeight;
+      }
       const d = item.decade || "";
-      if (d) decade[d] = (decade[d] || 0) + 1;
+      if (d) {
+        decade[d] = (decade[d] || 0) + 1;
+        recencyByDecade[d] = (recencyByDecade[d] || 0) + recencyWeight;
+      }
       const sid = item.showId || "";
       if (sid) {
         series[sid] = (series[sid] || 0) + 1;
+        recencyByShow[sid] = (recencyByShow[sid] || 0) + recencyWeight;
         if (item.completed) completedBySeries[sid] = (completedBySeries[sid] || 0) + 1;
         watchedShows.add(sid);
       }
       if (idx < 8 && item.episodeId) recent.add(item.episodeId);
+      if (idx < 6 && sid) recentShows.add(sid);
     });
-    return { history, genre, decade, series, completedBySeries, recent, watchedShows };
+    return {
+      history,
+      genre,
+      decade,
+      series,
+      completedBySeries,
+      recent,
+      watchedShows,
+      recencyByShow,
+      recencyByGenre,
+      recencyByDecade,
+      recentShows
+    };
   }
 
   function scoreShowForUser(show, stats) {
     if (!stats) return { score: show.score || 0, reason: "Starter pick from a different era and genre." };
     const genreAffinity = (show.genre || []).reduce((sum, g) => sum + (stats.genre[g] || 0), 0);
+    const genreRecency = (show.genre || []).reduce((sum, g) => sum + (stats.recencyByGenre[g] || 0), 0);
     const decadeKey = showDecade(show);
     const decadeAffinity = stats.decade[decadeKey] || 0;
+    const decadeRecency = stats.recencyByDecade[decadeKey] || 0;
     const seriesAffinity = stats.series[show.id] || 0;
+    const seriesRecency = stats.recencyByShow[show.id] || 0;
     const completionAffinity = stats.completedBySeries[show.id] || 0;
     const repeatViewing = Math.max(0, seriesAffinity - 1);
     const unexploredBonus = stats.watchedShows.has(show.id) ? 0 : 1;
     const completedPenalty = completionAffinity > 2 ? 1 : 0;
+    const hardRecentPenalty = stats.recentShows && stats.recentShows.has(show.id) ? 1 : 0;
     const recentlyWatchedPenalty = show.episodes.some((ep) => stats.recent.has(buildEpisodeId(ep, show))) ? 1 : 0;
     const tvExperienceBoost = isTvFirstShow(show) ? TV_SHOW_BOOST : NON_TV_PENALTY;
-    const episodicBonus = Math.min(24, Math.max(0, show.episodes.length - 1) * 3);
+    const episodicBonus = Math.min(24, Math.max(0, show.episodes.length - 1) * 2);
     const score =
-      genreAffinity * 30 +
-      decadeAffinity * 18 +
-      seriesAffinity * 22 +
+      genreAffinity * 22 +
+      genreRecency * 44 +
+      decadeAffinity * 12 +
+      decadeRecency * 28 +
+      seriesAffinity * 15 +
+      seriesRecency * 52 +
       completionAffinity * 15 +
-      repeatViewing * 8 +
-      unexploredBonus * 8 -
-      recentlyWatchedPenalty * 25 -
+      repeatViewing * 4 +
+      unexploredBonus * 18 -
+      recentlyWatchedPenalty * 30 -
+      hardRecentPenalty * 55 -
       completedPenalty * 30 +
       tvExperienceBoost +
       episodicBonus +
@@ -800,6 +835,9 @@
     const params = new URLSearchParams({ autoplay: "1" });
     if (typeof episode.archiveIndex === "number" && !episode.archiveFile) {
       params.set("index", String(episode.archiveIndex));
+    }
+    if (episode.title) {
+      params.set("playtext", episode.title);
     }
     return base + "?" + params.toString();
   }
@@ -1646,7 +1684,10 @@
     }
     const base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
     const params = new URLSearchParams({ autoplay: "1" });
-    if (typeof episode.archiveIndex === "number") params.set("index", String(episode.archiveIndex));
+    if (typeof episode.archiveIndex === "number" && !episode.archiveFile) {
+      params.set("index", String(episode.archiveIndex));
+    }
+    if (episode.title) params.set("playtext", episode.title);
     return base + "?" + params.toString();
   }
 
@@ -1709,7 +1750,7 @@
         /* Find episode */
         const epPart = titleText.slice((show.title + " — ").length);
         const ep = show.episodes && show.episodes.find((e) => {
-          const lbl = e.season === 0 ? "Pilot: " : "S" + e.season + "E" + e.episode + ": ";
+          const lbl = e.season === 0 ? "Movie: " : "S" + e.season + "E" + e.episode + ": ";
           return epPart.startsWith(lbl) || epPart.includes(e.title);
         });
         if (ep) {
