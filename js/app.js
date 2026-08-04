@@ -801,6 +801,9 @@
     if (typeof episode.archiveIndex === "number" && !episode.archiveFile) {
       params.set("index", String(episode.archiveIndex));
     }
+    if (episode.title) {
+      params.set("playtext", episode.title);
+    }
     return base + "?" + params.toString();
   }
 
@@ -1646,7 +1649,10 @@
     }
     const base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
     const params = new URLSearchParams({ autoplay: "1" });
-    if (typeof episode.archiveIndex === "number") params.set("index", String(episode.archiveIndex));
+    if (typeof episode.archiveIndex === "number" && !episode.archiveFile) {
+      params.set("index", String(episode.archiveIndex));
+    }
+    if (episode.title) params.set("playtext", episode.title);
     return base + "?" + params.toString();
   }
 
@@ -1709,7 +1715,7 @@
         /* Find episode */
         const epPart = titleText.slice((show.title + " — ").length);
         const ep = show.episodes && show.episodes.find((e) => {
-          const lbl = e.season === 0 ? "Pilot: " : "S" + e.season + "E" + e.episode + ": ";
+          const lbl = e.season === 0 ? "Movie: " : "S" + e.season + "E" + e.episode + ": ";
           return epPart.startsWith(lbl) || epPart.includes(e.title);
         });
         if (ep) {
