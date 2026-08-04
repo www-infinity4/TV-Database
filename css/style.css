@@ -23,6 +23,7 @@
   --transition:   .2s ease;
   --hero-h:       520px;
   --nav-h:        64px;
+  --z-cosmo-popin: 25;   /* above player chrome/pop-ins without outranking modal layers */
   --pixel-font:   'Press Start 2P', monospace;
   --body-font:    'Nunito', 'Segoe UI', system-ui, sans-serif;
 }
@@ -1125,7 +1126,7 @@ ul { list-style: none; }
 .auth-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1500;
+  z-index: 2100;
   background: rgba(0,0,0,.85);
   display: flex;
   align-items: center;
@@ -1994,7 +1995,7 @@ ul { list-style: none; }
   position: absolute;
   bottom: 24px;
   left: 24px;
-  z-index: 20;
+  z-index: var(--z-cosmo-popin);
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -2047,3 +2048,42 @@ ul { list-style: none; }
 }
 .cosmo-popin__close:hover { background: var(--accent); color: #fff; }
 
+.player-open .ai-fab {
+  top: 74px;
+  right: 20px;
+  bottom: auto;
+}
+
+.player-open .ai-panel {
+  top: 132px;
+  right: 20px;
+  bottom: auto;
+  max-height: calc(100vh - 152px);
+}
+
+.player-page.open .cosmo-popin {
+  top: 84px;
+  bottom: auto;
+  max-width: min(420px, calc(100% - 48px));
+}
+
+@media (max-width: 720px) {
+  .player-open .ai-fab {
+    top: 72px;
+    right: 14px;
+    bottom: auto;
+  }
+
+  .player-open .ai-panel {
+    top: 126px;
+    right: 10px;
+    bottom: auto;
+    max-height: calc(100vh - 146px);
+  }
+
+  .player-page.open .cosmo-popin {
+    top: 74px;
+    left: 12px;
+    max-width: calc(100% - 24px);
+  }
+}

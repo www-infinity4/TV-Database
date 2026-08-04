@@ -7,6 +7,14 @@
   <title>StarQuest ⭐ — Classic TV Galaxy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://archive.org" crossorigin />
+  <link rel="dns-prefetch" href="https://archive.org" />
+  <link rel="preconnect" href="https://www.youtube.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.youtube.com" />
+  <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
+  <link rel="dns-prefetch" href="https://i.ytimg.com" />
+  <link rel="preconnect" href="https://text.pollinations.ai" crossorigin />
+  <link rel="dns-prefetch" href="https://text.pollinations.ai" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=20260804" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
@@ -107,16 +115,29 @@
       </div>
       <div class="wallet-card__progress" title="Shares toward next StarCoin">
         <div class="wallet-progress__label">
-          <span>🔗 Shares toward next coin</span>
+          <span>🔗 Shares toward next StarCoin (prototype)</span>
           <span id="wallet-share-count" class="wallet-share-count">0 / 10</span>
         </div>
         <div class="wallet-progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="wallet-progress-bar-wrap">
           <div id="wallet-share-bar" class="wallet-progress__fill" style="width:0%"></div>
         </div>
       </div>
+      <div class="wallet-card__progress" title="Eligible watch time toward next StarCoin">
+        <div class="wallet-progress__label">
+          <span>📺 Eligible watch-time</span>
+          <span id="wallet-watch-count" class="wallet-share-count">0 / 3600s</span>
+        </div>
+        <div class="wallet-progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="3600" aria-valuenow="0" id="wallet-watch-progress-wrap">
+          <div id="wallet-watch-bar" class="wallet-progress__fill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="wallet-card__earn-hints">
+        <span id="wallet-lifetime-shares">🔗 Lifetime shares: 0</span>
+        <span id="wallet-star-power">✨ Star Power (sharing): 0</span>
+      </div>
       <div class="wallet-card__earn-hints">
         <span>📺 +1 coin / hour watched</span>
-        <span>🔗 +1 coin / 10 shares</span>
+        <span>🔗 +1 coin / 10 successful shares (prototype)</span>
       </div>
     </div>
 
@@ -162,6 +183,17 @@
       <div class="sidebar-section__heading"><span>⭐</span> StarCoin Ledger</div>
       <div id="ledger-list" class="ledger-list" role="list" aria-label="Token transactions">
         <p class="history-empty" id="ledger-empty">Earn StarCoins by watching and sharing!</p>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section__heading"><span>🔓</span> Unlocked Entertainment</div>
+      <div id="unlocked-content-list" class="ledger-list" role="list" aria-label="Unlocked content">
+        <p class="history-empty" id="unlocked-content-empty">Unlock content with StarCoins to see it here.</p>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="history-empty" style="display:block">
+        Local account: this account and its StarCoins are stored only in this browser. Clearing browser data or changing devices will not transfer them.
       </div>
     </div>
   </aside>
@@ -239,6 +271,7 @@
         <h2 class="section-title" id="lbl-for-you">🎯 Picked For You</h2>
         <span class="section-more for-you-genre-label" id="for-you-genre-label"></span>
       </div>
+      <p id="for-you-reason" class="history-empty" style="margin:0 0 8px 0;">Starter picks from across genres and decades.</p>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
         <div class="card-row" id="row-for-you" role="list"></div>
@@ -430,7 +463,7 @@
     </div>
     <div class="player-wrap">
       <iframe id="player-frame" class="player-frame" src="about:blank" title="Video Player" allowfullscreen allow="autoplay; fullscreen; encrypted-media" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
-      <video id="player-video" class="player-video" controls autoplay preload="metadata" style="display:none"></video>
+      <video id="player-video" class="player-video" controls autoplay preload="auto" playsinline style="display:none"></video>
       <div id="player-error" class="player-error" style="display:none" aria-live="polite">
         <div class="player-error__icon" aria-hidden="true">📺</div>
         <p class="player-error__msg">This video is not available for direct streaming.</p>
