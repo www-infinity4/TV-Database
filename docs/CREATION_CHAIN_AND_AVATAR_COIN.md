@@ -62,9 +62,9 @@ The same user should not generate unlimited share progress by repeatedly reopeni
 
 ## Avatar Coin
 
-One Avatar Coin is earned when another verified user keeps a creator's design actively applied for a cumulative 24 hours of qualified use.
+One Avatar Coin is earned when another verified user keeps a creator's design actively applied for 24 continuous hours of qualified use.
 
-The 24 hours may accumulate across multiple sessions unless a later policy requires one uninterrupted session.
+The continuous-use clock pauses or resets when the design is no longer actively applied, the session becomes idle beyond policy limits, or integrity checks fail. A later economy policy may define a limited reconnection grace period without changing the 24-hour continuous-use requirement.
 
 Watching a page remain idle in a hidden browser tab does not count. Qualified time should stop when:
 
@@ -83,13 +83,13 @@ Watching a page remain idle in a hidden browser tab does not count. Qualified ti
   "creatorId": "user_01J...",
   "usingUserId": "user_01K...",
   "qualifiedSeconds": 900,
-  "sessionId": "session_01J...",
+  "continuousSessionId": "continuous_01J...",
   "integrity": "verified",
   "createdAt": 0
 }
 ```
 
-When verified qualified use reaches 86,400 seconds for a creator and creation cycle, one Avatar Coin is minted and the cycle resets or advances according to the final economy policy.
+When one verified continuous-use session reaches 86,400 qualified seconds, one Avatar Coin is minted for the creator and that completed session is closed in the ledger.
 
 ## Separate ledgers
 
@@ -120,6 +120,7 @@ Bots may help users:
 - Produce accessible variants.
 - Test design consistency.
 - Recommend improvements.
+- Turn a rough creative seed into finished media, such as expanding a flower idea into a complete poppy-video world.
 
 Bot-created work must remain attributed to the controlling user and the assisting bot. Bots must not create fake users, fake shares, fake viewing, fake qualified use time, or fake token events.
 
@@ -171,7 +172,7 @@ Public creation records should not expose private watch history, raw behavioral 
 ### Stage 3: Reward settlement
 
 - Firing Star share progress.
-- Avatar Coin qualified-use ledger.
+- Avatar Coin continuous-use ledger.
 - Anti-abuse review.
 - Creator dashboards.
 - Transparent cycle and mint history.
