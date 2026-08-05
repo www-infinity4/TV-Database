@@ -1,0 +1,168 @@
+name: Correct StarCoin mint rule
+
+on:
+  push:
+    branches:
+      - agent/tv-player-repair
+    paths:
+      - .github/workflows/correct-starcoin-mint-rule.yml
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/tv-player-repair
+
+      - name: Enforce full-watch tenth-share minting
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          auth = Path('js/auth.js')
+          text = auth.read_text(encoding='utf-8')
+
+          anchor = '''        if (!user.shareCooldownByContent || typeof user.shareCooldownByContent !== "object") {
+          user.shareCooldownByContent = {};
+        }
+'''
+          replacement = '''        const episodeKey = id.includes("|") ? id.split("|").pop() : id;
+        const completedHistory = Array.isArray(user.watchHistory)
+          ? user.watchHistory.find((item) => {
+              if (!item || !item.completed) return false;
+              const historyId = String(item.episodeId || "");
+              return historyId === episodeKey || historyId.endsWith("|" + episodeKey);
+            })
+          : null;
+        if (!completedHistory) {
+          return {
+            ok: false,
+            error: "share_requires_full_watch",
+            message: "Watch this video in full before its share can count toward a StarCoin.",
+          };
+        }
+        if (!opts.verified) {
+          return {
+            ok: false,
+            error: "share_not_verified",
+            message: "The share must be completed before it can count toward a StarCoin.",
+          };
+        }
+
+        if (!user.shareCooldownByContent || typeof user.shareCooldownByContent !== "object") {
+          user.shareCooldownByContent = {};
+        }
+'''
+          if replacement not in text:
+            if anchor not in text:
+              raise SystemExit('recordShare insertion point not found')
+            text = text.replace(anchor, replacement, 1)
+
+          text = text.replace(
+            '"Share reward (prototype): 10 shares"',
+            '"StarCoin minted: 10 verified shares of fully watched videos"'
+          )
+          text = text.replace(
+            '"share reward"',
+            '"verified full-watch share mint"'
+          )
+
+          old_reward = '''        const availableRewardSeconds = Math.max(0, user.eligibleWatchSeconds - user.rewardedWatchSeconds);
+        const rewardCount = Math.floor(availableRewardSeconds / WATCH_SECONDS_PER_COIN);
+        const awardedEvents = [];
+
+        for (let i = 0; i < rewardCount; i++) {
+          const eventId = createEventId("watch-reward");
+          user.rewardedWatchSeconds += WATCH_SECONDS_PER_COIN;
+          user.tokens = Math.max(0, toInt(user.tokens, 0) + 1);
+          const event = {
+            id: eventId,
+            contentId: id,
+            createdAt: Date.now(),
+            rewardedSeconds: user.rewardedWatchSeconds,
+            eligibleWatchSeconds: user.eligibleWatchSeconds,
+            amount: 1,
+          };
+          user.watchRewardEvents.push(event);
+          user.watchRewardEvents = user.watchRewardEvents.slice(-250);
+          appendLedger(
+            user,
+            1,
+            "Watch reward: 1 hour eligible watch-time",
+            eventId,
+            "watch_reward",
+            "watch reward"
+          );
+          awardedEvents.push(event);
+        }
+'''
+          new_reward = '''        // Watching establishes eligibility; it does not mint StarCoins by itself.
+        // A StarCoin is minted only on each tenth verified share of a fully watched video.
+        const rewardCount = 0;
+        const awardedEvents = [];
+'''
+          if new_reward not in text:
+            if old_reward not in text:
+              raise SystemExit('watch reward block not found')
+            text = text.replace(old_reward, new_reward, 1)
+
+          auth.write_text(text, encoding='utf-8')
+
+          ai = Path('js/ai.js')
+          ai_text = ai.read_text(encoding='utf-8')
+          ai_text = ai_text.replace(
+            '"You earn ⭐ StarCoins by watching (1 coin per hour) and sharing shows (1 coin per 10 shares). Your coins will unlock Pay-Per-View premium content coming soon!"',
+            '"A StarCoin is minted on the 10th verified share of a video you watched in full. Watching makes that video eligible; watching alone does not mint a coin, and incomplete or unverified shares do not count."'
+          )
+          ai_text = ai_text.replace(
+            '"StarCoins ⭐ are your reward for being a loyal Star! They\'ll be used for Pay-Per-View access to premium new content — think HBO-quality originals — coming to StarQuest. Collect them now!"',
+            '"StarCoins ⭐ record verified participation in StarQuest. Each coin is minted only when ten eligible shares have been completed from videos watched in full."'
+          )
+          ai.write_text(ai_text, encoding='utf-8')
+
+          index = Path('index.html')
+          index_text = index.read_text(encoding='utf-8')
+          index_text = index_text.replace('📺 +1 coin / hour watched', '📺 Full watch makes a video share-eligible')
+          index_text = index_text.replace('🔗 +1 coin / 10 successful shares (prototype)', '🔗 1 StarCoin / 10 verified eligible shares')
+          index_text = index_text.replace('Eligible watch-time toward next StarCoin', 'Full-watch eligibility progress')
+          index.write_text(index_text, encoding='utf-8')
+          PY
+
+      - name: Validate corrected rule
+        run: |
+          node --check js/auth.js
+          node --check js/ai.js
+          python3 - <<'PY'
+          from pathlib import Path
+          auth = Path('js/auth.js').read_text()
+          ai = Path('js/ai.js').read_text()
+          index = Path('index.html').read_text()
+          checks = {
+            'full-watch share guard': 'share_requires_full_watch' in auth,
+            'verified-share guard': 'share_not_verified' in auth,
+            'watching alone does not mint': 'const rewardCount = 0;' in auth,
+            'tenth-share ledger description': '10 verified shares of fully watched videos' in auth,
+            'Cosmo explains exact rule': '10th verified share of a video you watched in full' in ai,
+            'wallet removes hourly mint claim': '+1 coin / hour watched' not in index,
+          }
+          failed = [name for name, ok in checks.items() if not ok]
+          for name, ok in checks.items():
+            print(('PASS' if ok else 'FAIL') + ': ' + name)
+          if failed:
+            raise SystemExit(', '.join(failed))
+          PY
+
+      - name: Commit corrected StarCoin rule
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "Infinity Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add js/auth.js js/ai.js index.html
+          git commit -m "Correct StarCoin minting rule"
+          git push origin HEAD:agent/tv-player-repair
