@@ -1,0 +1,46 @@
+name: Install archive resolver
+
+on:
+  push:
+    branches:
+      - agent/tv-player-repair
+    paths:
+      - .github/workflows/install-archive-resolver.yml
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/tv-player-repair
+      - name: Add resolver script to the application
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          old = '  <script src="js/app.js?v=20260804"></script>\n'
+          new = old + '  <script src="js/archive-resolver.js?v=20260804"></script>\n'
+          if new in text:
+              print('Resolver already installed')
+          elif old in text:
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+              print('Resolver installed')
+          else:
+              raise SystemExit('Expected app.js script tag was not found')
+          PY
+      - name: Commit generated integration change
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "Infinity Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git commit -m "Load metadata-based archive resolver"
+          git push origin HEAD:agent/tv-player-repair
