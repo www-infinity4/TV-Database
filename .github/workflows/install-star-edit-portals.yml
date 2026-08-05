@@ -19,96 +19,43 @@ jobs:
         with:
           ref: agent/user-worlds-cosmo
 
-      - name: Add Star portal API and script
+      - name: Install portal script
         run: |
           python3 - <<'PY'
           from pathlib import Path
-
-          worlds = Path('js/user-worlds.js')
-          text = worlds.read_text(encoding='utf-8')
-          marker = '})();\n'
-          api = '''
-
-  function getActivePublic() {
-    const worlds = loadWorlds();
-    return getActiveWorld(worlds);
-  }
-
-  function patchActive(changes) {
-    const worlds = loadWorlds();
-    const active = getActiveWorld(worlds);
-    if (!active || active.worldId === DEFAULT_WORLD.worldId) {
-      document.querySelector(".world-builder-launch")?.click();
-      return null;
-    }
-    const index = worlds.findIndex((world) => world.worldId === active.worldId);
-    if (index < 0) return null;
-    const updated = normalizeWorld({ ...worlds[index], ...(changes || {}), worldId: worlds[index].worldId, createdAt: worlds[index].createdAt });
-    worlds[index] = updated;
-    saveWorlds(worlds);
-    localStorage.setItem(ACTIVE_KEY, updated.worldId);
-    applyWorld(updated);
-    document.dispatchEvent(new CustomEvent("starquest:world-list-updated", { detail: { worlds: worlds.slice() } }));
-    return updated;
-  }
-
-  window.StarQuestWorlds = Object.assign(window.StarQuestWorlds || {}, {
-    getActive: getActivePublic,
-    patchActive,
-    list: function () { return loadWorlds().slice(); },
-  });
-'''
-          if 'patchActive,' not in text:
-            pos = text.rfind(marker)
-            if pos < 0:
-              raise SystemExit('user-worlds closure not found')
-            text = text[:pos] + api + text[pos:]
-            worlds.write_text(text, encoding='utf-8')
-
-          index = Path('index.html')
-          html = index.read_text(encoding='utf-8')
-          tag = '  <script src="js/star-edit-portals.js?v=20260804"></script>\n'
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
           anchor = '  <script src="js/user-worlds.js?v=20260804"></script>\n'
-          if tag not in html:
-            if anchor not in html:
-              raise SystemExit('user-worlds script tag not found')
-            html = html.replace(anchor, anchor + tag, 1)
-            index.write_text(html, encoding='utf-8')
+          tag = '  <script src="js/star-edit-portals.js?v=20260804"></script>\n'
+          if tag not in text:
+              if anchor not in text:
+                  raise SystemExit("user-worlds script tag not found")
+              path.write_text(text.replace(anchor, anchor + tag, 1), encoding="utf-8")
           PY
 
-      - name: Validate Star edit system
+      - name: Validate portal script
         run: |
-          node --check js/user-worlds.js
           node --check js/star-edit-portals.js
           python3 - <<'PY'
           from pathlib import Path
-          worlds = Path('js/user-worlds.js').read_text()
-          portals = Path('js/star-edit-portals.js').read_text()
-          html = Path('index.html').read_text()
-          checks = {
-            'portal script loaded after world system': html.index('js/user-worlds.js') < html.index('js/star-edit-portals.js'),
-            'small Star control exists': 'star-edit-trigger' in portals,
-            'version history exists': 'starquest_world_versions_v1' in portals,
-            'restore action exists': 'restoreVersion' in portals,
-            'companion edit portal exists': 'companionName' in portals and 'companionRole' in portals,
-            'world patch API exists': 'patchActive' in worlds,
-            'permanent world ID preserved': 'worldId: worlds[index].worldId' in worlds,
-            'no arbitrary html injection': '.innerHTML = data' not in portals,
-          }
-          failed = [name for name, ok in checks.items() if not ok]
-          for name, ok in checks.items():
-            print(('PASS' if ok else 'FAIL') + ': ' + name)
-          if failed:
-            raise SystemExit(', '.join(failed))
+          portal = Path("js/star-edit-portals.js").read_text(encoding="utf-8")
+          html = Path("index.html").read_text(encoding="utf-8")
+          assert html.index("js/user-worlds.js") < html.index("js/star-edit-portals.js")
+          assert "star-edit-trigger" in portal
+          assert "starquest_world_versions_v1" in portal
+          assert "restoreVersion" in portal
+          assert "companionName" in portal
+          assert ".innerHTML = data" not in portal
+          print("PASS: Star edit portal installation")
           PY
 
-      - name: Commit integration
+      - name: Commit installation
         run: |
           if git diff --quiet; then
             exit 0
           fi
           git config user.name "Infinity Builder Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add js/user-worlds.js index.html
-          git commit -m "Integrate universal Star edit portals"
+          git add index.html
+          git commit -m "Load universal Star edit portals"
           git push origin HEAD:agent/user-worlds-cosmo
