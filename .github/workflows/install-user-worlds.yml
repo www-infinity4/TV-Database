@@ -1,0 +1,70 @@
+name: Install user worlds prototype
+
+on:
+  push:
+    branches:
+      - agent/user-worlds-cosmo
+    paths:
+      - js/user-worlds.js
+      - .github/workflows/install-user-worlds.yml
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/user-worlds-cosmo
+
+      - name: Load user worlds after the application
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          tag = '  <script src="js/user-worlds.js?v=20260804"></script>\n'
+          anchor = '  <script src="js/archive-resolver.js?v=20260804"></script>\n'
+          if tag in text:
+              print('User worlds already installed')
+          elif anchor in text:
+              path.write_text(text.replace(anchor, anchor + tag, 1), encoding='utf-8')
+              print('User worlds installed')
+          else:
+              raise SystemExit('archive-resolver script anchor not found')
+          PY
+
+      - name: Validate prototype
+        run: |
+          node --check js/user-worlds.js
+          python3 - <<'PY'
+          from pathlib import Path
+          index = Path('index.html').read_text(encoding='utf-8')
+          script = Path('js/user-worlds.js').read_text(encoding='utf-8')
+          checks = {
+            'script loaded': 'js/user-worlds.js' in index,
+            'permanent world id': 'worldId' in script,
+            'renameable companion': 'companionName' in script,
+            'safe curated themes': 'const THEMES' in script and 'cleanText' in script,
+            'multiple creations': 'Your Creations' in script,
+            'no fake public firing': 'Public Star firing comes later' in script,
+          }
+          failed = [name for name, ok in checks.items() if not ok]
+          for name, ok in checks.items():
+              print(('PASS' if ok else 'FAIL') + ': ' + name)
+          if failed:
+              raise SystemExit(', '.join(failed))
+          PY
+
+      - name: Commit integration
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "Infinity Builder Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git commit -m "Load user worlds prototype"
+          git push origin HEAD:agent/user-worlds-cosmo
