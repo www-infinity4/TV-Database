@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://text.pollinations.ai" crossorigin />
   <link rel="dns-prefetch" href="https://text.pollinations.ai" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20260808" />
+  <link rel="stylesheet" href="css/style.css?v=20260809" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
 </head>
 <body>
@@ -86,6 +86,44 @@
     </div>
   </div>
 
+  <!-- AVATAR COIN DESIGN PORTAL -->
+  <div id="profile-portal-backdrop" class="profile-portal-backdrop" role="dialog" aria-modal="true" aria-labelledby="profile-portal-title">
+    <section class="profile-portal">
+      <button id="profile-portal-close" class="auth-close" aria-label="Close Avatar Coin portal">✕</button>
+      <div class="profile-portal__eyebrow">STARQUEST AVATAR COIN</div>
+      <h2 id="profile-portal-title">Personal Design Portal</h2>
+      <p class="profile-portal__intro">The outlined star marks a design that can be changed. It represents the original StarQuest concept—not a profile picture.</p>
+      <p class="profile-edit-context">Editing: <strong id="profile-edit-target">Your whole StarQuest page</strong></p>
+
+      <div class="design-controls" aria-labelledby="design-controls-title">
+        <h3 id="design-controls-title">Personal page design</h3>
+        <p>Every small outlined star opens this same studio. Your choices apply across this browser.</p>
+        <div class="design-option-row" role="group" aria-label="Page color style">
+          <button type="button" data-design-theme="cosmic">Cosmic</button>
+          <button type="button" data-design-theme="midnight">Midnight</button>
+          <button type="button" data-design-theme="golden">Golden</button>
+        </div>
+        <label class="design-range">Card size
+          <input id="profile-card-size" type="range" min="0" max="2" step="1" value="1" />
+          <span id="profile-card-size-label">Comfortable</span>
+        </label>
+        <div class="design-network-note">☆ Community likes, reusable designs, chain attribution, ranking, and creator payouts are the next network layer—not active yet.</div>
+      </div>
+
+      <div class="coin-map" aria-label="Coin and credit locations">
+        <article><span>Viewer access</span><strong id="profile-access-balance">0</strong><small>Credits used to unlock content</small></article>
+        <article><span>Next watch credit</span><strong id="profile-watch-progress">0%</strong><small>Eligible viewing progress</small></article>
+        <article><span>Distributor StarCoins</span><strong id="profile-distributor-coins">0</strong><small id="profile-distributor-status">Unclaimed until rights are verified</small></article>
+        <article><span>Unlocked titles</span><strong id="profile-unlocked-count">0</strong><small>Available permanently in this browser</small></article>
+      </div>
+
+      <div class="profile-portal__actions">
+        <button id="profile-save-avatar" class="btn btn-primary" type="button">Save my page</button>
+      </div>
+      <div id="profile-save-message" class="profile-save-message" role="status" aria-live="polite"></div>
+    </section>
+  </div>
+
   <!-- HAMBURGER SIDEBAR -->
   <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
   <aside id="sidebar" class="sidebar" role="complementary" aria-label="StarQuest menu">
@@ -94,7 +132,7 @@
       <button id="sidebar-close" class="sidebar-close" aria-label="Close menu">✕</button>
     </div>
     <div id="sidebar-user" class="sidebar-user">
-      <div class="sidebar-user__avatar" aria-hidden="true">🌟</div>
+      <button id="sidebar-profile-avatar" class="sidebar-user__avatar" type="button" aria-label="Open Avatar Coin design portal">☆</button>
       <div class="sidebar-user__info">
         <div id="sidebar-username" class="sidebar-user__name">Guest</div>
         <div id="sidebar-wallet" class="sidebar-wallet" title="Your StarCoins">
@@ -142,6 +180,9 @@
     </div>
 
     <nav class="sidebar-nav" aria-label="Sidebar navigation">
+      <button id="sidebar-profile-btn" class="sidebar-nav__item" type="button">
+        <span>☆</span> Avatar Coin Design Portal
+      </button>
       <button id="sidebar-signin-btn" class="sidebar-nav__item">
         <span>👤</span> Sign In / Register
       </button>
@@ -200,7 +241,7 @@
 
   <!-- NAVIGATION -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
-    <a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span>Star</span>Quest</a>
+    <div class="nav__brand"><a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span>Star</span>Quest</a><button class="design-star" type="button" data-design-target="StarQuest identity" aria-label="Customize StarQuest identity">☆</button></div>
     <ul class="nav__links" role="list">
       <li><a href="#" class="active">Home</a></li>
       <li><a href="#reading-rainbow-section">Reading Rainbow</a></li>
@@ -215,6 +256,7 @@
         <input id="search-input" type="search" placeholder="Search the galaxy…" aria-label="Search TV shows" autocomplete="off" spellcheck="false" />
         <button id="clear-search" class="sr-only" aria-label="Clear search">✕</button>
       </div>
+      <button id="nav-profile-avatar" class="nav-profile-avatar" type="button" aria-label="Open Avatar Coin design portal">☆</button>
       <div id="nav-wallet" class="nav__wallet" title="Your StarCoins">
         ⭐ <span id="nav-token-count">0</span>
       </div>
@@ -559,10 +601,10 @@
   <!-- Scripts -->
   <script src="js/data.js?v=20260808"></script>
   <script src="js/archive-discovery.js?v=20260808"></script>
-  <script src="js/auth.js?v=20260804"></script>
+  <script src="js/auth.js?v=20260809"></script>
   <script src="js/distributor-ledger.js?v=20260808"></script>
   <script src="js/ai.js?v=20260804"></script>
-  <script src="js/app.js?v=20260808"></script>
+  <script src="js/app.js?v=20260809"></script>
   <script src="js/archive-resolver.js?v=20260807"></script>
 </body>
 </html>

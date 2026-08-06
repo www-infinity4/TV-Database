@@ -1285,6 +1285,27 @@ ul { list-style: none; }
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ── Nav Wallet ── */
+.nav-profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  overflow: hidden;
+  font-size: 1.25rem;
+  background: linear-gradient(145deg, #2b1d55, #11182d);
+  border: 2px solid rgba(255,215,0,.62);
+  box-shadow: 0 0 0 3px rgba(124,58,237,.16), 0 6px 20px rgba(0,0,0,.35);
+}
+.nav__brand { display: flex; align-items: flex-start; flex: 0 0 auto; }
+.design-star {
+  display: inline-grid; place-items: center; width: 24px; height: 24px; margin-left: 4px;
+  color: #facc15; background: transparent; border: 0; border-radius: 50%;
+  font-size: 1.15rem; line-height: 1; vertical-align: super; opacity: .82;
+}
+.design-star:hover, .design-star:focus-visible { opacity: 1; background: rgba(250,204,21,.14); transform: rotate(18deg) scale(1.1); }
+.section-title .design-star { position: relative; top: -.35em; }
 .nav__wallet {
   display: flex;
   align-items: center;
@@ -1384,6 +1405,78 @@ ul { list-style: none; }
   width: 52px; height: 52px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
+  color: #fff;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ── Star ID / avatar portal ── */
+.profile-portal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(4,6,15,.84);
+  backdrop-filter: blur(14px);
+}
+.profile-portal-backdrop.open { display: flex; }
+.profile-portal {
+  position: relative;
+  width: min(760px, 100%);
+  max-height: min(880px, calc(100dvh - 30px));
+  overflow-y: auto;
+  padding: 30px;
+  border-radius: 24px;
+  color: #f8fafc;
+  background:
+    radial-gradient(circle at 88% 5%, rgba(124,58,237,.3), transparent 30%),
+    radial-gradient(circle at 4% 70%, rgba(229,9,20,.14), transparent 34%),
+    linear-gradient(155deg, #11182d, #090b16 65%);
+  border: 1px solid rgba(196,181,253,.24);
+  box-shadow: 0 30px 90px rgba(0,0,0,.65);
+}
+.profile-portal__eyebrow { color: #facc15; font: 700 .64rem/1 var(--pixel-font); letter-spacing: .12em; }
+.profile-portal h2 { margin: 10px 0 6px; font-size: clamp(1.55rem, 5vw, 2.25rem); }
+.profile-portal__intro { color: var(--text-muted); line-height: 1.5; margin-bottom: 22px; }
+.profile-edit-context { margin: -10px 0 20px; color: #c4b5fd; font-size: .78rem; }
+.coin-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 24px 0; }
+.coin-map article { min-width: 0; padding: 14px; border-radius: 14px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1); }
+.coin-map span, .coin-map small { display: block; color: var(--text-muted); font-size: .67rem; line-height: 1.3; }
+.coin-map strong { display: block; margin: 7px 0; color: #facc15; font-size: 1.4rem; }
+.profile-portal__actions { display: flex; gap: 10px; }
+.profile-save-message { min-height: 1.2em; margin-top: 12px; color: #86efac; font-size: .8rem; }
+.design-controls { margin: 22px 0 4px; padding: 18px; border-radius: 16px; background: rgba(124,58,237,.1); border: 1px solid rgba(196,181,253,.18); }
+.design-controls h3 { margin: 0 0 5px; }
+.design-controls > p { color: var(--text-muted); font-size: .78rem; margin: 0 0 14px; }
+.design-option-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.design-option-row button { padding: 9px 13px; border-radius: 999px; color: #fff; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); }
+.design-option-row button.selected { color: #111827; background: #facc15; border-color: #facc15; }
+.design-range { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; margin-top: 16px; font-size: .78rem; }
+.design-range input { width: 100%; accent-color: #facc15; }
+.design-network-note { margin-top: 16px; color: #c4b5fd; font-size: .72rem; line-height: 1.45; }
+html[data-user-theme="midnight"] body { --bg-primary: #020617; --bg-secondary: #07101f; --accent: #2563eb; }
+html[data-user-theme="golden"] body { --bg-primary: #140f05; --bg-secondary: #211807; --accent: #b45309; --accent-2: #facc15; }
+html[data-card-size="0"] .show-card { width: 175px; flex-basis: 175px; }
+html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
+
+@media (max-width: 700px) {
+  .profile-portal-backdrop { align-items: flex-end; padding: 0; }
+  .profile-portal { width: 100%; max-height: 92dvh; border-radius: 24px 24px 0 0; padding: 24px 18px calc(24px + env(safe-area-inset-bottom)); }
+  .coin-map { grid-template-columns: repeat(2, 1fr); }
+  .nav-profile-avatar { width: 38px; height: 38px; }
+  .nav__wallet { padding: 5px 8px; }
+}
+
+@media (max-width: 520px) {
+  .nav { padding-left: 10px; padding-right: 10px; gap: 8px; }
+  .nav__right { gap: 7px; }
+  .nav__search { display: none; }
+  .nav-profile-avatar { width: 40px; height: 40px; }
+  .nav__wallet { padding: 5px 7px; }
+  .hamburger { width: 34px; }
 }
 
 .sidebar-user__name {

@@ -1372,6 +1372,135 @@
   });
 
   /* ─────────────────────────────────────────────────────────────
+     AVATAR COIN DESIGN & VALUE PORTAL
+     ──────────────────────────────────────────────────────────── */
+  const profileBackdrop = $("profile-portal-backdrop");
+  const profileClose = $("profile-portal-close");
+  const profileSave = $("profile-save-avatar");
+  const profileMessage = $("profile-save-message");
+  const navProfileAvatar = $("nav-profile-avatar");
+  const sidebarProfileAvatar = $("sidebar-profile-avatar");
+  const sidebarProfileBtn = $("sidebar-profile-btn");
+  const profileEditTarget = $("profile-edit-target");
+  const profileCardSize = $("profile-card-size");
+  const profileCardSizeLabel = $("profile-card-size-label");
+  const DESIGN_KEY = "starquest_personal_design";
+  const designSizes = ["Compact", "Comfortable", "Showcase"];
+  let activeDesignTarget = "Your whole StarQuest page";
+  let pendingDesign = { theme: "cosmic", cardSize: 1 };
+
+  function distributorSummary() {
+    if (!window.AINScansDistributorLedger) return { coins: 0, verified: 0, unclaimed: 0 };
+    const ledger = window.AINScansDistributorLedger.read();
+    return Object.values(ledger.accounts || {}).reduce((sum, account) => {
+      const coins = Math.max(0, Number(account.starCoins) || 0);
+      sum.coins += coins;
+      if (account.verified) sum.verified += coins;
+      else sum.unclaimed += coins;
+      return sum;
+    }, { coins: 0, verified: 0, unclaimed: 0 });
+  }
+
+  function readPersonalDesign() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(DESIGN_KEY)) || {};
+      const theme = ["cosmic", "midnight", "golden"].includes(stored.theme) ? stored.theme : "cosmic";
+      const storedSize = Number(stored.cardSize);
+      const cardSize = Number.isInteger(storedSize) ? Math.max(0, Math.min(2, storedSize)) : 1;
+      return { theme, cardSize };
+    } catch (_) { return { theme: "cosmic", cardSize: 1 }; }
+  }
+
+  function applyPersonalDesign(design) {
+    document.documentElement.dataset.userTheme = design.theme;
+    document.documentElement.dataset.cardSize = String(design.cardSize);
+  }
+
+  function renderDesignControls() {
+    if (profileEditTarget) profileEditTarget.textContent = activeDesignTarget;
+    document.querySelectorAll("[data-design-theme]").forEach((button) => {
+      button.classList.toggle("selected", button.dataset.designTheme === pendingDesign.theme);
+    });
+    if (profileCardSize) profileCardSize.value = String(pendingDesign.cardSize);
+    if (profileCardSizeLabel) profileCardSizeLabel.textContent = designSizes[pendingDesign.cardSize];
+  }
+
+  function renderProfilePortal() {
+    const user = typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null;
+    if ($("profile-access-balance")) $("profile-access-balance").textContent = user ? (user.tokens || 0) : "0";
+    const eligible = user ? Math.max(0, Number(user.eligibleWatchSeconds) || 0) : 0;
+    const settled = user ? Math.max(0, Number(user.rewardedWatchSeconds) || 0) : 0;
+    const progress = Math.max(0, Math.min(100, Math.floor(((eligible - settled) / 3600) * 100)));
+    if ($("profile-watch-progress")) $("profile-watch-progress").textContent = progress + "%";
+    if ($("profile-unlocked-count")) $("profile-unlocked-count").textContent = user ? Object.keys(user.unlockedContent || {}).length : "0";
+    const distributor = distributorSummary();
+    if ($("profile-distributor-coins")) $("profile-distributor-coins").textContent = distributor.coins;
+    if ($("profile-distributor-status")) {
+      $("profile-distributor-status").textContent = distributor.verified
+        ? distributor.verified + " claimable · " + distributor.unclaimed + " unclaimed"
+        : distributor.unclaimed + " unclaimed until rights are verified";
+    }
+    if (profileSave) profileSave.disabled = false;
+    if (profileMessage) profileMessage.textContent = "";
+    pendingDesign = readPersonalDesign();
+    renderDesignControls();
+  }
+
+  function openProfilePortal(target) {
+    activeDesignTarget = target || "Your whole StarQuest page";
+    renderProfilePortal();
+    if (profileBackdrop) profileBackdrop.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeProfilePortal() {
+    if (profileBackdrop) profileBackdrop.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  [navProfileAvatar, sidebarProfileAvatar, sidebarProfileBtn].forEach((button) => {
+    if (button) button.addEventListener("click", () => { closeSidebar(); openProfilePortal("Your whole StarQuest page"); });
+  });
+  document.querySelectorAll(".section-title").forEach((title) => {
+    if (title.querySelector(".design-star")) return;
+    const star = document.createElement("button");
+    star.type = "button";
+    star.className = "design-star";
+    star.textContent = "☆";
+    star.dataset.designTarget = title.textContent.trim();
+    star.setAttribute("aria-label", "Customize " + title.textContent.trim());
+    title.appendChild(star);
+  });
+  document.querySelectorAll(".design-star").forEach((star) => {
+    star.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openProfilePortal(star.dataset.designTarget || "Your whole StarQuest page");
+    });
+  });
+  document.querySelectorAll("[data-design-theme]").forEach((button) => {
+    button.addEventListener("click", () => {
+      pendingDesign.theme = button.dataset.designTheme;
+      applyPersonalDesign(pendingDesign);
+      renderDesignControls();
+    });
+  });
+  if (profileCardSize) profileCardSize.addEventListener("input", () => {
+    pendingDesign.cardSize = Number(profileCardSize.value);
+    applyPersonalDesign(pendingDesign);
+    renderDesignControls();
+  });
+  if (profileClose) profileClose.addEventListener("click", closeProfilePortal);
+  if (profileBackdrop) profileBackdrop.addEventListener("click", (event) => { if (event.target === profileBackdrop) closeProfilePortal(); });
+  if (profileSave) profileSave.addEventListener("click", () => {
+    localStorage.setItem(DESIGN_KEY, JSON.stringify(pendingDesign));
+    applyPersonalDesign(pendingDesign);
+    if (profileMessage) profileMessage.textContent = "Your Avatar Coin design is saved on this device.";
+  });
+
+  applyPersonalDesign(readPersonalDesign());
+
+  /* ─────────────────────────────────────────────────────────────
      UPDATE UI FOR LOGGED-IN / LOGGED-OUT STATE
      ──────────────────────────────────────────────────────────── */
   function updateUIForUser(user) {
