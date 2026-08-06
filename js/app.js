@@ -36,6 +36,7 @@
     rowComedy: document.getElementById("row-comedy"),
     rowScifi: document.getElementById("row-scifi"),
     rowCrime: document.getElementById("row-crime"),
+    rowGameShows: document.getElementById("row-game-shows"),
     row70s: document.getElementById("row-70s"),
     row80s: document.getElementById("row-80s"),
     row90s: document.getElementById("row-90s"),
@@ -279,14 +280,18 @@
     const available = (typeof SHOWS !== "undefined" ? SHOWS.slice() : []).filter(isShowAvailable);
     const tv = available.filter(isTvFirstShow).sort(byPersonalized(stats, reasonMap));
     const movies = available.filter((show) => show.type === "movie").sort(byPersonalized(stats, reasonMap));
-    const starterOrder = ["mash", "the-twilight-zone", "due-south", "real-ghostbusters", "thomas-the-tank-engine", "new-alfred-hitchcock-presents"];
+    const starterOrder = ["mash", "the-price-is-right", "due-south", "the-twilight-zone-1985", "real-ghostbusters", "thomas-the-tank-engine", "new-alfred-hitchcock-presents"];
     const starterTV = stats ? tv : starterOrder
       .map((id) => available.find((show) => show.id === id))
       .filter(Boolean)
       .concat(tv.filter((show) => !starterOrder.includes(show.id) && show.id !== "reading-rainbow"));
-    const candidates = diverseForYou(starterTV, 14);
+    const candidates = diverseForYou(starterTV, 18);
+    const priceIsRight = available.find((show) => show.id === "the-price-is-right");
+    if (priceIsRight && !candidates.some((show) => show.id === priceIsRight.id)) {
+      candidates.splice(Math.min(2, candidates.length), 0, priceIsRight);
+    }
     for (const movie of movies) {
-      if (candidates.length >= 16) break;
+      if (candidates.length >= 20) break;
       if (!candidates.some((show) => show.id === movie.id)) candidates.push(movie);
     }
     DOM.forYouSection.style.display = "";
@@ -357,6 +362,7 @@
     renderRow(DOM.rowComedy, getShowsByGenre("Comedy").slice().sort(byScoreFreeFirst));
     renderRow(DOM.rowScifi, getShowsByGenre("Sci-Fi").slice().sort(byScoreFreeFirst));
     renderRow(DOM.rowCrime, getShowsByGenre("Crime").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowGameShows, getShowsByGenre("Game Show").slice().sort(byScoreFreeFirst));
     renderRow(DOM.rowFamily, getShowsByGenre("Family").slice().sort(byScoreFreeFirst));
     renderRow(DOM.row70s, getShowsByDecade(1970).slice().sort(byScoreFreeFirst));
     renderRow(DOM.row80s, getShowsByDecade(1980).slice().sort(byScoreFreeFirst));
@@ -377,6 +383,7 @@
     if (bucket === "1990s") renderRow(DOM.row90s, getShowsByDecade(1990).slice().sort(byScoreFreeFirst));
     if (bucket === "cartoons") renderRow(DOM.rowFamily, getShowsByGenre("Family").slice().sort(byScoreFreeFirst));
     renderRow(DOM.rowMovies, getMovies().slice().sort(byScoreFreeFirst));
+    renderForYouRow();
   }
 
   window.addEventListener("starquest:archive-discovered", event => {
@@ -423,8 +430,9 @@
              loading="lazy"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="show-card__thumb-fallback" style="display:none">
-          <span class="icon">📺</span>
-          <span>${escHTML(ep.title)}</span>
+          <span class="fallback-kicker">STARQUEST ARCHIVE</span>
+          <span class="fallback-title">${escHTML(show.title)}</span>
+          <span class="fallback-subtitle">${escHTML(ep.title)}</span>
         </div>
         <div class="show-card__play-overlay" aria-hidden="true">
           <div class="play-icon-circle">▶</div>
@@ -482,8 +490,9 @@
              loading="lazy"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="show-card__thumb-fallback" style="display:none">
-          <span class="icon">📺</span>
-          <span>${escHTML(show.title)}</span>
+          <span class="fallback-kicker">STARQUEST ARCHIVE</span>
+          <span class="fallback-title">${escHTML(show.title)}</span>
+          <span class="fallback-subtitle">${escHTML((show.genre || []).slice(0, 2).join(" · ") || show.years)}</span>
         </div>
         <div class="show-card__play-overlay" aria-hidden="true">
           <div class="play-icon-circle">${show.payToWatch ? "↗" : "▶"}</div>

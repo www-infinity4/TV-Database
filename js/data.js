@@ -957,7 +957,7 @@ const SHOWS = [
     score: 7.6,
     description:
       "Contestants compete by trying to correctly price merchandise to win cash and prizes.",
-    thumbnail: "https://archive.org/services/img/ThePriceIsRight",
+    thumbnail: "https://archive.org/services/img/september-4-1972",
     featured: false,
     episodes: [
       {
@@ -972,7 +972,7 @@ const SHOWS = [
         // Use Archive's 128 MB H.264 streaming derivative instead of the
         // 3.36 GB preservation original, which stalls on mobile connections.
         archiveFile: "September 4 1972.ia.mp4",
-        thumbnail: "https://archive.org/services/img/ThePriceIsRight",
+        thumbnail: "https://archive.org/services/img/september-4-1972",
       },
       {
         id: "tpir-s13e5731d",
