@@ -198,11 +198,6 @@
 
     const shareEvents = Array.isArray(user.shareEvents) ? user.shareEvents.slice(-250) : [];
     const watchRewardEvents = Array.isArray(user.watchRewardEvents) ? user.watchRewardEvents.slice(-250) : [];
-    const allowedAvatars = new Set(["🌟", "⭐", "🚀", "📺", "🎬", "🪐", "🛸", "🎤", "📚", "🤖"]);
-    const avatarEmoji = allowedAvatars.has(user.avatarEmoji) ? user.avatarEmoji : "🌟";
-    const avatarImage = typeof user.avatarImage === "string" &&
-      /^data:image\/(png|jpeg|webp);base64,/i.test(user.avatarImage) && user.avatarImage.length <= 450000
-      ? user.avatarImage : "";
 
     return {
       username,
@@ -224,8 +219,6 @@
       watchRewardEvents,
       unlockedContent,
       ledger,
-      avatarEmoji,
-      avatarImage,
     };
   }
 
@@ -321,18 +314,6 @@
   const Auth = {
     currentUser() {
       return getCurrentUserFromStore();
-    },
-
-    updateProfile(profile) {
-      const incoming = profile && typeof profile === "object" ? profile : {};
-      const result = mutateCurrentUser((user) => {
-        if (typeof incoming.avatarEmoji === "string") user.avatarEmoji = incoming.avatarEmoji;
-        if (typeof incoming.avatarImage === "string") user.avatarImage = incoming.avatarImage;
-        return { ok: true };
-      });
-      if (!result.ok) return result;
-      dispatch("starquest:profile-updated", { user: result.user });
-      return { ok: true, user: result.user };
     },
 
     async register(username, password) {
