@@ -92,8 +92,18 @@
       <button id="profile-portal-close" class="auth-close" aria-label="Close Avatar Coin portal">✕</button>
       <div class="profile-portal__eyebrow">STARQUEST AVATAR COIN</div>
       <h2 id="profile-portal-title">Personal Design Portal</h2>
-      <p class="profile-portal__intro">The outlined star marks a design that can be changed. It represents the original StarQuest concept—not a profile picture.</p>
+      <p class="profile-portal__intro">The small star beside an element opens controls for that exact element. It represents editable StarQuest design—not a profile picture.</p>
       <p class="profile-edit-context">Editing: <strong id="profile-edit-target">Your whole StarQuest page</strong></p>
+
+      <div class="element-editor" aria-labelledby="element-editor-title">
+        <h3 id="element-editor-title">Change this element</h3>
+        <label>Displayed words<input id="avatar-element-value" type="text" maxlength="64" /></label>
+        <div class="element-editor__actions">
+          <button id="avatar-ai-suggest" class="btn btn-secondary" type="button">Ask AI for a new idea</button>
+          <span id="avatar-ai-status" role="status" aria-live="polite"></span>
+        </div>
+        <p>The field changes the exact name or heading beside the marker. Graphic and layout generation are the next editor types.</p>
+      </div>
 
       <div class="design-controls" aria-labelledby="design-controls-title">
         <h3 id="design-controls-title">Build an Avatar Coin design</h3>
@@ -250,7 +260,7 @@
 
   <!-- NAVIGATION -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
-    <div class="nav__brand"><a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span>Star</span>Quest</a><button class="design-star" type="button" data-design-target="StarQuest identity" data-design-scope="site" aria-label="Customize StarQuest identity">☆</button></div>
+    <div class="nav__brand"><a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span id="nav-brand-name">StarQuest</span></a><button class="design-star" type="button" data-design-target="StarQuest name" data-design-key="brand-name" data-design-scope="site" aria-label="Change the StarQuest name">☆</button></div>
     <ul class="nav__links" role="list">
       <li><a href="#" class="active">Home</a></li>
       <li><a href="#reading-rainbow-section">Reading Rainbow</a></li>
@@ -612,8 +622,8 @@
   <script src="js/archive-discovery.js?v=20260808"></script>
   <script src="js/auth.js?v=20260809"></script>
   <script src="js/distributor-ledger.js?v=20260808"></script>
-  <script src="js/ai.js?v=20260804"></script>
-  <script src="js/app.js?v=20260810"></script>
+  <script src="js/ai.js?v=20260811"></script>
+  <script src="js/app.js?v=20260811"></script>
   <script src="js/archive-resolver.js?v=20260807"></script>
 </body>
 </html>
