@@ -101,7 +101,7 @@
     if (!ep || typeof ep !== "object") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
-    return !!ep.archiveId && typeof ep.archiveIndex === "number";
+    // Item-only Archive.org records are resolved from metadata at playback time.\n    return !!ep.archiveId;
   }
 
   function isShowAvailable(show) {
@@ -1695,7 +1695,7 @@
     if (!ep || typeof ep !== "object") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i.test(ep.archiveFile);
-    return !!ep.archiveId && typeof ep.archiveIndex === "number";
+    // Item-only Archive.org records are resolved from metadata at playback time.\n    return !!ep.archiveId;
   }
 
   /* Intercept player back button to stop timer */
