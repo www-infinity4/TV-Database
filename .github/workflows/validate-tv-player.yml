@@ -46,6 +46,11 @@ jobs:
               'item-only Archive records are playable': app.count('return !!ep.archiveId;') >= 2,
               'resolver uses archive metadata': 'archive.org/metadata/' in resolver,
               'resolver handles direct playback rejection': 'video.onerror' in resolver,
+              'Archive item return is not commented out': 'time.\\\\n    return !!ep.archiveId' not in app,
+              'Reading Rainbow shelf is present': 'id="row-reading-rainbow"' in index and 'rowReadingRainbow' in app,
+              'StarCoin movie shelf is present': 'id="row-starcoin-movies"' in index and 'rowStarCoinMovies' in app,
+              'For You records consented search signals': 'recordDiscoverySearch' in app,
+              'music-first content is excluded from TV pool': 'isMusicFirst(show)' in app,
               'resolver refuses unsafe collection guesses': 'could not be matched safely' in resolver,
           }
 
