@@ -1,6 +1,8 @@
 # Avatar Coin Cross-Site Standard
 
-Avatar Coin is the portable design layer for the www-infinity4 website network. It is not a profile picture. The hand-drawn outlined star marks an interface, channel, category, or whole service that can be redesigned.
+Avatar Coin is the portable design layer for the www-infinity4 website network. It is not a profile picture. A small contextual marker occupies the familiar trademark/help position beside an editable interface name or design element.
+
+The hand-drawn marks in the original StarQuest screenshots showed placement only. They are not the required visual style. Each site uses a polished symbol appropriate to its world: a star on StarQuest, an alien head on Alien Coin, and another recognizable marker where appropriate.
 
 ## What one Avatar Coin can represent
 
@@ -58,9 +60,11 @@ No blockchain claim should be shown until records are actually written to a sele
 
 ## Required experience on every participating site
 
-- Use the recognizable hand-drawn outlined-star mark.
+- Use a polished contextual marker appropriate to the site.
 - Every mark opens the same kind of portal.
-- State what the selected mark controls.
+- State what the selected mark controls and edit that exact element first.
+- A marker beside a product name must allow that displayed name to change.
+- Component markers must open component-specific controls rather than only global theme controls.
 - Offer live preview, save, reset, and reversibility.
 - Keep the site usable without personalization.
 - Store locally until a real authenticated shared service exists.
@@ -69,4 +73,4 @@ No blockchain claim should be shown until records are actually written to a sele
 
 ## Current StarQuest implementation
 
-StarQuest provides the first local prototype: three color systems, three card sizes, network/site/channel/component reach, declared creation method, and optional history-based adaptation. Saved settings remain in the current browser. The cross-site registry, public submissions, adoption counters, likes, attribution graph, moderation, and payouts remain future services.
+StarQuest provides the first local prototype: contextual name and shelf-label editing, real AI naming suggestions, three color systems, three card sizes, network/site/channel/component reach, declared creation method, and optional history-based adaptation. Saved settings remain in the current browser. AI-generated graphics and replacement layouts, the cross-site registry, public submissions, adoption counters, likes, attribution graph, moderation, and payouts remain future services.
