@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://text.pollinations.ai" crossorigin />
   <link rel="dns-prefetch" href="https://text.pollinations.ai" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20260809" />
+  <link rel="stylesheet" href="css/style.css?v=20260810" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
 </head>
 <body>
@@ -96,8 +96,13 @@
       <p class="profile-edit-context">Editing: <strong id="profile-edit-target">Your whole StarQuest page</strong></p>
 
       <div class="design-controls" aria-labelledby="design-controls-title">
-        <h3 id="design-controls-title">Personal page design</h3>
-        <p>Every small outlined star opens this same studio. Your choices apply across this browser.</p>
+        <h3 id="design-controls-title">Build an Avatar Coin design</h3>
+        <p>One design can cover the network, this site, a channel, or one component. Continued adoption is the future value signal.</p>
+        <div class="design-fields">
+          <label>Design name<input id="avatar-design-name" type="text" maxlength="48" placeholder="Name this version" /></label>
+          <label>Reach<select id="avatar-design-scope"><option value="network">Whole network</option><option value="site">This site</option><option value="channel">Channel or category</option><option value="component">This component</option></select></label>
+          <label>Creation<select id="avatar-design-mode"><option value="human">Human designed</option><option value="assisted">Human + AI assisted</option><option value="adaptive">AI adapted for me</option></select></label>
+        </div>
         <div class="design-option-row" role="group" aria-label="Page color style">
           <button type="button" data-design-theme="cosmic">Cosmic</button>
           <button type="button" data-design-theme="midnight">Midnight</button>
@@ -107,7 +112,9 @@
           <input id="profile-card-size" type="range" min="0" max="2" step="1" value="1" />
           <span id="profile-card-size-label">Comfortable</span>
         </label>
-        <div class="design-network-note">☆ Community likes, reusable designs, chain attribution, ranking, and creator payouts are the next network layer—not active yet.</div>
+        <label class="adaptive-design-toggle"><input id="avatar-auto-adapt" type="checkbox" /> Let StarQuest adapt color and card size from my viewing activity</label>
+        <div id="avatar-adapt-reason" class="avatar-adapt-reason">Automatic adaptation is off.</div>
+        <div class="design-network-note">The saved record preserves the design name, reach, creation method, and settings. Community adoption, likes, portable cross-site identity, chain attribution, rankings, and creator payouts require the future shared service and are not active yet.</div>
       </div>
 
       <div class="coin-map" aria-label="Coin and credit locations">
@@ -119,6 +126,8 @@
 
       <div class="profile-portal__actions">
         <button id="profile-save-avatar" class="btn btn-primary" type="button">Save my page</button>
+        <button id="avatar-copy-design" class="btn btn-secondary" type="button">Copy design record</button>
+        <button id="avatar-reset-design" class="btn-ghost" type="button">Reset</button>
       </div>
       <div id="profile-save-message" class="profile-save-message" role="status" aria-live="polite"></div>
     </section>
@@ -241,7 +250,7 @@
 
   <!-- NAVIGATION -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
-    <div class="nav__brand"><a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span>Star</span>Quest</a><button class="design-star" type="button" data-design-target="StarQuest identity" aria-label="Customize StarQuest identity">☆</button></div>
+    <div class="nav__brand"><a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span>Star</span>Quest</a><button class="design-star" type="button" data-design-target="StarQuest identity" data-design-scope="site" aria-label="Customize StarQuest identity">☆</button></div>
     <ul class="nav__links" role="list">
       <li><a href="#" class="active">Home</a></li>
       <li><a href="#reading-rainbow-section">Reading Rainbow</a></li>
@@ -604,7 +613,7 @@
   <script src="js/auth.js?v=20260809"></script>
   <script src="js/distributor-ledger.js?v=20260808"></script>
   <script src="js/ai.js?v=20260804"></script>
-  <script src="js/app.js?v=20260809"></script>
+  <script src="js/app.js?v=20260810"></script>
   <script src="js/archive-resolver.js?v=20260807"></script>
 </body>
 </html>
