@@ -110,7 +110,10 @@
 
     // Complete-series items must have an episode-pattern match. This prevents
     // Alfred Hitchcock from silently playing whichever file occupies a guessed index.
-    // A few files usually mean one program plus format derivatives. Large\n    // collections still require a season/episode/title match.\n    const isCollection = ranked.length > 4;\n    if (isCollection && ranked[0].score < 100) return null;
+    // A few files usually mean one program plus format derivatives. Large
+    // collections still require a season/episode/title match.
+    const isCollection = ranked.length > 4;
+    if (isCollection && ranked[0].score < 100) return null;
     return ranked[0].file;
   }
 
@@ -132,12 +135,9 @@
     }
   }
 
-  async function resolveCurrentFrame() {
-    if (internalChange) return;
-    const identifier = archiveIdFromUrl(frame.src);
+  async function resolveArchiveEpisode(identifier, context) {
     if (!identifier) return;
     const token = ++resolutionToken;
-    const context = playerContext();
 
     try {
       const metadata = await getMetadata(identifier);
@@ -171,6 +171,31 @@
       showFallback(identifier, "The archive source is temporarily unavailable. You can still open its verified source page.");
     }
   }
+
+  async function resolveCurrentFrame() {
+    if (internalChange) return;
+    const identifier = archiveIdFromUrl(frame.src);
+    if (!identifier) return;
+    return resolveArchiveEpisode(identifier, playerContext());
+  }
+
+  document.addEventListener("starquest:resolve-archive-episode", (event) => {
+    const detail = event && event.detail ? event.detail : {};
+    const identifier = String(detail.identifier || "");
+    if (!identifier) return;
+    internalChange = false;
+    frame.style.display = "none";
+    frame.src = "about:blank";
+    video.style.display = "none";
+    if (error) error.style.display = "none";
+    if (loading) loading.style.display = "flex";
+    resolveArchiveEpisode(identifier, {
+      showTitle: String(detail.showTitle || ""),
+      season: Number.isInteger(detail.season) ? detail.season : null,
+      episode: Number.isInteger(detail.episode) ? detail.episode : null,
+      episodeTitle: String(detail.episodeTitle || "")
+    });
+  });
 
   const observer = new MutationObserver(() => {
     if (archiveIdFromUrl(frame.src)) resolveCurrentFrame();
