@@ -1,0 +1,51 @@
+name: Validate TV player repair
+
+on:
+  push:
+    branches:
+      - agent/tv-player-repair
+  pull_request:
+    paths:
+      - index.html
+      - js/app.js
+      - js/data.js
+      - js/archive-resolver.js
+      - .github/workflows/validate-tv-player.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: node --check js/archive-resolver.js
+      - name: Check player integration and regression records
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          index = Path('index.html').read_text(encoding='utf-8')
+          data = Path('js/data.js').read_text(encoding='utf-8')
+          resolver = Path('js/archive-resolver.js').read_text(encoding='utf-8')
+
+          checks = {
+              'resolver script is loaded after app.js': (
+                  index.index('js/app.js') < index.index('js/archive-resolver.js')
+              ),
+              'Reading Rainbow catalog remains present': 'id: "reading-rainbow"' in data,
+              'Reading Rainbow source identifier remains present': 'ReadingRainbow0101' in data,
+              'Alfred Hitchcock catalog remains present': 'id: "new-alfred-hitchcock-presents"' in data,
+              'Hitchcock collection source remains present': 'the-new-alfred-hitchcock-presents-complete' in data,
+              'resolver uses archive metadata': 'archive.org/metadata/' in resolver,
+              'resolver refuses unsafe collection guesses': 'could not be matched safely' in resolver,
+          }
+
+          failed = [name for name, passed in checks.items() if not passed]
+          for name, passed in checks.items():
+              print(('PASS' if passed else 'FAIL') + ': ' + name)
+          if failed:
+              raise SystemExit('Validation failed: ' + ', '.join(failed))
+          PY
