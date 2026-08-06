@@ -969,6 +969,9 @@ const SHOWS = [
         duration: "60 min",
         description: "The first episode of the long-running game show hosted by Bob Barker.",
         archiveId: "september-4-1972",
+        // Use Archive's 128 MB H.264 streaming derivative instead of the
+        // 3.36 GB preservation original, which stalls on mobile connections.
+        archiveFile: "September 4 1972.ia.mp4",
         thumbnail: "https://archive.org/services/img/ThePriceIsRight",
       },
       {
@@ -980,6 +983,7 @@ const SHOWS = [
         duration: "60 min",
         description: "Bob Barker hosts a classic episode featuring six pricing games: Lucky Seven, Safe Crackers, The Phone Home Game, Squeeze Play, Secret X, and 3 Strikes.",
         archiveId: "tpir-5731d",
+        archiveFile: "tpir-5731d.mp4",
         thumbnail: "https://archive.org/services/img/tpir-5731d",
       },
     ],
