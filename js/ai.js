@@ -202,9 +202,9 @@
     /* Token/wallet facts */
     tokens: {
       howToEarn:
-        "A StarCoin is minted on the 10th verified share of a video you watched in full. Watching makes that video eligible; watching alone does not mint a coin, and incomplete or unverified shares do not count.",
+        "You earn ⭐ StarCoins by watching (1 coin per hour) and sharing shows (1 coin per 10 shares). Your coins will unlock Pay-Per-View premium content coming soon!",
       whatFor:
-        "StarCoins ⭐ record verified participation in StarQuest. Each coin is minted only when ten eligible shares have been completed from videos watched in full.",
+        "StarCoins ⭐ are your reward for being a loyal Star! They'll be used for Pay-Per-View access to premium new content — think HBO-quality originals — coming to StarQuest. Collect them now!",
     },
 
     /* Companion personality */
