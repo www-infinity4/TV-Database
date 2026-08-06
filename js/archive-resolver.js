@@ -110,8 +110,7 @@
 
     // Complete-series items must have an episode-pattern match. This prevents
     // Alfred Hitchcock from silently playing whichever file occupies a guessed index.
-    const isCollection = !/^ReadingRainbow\d{4}$/i.test(identifier);
-    if (isCollection && ranked[0].score < 100) return null;
+    // A few files usually mean one program plus format derivatives. Large\n    // collections still require a season/episode/title match.\n    const isCollection = ranked.length > 4;\n    if (isCollection && ranked[0].score < 100) return null;
     return ranked[0].file;
   }
 
