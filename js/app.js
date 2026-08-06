@@ -6,6 +6,8 @@
 (function () {
   "use strict";
 
+  const originalElementLabels = {};
+
   /* ── State ── */
   const state = {
     currentShow: null,
@@ -396,6 +398,7 @@
     shows.filter(isShowAvailable).forEach((show) => {
       container.appendChild(createShowCard(show));
     });
+    updateCarouselButtons(container);
   }
 
   /**
@@ -410,6 +413,7 @@
     episodes.forEach((ep) => {
       container.appendChild(createEpisodeCard(ep, show));
     });
+    updateCarouselButtons(container);
   }
 
   /* ── Episode Card (direct-play) ── */
@@ -440,12 +444,14 @@
         <div class="ep-season-badge">${escHTML(seasonLabel)}</div>
       </div>
       <div class="show-card__info">
-        <div class="show-card__title" title="${escAttr(ep.title)}">${escHTML(ep.title)}</div>
+        <div class="show-card__title" title="${escAttr(ep.title)}"><span class="editable-text">${escHTML(ep.title)}</span><button class="card-avatar-marker" type="button" aria-label="Change ${escAttr(ep.title)}">★</button></div>
         <div class="show-card__meta">
           <span style="color:var(--text-muted)">${escHTML(ep.year + " · " + ep.duration)}</span>
         </div>
       </div>
     `;
+
+    registerCardEditor(card, "episode-" + (ep.id || show.id + "-" + ep.season + "-" + ep.episode), ep.title);
 
     const play = () => openPlayer(ep, show.title);
     card.addEventListener("click", play);
@@ -500,7 +506,7 @@
         ${movieBadge}${payBadge}
       </div>
       <div class="show-card__info">
-        <div class="show-card__title" title="${escAttr(show.title)}">${escHTML(show.title)}</div>
+        <div class="show-card__title" title="${escAttr(show.title)}"><span class="editable-text">${escHTML(show.title)}</span><button class="card-avatar-marker" type="button" aria-label="Change ${escAttr(show.title)}">★</button></div>
         <div class="show-card__meta">
           <span class="show-card__score">★ ${escHTML(String(show.score))}</span>
           <span class="show-card__genre">${escHTML(show.genre[0])}</span>
@@ -511,6 +517,8 @@
         ${unlockCost > 0 && !isLocked ? '<div class="history-empty" style="display:block;margin-top:4px;">Unlocked</div>' : ""}
       </div>
     `;
+
+    registerCardEditor(card, "show-" + show.id, show.title);
 
     const unlockBtn = card.querySelector(".unlock-btn");
     if (unlockBtn) {
@@ -1113,12 +1121,37 @@
   }
 
   /* ── Scroll buttons ── */
+  function updateCarouselButtons(row) {
+    const wrap = row && row.closest(".card-row-wrap");
+    if (!wrap) return;
+    const left = wrap.querySelector(".scroll-btn.left");
+    const right = wrap.querySelector(".scroll-btn.right");
+    const max = Math.max(0, row.scrollWidth - row.clientWidth);
+    if (left) left.disabled = row.scrollLeft <= 6;
+    if (right) right.disabled = row.scrollLeft >= max - 6;
+  }
+
   document.querySelectorAll(".scroll-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const direction = btn.classList.contains("right") ? 1 : -1;
       const row = btn.closest(".card-row-wrap").querySelector(".card-row");
-      row.scrollBy({ left: direction * 620, behavior: "smooth" });
+      const cards = Array.from(row.querySelectorAll(".show-card"));
+      if (!cards.length) return;
+      const viewportCenter = row.scrollLeft + row.clientWidth / 2;
+      let current = 0;
+      let distance = Infinity;
+      cards.forEach((card, index) => {
+        const center = card.offsetLeft + card.offsetWidth / 2;
+        const delta = Math.abs(center - viewportCenter);
+        if (delta < distance) { distance = delta; current = index; }
+      });
+      const target = cards[Math.max(0, Math.min(cards.length - 1, current + direction))];
+      row.scrollTo({ left: target.offsetLeft - (row.clientWidth - target.offsetWidth) / 2, behavior: "smooth" });
     });
+  });
+  document.querySelectorAll(".card-row").forEach((row) => {
+    row.addEventListener("scroll", () => requestAnimationFrame(() => updateCarouselButtons(row)), { passive: true });
+    updateCarouselButtons(row);
   });
 
   /* ── "See All" buttons ── */
@@ -1400,7 +1433,21 @@
   let activeDesignKey = "brand-name";
   let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, overrides: {} };
   const AVATAR_COIN_MARK = "★";
-  const originalElementLabels = {};
+  function registerCardEditor(card, key, original) {
+    const value = card && card.querySelector(".editable-text");
+    const marker = card && card.querySelector(".card-avatar-marker");
+    if (!value || !marker) return;
+    originalElementLabels[key] = { node: value, kind: "element", original };
+    try {
+      const saved = JSON.parse(localStorage.getItem("starquest_personal_design")) || {};
+      if (saved.overrides && saved.overrides[key]) value.textContent = String(saved.overrides[key]).slice(0, 64);
+    } catch (_) {}
+    marker.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openProfilePortal(original, "component", key);
+    });
+  }
 
   function distributorSummary() {
     if (!window.AINScansDistributorLedger) return { coins: 0, verified: 0, unclaimed: 0 };
@@ -2439,6 +2486,7 @@
     if (e.key === "Escape") {
       closeAIPanel();
       closeAuthModal();
+      closeProfilePortal();
     }
   });
 
