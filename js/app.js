@@ -102,6 +102,7 @@
 
   function isEpisodePlayable(ep) {
     if (!ep || typeof ep !== "object") return false;
+    if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
     // Item-only Archive.org records are resolved from metadata at playback time.
@@ -361,6 +362,26 @@
     renderRow(DOM.row80s, getShowsByDecade(1980).slice().sort(byScoreFreeFirst));
     renderRow(DOM.row90s, getShowsByDecade(1990).slice().sort(byScoreFreeFirst));
   }
+
+  function addDiscoveredShows(bucket, shows) {
+    if (!Array.isArray(shows) || !shows.length) return;
+    const known = new Set(SHOWS.map(show => show.id));
+    shows.filter(isShowAvailable).forEach(show => {
+      if (!known.has(show.id) && Number(show.score) >= 7) {
+        SHOWS.push(show);
+        known.add(show.id);
+      }
+    });
+    if (bucket === "1970s") renderRow(DOM.row70s, getShowsByDecade(1970).slice().sort(byScoreFreeFirst));
+    if (bucket === "1980s") renderRow(DOM.row80s, getShowsByDecade(1980).slice().sort(byScoreFreeFirst));
+    if (bucket === "1990s") renderRow(DOM.row90s, getShowsByDecade(1990).slice().sort(byScoreFreeFirst));
+    if (bucket === "cartoons") renderRow(DOM.rowFamily, getShowsByGenre("Family").slice().sort(byScoreFreeFirst));
+    renderRow(DOM.rowMovies, getMovies().slice().sort(byScoreFreeFirst));
+  }
+
+  window.addEventListener("starquest:archive-discovered", event => {
+    addDiscoveredShows(event.detail?.bucket, event.detail?.shows);
+  });
 
   function renderRow(container, shows) {
     if (!container) return;
@@ -1145,6 +1166,8 @@
   }
 
   function archiveValidationStatus(ep) {
+    if (ep.sourceStatus === "restricted") return "restricted by source";
+    if (ep.sourceStatus === "file-missing") return "file missing";
     if (!ep.archiveId && !ep.youtubeId) return "identifier missing";
     if (ep.youtubeId) return "external fallback only";
     if (typeof ep.archiveFile === "string" && ep.archiveFile) {
@@ -1176,6 +1199,7 @@
   window.initHero = initHero;
   initHero();
   initRows();
+  if (window.StarQuestArchiveDiscovery) window.StarQuestArchiveDiscovery.load();
 })();
 
 /* ================================================================
@@ -1880,6 +1904,8 @@
       decade: show ? (Math.floor(parseInt(String(show.years || "").split("–")[0], 10) / 10) * 10 + "s") : "",
       tags: show && show.genre ? show.genre.slice(0, 4) : [],
       thumbnail: ep.thumbnail || (show && show.thumbnail) || "",
+      archiveId: ep.archiveId || "",
+      distributorAccount: show && show.distributorAccount ? show.distributorAccount : "",
       watchedSeconds: Math.max(0, Math.trunc(Number(StarQuestAuth.getWatchPosition(episodeId)) || 0)),
     };
 
@@ -1912,10 +1938,19 @@
         watchedSeconds: Math.floor(_watchTracker.watchedSeconds),
         duration: _watchTracker.duration,
       });
+      const distributorResult = window.AINScansDistributorLedger
+        ? window.AINScansDistributorLedger.recordEligibleWatch(_watchTracker.episodeId, delta, {
+          archiveId: _watchTracker.archiveId,
+          distributorAccount: _watchTracker.distributorAccount,
+        })
+        : null;
 
       if (watchResult && watchResult.ok && watchResult.awarded > 0) {
         showPlayerTokenNotif();
         showTokenToast("⭐ +" + watchResult.awarded + " StarCoin for watch-time!");
+      }
+      if (distributorResult && distributorResult.produced > 0) {
+        showTokenToast("⭐ " + distributorResult.produced + " distributor StarCoin produced by verified watch-time.");
       }
     }, 1000);
   }
