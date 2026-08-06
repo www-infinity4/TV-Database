@@ -1,0 +1,337 @@
+{
+  "generatedAt": "2026-08-06T01:33:10.545Z",
+  "examined": 110,
+  "resolved": 47,
+  "unresolved": 63,
+  "mappings": [
+    {
+      "id": "washingtoon-s01e05",
+      "archiveId": "washingtoon-1985",
+      "archiveIndex": 0,
+      "archiveFile": "Washingtoon - Episode 5 -(1985 Showtime sitcom) - archive.mp4",
+      "score": 166
+    },
+    {
+      "id": "washingtoon-s01e08",
+      "archiveId": "washingtoon-1985",
+      "archiveIndex": 1,
+      "archiveFile": "Washingtoon - Episode 8 - RARE - 1985 Sitcom -iyoutubetomp4 yt.mp4",
+      "score": 166
+    },
+    {
+      "id": "scream-of-fear-1961-full",
+      "archiveId": "scream-of-fear",
+      "archiveIndex": 0,
+      "archiveFile": "Scream of Fear.mp4",
+      "score": 158
+    },
+    {
+      "id": "disney-cartoon-classics-daisy-1984-full",
+      "archiveId": "walt-disney-cartoon-classics-limited-gold-edition-daisy-1984-vhs",
+      "archiveIndex": 0,
+      "archiveFile": "Walt Disney Cartoon Classics Limited Gold Edition - Daisy (1984 VHS).mp4",
+      "score": 166
+    },
+    {
+      "id": "disney-silly-symphonies-animal-tales-1986-full",
+      "archiveId": "walt-disney-cartoon-classics-silly-symphonies-animal-tales-1986-vhs",
+      "archiveIndex": 0,
+      "archiveFile": "Walt Disney Cartoon Classics - Silly Symphonies - Animal Tales (1986 VHS).mp4",
+      "score": 166
+    },
+    {
+      "id": "the-wolf-man-1941-full",
+      "archiveId": "the-wolf-man-1941_202106",
+      "archiveIndex": 0,
+      "archiveFile": "The Wolf Man - 1941.mp4",
+      "score": 158
+    },
+    {
+      "id": "halloween-cartoons-1985-full",
+      "archiveId": "halloween-cartoons-1985",
+      "archiveIndex": 0,
+      "archiveFile": "Halloween Cartoons 1985.mp4",
+      "score": 166
+    },
+    {
+      "id": "follow-that-bird-1985-full",
+      "archiveId": "sesame.-street.-presents-follow.that.-bird.-1985.-web-dl.x-264-fgt",
+      "archiveIndex": 0,
+      "archiveFile": "Sesame.Street.Presents-Follow.that.Bird.1985.WEB-DL.x264-FGT.mp4",
+      "score": 166
+    },
+    {
+      "id": "house-of-dark-shadows-1970-full",
+      "archiveId": "house-of-dark-shadows-1970",
+      "archiveIndex": 0,
+      "archiveFile": "House of Dark Shadows (1970).mp4",
+      "score": 166
+    },
+    {
+      "id": "inspector-gadget-1983-s01e01",
+      "archiveId": "inspector-gadget-go-go-gadget-series",
+      "archiveIndex": 0,
+      "archiveFile": "Inspector Gadget S01E01 Winter Olympics.mp4",
+      "score": 206
+    },
+    {
+      "id": "dungeons-dragons-1983-s02e01",
+      "archiveId": "dungeons-dragons-1983-s-02-e-01-the-girl-who-dreamed-tomorrow-1080p-hd-upscale",
+      "archiveIndex": 0,
+      "archiveFile": "Dungeons & Dragons (1983) - S02E01 - The Girl Who Dreamed Tomorrow (1080p HD Upscale).mp4",
+      "score": 346
+    },
+    {
+      "id": "ttef-s01e01",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 0,
+      "archiveFile": "S01E01 - Thomas and Gordon.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e02",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 1,
+      "archiveFile": "S01E02 - Edward and Gordon.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e03",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 2,
+      "archiveFile": "S01E03 - The Sad Story of Henry.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e04",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 3,
+      "archiveFile": "S01E04 - Edward, Gordon and Henry.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e05",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 4,
+      "archiveFile": "S01E05 - Thomas' Train.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s01e06",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 5,
+      "archiveFile": "S01E06 - Thomas and the Trucks.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e07",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 6,
+      "archiveFile": "S01E07 - Thomas and the Breakdown Train.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e08",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 7,
+      "archiveFile": "S01E08 - James and the Coaches.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e09",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 8,
+      "archiveFile": "S01E09 - Troublesome Trucks.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e10",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 9,
+      "archiveFile": "S01E10 - James and the Express.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e11",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 10,
+      "archiveFile": "S01E11 - Thomas and the Guard.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e12",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 11,
+      "archiveFile": "S01E12 - Thomas Goes Fishing.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e13",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 12,
+      "archiveFile": "S01E13 - Thomas, Terence and the Snow.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e14",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 13,
+      "archiveFile": "S01E14 - Thomas and Bertie.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e15",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 14,
+      "archiveFile": "S01E15 - Tenders and Turntables.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e16",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 15,
+      "archiveFile": "S01E16 - Trouble in the Shed.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e17",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 16,
+      "archiveFile": "S01E17 - Percy Runs Away.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e18",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 17,
+      "archiveFile": "S01E18 - Coal.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e19",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 18,
+      "archiveFile": "S01E19 - The Flying Kipper.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s01e20",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 19,
+      "archiveFile": "S01E20 - Whistles and Sneezes.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s02e01",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 20,
+      "archiveFile": "S02E01 - Thomas, Percy and the Coal.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s02e02",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 21,
+      "archiveFile": "S02E02 - Cows.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s02e03",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 22,
+      "archiveFile": "S02E03 - Bertie's Chase.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s02e04",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 23,
+      "archiveFile": "S02E04 - Saved from Scrap.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s02e05",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 24,
+      "archiveFile": "S02E05 - Old Iron.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s02e06",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 25,
+      "archiveFile": "S02E06 - Thomas and Trevor.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s03e01",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 36,
+      "archiveFile": "S03E01 - A Scarf for Percy.mp4",
+      "score": 338
+    },
+    {
+      "id": "ttef-s03e02",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 37,
+      "archiveFile": "S03E02 - Percy's Promise.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s03e03",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 38,
+      "archiveFile": "S03E03 - Time for Trouble.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s03e04",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 39,
+      "archiveFile": "S03E04 - Gordon and the Famous Visitor.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s04e01",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 52,
+      "archiveFile": "S04E01 - Granpuff.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s04e02",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 53,
+      "archiveFile": "S04E02 - Sleeping Beauty.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s04e03",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 54,
+      "archiveFile": "S04E03 - Bulldog.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s05e01",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 65,
+      "archiveFile": "S05E01 - Cranky Bugs.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s05e02",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 66,
+      "archiveFile": "S05E02 - Horrid Lorry.mp4",
+      "score": 198
+    },
+    {
+      "id": "ttef-s05e03",
+      "archiveId": "thomas-the-tank-engine-friends-the-complete-series-1-5-1984-98",
+      "archiveIndex": 67,
+      "archiveFile": "S05E03 - A Better View for Gordon.mp4",
+      "score": 198
+    }
+  ]
+}
