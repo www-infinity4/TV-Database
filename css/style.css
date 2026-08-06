@@ -318,7 +318,7 @@ ul { list-style: none; }
 
 /* ── Show Card ── */
 .show-card {
-  flex: 0 0 200px;
+  flex: 0 0 240px;
   scroll-snap-align: start;
   border-radius: var(--radius);
   overflow: hidden;
@@ -356,17 +356,38 @@ ul { list-style: none; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1a1a3a, #2a1a4a);
+  background:
+    radial-gradient(circle at 78% 18%, rgba(192,132,252,.32), transparent 34%),
+    linear-gradient(145deg, #10182d 0%, #29164c 58%, #0b0f1d 100%);
   font-size: .7rem;
-  color: var(--text-muted);
+  color: #fff;
   text-align: center;
   padding: 8px;
-  gap: 6px;
+  gap: 7px;
+  border: 1px solid rgba(255,255,255,.12);
 }
 
-.show-card__thumb-fallback .icon {
-  font-size: 2rem;
-  opacity: .6;
+.fallback-kicker {
+  font-size: .55rem;
+  font-weight: 900;
+  letter-spacing: .16em;
+  color: #c4b5fd;
+}
+
+.fallback-title {
+  max-width: 92%;
+  font-size: 1rem;
+  line-height: 1.08;
+  font-weight: 900;
+  text-wrap: balance;
+  text-shadow: 0 3px 16px rgba(0,0,0,.65);
+}
+
+.fallback-subtitle {
+  max-width: 90%;
+  font-size: .62rem;
+  line-height: 1.2;
+  color: rgba(255,255,255,.72);
 }
 
 .show-card__play-overlay {
@@ -823,8 +844,10 @@ ul { list-style: none; }
   .nav__search input { width: 120px; }
   .hero__title { font-size: 1.8rem; }
   .hero__btns .btn { padding: 9px 18px; font-size: .85rem; }
-  .show-card { flex: 0 0 calc(50vw - 20px); }
-  .card-row { padding: 4px 12px 14px; gap: 8px; }
+  .show-card { flex: 0 0 min(78vw, 300px); }
+  .card-row { padding: 4px 16px 18px; gap: 14px; }
+  .show-card__title { font-size: 1rem; }
+  .show-card__meta { font-size: .8rem; }
   .modal { border-radius: 0; }
   .modal__hero { height: 180px; }
   .search-grid { grid-template-columns: repeat(2, 1fr); }
