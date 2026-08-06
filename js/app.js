@@ -65,6 +65,9 @@
     rowMovies: document.getElementById("row-movies"),
     rowFamily: document.getElementById("row-family"),
     rowForYou: document.getElementById("row-for-you"),
+    rowReadingRainbow: document.getElementById("row-reading-rainbow"),
+    readingRainbowBrowseAll: document.getElementById("reading-rainbow-browse-all"),
+    rowStarCoinMovies: document.getElementById("row-starcoin-movies"),
     forYouSection: document.getElementById("for-you-section"),
     forYouGenreLabel: document.getElementById("for-you-genre-label"),
     allEpsBackdrop: document.getElementById("all-eps-backdrop"),
@@ -101,7 +104,8 @@
     if (!ep || typeof ep !== "object") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
-    // Item-only Archive.org records are resolved from metadata at playback time.\n    return !!ep.archiveId;
+    // Item-only Archive.org records are resolved from metadata at playback time.
+    return !!ep.archiveId;
   }
 
   function isShowAvailable(show) {
@@ -114,28 +118,73 @@
     return show.episodes.find(isEpisodePlayable) || show.episodes[0] || null;
   }
 
+  const DISCOVERY_KEY = "starquest.discovery.v1";
+
+  function showGenres(show) {
+    return (show && Array.isArray(show.genre) ? show.genre : []).map((genre) => String(genre).toLowerCase());
+  }
+
+  function isMusicFirst(show) {
+    const type = String((show && show.type) || "").toLowerCase();
+    const genres = showGenres(show);
+    return type === "music-video" || type === "concert" ||
+      (genres.some((genre) => /^(music|concert|performance)$/.test(genre)) &&
+       !genres.some((genre) => /drama|comedy|family|animation|documentary/.test(genre)));
+  }
+
   function isTvFirstShow(show) {
-    if (!show || !Array.isArray(show.episodes) || !show.episodes.length) return false;
+    if (!show || !Array.isArray(show.episodes) || !show.episodes.length || isMusicFirst(show)) return false;
     const type = String(show.type || "").toLowerCase();
     if (TV_FIRST_TYPES.has(type)) return true;
-    if (!type) return show.episodes.length > 1;
-    return !["movie", "documentary", "music-video", "concert"].includes(type);
+    if (["movie", "documentary", "music-video", "concert"].includes(type)) return false;
+    const genres = showGenres(show);
+    const tvGenre = genres.some((genre) =>
+      /drama|comedy|crime|mystery|sci-fi|fantasy|family|kids|animation|animated|game show|soap|educational/.test(genre)
+    );
+    return tvGenre && (show.episodes.length > 1 || !type);
+  }
+
+  function loadDiscoverySignals() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(DISCOVERY_KEY) || "{}");
+      return {
+        searches: Array.isArray(parsed.searches) ? parsed.searches.slice(-30) : [],
+        shows: parsed.shows && typeof parsed.shows === "object" ? parsed.shows : {}
+      };
+    } catch (_) {
+      return { searches: [], shows: {} };
+    }
+  }
+
+  function saveDiscoverySignals(signals) {
+    try { localStorage.setItem(DISCOVERY_KEY, JSON.stringify(signals)); } catch (_) {}
+  }
+
+  function recordDiscoverySearch(query) {
+    const clean = String(query || "").trim().toLowerCase();
+    if (clean.length < 2) return;
+    const signals = loadDiscoverySignals();
+    if (signals.searches[signals.searches.length - 1] !== clean) signals.searches.push(clean);
+    signals.searches = signals.searches.slice(-30);
+    saveDiscoverySignals(signals);
+  }
+
+  function recordDiscoveryShow(show) {
+    if (!show || !show.id) return;
+    const signals = loadDiscoverySignals();
+    signals.shows[show.id] = Math.min(25, Number(signals.shows[show.id] || 0) + 1);
+    saveDiscoverySignals(signals);
   }
 
   function historyStats() {
-    if (typeof StarQuestAuth === "undefined") return null;
-    const history = StarQuestAuth.getHistory().slice(0, MAX_HISTORY_ITEMS);
-    if (!history.length) return null;
-    const genre = {};
-    const decade = {};
-    const series = {};
-    const completedBySeries = {};
-    const recencyByShow = {};
-    const recencyByGenre = {};
-    const recencyByDecade = {};
-    const recentShows = new Set();
-    const recent = new Set();
-    const watchedShows = new Set();
+    const history = typeof StarQuestAuth !== "undefined" ? StarQuestAuth.getHistory().slice(0, MAX_HISTORY_ITEMS) : [];
+    const discovery = loadDiscoverySignals();
+    const unlocked = typeof StarQuestAuth !== "undefined" && StarQuestAuth.getUnlockedContent
+      ? StarQuestAuth.getUnlockedContent() : [];
+    if (!history.length && !discovery.searches.length && !Object.keys(discovery.shows).length && !unlocked.length) return null;
+    const genre = {}, decade = {}, series = {}, completedBySeries = {};
+    const recencyByShow = {}, recencyByGenre = {}, recencyByDecade = {};
+    const recentShows = new Set(), recent = new Set(), watchedShows = new Set();
     const total = history.length;
     history.forEach((item, idx) => {
       const recencyWeight = Math.max(0.2, 1 - (idx / Math.max(1, total)));
@@ -159,23 +208,19 @@
       if (idx < 8 && item.episodeId) recent.add(item.episodeId);
       if (idx < 6 && sid) recentShows.add(sid);
     });
+    unlocked.forEach((item) => {
+      const id = String(item.contentId || "").replace(/^show:/, "");
+      if (id) series[id] = (series[id] || 0) + 2;
+    });
     return {
-      history,
-      genre,
-      decade,
-      series,
-      completedBySeries,
-      recent,
-      watchedShows,
-      recencyByShow,
-      recencyByGenre,
-      recencyByDecade,
-      recentShows
+      history, genre, decade, series, completedBySeries, recent, watchedShows,
+      recencyByShow, recencyByGenre, recencyByDecade, recentShows,
+      searches: discovery.searches, explicitShows: discovery.shows
     };
   }
 
   function scoreShowForUser(show, stats) {
-    if (!stats) return { score: show.score || 0, reason: "Starter pick from a different era and genre." };
+    if (!stats) return { score: (show.score || 0) + (isTvFirstShow(show) ? 35 : 0), reason: "Highly rated television from across genres and decades." };
     const genreAffinity = (show.genre || []).reduce((sum, g) => sum + (stats.genre[g] || 0), 0);
     const genreRecency = (show.genre || []).reduce((sum, g) => sum + (stats.recencyByGenre[g] || 0), 0);
     const decadeKey = showDecade(show);
@@ -183,76 +228,71 @@
     const decadeRecency = stats.recencyByDecade[decadeKey] || 0;
     const seriesAffinity = stats.series[show.id] || 0;
     const seriesRecency = stats.recencyByShow[show.id] || 0;
-    const completionAffinity = stats.completedBySeries[show.id] || 0;
-    const repeatViewing = Math.max(0, seriesAffinity - 1);
-    const unexploredBonus = stats.watchedShows.has(show.id) ? 0 : 1;
-    const completedPenalty = completionAffinity > 2 ? 1 : 0;
-    const hardRecentPenalty = stats.recentShows && stats.recentShows.has(show.id) ? 1 : 0;
-    const recentlyWatchedPenalty = show.episodes.some((ep) => stats.recent.has(buildEpisodeId(ep, show))) ? 1 : 0;
-    const tvExperienceBoost = isTvFirstShow(show) ? TV_SHOW_BOOST : NON_TV_PENALTY;
-    const episodicBonus = Math.min(24, Math.max(0, show.episodes.length - 1) * 2);
+    const explicitInterest = Number(stats.explicitShows[show.id] || 0);
+    const searchable = [show.title, show.description].concat(show.genre || []).join(" ").toLowerCase();
+    const searchAffinity = stats.searches.reduce((sum, term, idx) =>
+      sum + (searchable.includes(term) ? 1 + idx / Math.max(1, stats.searches.length) : 0), 0);
+    const recentlyWatched = stats.recentShows.has(show.id);
+    const discoveryBonus = stats.watchedShows.has(show.id) ? 0 : 22;
+    const tvBoost = isTvFirstShow(show) ? 65 : (isMusicFirst(show) ? -90 : -15);
     const score =
-      genreAffinity * 22 +
-      genreRecency * 44 +
-      decadeAffinity * 12 +
-      decadeRecency * 28 +
-      seriesAffinity * 15 +
-      seriesRecency * 52 +
-      completionAffinity * 15 +
-      repeatViewing * 4 +
-      unexploredBonus * 18 -
-      recentlyWatchedPenalty * 30 -
-      hardRecentPenalty * 55 -
-      completedPenalty * 30 +
-      tvExperienceBoost +
-      episodicBonus +
-      (show.score || 0);
-    const leadGenre = (show.genre && show.genre[0]) || "classic";
-    const reason = stats.watchedShows.has(show.id)
-      ? "Picked because you watch " + decadeKey + " " + leadGenre.toLowerCase() + " and revisit this series."
-      : "Picked because you watch " + decadeKey + " " + leadGenre.toLowerCase() + " and completed similar episodes.";
+      genreAffinity * 20 + genreRecency * 38 +
+      decadeAffinity * 10 + decadeRecency * 24 +
+      seriesAffinity * 18 + seriesRecency * 45 +
+      explicitInterest * 35 + searchAffinity * 55 +
+      discoveryBonus - (recentlyWatched ? 45 : 0) +
+      tvBoost + Math.min(18, Math.max(0, show.episodes.length - 1)) + (show.score || 0);
+    let reason = "Recommended from your mix of favorite genres, decades, and highly rated television.";
+    if (searchAffinity > 0) reason = "Matches things you searched for in StarQuest.";
+    else if (explicitInterest > 0) reason = "Based on shows you opened and explored.";
+    else if (seriesAffinity > 0) reason = "Based on your viewing and unlocked entertainment.";
     return { score, reason };
   }
 
   function byPersonalized(stats, reasonMap = {}) {
     return function (a, b) {
-      const aPay = a.starCoinCost > 0 ? 1 : 0;
-      const bPay = b.starCoinCost > 0 ? 1 : 0;
-      if (aPay !== bPay) return aPay - bPay;
-      const aScore = scoreShowForUser(a, stats);
-      const bScore = scoreShowForUser(b, stats);
-      reasonMap[a.id] = aScore.reason;
-      reasonMap[b.id] = bScore.reason;
-      if (bScore.score !== aScore.score) return bScore.score - aScore.score;
-      return String(a.title || "").localeCompare(String(b.title || ""));
+      const aScore = scoreShowForUser(a, stats), bScore = scoreShowForUser(b, stats);
+      reasonMap[a.id] = aScore.reason; reasonMap[b.id] = bScore.reason;
+      return bScore.score !== aScore.score ? bScore.score - aScore.score : String(a.title || "").localeCompare(String(b.title || ""));
     };
+  }
+
+  function diverseForYou(sorted, limit) {
+    const picked = [], genreCounts = {}, decadeCounts = {};
+    for (const show of sorted) {
+      const genre = (show.genre && show.genre[0]) || "Other";
+      const decade = showDecade(show) || "Other";
+      if ((genreCounts[genre] || 0) >= 3 || (decadeCounts[decade] || 0) >= 5) continue;
+      picked.push(show);
+      genreCounts[genre] = (genreCounts[genre] || 0) + 1;
+      decadeCounts[decade] = (decadeCounts[decade] || 0) + 1;
+      if (picked.length >= limit) break;
+    }
+    return picked;
   }
 
   function renderForYouRow() {
     if (!DOM.rowForYou || !DOM.forYouSection) return;
     const reasonEl = document.getElementById("for-you-reason");
-    const stats = historyStats();
-    const reasonMap = {};
+    const stats = historyStats(), reasonMap = {};
     const available = (typeof SHOWS !== "undefined" ? SHOWS.slice() : []).filter(isShowAvailable);
-    const primary = available.filter(isTvFirstShow).sort(byPersonalized(stats, reasonMap));
-    const secondary = available
-      .filter((show) => !isTvFirstShow(show))
-      .sort(byPersonalized(stats, reasonMap));
-    const candidates = primary.concat(secondary).slice(0, 16);
+    const tv = available.filter(isTvFirstShow).sort(byPersonalized(stats, reasonMap));
+    const movies = available.filter((show) => show.type === "movie").sort(byPersonalized(stats, reasonMap));
+    const candidates = diverseForYou(tv, 14);
+    for (const movie of movies) {
+      if (candidates.length >= 16) break;
+      if (!candidates.some((show) => show.id === movie.id)) candidates.push(movie);
+    }
     DOM.forYouSection.style.display = "";
     renderRow(DOM.rowForYou, candidates);
+    DOM.rowForYou.scrollLeft = 0;
     const first = candidates[0];
-    if (DOM.forYouGenreLabel) {
-      DOM.forYouGenreLabel.textContent = stats ? "Series & Shows for You" : "Starter TV picks";
-    }
-    if (reasonEl) {
-      reasonEl.textContent = first ? (reasonMap[first.id] || "Starter picks from across genres and decades.") : "No available recommendations yet.";
-    }
+    if (DOM.forYouGenreLabel) DOM.forYouGenreLabel.textContent = stats ? "Built from your StarQuest activity" : "Best starter television";
+    if (reasonEl) reasonEl.textContent = first ? (reasonMap[first.id] || scoreShowForUser(first, stats).reason) : "No available recommendations yet.";
     document.dispatchEvent(new CustomEvent("starquest:recommendations-updated", {
       detail: { hasHistory: !!stats, recommendations: candidates.map((show) => show.id) }
     }));
   }
-
 
   function initHero() {
     const featured = getFeaturedShows().filter(isShowAvailable);
@@ -302,6 +342,8 @@
 
   function initRows() {
     renderForYouRow();
+    renderRow(DOM.rowReadingRainbow, [getShowById("reading-rainbow")].filter(Boolean));
+    renderRow(DOM.rowStarCoinMovies, getMovies().filter((show) => (show.starCoinCost || 0) > 0).sort(byScore));
     renderRow(DOM.rowFeatured, getFeaturedShows().slice().sort(byScoreFreeFirst));
     renderEpisodeRow(DOM.rowDueSouth, getShowById("due-south"), 0, 1);
     renderRow(DOM.rowMovies, getMovies().slice().sort(byScoreFreeFirst));
@@ -511,6 +553,7 @@
 
   /* ── Modal ── */
   function openModal(show) {
+    recordDiscoveryShow(show);
     DOM.modalTitle.textContent = show.title;
     DOM.modalScore.textContent = "★ " + show.score;
     DOM.modalRating.textContent = show.rating;
@@ -805,6 +848,13 @@
     if (e.target && e.target.id === "cosmo-popin-close") hideCosmoPopIn();
   });
 
+  if (DOM.readingRainbowBrowseAll) {
+    DOM.readingRainbowBrowseAll.addEventListener("click", () => {
+      const show = getShowById("reading-rainbow");
+      if (show) openModal(show);
+    });
+  }
+
   DOM.playerBack.addEventListener("click", closePlayer);
 
 
@@ -848,6 +898,7 @@
   function handleSearch() {
     const q = DOM.searchInput.value.trim().toLowerCase();
     state.searchQuery = q;
+    if (q.length >= 2) recordDiscoverySearch(q);
 
     if (!q) {
       DOM.searchOverlay.classList.remove("open");
@@ -1695,7 +1746,8 @@
     if (!ep || typeof ep !== "object") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i.test(ep.archiveFile);
-    // Item-only Archive.org records are resolved from metadata at playback time.\n    return !!ep.archiveId;
+    // Item-only Archive.org records are resolved from metadata at playback time.
+    return !!ep.archiveId;
   }
 
   /* Intercept player back button to stop timer */
