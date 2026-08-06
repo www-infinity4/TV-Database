@@ -725,21 +725,6 @@
       const now = Date.now();
 
       const result = mutateCurrentUser((user) => {
-        const episodeKey = id.includes("|") ? id.split("|").pop() : id;
-        const completedHistory = Array.isArray(user.watchHistory)
-          ? user.watchHistory.find((item) => {
-              if (!item || !item.completed) return false;
-              const historyId = String(item.episodeId || "");
-              return historyId === episodeKey || historyId.endsWith("|" + episodeKey);
-            })
-          : null;
-        if (!completedHistory) {
-          return { ok: false, error: "share_requires_full_watch", message: "Watch this video in full before its share can count toward a StarCoin." };
-        }
-        if (!opts.verified) {
-          return { ok: false, error: "share_not_verified", message: "The share must be completed before it can count toward a StarCoin." };
-        }
-
         if (!user.shareCooldownByContent || typeof user.shareCooldownByContent !== "object") {
           user.shareCooldownByContent = {};
         }
@@ -775,10 +760,10 @@
           appendLedger(
             user,
             1,
-            "StarCoin minted: 10 verified shares of fully watched videos",
+            "Share reward (prototype): 10 shares",
             event.id,
             "share_reward",
-            "verified full-watch share mint"
+            "share reward"
           );
         }
 
@@ -856,10 +841,34 @@
           }
         }
 
-        // Watching establishes eligibility; it does not mint StarCoins by itself.
-        // A StarCoin is minted only on each tenth verified share of a fully watched video.
-        const rewardCount = 0;
+        const availableRewardSeconds = Math.max(0, user.eligibleWatchSeconds - user.rewardedWatchSeconds);
+        const rewardCount = Math.floor(availableRewardSeconds / WATCH_SECONDS_PER_COIN);
         const awardedEvents = [];
+
+        for (let i = 0; i < rewardCount; i++) {
+          const eventId = createEventId("watch-reward");
+          user.rewardedWatchSeconds += WATCH_SECONDS_PER_COIN;
+          user.tokens = Math.max(0, toInt(user.tokens, 0) + 1);
+          const event = {
+            id: eventId,
+            contentId: id,
+            createdAt: Date.now(),
+            rewardedSeconds: user.rewardedWatchSeconds,
+            eligibleWatchSeconds: user.eligibleWatchSeconds,
+            amount: 1,
+          };
+          user.watchRewardEvents.push(event);
+          user.watchRewardEvents = user.watchRewardEvents.slice(-250);
+          appendLedger(
+            user,
+            1,
+            "Watch reward: 1 hour eligible watch-time",
+            eventId,
+            "watch_reward",
+            "watch reward"
+          );
+          awardedEvents.push(event);
+        }
 
         return {
           rewardCount,
