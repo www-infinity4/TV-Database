@@ -1,9 +1,6 @@
 name: Validate TV player repair
 
 on:
-  push:
-    branches:
-      - agent/tv-player-repair
   pull_request:
     paths:
       - index.html
@@ -21,7 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check JavaScript syntax
-        run: node --check js/archive-resolver.js
+        run: |
+          node --check js/data.js
+          node --check js/app.js
+          node --check js/archive-resolver.js
       - name: Check player integration and regression records
         run: |
           python3 - <<'PY'
@@ -29,6 +29,7 @@ jobs:
 
           index = Path('index.html').read_text(encoding='utf-8')
           data = Path('js/data.js').read_text(encoding='utf-8')
+          app = Path('js/app.js').read_text(encoding='utf-8')
           resolver = Path('js/archive-resolver.js').read_text(encoding='utf-8')
 
           checks = {
@@ -36,10 +37,15 @@ jobs:
                   index.index('js/app.js') < index.index('js/archive-resolver.js')
               ),
               'Reading Rainbow catalog remains present': 'id: "reading-rainbow"' in data,
-              'Reading Rainbow source identifier remains present': 'ReadingRainbow0101' in data,
+              'Reading Rainbow uses live collection': 'ReadingRainbowTVSeries' in data,
+              'dead Reading Rainbow item IDs removed': 'archiveId: "ReadingRainbow01' not in data,
+              'MASH uses live replacement collection': 'mash-complete-series_202511' in data,
+              'dark MASH collection removed': 'archiveId: "MASH-Complete-Series"' not in data,
               'Alfred Hitchcock catalog remains present': 'id: "new-alfred-hitchcock-presents"' in data,
               'Hitchcock collection source remains present': 'the-new-alfred-hitchcock-presents-complete' in data,
+              'item-only Archive records are playable': app.count('return !!ep.archiveId;') >= 2,
               'resolver uses archive metadata': 'archive.org/metadata/' in resolver,
+              'resolver handles direct playback rejection': 'video.onerror' in resolver,
               'resolver refuses unsafe collection guesses': 'could not be matched safely' in resolver,
           }
 

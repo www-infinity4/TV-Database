@@ -110,8 +110,7 @@
 
     // Complete-series items must have an episode-pattern match. This prevents
     // Alfred Hitchcock from silently playing whichever file occupies a guessed index.
-    const isCollection = !/^ReadingRainbow\d{4}$/i.test(identifier);
-    if (isCollection && ranked[0].score < 100) return null;
+    // A few files usually mean one program plus format derivatives. Large\n    // collections still require a season/episode/title match.\n    const isCollection = ranked.length > 4;\n    if (isCollection && ranked[0].score < 100) return null;
     return ranked[0].file;
   }
 
@@ -153,12 +152,18 @@
       frame.style.display = "none";
       frame.src = "about:blank";
       video.style.display = "block";
+      video.oncanplay = () => {
+        if (loading) loading.style.display = "none";
+        if (error) error.style.display = "none";
+      };
+      video.onerror = () => {
+        video.style.display = "none";
+        showFallback(identifier, "The selected archive file is not available for direct playback. Open the verified source page instead.");
+      };
       video.src = directUrl(identifier, file.name);
       video.load();
       const promise = video.play();
       if (promise && typeof promise.catch === "function") promise.catch(() => {});
-      if (loading) loading.style.display = "none";
-      if (error) error.style.display = "none";
       window.setTimeout(() => { internalChange = false; }, 0);
     } catch (problem) {
       if (token !== resolutionToken) return;
