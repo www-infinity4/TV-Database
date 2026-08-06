@@ -152,12 +152,18 @@
       frame.style.display = "none";
       frame.src = "about:blank";
       video.style.display = "block";
+      video.oncanplay = () => {
+        if (loading) loading.style.display = "none";
+        if (error) error.style.display = "none";
+      };
+      video.onerror = () => {
+        video.style.display = "none";
+        showFallback(identifier, "The selected archive file is not available for direct playback. Open the verified source page instead.");
+      };
       video.src = directUrl(identifier, file.name);
       video.load();
       const promise = video.play();
       if (promise && typeof promise.catch === "function") promise.catch(() => {});
-      if (loading) loading.style.display = "none";
-      if (error) error.style.display = "none";
       window.setTimeout(() => { internalChange = false; }, 0);
     } catch (problem) {
       if (token !== resolutionToken) return;
