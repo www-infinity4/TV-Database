@@ -6,7 +6,23 @@
 (function () {
   "use strict";
 
-  const originalElementLabels = {};
+  const originalElementLabels = window.StarQuestEditableRegistry = window.StarQuestEditableRegistry || {};
+
+  function registerCardEditor(card, key, original) {
+    const value = card && card.querySelector(".editable-text");
+    const marker = card && card.querySelector(".card-avatar-marker");
+    if (!value || !marker) return;
+    originalElementLabels[key] = { node: value, kind: "element", original };
+    try {
+      const saved = JSON.parse(localStorage.getItem("starquest_personal_design")) || {};
+      if (saved.overrides && saved.overrides[key]) value.textContent = String(saved.overrides[key]).slice(0, 64);
+    } catch (_) {}
+    marker.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      document.dispatchEvent(new CustomEvent("starquest:edit-element", { detail: { target: original, scope: "component", key } }));
+    });
+  }
 
   /* ── State ── */
   const state = {
@@ -1250,6 +1266,8 @@
 (function () {
   "use strict";
 
+  const originalElementLabels = window.StarQuestEditableRegistry = window.StarQuestEditableRegistry || {};
+
   /* ── State ── */
   let _currentEpisode = null;  /* set when player opens */
   let _currentShowTitle = "";
@@ -1433,22 +1451,6 @@
   let activeDesignKey = "brand-name";
   let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, overrides: {} };
   const AVATAR_COIN_MARK = "★";
-  function registerCardEditor(card, key, original) {
-    const value = card && card.querySelector(".editable-text");
-    const marker = card && card.querySelector(".card-avatar-marker");
-    if (!value || !marker) return;
-    originalElementLabels[key] = { node: value, kind: "element", original };
-    try {
-      const saved = JSON.parse(localStorage.getItem("starquest_personal_design")) || {};
-      if (saved.overrides && saved.overrides[key]) value.textContent = String(saved.overrides[key]).slice(0, 64);
-    } catch (_) {}
-    marker.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      openProfilePortal(original, "component", key);
-    });
-  }
-
   function distributorSummary() {
     if (!window.AINScansDistributorLedger) return { coins: 0, verified: 0, unclaimed: 0 };
     const ledger = window.AINScansDistributorLedger.read();
@@ -1548,6 +1550,10 @@
     if (profileBackdrop) profileBackdrop.classList.remove("open");
     document.body.style.overflow = "";
   }
+  document.addEventListener("starquest:edit-element", (event) => {
+    const detail = event.detail || {};
+    openProfilePortal(detail.target, detail.scope, detail.key);
+  });
 
   [sidebarProfileBtn].forEach((button) => {
     if (button) button.addEventListener("click", () => { closeSidebar(); openProfilePortal("StarQuest name", "site", "brand-name"); });
@@ -1867,27 +1873,6 @@
       return;
     }
 
-    function renderUnlockedContent(user) {
-      const list = $("unlocked-content-list");
-      const empty = $("unlocked-content-empty");
-      if (!list) return;
-      Array.from(list.querySelectorAll(".ledger-item")).forEach((el) => el.remove());
-      const items = (user && typeof StarQuestAuth !== "undefined") ? StarQuestAuth.getUnlockedContent() : [];
-      if (!items.length) {
-        if (empty) empty.style.display = "";
-        return;
-      }
-      if (empty) empty.style.display = "none";
-      items.slice(0, 20).forEach((item) => {
-        const el = document.createElement("div");
-        el.className = "ledger-item";
-        el.innerHTML = `
-          <span class="ledger-item__reason">${escHTMLSQ(item.title || item.contentId)}</span>
-          <span class="ledger-item__amount">${escHTMLSQ(String(item.cost || 0))} ⭐</span>
-        `;
-        list.appendChild(el);
-      });
-    }
     if (empty) empty.style.display = "none";
 
     ledger.forEach((tx) => {
@@ -1905,6 +1890,28 @@
         <span class="ledger-item__amount">${sign}${escHTMLSQ(String(Math.abs(amount)))} ⭐</span>
         <span class="ledger-item__reason">${escHTMLSQ(label)} · ${escHTMLSQ(tx.reason || "")}</span>
         <span class="ledger-item__balance">bal: ${escHTMLSQ(String(tx.balance))}</span>
+      `;
+      list.appendChild(el);
+    });
+  }
+
+  function renderUnlockedContent(user) {
+    const list = $("unlocked-content-list");
+    const empty = $("unlocked-content-empty");
+    if (!list) return;
+    Array.from(list.querySelectorAll(".ledger-item")).forEach((el) => el.remove());
+    const items = (user && typeof StarQuestAuth !== "undefined") ? StarQuestAuth.getUnlockedContent() : [];
+    if (!items.length) {
+      if (empty) empty.style.display = "";
+      return;
+    }
+    if (empty) empty.style.display = "none";
+    items.slice(0, 20).forEach((item) => {
+      const el = document.createElement("div");
+      el.className = "ledger-item";
+      el.innerHTML = `
+        <span class="ledger-item__reason">${escHTMLSQ(item.title || item.contentId)}</span>
+        <span class="ledger-item__amount">${escHTMLSQ(String(item.cost || 0))} ⭐</span>
       `;
       list.appendChild(el);
     });
