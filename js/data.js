@@ -649,6 +649,7 @@ const SHOWS = [
         description:
           "Peter Jay Novins accidentally dials his own home phone number and is horrified to hear himself answer — a doppelganger who has taken over his life and is determined to improve it. As his double makes amends and grows stronger, Peter fades. Directed by Wes Craven; written by Alan Brennert from a story by Harlan Ellison; starring Bruce Willis.",
         archiveId: "twilight-zone-1985-1x-01-shatterday",
+        archiveFile: "The Twilight Zone 1985 S01E01 - Shatterday.mp4",
         thumbnail: "https://archive.org/services/img/twilight-zone-1985-1x-01-shatterday",
       },
     ],
@@ -674,6 +675,7 @@ const SHOWS = [
         duration: "25 min",
         description: "A man finds himself in a small town completely devoid of any other people.",
         archiveId: "the.twilight.zone.s01e01",
+        sourceStatus: "file-missing",
         thumbnail: "https://archive.org/services/img/twilightzone",
       },
       {
@@ -685,6 +687,7 @@ const SHOWS = [
         duration: "25 min",
         description: "A young woman is terrorized by a mysterious hitchhiker who appears no matter how far she drives.",
         archiveId: "TheTwilightZone-TheHitch-hiker",
+        sourceStatus: "file-missing",
         thumbnail: "https://archive.org/services/img/twilightzone",
       },
     ],
@@ -813,6 +816,7 @@ const SHOWS = [
         description: "Jerry awaits the arrival of a woman he met in Lansing to determine if she is his girlfriend.",
         archiveId: "Seinfeld.Complete.Series",
         archiveFile: "Season 1/Seinfeld.S01E01.The.Seinfeld.Chronicles.720p.WEBrip.AAC.EN-SUB.x264-[MULVAcoded].mp4",
+        sourceStatus: "restricted",
         thumbnail: "https://archive.org/services/img/Seinfeld",
       },
     ],
@@ -1122,8 +1126,7 @@ const SHOWS = [
         duration: "117 min",
         description:
           "A city is gripped by terror as a child murderer strikes repeatedly. With police failing to catch him, the criminal underworld conducts its own hunt — culminating in a harrowing underground trial. Peter Lorre's breakthrough role. Restored HD print.",
-        archiveId: "fritz-langs-m-1931-restored-movie-720p-hd",
-        archiveIndex: 0,
+        archiveId: "fritz-langs-m-1931-restored-movie-720p-hd", archiveFile: "fritz lang's m-1931-restored movie-720p-hd.mp4",
         thumbnail: "https://archive.org/services/img/fritz-langs-m-1931-restored-movie-720p-hd",
       },
     ],
@@ -2237,8 +2240,7 @@ const SHOWS = [
         duration: "varies",
         description:
           "Full CBS Saturday Morning broadcast from July 1990 with original commercials. Features Muppet Babies, Garfield and Friends, Teenage Mutant Ninja Turtles, Bill & Ted's Excellent Adventures, Pee-Wee's Playhouse, Dink the Little Dinosaur, and CBS Storybreak.",
-        archiveId: "videoplayback_20230812",
-        archiveIndex: 0,
+        archiveId: "videoplayback_20230812", archiveFile: "videoplayback.mp4",
         thumbnail: "https://archive.org/services/img/videoplayback_20230812",
       },
     ],
@@ -3039,7 +3041,7 @@ const SHOWS = [
         title: "The Origin of the Hulk / Enter the Gorgon / To Be a Man",
         season: 1, episode: 1, year: 1966, duration: "22 min",
         description: "Dr. Bruce Banner saves teenager Rick Jones from a gamma bomb blast and is irradiated, triggering his first transformation; the monstrous Gorgon arrives in America to battle the Hulk; Banner attempts to help the Gorgon find a cure for his deformity.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 0,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 101 - Origin of The Hulk + Enter The Gordon + To Be A Man [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3047,7 +3049,7 @@ const SHOWS = [
         title: "Terror of the Toadmen / Wanted for Treason / Hulk Runs Amok",
         season: 1, episode: 2, year: 1966, duration: "22 min",
         description: "Magnetism-wielding alien Toadmen invade Earth and capture Banner; the U.S. military brands Bruce Banner a traitor in the wake of the Toadmen's assault; the Hulk is hunted by General Ross's forces across the country.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 1,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 102 - Terror of The ToadMan + Wanted For Treason + Hulk Runs Amok [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3055,7 +3057,7 @@ const SHOWS = [
         title: "A Titan Rides the Train / The Horde of Humanoids / On the Rampage!",
         season: 1, episode: 3, year: 1966, duration: "22 min",
         description: "The Leader's synthetic Humanoids hijack a train carrying one of Banner's inventions; the Leader prepares a full-scale invasion with his Humanoid army while Banner is held captive; the Hulk battles the Humanoid horde and reverts to Banner in the chaos.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 2,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 103 - Titan Rides The Train + Horde of Humanoids + Hulk on The Rampage [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3063,7 +3065,7 @@ const SHOWS = [
         title: "The Power of Dr. Banner / Where Strides the Behemoth / Back from the Dead",
         season: 1, episode: 4, year: 1966, duration: "22 min",
         description: "The military hunts Banner for crimes attributed to the Hulk and he fights to prove his innocence; the Hulk flees to the Himalayas but is captured and reverted to Banner; Banner sees a chance to save Major Talbot and to rid himself of the Hulk forever.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 3,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 104 - Power of Dr. Banner + Where's Strides Behemoth + Back From The Dead [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3071,7 +3073,7 @@ const SHOWS = [
         title: "Micro-Monsters / The Lair of the Leader / To Live Again",
         season: 1, episode: 5, year: 1966, duration: "22 min",
         description: "The Hulk battles the Leader's forces to rescue Rick Jones from miniaturised monsters; the Hulk is trapped inside the Leader's high-tech subterranean lair while Rick faces mortal danger; the final battle for Banner's Absorbatron — a device capable of absorbing a nuclear explosion.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 4,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 105 - Micro-Monster + Lair of The Leader + To Live Again [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3087,7 +3089,7 @@ const SHOWS = [
         title: "Within This Monster Dwells a Man / Another World, Another Foe / The Wisdom of the Watcher",
         season: 1, episode: 7, year: 1966, duration: "22 min",
         description: "The Hulk's internal struggle between Banner's intellect and the monster's rage reaches a crisis point; a new interdimensional threat emerges to challenge the Hulk; the cosmic Watcher observes Banner's dilemma and imparts wisdom about the duality of human nature.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 6,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 107 - Within The Monster Dwells The Man + Another World, Another Foe + Wisdom of The Watcher [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3095,7 +3097,7 @@ const SHOWS = [
         title: "The Space Phantom / Sting of the Wasp / Exit the Hulk",
         season: 1, episode: 8, year: 1966, duration: "22 min",
         description: "The alien Space Phantom, who can assume anyone's form, sows chaos and pits the Hulk against the Avengers; the Wasp enters the fray as the Avengers confront the shape-shifting interloper; the Hulk's uneasy alliance with Earth's Mightiest Heroes collapses and he departs alone.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 7,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 108 - The Space Phantom + Sting of The Wasp + Exit of The Hulk [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3103,7 +3105,7 @@ const SHOWS = [
         title: "Hulk vs. Metal Master / The Master Tests His Metal / Mind Over Metal",
         season: 1, episode: 9, year: 1966, duration: "22 min",
         description: "The extraterrestrial Metal Master — with power over every metal on Earth — arrives and the Hulk's brute strength proves no match; Metal Master tests his powers on humanity's infrastructure; Banner's scientific genius devises the only weapon capable of defeating an enemy immune to the Hulk's fists.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 8,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 109 -  Incredible Hulk vs. The Metal Master + Master Tests his Metal + Mind over Metal [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3111,7 +3113,7 @@ const SHOWS = [
         title: "The Ringmaster / Captive of the Circus / The Grand Finale",
         season: 1, episode: 10, year: 1966, duration: "22 min",
         description: "The sinister Ringmaster uses his hypnotic disc to enslave the Hulk and force him to perform in his criminal circus; the Hulk struggles to break free while helpless to resist the Ringmaster's mental control; the dramatic showdown inside the big top brings the Ringmaster's reign of terror to an end.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 9,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 110 - Ringmaster + Captive of The Circus + Grand Finale [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3119,7 +3121,7 @@ const SHOWS = [
         title: "Enter Tyrannus / Beauty and the Beast / They Dwell in the Depths",
         season: 1, episode: 11, year: 1966, duration: "22 min",
         description: "The Hulk is dragged into the subterranean kingdom of the immortal Roman emperor Tyrannus; Betty Ross is captured and the Hulk must navigate Tyrannus's underground realm to rescue her; the Hulk battles monstrous creatures lurking in the earth's deep passages to find his way back to the surface.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 10,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 111 - Enter Tyrannus + Beauty And The Beast + Dwell in The Depths [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
       {
@@ -3135,7 +3137,7 @@ const SHOWS = [
         title: "The Man Called Boomerang / Hulk Intervenes / Less Than Monster, More Than Man",
         season: 1, episode: 13, year: 1966, duration: "22 min",
         description: "The villainous Boomerang — a supersonic assassin armed with explosive shells — challenges the Hulk in the season finale; the Hulk must intervene in a crisis that tests whether brute strength alone is enough; the series concludes with a meditation on Banner's duality — less than the monster the world fears, yet more than merely human.",
-        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveIndex: 12,
+        archiveId: "the-incredble-hulk-1966-complete-series-english", archiveFile: "The Incredible Hulk/Incredble Hulk (1966) 113 - Man Called Boomerang + Hulk Intervenes + Less Than Monster More Than Man [DB2k8-DCP].mp4",
         thumbnail: "https://archive.org/services/img/the-incredble-hulk-1966-complete-series-english",
       },
     ],
@@ -3164,7 +3166,7 @@ const SHOWS = [
         title: "The Return of the Beast (Part 1)",
         season: 1, episode: 1, year: 1996, duration: "23 min",
         description: "Bruce Banner returns to the Gamma Base and must once again become the Hulk to stop the Leader from seizing a powerful gamma weapon.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 0,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 01-Return of the Beast, Part 1.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
@@ -3172,104 +3174,104 @@ const SHOWS = [
         title: "The Return of the Beast (Part 2)",
         season: 1, episode: 2, year: 1996, duration: "23 min",
         description: "The Hulk battles the Leader's forces and faces General Ross, who is determined to capture Banner once and for all.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 1,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 02-Return of the Beast, Part 2.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
         id: "hulk94-s01e03",
-        title: "Helping Hand, Iron Fist",
+        title: "Raw Power",
         season: 1, episode: 3, year: 1996, duration: "23 min",
         description: "Iron Man crosses paths with the Hulk when both heroes converge on a dangerous gamma-powered arms deal.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 04- Helping Hand, Iron Fist.mp4",
-        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
-      },
-      {
-        id: "hulk94-s01e04",
-        title: "Man to Man, Beast to Beast",
-        season: 1, episode: 4, year: 1996, duration: "23 min",
-        description: "The Hulk encounters the Man-Thing in a Florida swamp and must prevent the creature from being weaponised by a shadowy organisation.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 06-Man to Man, Beast to Beast.mp4",
-        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
-      },
-      {
-        id: "hulk94-s01e05",
-        title: "Raw Power",
-        season: 1, episode: 5, year: 1996, duration: "23 min",
-        description: "Zzzax — a being of pure electrical energy — threatens the power grid, and only the Hulk has the raw strength to stop it.",
         archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 03-Raw Power.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
-        id: "hulk94-s01e06",
-        title: "Darkness and Light (Part 1)",
-        season: 1, episode: 6, year: 1996, duration: "23 min",
-        description: "Bruce Banner discovers that his gamma-fuelled alter ego may be splintering his mind into multiple personalities — and one of them is murderous.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 11-Darkness & Light, Part 1.mp4",
+        id: "hulk94-s01e04",
+        title: "Helping Hand, Iron Fist",
+        season: 1, episode: 4, year: 1996, duration: "23 min",
+        description: "The Hulk encounters the Man-Thing in a Florida swamp and must prevent the creature from being weaponised by a shadowy organisation.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 04- Helping Hand, Iron Fist.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
-        id: "hulk94-s01e07",
-        title: "Darkness and Light (Part 2)",
-        season: 1, episode: 7, year: 1996, duration: "23 min",
-        description: "As Banner's psyche fractures further, the Grey Hulk persona takes control and pursues its own destructive agenda.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 12-Darkness & Light, Part 2.mp4",
-        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
-      },
-      {
-        id: "hulk94-s01e08",
-        title: "Darkness and Light (Part 3)",
-        season: 1, episode: 8, year: 1996, duration: "23 min",
-        description: "Banner must unify his fractured psyche before the competing Hulk personalities destroy everything — and everyone — around him.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 13-Darkness & Light, Part 3.mp4",
-        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
-      },
-      {
-        id: "hulk94-s01e09",
+        id: "hulk94-s01e05",
         title: "Innocent Blood",
-        season: 1, episode: 9, year: 1996, duration: "23 min",
-        description: "The Hulk is framed for a brutal attack and hunted by both General Ross and a relentless new bounty hunter hired to bring Banner in dead or alive.",
+        season: 1, episode: 5, year: 1996, duration: "23 min",
+        description: "Zzzax — a being of pure electrical energy — threatens the power grid, and only the Hulk has the raw strength to stop it.",
         archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 05-Innocent Blood.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
-        id: "hulk94-s01e10",
+        id: "hulk94-s01e06",
+        title: "Man to Man, Beast to Beast",
+        season: 1, episode: 6, year: 1996, duration: "23 min",
+        description: "Bruce Banner discovers that his gamma-fuelled alter ego may be splintering his mind into multiple personalities — and one of them is murderous.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 06-Man to Man, Beast to Beast.mp4",
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e07",
+        title: "Doomed",
+        season: 1, episode: 7, year: 1996, duration: "23 min",
+        description: "As Banner's psyche fractures further, the Grey Hulk persona takes control and pursues its own destructive agenda.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 07-Doomed.mp4",
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e08",
+        title: "Fantastic Fortitude",
+        season: 1, episode: 8, year: 1996, duration: "23 min",
+        description: "Banner must unify his fractured psyche before the competing Hulk personalities destroy everything — and everyone — around him.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 08-Fantastic Fortitude.mp4",
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
+        id: "hulk94-s01e09",
         title: "Mortal Bounds",
-        season: 1, episode: 10, year: 1996, duration: "23 min",
-        description: "Rick Jones is infected with a lethal gamma-born virus; only the Hulk can retrieve the cure from the Abomination's lair.",
+        season: 1, episode: 9, year: 1996, duration: "23 min",
+        description: "The Hulk is framed for a brutal attack and hunted by both General Ross and a relentless new bounty hunter hired to bring Banner in dead or alive.",
         archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 09-Mortal Bounds.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
+        id: "hulk94-s01e10",
+        title: "And the Wind Cries... Wendigo!",
+        season: 1, episode: 10, year: 1996, duration: "23 min",
+        description: "Rick Jones is infected with a lethal gamma-born virus; only the Hulk can retrieve the cure from the Abomination's lair.",
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 10-And the Wing Cries...Wendigo!.mp4",
+        thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
+      },
+      {
         id: "hulk94-s01e11",
-        title: "Of Monsters and Men",
+        title: "Darkness and Light (Part 1)",
         season: 1, episode: 11, year: 1996, duration: "23 min",
         description: "The Hulk reluctantly teams up with Thor when a fearsome new gamma-powered monster threatens both New York and Asgard.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 10,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 11-Darkness & Light, Part 1.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
         id: "hulk94-s01e12",
-        title: "They Call Me Conquest",
+        title: "Darkness and Light (Part 2)",
         season: 1, episode: 12, year: 1996, duration: "23 min",
         description: "An alien warlord arrives on Earth seeking the Hulk as a trophy; the Hulk must fight for his life — and for Earth's freedom.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 11,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 12-Darkness & Light, Part 2.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
         id: "hulk94-s01e13",
-        title: "Doomed",
+        title: "Darkness and Light (Part 3)",
         season: 1, episode: 13, year: 1996, duration: "23 min",
         description: "Dr. Doom traps the Hulk and the Fantastic Four in an interdimensional labyrinth, forcing uneasy allies to work together to escape.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 07-Doomed.mp4",
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 13-Darkness & Light, Part 3.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       /* ── Season 2 (1997) ── */
       {
         id: "hulk94-s02e01",
-        title: "Hex Factor",
+        title: "Hulk of a Different Color",
         season: 2, episode: 1, year: 1997, duration: "23 min",
         description: "She-Hulk joins Bruce as he faces the Absorbing Man and a mysterious sorceress whose hex powers push the Hulk to his limits.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 13,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 14-Hulk of a Different Color.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
@@ -3290,42 +3292,42 @@ const SHOWS = [
       },
       {
         id: "hulk94-s02e04",
-        title: "Doomed (Part 1)",
+        title: "They Call Me Mr. Fixit",
         season: 2, episode: 4, year: 1997, duration: "23 min",
         description: "Doctor Doom returns, now wielding the power of the Silver Surfer, and sets his sights on conquering every dimension in the multiverse.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 16,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 17-They Call Me Mr. Fixit.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
         id: "hulk94-s02e05",
-        title: "Doomed (Part 2)",
+        title: "Fashion Warriors",
         season: 2, episode: 5, year: 1997, duration: "23 min",
         description: "The Hulk, She-Hulk, and the Fantastic Four mount a desperate last stand against an all-powerful Doctor Doom.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 17,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 18-Fashion Warriors.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
         id: "hulk94-s02e06",
-        title: "Fashion Victims",
+        title: "Hollywood Rocks",
         season: 2, episode: 6, year: 1997, duration: "23 min",
         description: "She-Hulk battles the villainous Ogress while Bruce struggles to maintain control after a new gamma experiment goes catastrophically wrong.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 18,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 19-Hollywood Rocks.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
         id: "hulk94-s02e07",
-        title: "Innocent Blood (Part 2)",
+        title: "The Lost Village",
         season: 2, episode: 7, year: 1997, duration: "23 min",
         description: "The Hulk is put on trial for his past rampages; She-Hulk serves as his defence attorney in a case that could see Banner imprisoned forever.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 19,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 20-The Lost Village.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
       {
         id: "hulk94-s02e08",
-        title: "Crack in the World",
+        title: "Mission Incredible",
         season: 2, episode: 8, year: 1997, duration: "23 min",
         description: "In the series finale, a catastrophic fault line threatens to split the Earth apart — only the Hulk's immeasurable strength can save the planet.",
-        archiveId: "incredible-hulk-1994-complete-series", archiveIndex: 20,
+        archiveId: "incredible-hulk-1994-complete-series", archiveFile: "Episode 21-Mission Incredible.mp4",
         thumbnail: "https://archive.org/services/img/incredible-hulk-1994-complete-series",
       },
     ],
@@ -3711,8 +3713,7 @@ const SHOWS = [
         duration: "70 min",
         description:
           "A restored presentation of James Whale's 1931 horror landmark, preserving Boris Karloff's iconic Monster in a cleaner 720p source.",
-        archiveId: "frankenstein-1931-restored-movie-720p-hd",
-        archiveIndex: 0,
+        archiveId: "frankenstein-1931-restored-movie-720p-hd", archiveFile: "frankenstein-1931-restored movie-720p-hd.mp4",
         thumbnail: "https://archive.org/services/img/frankenstein-1931-restored-movie-720p-hd",
       },
     ],
@@ -6067,8 +6068,7 @@ const SHOWS = [
         duration: "52 min",
         description:
           "Three Disney Halloween classics: \"The Legend of Sleepy Hollow\" (1949, narrated by Bing Crosby), \"Lonesome Ghosts\" (1937, Mickey, Donald & Goofy), and \"Trick or Treat\" (1952, Donald Duck & Witch Hazel).",
-        archiveId: "75v_20211031",
-        archiveIndex: 0,
+        archiveId: "75v_20211031", archiveFile: "The Legend of Sleepy Hollow.mp4",
         thumbnail: "https://archive.org/services/img/75v_20211031",
       },
     ],
@@ -11235,8 +11235,7 @@ const SHOWS = [
         duration: "360 min",
         description:
           "Six-hour KELO off-air VHS from 1988 featuring Knots Landing, Dynasty, the CBS Tuesday Movie Murphy's Romance, and period commercials/news breaks.",
-        archiveId: "vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
-        archiveIndex: 0,
+        archiveId: "vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard", archiveFile: "VHS Tape - 1988 - KELO - Knot's Landing, Dynasty, CBS Tuesday Movie - Murphy's Romance, Sharing Richard.mp4",
         thumbnail: "https://archive.org/services/img/vhs-tape-1988-kelo-knots-landing-dynasty-cbs-tuesday-movie-murphys-romance-sharing-richard",
       },
     ],
@@ -11268,8 +11267,7 @@ const SHOWS = [
         duration: "48 min",
         description:
           "Partial July 31, 1989 SAS-7 recording with the end of Knots Landing, the start of Today, and original Australian promos and commercials.",
-        archiveId: "knots-landing-nbc-sunday-today-partial-sas-7-31-07-89",
-        archiveIndex: 0,
+        archiveId: "knots-landing-nbc-sunday-today-partial-sas-7-31-07-89", archiveFile: "Knots Landing, NBC Sunday Today [Partial, SAS-7, 31-07-89].mp4",
         thumbnail: "https://archive.org/services/img/knots-landing-nbc-sunday-today-partial-sas-7-31-07-89",
       },
     ],
@@ -11301,8 +11299,7 @@ const SHOWS = [
         duration: "60 min",
         description:
           "Incomplete May 9, 1991 off-air Knots Landing broadcast from CBS/WOC with original commercials intact.",
-        archiveId: "Knots_Landing_CBS_WOC_1991-05-09_Incomplete",
-        archiveIndex: 0,
+        archiveId: "Knots_Landing_CBS_WOC_1991-05-09_Incomplete", archiveFile: "Knots Landing CBS WOC 1991-05-09 Incomplete.mp4",
         thumbnail: "https://archive.org/services/img/Knots_Landing_CBS_WOC_1991-05-09_Incomplete",
       },
     ],
@@ -11334,8 +11331,7 @@ const SHOWS = [
         duration: "24 min",
         description:
           "First 24 minutes of an August 16, 1986 ATN-7 Knots Landing broadcast, preserved with original Australian promos and commercials.",
-        archiveId: "knots-landing-incomplete-atn-7-16-08-86",
-        archiveIndex: 0,
+        archiveId: "knots-landing-incomplete-atn-7-16-08-86", archiveFile: "Knots Landing Incomplete ATN-7 16-08-86 fix.mp4",
         thumbnail: "https://archive.org/services/img/knots-landing-incomplete-atn-7-16-08-86",
       },
     ],
@@ -12132,8 +12128,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Heathcliff turns neighborhood garbage into a towering garbage creature to frighten away rivals. Then the Catillac Cats attempt to muscle their way into the art world when Cleo paints a portrait that causes a sensation across Pussycat Junkyard.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 0,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E01 - The Great Pussini.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12145,8 +12140,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "A slick new tomcat arrives in Westfinster and challenges Heathcliff for the affections of Sonja and the run of the neighborhood. Meanwhile, Riff and Mungo enter a wrestling tournament convinced the championship trophy will earn them the respect — and free food — they crave.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 1,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E02 - Kitty Kat Kennels.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12158,8 +12152,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Heathcliff discovers an abandoned house rumored to be haunted and uses the ghost stories to keep the neighborhood dogs at bay. Across town, the Catillac Cats hatch an elaborate scheme to hijack a delivery truck loaded with the finest canned tuna.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 2,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E03 - Chauncey's Great Escape.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12171,8 +12164,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Grandpa Nutmeg's grandson Iggy and his friend Bink get their hands on a go-kart, and Heathcliff promptly commandeers it for a high-speed joyride through Westfinster. The Catillac Cats plan an elaborate heist on the neighborhood fish market — but Wordsworth's over-complicated blueprint leads to predictably chaotic results.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 3,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E04 - Carnival Capers.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12184,8 +12176,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Heathcliff infiltrates a neighborhood football game and single-pawedly disrupts both teams in pursuit of the half-time hot-dog cart. Riff convinces the gang to enter a pet show in disguise — only for the competition to turn into a full-scale junkyard stampede.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 4,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E05 - Mad Dog Catcher.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12197,8 +12188,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Heathcliff takes up skateboarding to impress Sonja and immediately makes mortal enemies of every dog on wheels in the neighborhood. The Catillac Cats discover that Cleo has been catnapped by a theatrical agent who intends to make her a TV star — whether she likes it or not.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 5,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E06 - Circus Beserkus.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12210,8 +12200,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Heathcliff enters every competition in Westfinster determined to win a trophy — even the ones he wasn't invited to. Meanwhile Riff bets the Catillac itself in a street race against a rival gang and must scramble to reclaim the car before sundown.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 6,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E07 - Rebel Without a Claws.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12223,8 +12212,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Heathcliff stumbles onto a horror-movie film set and is mistaken for the lead monster, sending the entire crew fleeing the lot. Hector talks the Catillac Cats into running a neighborhood protection racket — offering to guard Pussycat Junkyard from hazards entirely of their own making.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 7,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E08 - The Farming Life Ain't For Me.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12236,8 +12224,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "A gang of bulldogs blockades Iggy's school and only Heathcliff can outwit them — though his methods cause almost as much chaos as the dogs themselves. The Catillac Cats volunteer as stagehands for a neighborhood talent show, turning the curtain-raiser into an involuntary audition.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 8,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E09 - Heathcliff's Middle Name.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12249,8 +12236,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Heathcliff and a grumpy catfish wage a battle of wills at the local fishing pond, with Grandpa caught in the crossfire. Wordsworth submits an epic ode to tuna to a poetry contest and drags the rest of the Catillac Cats into a very reluctant reading tour.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 9,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E10 - Wishful Thinking.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12262,8 +12248,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Heathcliff fakes a string of ailments to avoid the neighborhood vet, accidentally convincing everyone in Westfinster he is gravely ill. Mungo discovers a mail-order muscle-building kit and uses his new strength to settle every score in Pussycat Junkyard — until the kit's side-effects kick in.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 10,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E11 - Teed Off.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12275,8 +12260,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "A new family moves in next door with a pampered show-cat, and Heathcliff must decide whether to torment his new neighbor or recruit her as an ally against the neighborhood dogs. Riff prepares an elaborate romantic evening for Cleo, only for every member of the Catillac Cats gang to accidentally join the date.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 11,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E12 - Monstro vs. the Wolf Hound.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
       {
@@ -12288,8 +12272,7 @@ const SHOWS = [
         duration: "22 min",
         description:
           "Heathcliff stows away on Grandpa Nutmeg's fishing trip and proceeds to commandeer the boat, the bait, and the catch. The Catillac Cats enter the Catillac in a demolition derby-style junkyard race that quickly threatens to leave them without a car at all.",
-        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series",
-        archiveIndex: 12,
+        archiveId: "heathcliff-and-the-catillac-cats-1984-complete-series", archiveFile: "Heathcliff E13 - Say Cheese.mp4",
         thumbnail: "https://archive.org/services/img/heathcliff-and-the-catillac-cats-1984-complete-series",
       },
     ],
@@ -12322,13 +12305,22 @@ const SHOWS = [
         duration: "48 min",
         description:
           "Boss Hogg schemes to steal charity money collected for Hazzard County's Christmas celebration. Bo, Luke, and Daisy race to stop him in a festive holiday chase that puts the General Lee up against a sleigh's worth of trouble.",
-        archiveId: "dukes-xmas",
-        archiveIndex: 0,
+        archiveId: "dukes-xmas", archiveFile: "Dukes Xmas.mp4",
         thumbnail: "https://archive.org/services/img/dukes-xmas",
       },
     ],
   },
 ];
+
+// Copilot originally paired several 1994 Hulk titles with invented or
+// out-of-order summaries. Until reviewed synopses are available, keep the
+// catalog honest and describe only what the verified file establishes.
+const verifiedHulk1994 = SHOWS.find((show) => show.id === "incredible-hulk-1994");
+if (verifiedHulk1994) {
+  verifiedHulk1994.episodes.forEach((episode) => {
+    episode.description = "Verified episode file for “" + episode.title + "” from the Internet Archive collection.";
+  });
+}
 
 const CATEGORIES = [
   { id: "featured", label: "Featured Classics" },
