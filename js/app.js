@@ -1384,10 +1384,18 @@
   const profileEditTarget = $("profile-edit-target");
   const profileCardSize = $("profile-card-size");
   const profileCardSizeLabel = $("profile-card-size-label");
+  const designNameInput = $("avatar-design-name");
+  const designScopeInput = $("avatar-design-scope");
+  const designModeInput = $("avatar-design-mode");
+  const designAutoAdapt = $("avatar-auto-adapt");
+  const designAdaptReason = $("avatar-adapt-reason");
+  const designCopy = $("avatar-copy-design");
+  const designReset = $("avatar-reset-design");
   const DESIGN_KEY = "starquest_personal_design";
   const designSizes = ["Compact", "Comfortable", "Showcase"];
   let activeDesignTarget = "Your whole StarQuest page";
-  let pendingDesign = { theme: "cosmic", cardSize: 1 };
+  let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false };
+  const AVATAR_COIN_MARK = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4 20 20 7 29 22 27 34 42 31 25 43 16 29 21 24 4Z"/><path d="M7 29 31 25 20 20 34 42"/></svg>';
 
   function distributorSummary() {
     if (!window.AINScansDistributorLedger) return { coins: 0, verified: 0, unclaimed: 0 };
@@ -1407,8 +1415,20 @@
       const theme = ["cosmic", "midnight", "golden"].includes(stored.theme) ? stored.theme : "cosmic";
       const storedSize = Number(stored.cardSize);
       const cardSize = Number.isInteger(storedSize) ? Math.max(0, Math.min(2, storedSize)) : 1;
-      return { theme, cardSize };
-    } catch (_) { return { theme: "cosmic", cardSize: 1 }; }
+      const scope = ["network", "site", "channel", "component"].includes(stored.scope) ? stored.scope : "site";
+      const mode = ["human", "assisted", "adaptive"].includes(stored.mode) ? stored.mode : "human";
+      return { name: String(stored.name || "My StarQuest").slice(0, 48), scope, mode, theme, cardSize, autoAdapt: !!stored.autoAdapt };
+    } catch (_) { return { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false }; }
+  }
+
+  function adaptiveDesign(design) {
+    if (!design.autoAdapt || typeof StarQuestAuth === "undefined") return { design, reason: "Automatic adaptation is off." };
+    const history = StarQuestAuth.getHistory ? StarQuestAuth.getHistory() : [];
+    if (!history.length) return { design, reason: "Watch a few titles first; your current design stays in place." };
+    const words = history.slice(0, 30).flatMap((item) => [item.genre, ...(item.tags || [])]).join(" ").toLowerCase();
+    const theme = /family|comedy|music|game/.test(words) ? "golden" : /crime|mystery|drama|horror/.test(words) ? "midnight" : "cosmic";
+    const cardSize = history.length >= 12 ? 0 : 2;
+    return { design: { ...design, theme, cardSize, mode: "adaptive" }, reason: "Adapted from " + Math.min(history.length, 30) + " recent viewing-history items; you can still override it." };
   }
 
   function applyPersonalDesign(design) {
@@ -1423,6 +1443,10 @@
     });
     if (profileCardSize) profileCardSize.value = String(pendingDesign.cardSize);
     if (profileCardSizeLabel) profileCardSizeLabel.textContent = designSizes[pendingDesign.cardSize];
+    if (designNameInput) designNameInput.value = pendingDesign.name;
+    if (designScopeInput) designScopeInput.value = pendingDesign.scope;
+    if (designModeInput) designModeInput.value = pendingDesign.mode;
+    if (designAutoAdapt) designAutoAdapt.checked = pendingDesign.autoAdapt;
   }
 
   function renderProfilePortal() {
@@ -1442,13 +1466,18 @@
     }
     if (profileSave) profileSave.disabled = false;
     if (profileMessage) profileMessage.textContent = "";
-    pendingDesign = readPersonalDesign();
+    const adapted = adaptiveDesign(readPersonalDesign());
+    pendingDesign = adapted.design;
+    if (designAdaptReason) designAdaptReason.textContent = adapted.reason;
+    applyPersonalDesign(pendingDesign);
     renderDesignControls();
   }
 
-  function openProfilePortal(target) {
+  function openProfilePortal(target, scope) {
     activeDesignTarget = target || "Your whole StarQuest page";
     renderProfilePortal();
+    if (scope) pendingDesign.scope = scope;
+    renderDesignControls();
     if (profileBackdrop) profileBackdrop.classList.add("open");
     document.body.style.overflow = "hidden";
   }
@@ -1458,24 +1487,27 @@
     document.body.style.overflow = "";
   }
 
-  [navProfileAvatar, sidebarProfileAvatar, sidebarProfileBtn].forEach((button) => {
-    if (button) button.addEventListener("click", () => { closeSidebar(); openProfilePortal("Your whole StarQuest page"); });
+  [sidebarProfileBtn].forEach((button) => {
+    if (button) button.addEventListener("click", () => { closeSidebar(); openProfilePortal("Your whole StarQuest page", "site"); });
   });
   document.querySelectorAll(".section-title").forEach((title) => {
     if (title.querySelector(".design-star")) return;
     const star = document.createElement("button");
     star.type = "button";
     star.className = "design-star";
-    star.textContent = "☆";
+    star.innerHTML = AVATAR_COIN_MARK;
     star.dataset.designTarget = title.textContent.trim();
+    star.dataset.designScope = "component";
     star.setAttribute("aria-label", "Customize " + title.textContent.trim());
     title.appendChild(star);
   });
-  document.querySelectorAll(".design-star").forEach((star) => {
+  document.querySelectorAll(".design-star, #nav-profile-avatar, #sidebar-profile-avatar").forEach((star) => {
+    star.innerHTML = AVATAR_COIN_MARK;
     star.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      openProfilePortal(star.dataset.designTarget || "Your whole StarQuest page");
+      closeSidebar();
+      openProfilePortal(star.dataset.designTarget || "Your whole StarQuest page", star.dataset.designScope || "site");
     });
   });
   document.querySelectorAll("[data-design-theme]").forEach((button) => {
@@ -1490,12 +1522,52 @@
     applyPersonalDesign(pendingDesign);
     renderDesignControls();
   });
+  if (designNameInput) designNameInput.addEventListener("input", () => { pendingDesign.name = designNameInput.value.slice(0, 48); });
+  if (designScopeInput) designScopeInput.addEventListener("change", () => { pendingDesign.scope = designScopeInput.value; });
+  if (designModeInput) designModeInput.addEventListener("change", () => { pendingDesign.mode = designModeInput.value; });
+  if (designAutoAdapt) designAutoAdapt.addEventListener("change", () => {
+    pendingDesign.autoAdapt = designAutoAdapt.checked;
+    const adapted = adaptiveDesign(pendingDesign);
+    pendingDesign = adapted.design;
+    applyPersonalDesign(pendingDesign);
+    if (designAdaptReason) designAdaptReason.textContent = adapted.reason;
+    renderDesignControls();
+  });
   if (profileClose) profileClose.addEventListener("click", closeProfilePortal);
   if (profileBackdrop) profileBackdrop.addEventListener("click", (event) => { if (event.target === profileBackdrop) closeProfilePortal(); });
   if (profileSave) profileSave.addEventListener("click", () => {
     localStorage.setItem(DESIGN_KEY, JSON.stringify(pendingDesign));
     applyPersonalDesign(pendingDesign);
     if (profileMessage) profileMessage.textContent = "Your Avatar Coin design is saved on this device.";
+  });
+  if (designCopy) designCopy.addEventListener("click", async () => {
+    const record = {
+      schema: "avatar-coin-design/v1",
+      id: "site:starquest:design:local-" + Date.now().toString(36),
+      name: pendingDesign.name || "My StarQuest",
+      scope: pendingDesign.scope,
+      target: activeDesignTarget,
+      creationMode: pendingDesign.mode,
+      author: "local-user",
+      parent: null,
+      settings: { theme: pendingDesign.theme, cardSize: pendingDesign.cardSize, autoAdapt: pendingDesign.autoAdapt },
+      createdAt: new Date().toISOString(),
+      status: "local-unpublished"
+    };
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(record, null, 2));
+      if (profileMessage) profileMessage.textContent = "Portable Avatar Coin design record copied.";
+    } catch (_) {
+      if (profileMessage) profileMessage.textContent = "Copy was blocked by this browser. Your saved design is unchanged.";
+    }
+  });
+  if (designReset) designReset.addEventListener("click", () => {
+    localStorage.removeItem(DESIGN_KEY);
+    pendingDesign = readPersonalDesign();
+    applyPersonalDesign(pendingDesign);
+    renderDesignControls();
+    if (designAdaptReason) designAdaptReason.textContent = "Automatic adaptation is off.";
+    if (profileMessage) profileMessage.textContent = "Avatar Coin design reset to the StarQuest default.";
   });
 
   applyPersonalDesign(readPersonalDesign());

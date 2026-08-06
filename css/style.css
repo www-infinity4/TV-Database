@@ -1304,6 +1304,8 @@ ul { list-style: none; }
   color: #facc15; background: transparent; border: 0; border-radius: 50%;
   font-size: 1.15rem; line-height: 1; vertical-align: super; opacity: .82;
 }
+.design-star svg, .nav-profile-avatar svg, .sidebar-user__avatar svg { width: 100%; height: 100%; overflow: visible; }
+.design-star svg path, .nav-profile-avatar svg path, .sidebar-user__avatar svg path { fill: none; stroke: #facc15; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
 .design-star:hover, .design-star:focus-visible { opacity: 1; background: rgba(250,204,21,.14); transform: rotate(18deg) scale(1.1); }
 .section-title .design-star { position: relative; top: -.35em; }
 .nav__wallet {
@@ -1446,11 +1448,17 @@ ul { list-style: none; }
 .coin-map article { min-width: 0; padding: 14px; border-radius: 14px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1); }
 .coin-map span, .coin-map small { display: block; color: var(--text-muted); font-size: .67rem; line-height: 1.3; }
 .coin-map strong { display: block; margin: 7px 0; color: #facc15; font-size: 1.4rem; }
-.profile-portal__actions { display: flex; gap: 10px; }
+.profile-portal__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .profile-save-message { min-height: 1.2em; margin-top: 12px; color: #86efac; font-size: .8rem; }
 .design-controls { margin: 22px 0 4px; padding: 18px; border-radius: 16px; background: rgba(124,58,237,.1); border: 1px solid rgba(196,181,253,.18); }
 .design-controls h3 { margin: 0 0 5px; }
 .design-controls > p { color: var(--text-muted); font-size: .78rem; margin: 0 0 14px; }
+.design-fields { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.design-fields label { color: var(--text-muted); font-size: .69rem; }
+.design-fields input, .design-fields select { display: block; width: 100%; margin-top: 5px; padding: 10px; border-radius: 10px; color: #fff; background: #111827; border: 1px solid rgba(255,255,255,.15); }
+.adaptive-design-toggle { display: flex; align-items: flex-start; gap: 9px; margin-top: 16px; font-size: .78rem; line-height: 1.4; }
+.adaptive-design-toggle input { margin-top: 3px; accent-color: #facc15; }
+.avatar-adapt-reason { margin: 7px 0 0 25px; color: #93c5fd; font-size: .7rem; }
 .design-option-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .design-option-row button { padding: 9px 13px; border-radius: 999px; color: #fff; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); }
 .design-option-row button.selected { color: #111827; background: #facc15; border-color: #facc15; }
@@ -1468,6 +1476,7 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   .coin-map { grid-template-columns: repeat(2, 1fr); }
   .nav-profile-avatar { width: 38px; height: 38px; }
   .nav__wallet { padding: 5px 8px; }
+  .design-fields { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 520px) {
