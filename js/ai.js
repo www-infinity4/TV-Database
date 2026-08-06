@@ -750,6 +750,16 @@
     return response;
   }
 
+  async function suggestDesignName(target, currentValue) {
+    const messages = [
+      { role: "system", content: "You are a concise interface naming designer. Return only one short replacement label, 2 to 5 words, with no quotes, explanation, trademark symbol, or punctuation at the end." },
+      { role: "user", content: "Create a fresh label for this StarQuest interface element. Element: " + String(target || "interface") + ". Current label: " + String(currentValue || "").slice(0, 80) }
+    ];
+    const suggestion = await _callPollinations(messages);
+    if (!suggestion) return null;
+    return suggestion.replace(/["'`]/g, "").split(/\r?\n/)[0].trim().slice(0, 64) || null;
+  }
+
   /* ── Public API ── */
   global.StarQuestAI = {
     /** Call once on page load to attempt Chrome AI init (secondary engine) */
@@ -774,6 +784,7 @@
 
     /** Generate a pop-in comment for the current show */
     generatePopIn: generatePopInText,
+    suggestDesignName,
 
     /** Clear conversation memory (and localStorage) */
     clearHistory() {
