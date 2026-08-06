@@ -278,7 +278,12 @@
     const available = (typeof SHOWS !== "undefined" ? SHOWS.slice() : []).filter(isShowAvailable);
     const tv = available.filter(isTvFirstShow).sort(byPersonalized(stats, reasonMap));
     const movies = available.filter((show) => show.type === "movie").sort(byPersonalized(stats, reasonMap));
-    const candidates = diverseForYou(tv, 14);
+    const starterOrder = ["mash", "the-twilight-zone", "due-south", "real-ghostbusters", "thomas-the-tank-engine", "new-alfred-hitchcock-presents"];
+    const starterTV = stats ? tv : starterOrder
+      .map((id) => available.find((show) => show.id === id))
+      .filter(Boolean)
+      .concat(tv.filter((show) => !starterOrder.includes(show.id) && show.id !== "reading-rainbow"));
+    const candidates = diverseForYou(starterTV, 14);
     for (const movie of movies) {
       if (candidates.length >= 16) break;
       if (!candidates.some((show) => show.id === movie.id)) candidates.push(movie);
@@ -303,7 +308,7 @@
     if (profile) {
       show = featured.slice().sort(byPersonalized(profile, {}))[0];
     } else {
-      show = featured[Math.floor(Math.random() * featured.length)];
+      show = getShowById("mash") || getShowById("due-south") || featured[0];
     }
     renderHero(show);
   }
@@ -734,11 +739,9 @@
       StarQuestAI.setContext(show ? show.id : null, showTitle, episode.title);
     }
 
-    /* Give Cosmo more to say during playback */
+    /* Automatic AI pop-ins are disabled during playback. They were unrelated
+       to the program and could be mistaken for part of the episode. */
     clearCosmoPopInTimers();
-    COSMO_POPIN_SCHEDULE_MS.forEach((delay) => {
-      _popInTimers.push(setTimeout(() => showCosmoPopIn(show, showTitle, episode), delay));
-    });
 
     if (typeof episode.archiveFile === "string" && episode.archiveId) {
       /* Use a native <video> element with the direct archive.org download URL.
@@ -764,8 +767,9 @@
       DOM.playerVideo.src = directUrl;
       DOM.playerVideo.load();
       attemptInstantPlayback();
-    } else {
-      /* Fall back to iframe embed for YouTube or archive.org items without a specific file */
+    } else if (episode.youtubeId) {
+      /* YouTube remains an iframe source. Archive.org never uses the iframe:
+         metadata resolution selects a direct file before anything is shown. */
       const embedUrl = buildEmbedUrl(episode);
       DOM.playerVideo.onloadedmetadata = null;
       DOM.playerVideo.oncanplay = null;
@@ -779,6 +783,24 @@
       DOM.playerFrame.addEventListener("load", () => {
         DOM.playerLoading.style.display = "none";
       }, { once: true });
+    } else {
+      DOM.playerVideo.onloadedmetadata = null;
+      DOM.playerVideo.oncanplay = null;
+      DOM.playerVideo.onerror = null;
+      DOM.playerVideo.style.display = "none";
+      DOM.playerVideo.removeAttribute("src");
+      DOM.playerVideo.load();
+      DOM.playerFrame.style.display = "none";
+      DOM.playerFrame.src = "about:blank";
+      document.dispatchEvent(new CustomEvent("starquest:resolve-archive-episode", {
+        detail: {
+          identifier: episode.archiveId,
+          showTitle,
+          season: episode.season,
+          episode: episode.episode,
+          episodeTitle: episode.title
+        }
+      }));
     }
   }
 
@@ -1711,7 +1733,7 @@
         };
         playerVideo.src = directUrl;
       }
-    } else {
+    } else if (ep.youtubeId) {
       const url = buildPlayerUrl(ep);
       if (playerVideo) {
         playerVideo.oncanplay = null;
@@ -1723,6 +1745,25 @@
       playerFrame.style.display = "block";
       playerFrame.src = url;
       playerFrame.addEventListener("load", () => { if (playerLoad) playerLoad.style.display = "none"; }, { once: true });
+    } else {
+      if (playerVideo) {
+        playerVideo.oncanplay = null;
+        playerVideo.onerror = null;
+        playerVideo.style.display = "none";
+        playerVideo.removeAttribute("src");
+        playerVideo.load();
+      }
+      playerFrame.style.display = "none";
+      playerFrame.src = "about:blank";
+      document.dispatchEvent(new CustomEvent("starquest:resolve-archive-episode", {
+        detail: {
+          identifier: ep.archiveId,
+          showTitle,
+          season: ep.season,
+          episode: ep.episode,
+          episodeTitle: ep.title
+        }
+      }));
     }
 
     startWatchTimer(ep, showTitle);
