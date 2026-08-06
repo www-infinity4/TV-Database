@@ -1391,11 +1391,16 @@
   const designAdaptReason = $("avatar-adapt-reason");
   const designCopy = $("avatar-copy-design");
   const designReset = $("avatar-reset-design");
+  const elementValueInput = $("avatar-element-value");
+  const designAISuggest = $("avatar-ai-suggest");
+  const designAIStatus = $("avatar-ai-status");
   const DESIGN_KEY = "starquest_personal_design";
   const designSizes = ["Compact", "Comfortable", "Showcase"];
   let activeDesignTarget = "Your whole StarQuest page";
-  let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false };
-  const AVATAR_COIN_MARK = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4 20 20 7 29 22 27 34 42 31 25 43 16 29 21 24 4Z"/><path d="M7 29 31 25 20 20 34 42"/></svg>';
+  let activeDesignKey = "brand-name";
+  let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, overrides: {} };
+  const AVATAR_COIN_MARK = "★";
+  const originalElementLabels = {};
 
   function distributorSummary() {
     if (!window.AINScansDistributorLedger) return { coins: 0, verified: 0, unclaimed: 0 };
@@ -1417,8 +1422,9 @@
       const cardSize = Number.isInteger(storedSize) ? Math.max(0, Math.min(2, storedSize)) : 1;
       const scope = ["network", "site", "channel", "component"].includes(stored.scope) ? stored.scope : "site";
       const mode = ["human", "assisted", "adaptive"].includes(stored.mode) ? stored.mode : "human";
-      return { name: String(stored.name || "My StarQuest").slice(0, 48), scope, mode, theme, cardSize, autoAdapt: !!stored.autoAdapt };
-    } catch (_) { return { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false }; }
+      const overrides = stored.overrides && typeof stored.overrides === "object" ? stored.overrides : {};
+      return { name: String(stored.name || "My StarQuest").slice(0, 48), scope, mode, theme, cardSize, autoAdapt: !!stored.autoAdapt, overrides };
+    } catch (_) { return { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, overrides: {} }; }
   }
 
   function adaptiveDesign(design) {
@@ -1434,6 +1440,12 @@
   function applyPersonalDesign(design) {
     document.documentElement.dataset.userTheme = design.theme;
     document.documentElement.dataset.cardSize = String(design.cardSize);
+    Object.keys(originalElementLabels).forEach((key) => {
+      const entry = originalElementLabels[key];
+      const value = design.overrides && design.overrides[key] ? String(design.overrides[key]).slice(0, 64) : entry.original;
+      if (entry.kind === "text-node") entry.node.nodeValue = value + " ";
+      else entry.node.textContent = value;
+    });
   }
 
   function renderDesignControls() {
@@ -1447,6 +1459,8 @@
     if (designScopeInput) designScopeInput.value = pendingDesign.scope;
     if (designModeInput) designModeInput.value = pendingDesign.mode;
     if (designAutoAdapt) designAutoAdapt.checked = pendingDesign.autoAdapt;
+    const entry = originalElementLabels[activeDesignKey];
+    if (elementValueInput) elementValueInput.value = (pendingDesign.overrides && pendingDesign.overrides[activeDesignKey]) || (entry ? entry.original : "");
   }
 
   function renderProfilePortal() {
@@ -1473,8 +1487,9 @@
     renderDesignControls();
   }
 
-  function openProfilePortal(target, scope) {
+  function openProfilePortal(target, scope, key) {
     activeDesignTarget = target || "Your whole StarQuest page";
+    activeDesignKey = key || "brand-name";
     renderProfilePortal();
     if (scope) pendingDesign.scope = scope;
     renderDesignControls();
@@ -1488,26 +1503,34 @@
   }
 
   [sidebarProfileBtn].forEach((button) => {
-    if (button) button.addEventListener("click", () => { closeSidebar(); openProfilePortal("Your whole StarQuest page", "site"); });
+    if (button) button.addEventListener("click", () => { closeSidebar(); openProfilePortal("StarQuest name", "site", "brand-name"); });
   });
+  const brandName = $("nav-brand-name");
+  if (brandName) originalElementLabels["brand-name"] = { node: brandName, kind: "element", original: "StarQuest" };
   document.querySelectorAll(".section-title").forEach((title) => {
     if (title.querySelector(".design-star")) return;
     const star = document.createElement("button");
     star.type = "button";
     star.className = "design-star";
-    star.innerHTML = AVATAR_COIN_MARK;
-    star.dataset.designTarget = title.textContent.trim();
+    const labelNode = Array.from(title.childNodes).find((node) => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim());
+    if (!labelNode) return;
+    const key = "heading-" + (title.id || Math.random().toString(36).slice(2));
+    const original = labelNode.nodeValue.trim();
+    originalElementLabels[key] = { node: labelNode, kind: "text-node", original };
+    star.textContent = AVATAR_COIN_MARK;
+    star.dataset.designTarget = original;
+    star.dataset.designKey = key;
     star.dataset.designScope = "component";
     star.setAttribute("aria-label", "Customize " + title.textContent.trim());
     title.appendChild(star);
   });
   document.querySelectorAll(".design-star, #nav-profile-avatar, #sidebar-profile-avatar").forEach((star) => {
-    star.innerHTML = AVATAR_COIN_MARK;
+    star.textContent = AVATAR_COIN_MARK;
     star.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
       closeSidebar();
-      openProfilePortal(star.dataset.designTarget || "Your whole StarQuest page", star.dataset.designScope || "site");
+      openProfilePortal(star.dataset.designTarget || "StarQuest name", star.dataset.designScope || "site", star.dataset.designKey || "brand-name");
     });
   });
   document.querySelectorAll("[data-design-theme]").forEach((button) => {
@@ -1533,6 +1556,28 @@
     if (designAdaptReason) designAdaptReason.textContent = adapted.reason;
     renderDesignControls();
   });
+  if (elementValueInput) elementValueInput.addEventListener("input", () => {
+    if (!pendingDesign.overrides) pendingDesign.overrides = {};
+    const value = elementValueInput.value.trim().slice(0, 64);
+    if (value) pendingDesign.overrides[activeDesignKey] = value;
+    else delete pendingDesign.overrides[activeDesignKey];
+    applyPersonalDesign(pendingDesign);
+  });
+  if (designAISuggest) designAISuggest.addEventListener("click", async () => {
+    if (!window.StarQuestAI || typeof StarQuestAI.suggestDesignName !== "function") return;
+    designAISuggest.disabled = true;
+    if (designAIStatus) designAIStatus.textContent = "Designing…";
+    const suggestion = await StarQuestAI.suggestDesignName(activeDesignTarget, elementValueInput ? elementValueInput.value : "");
+    designAISuggest.disabled = false;
+    if (!suggestion) { if (designAIStatus) designAIStatus.textContent = "AI is unavailable right now."; return; }
+    if (elementValueInput) {
+      elementValueInput.value = suggestion;
+      elementValueInput.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    pendingDesign.mode = "assisted";
+    if (designAIStatus) designAIStatus.textContent = "Previewing an AI suggestion.";
+    renderDesignControls();
+  });
   if (profileClose) profileClose.addEventListener("click", closeProfilePortal);
   if (profileBackdrop) profileBackdrop.addEventListener("click", (event) => { if (event.target === profileBackdrop) closeProfilePortal(); });
   if (profileSave) profileSave.addEventListener("click", () => {
@@ -1550,7 +1595,7 @@
       creationMode: pendingDesign.mode,
       author: "local-user",
       parent: null,
-      settings: { theme: pendingDesign.theme, cardSize: pendingDesign.cardSize, autoAdapt: pendingDesign.autoAdapt },
+      settings: { theme: pendingDesign.theme, cardSize: pendingDesign.cardSize, autoAdapt: pendingDesign.autoAdapt, overrides: pendingDesign.overrides },
       createdAt: new Date().toISOString(),
       status: "local-unpublished"
     };
