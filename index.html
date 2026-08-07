@@ -276,8 +276,13 @@
         <button id="clear-search" class="sr-only" aria-label="Clear search">✕</button>
       </div>
       <button id="nav-profile-avatar" class="nav-profile-avatar" type="button" aria-label="Open Avatar Coin design portal">☆</button>
-      <div id="nav-wallet" class="nav__wallet" title="Your StarCoins">
-        ⭐ <span id="nav-token-count">0</span>
+      <div id="nav-wallet" class="nav__wallet" title="Your StarCoins and share progress" aria-label="StarCoin wallet">
+        <span class="nav__wallet-balance">⭐ <span id="nav-token-count">0</span></span>
+        <span class="nav__wallet-divider" aria-hidden="true"></span>
+        <span class="nav__wallet-progress">
+          <strong id="nav-share-progress">0/10</strong>
+          <small id="nav-shares-left">10 shares left</small>
+        </span>
       </div>
       <button id="hamburger-btn" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
         <span></span><span></span><span></span>
@@ -556,7 +561,7 @@
       <span id="player-ep-title" class="player-ep-title"></span>
       <div class="player-topbar__right">
         <span id="player-token-notif" class="player-token-notif" aria-live="polite" style="display:none">⭐ +1 StarCoin!</span>
-        <button id="player-share-btn" class="player-share-btn" aria-label="Share this show">🔗 Share</button>
+        <button id="player-share-btn" class="player-share-btn" type="button" aria-label="Share this show">🔗 Share</button>
       </div>
     </div>
     <div class="player-wrap">
