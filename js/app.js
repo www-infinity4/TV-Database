@@ -1109,7 +1109,7 @@
           <div class="episode-desc">${escHTML(!isPlayable && ep.sourceNote ? ep.sourceNote : ep.description)}</div>
         </div>
         <span class="episode-duration">${escHTML(ep.duration)}</span>
-        <div class="episode-play" aria-hidden="true">▶</div>
+        <div class="episode-play" aria-hidden="true">${!isPlayable ? "⛔" : "▶"}</div>
       `;
       const play = () => {
         closeAllEps();
