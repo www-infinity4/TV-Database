@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-avatar-site="starquest" data-avatar-symbol="★">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -126,6 +126,27 @@
         <div id="avatar-adapt-reason" class="avatar-adapt-reason">Automatic adaptation is off.</div>
         <div class="design-network-note">The saved record preserves the design name, reach, creation method, and settings. Community adoption, likes, portable cross-site identity, chain attribution, rankings, and creator payouts require the future shared service and are not active yet.</div>
       </div>
+
+      <section class="avatar-chain" aria-labelledby="avatar-chain-title">
+        <div class="avatar-chain__header">
+          <div>
+            <h3 id="avatar-chain-title">Crown design chain</h3>
+            <p>Every save creates an attributed version. A remix keeps its parent so people can follow how the design grows.</p>
+          </div>
+          <span id="avatar-crown-id" class="avatar-chain__id">Creating Crown ID…</span>
+        </div>
+        <div class="avatar-request">
+          <label for="avatar-change-request">What do you want to change?</label>
+          <textarea id="avatar-change-request" rows="2" maxlength="240" placeholder='Try: “Call it Star Theater, use midnight, and make cards showcase size.”'></textarea>
+          <button id="avatar-apply-request" class="btn btn-secondary" type="button">Preview request</button>
+        </div>
+        <div id="avatar-chain-list" class="avatar-chain__list" aria-live="polite"></div>
+        <div class="avatar-chain__actions">
+          <button id="avatar-fork-current" class="btn btn-secondary" type="button">Start a new branch</button>
+          <button id="avatar-copy-chain" class="btn btn-secondary" type="button">Copy full chain</button>
+          <button id="avatar-import-design" class="btn btn-secondary" type="button">Import a design</button>
+        </div>
+      </section>
 
       <div class="coin-map" aria-label="Coin and credit locations">
         <article><span>Viewer access</span><strong id="profile-access-balance">0</strong><small>Credits used to unlock content</small></article>
@@ -260,7 +281,7 @@
 
   <!-- NAVIGATION -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
-    <div class="nav__brand"><a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span id="nav-brand-name">StarQuest</span></a><button class="design-star" type="button" data-design-target="StarQuest name" data-design-key="brand-name" data-design-scope="site" aria-label="Change the StarQuest name">☆</button></div>
+    <div class="nav__brand"><a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span id="nav-brand-name">StarQuest</span></a><button class="design-star" type="button" data-avatar-portal data-avatar-symbol="★" data-design-target="StarQuest name" data-design-key="brand-name" data-design-scope="site" aria-label="Open Avatar Coin editor for the StarQuest name">★</button></div>
     <ul class="nav__links" role="list">
       <li><a href="#" class="active">Home</a></li>
       <li><a href="#reading-rainbow-section">Reading Rainbow</a></li>
@@ -628,7 +649,8 @@
   <script src="js/auth.js?v=20260809"></script>
   <script src="js/distributor-ledger.js?v=20260808"></script>
   <script src="js/ai.js?v=20260811"></script>
-  <script src="js/app.js?v=20260813"></script>
+  <script src="js/avatar-coin.js?v=20260814"></script>
+  <script src="js/app.js?v=20260814"></script>
   <script src="js/archive-resolver.js?v=20260807"></script>
 </body>
 </html>
