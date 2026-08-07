@@ -1456,6 +1456,8 @@
   const designSizes = ["Compact", "Comfortable", "Showcase"];
   let activeDesignTarget = "Your whole StarQuest page";
   let activeDesignKey = "brand-name";
+  let pendingChainParentId = null;
+  let pendingChainDesignId = null;
   let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, overrides: {} };
   const AVATAR_COIN_MARK = "★";
   function distributorSummary() {
@@ -1721,9 +1723,15 @@
         ? await AvatarCoinChain.saveVersion(pendingDesign, {
             targetKey: activeDesignKey,
             targetLabel: activeDesignTarget,
-            siteSymbol: AVATAR_COIN_MARK
+            siteSymbol: AVATAR_COIN_MARK,
+            designId: pendingChainDesignId || undefined,
+            parentVersionId: pendingChainParentId === null ? undefined : pendingChainParentId
           })
         : null;
+      if (record) {
+        pendingChainParentId = record.id;
+        pendingChainDesignId = record.designId;
+      }
       renderAvatarChain();
       if (profileMessage) {
         profileMessage.textContent = record
@@ -1762,6 +1770,8 @@
     const design = designFromChainRecord(record);
     if (!design) return;
     pendingDesign = design;
+    pendingChainParentId = record.id;
+    pendingChainDesignId = record.designId;
     applyPersonalDesign(pendingDesign);
     renderDesignControls();
     if (profileMessage) profileMessage.textContent = "Version " + record.version + " is previewing. Save to continue from it.";
@@ -1776,6 +1786,8 @@
     const record = await AvatarCoinChain.fork(current.id, (pendingDesign.name || current.name) + " remix");
     const design = designFromChainRecord(record);
     if (design) pendingDesign = design;
+    pendingChainParentId = record.id;
+    pendingChainDesignId = record.designId;
     localStorage.setItem(DESIGN_KEY, JSON.stringify(pendingDesign));
     applyPersonalDesign(pendingDesign);
     renderDesignControls();
