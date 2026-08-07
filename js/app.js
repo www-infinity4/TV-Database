@@ -850,6 +850,9 @@
       DOM.playerVideo.load();
       DOM.playerFrame.style.display = "block";
       DOM.playerFrame.src = embedUrl;
+      /* The embedded player renders its own buffering state. Do not keep the
+         StarQuest overlay waiting on a cross-origin iframe load event. */
+      DOM.playerLoading.style.display = "none";
       DOM.playerFrame.addEventListener("load", () => {
         DOM.playerLoading.style.display = "none";
       }, { once: true });
@@ -2284,6 +2287,7 @@
       }
       playerFrame.style.display = "block";
       playerFrame.src = buildPlayerUrl(ep);
+      if (playerLoad) playerLoad.style.display = "none";
       playerFrame.addEventListener("load", () => {
         if (playerLoad) playerLoad.style.display = "none";
       }, { once: true });
