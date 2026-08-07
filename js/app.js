@@ -121,7 +121,7 @@
 
   function isEpisodePlayable(ep) {
     if (!ep || typeof ep !== "object") return false;
-    if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing") return false;
+    if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing" || ep.sourceStatus === "unverified") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
     // Item-only Archive.org records are resolved from metadata at playback time.
@@ -1227,6 +1227,7 @@
   function archiveValidationStatus(ep) {
     if (ep.sourceStatus === "restricted") return "restricted by source";
     if (ep.sourceStatus === "file-missing") return "file missing";
+    if (ep.sourceStatus === "unverified") return "unverified after source audit";
     if (!ep.archiveId && !ep.youtubeId) return "identifier missing";
     if (ep.youtubeId) return "embedded player";
     if (typeof ep.archiveFile === "string" && ep.archiveFile) {
@@ -2576,15 +2577,17 @@
   function openShareSheet() {
     activeShare = currentSharePayload();
     if (shareSheetProgram) shareSheetProgram.textContent = activeShare.text;
-    if (shareSmsLink) shareSmsLink.href = "sms:?&body=" + encodeURIComponent(activeShare.text + "\n" + activeShare.url);
+    if (shareSmsLink) shareSmsLink.href = "sms:?body=" + encodeURIComponent(activeShare.text + "\n" + activeShare.url);
     if (shareEmailLink) {
       shareEmailLink.href = "mailto:?subject=" + encodeURIComponent(activeShare.title) +
         "&body=" + encodeURIComponent(activeShare.text + "\n\n" + activeShare.url);
     }
     if (shareNativeBtn) {
-      shareNativeBtn.hidden = typeof navigator.share !== "function";
+      shareNativeBtn.hidden = false;
       shareNativeBtn.disabled = false;
-      shareNativeBtn.textContent = "📱 Share with phone";
+      shareNativeBtn.textContent = typeof navigator.share === "function"
+        ? "📱 Share with phone"
+        : "🔗 Copy share link";
     }
     setShareStatus("Choose how you want to share it.");
     if (shareBackdrop) {
@@ -2686,6 +2689,10 @@
     shareNativeBtn.textContent = "Opening phone share…";
     setShareStatus("Opening your phone's share choices…");
     try {
+      if (typeof navigator.share !== "function") {
+        await copyActiveShare();
+        return;
+      }
       await navigator.share({ title: activeShare.title, text: activeShare.text, url: activeShare.url });
       rewardCompletedShare("web_share_api");
     } catch (error) {
@@ -2697,7 +2704,9 @@
     } finally {
       shareInFlight = false;
       shareNativeBtn.disabled = false;
-      shareNativeBtn.textContent = "📱 Share with phone";
+      shareNativeBtn.textContent = typeof navigator.share === "function"
+        ? "📱 Share with phone"
+        : "🔗 Copy share link";
     }
   });
 
