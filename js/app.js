@@ -2608,7 +2608,8 @@
     const episode = activeShare.episode;
     const shareResult = StarQuestAuth.recordShare(activeShare.contentId, {
       verified: false,
-      status: "completed_client_reported",
+      fullyWatched: false,
+      status: "pending_verification",
       method,
       url: activeShare.url,
       showTitle: _currentShowTitle || "",
@@ -2623,8 +2624,12 @@
       );
       return;
     }
+    if (!shareResult.credited) {
+      setShareStatus("Share sent. Verification is pending; the wallet counter changes only after the completed watch and share are verified.");
+      return;
+    }
     if (shareResult.awarded > 0) {
-      setShareStatus("⭐ StarCoin created: the share requirement was reached.");
+      setShareStatus("⭐ StarCoin created: the 10th fully watched, verified share was reached.");
     } else {
       const remaining = shareResult.sharesPerCoin - shareResult.progressToNextCoin;
       setShareStatus("Share completed. " + remaining + (remaining === 1 ? " share" : " shares") + " until the next StarCoin.");
