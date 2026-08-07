@@ -2508,137 +2508,176 @@
      SHARE BUTTON
      ──────────────────────────────────────────────────────────── */
   const shareBtn = $("player-share-btn");
-  if (shareBtn) {
-    let shareInFlight = false;
+  const shareBackdrop = $("share-backdrop");
+  const shareSheetClose = $("share-sheet-close");
+  const shareSheetProgram = $("share-sheet-program");
+  const shareSheetStatus = $("share-sheet-status");
+  const shareNativeBtn = $("share-native-btn");
+  const shareSmsLink = $("share-sms-link");
+  const shareEmailLink = $("share-email-link");
+  const shareCopyBtn = $("share-copy-btn");
+  let activeShare = null;
+  let shareInFlight = false;
 
-    shareBtn.addEventListener("click", async () => {
-      if (shareInFlight) return;
-
-      const shareUrl = new URL(window.location.href);
-      shareUrl.searchParams.delete("deploy");
-      const shareShow = _currentEpisode ? findShowForEpisode(_currentEpisode) : null;
-      if (shareShow && _currentEpisode) {
-        shareUrl.searchParams.set("sqShow", shareShow.id);
-        shareUrl.searchParams.set("sqEpisode", _currentEpisode.id || "");
-        shareUrl.hash = "watch";
-      }
-      const url = shareUrl.toString();
-      const text = _currentShowTitle
-        ? "Watching " + _currentShowTitle + " on StarQuest ⭐ — classic TV galaxy!"
-        : "Check out StarQuest ⭐ — free classic TV!";
-      const contentId = (_currentEpisode && _currentShowTitle)
+  function currentSharePayload() {
+    const shareUrl = new URL(window.location.href);
+    shareUrl.searchParams.delete("deploy");
+    const shareShow = _currentEpisode ? findShowForEpisode(_currentEpisode) : null;
+    if (shareShow && _currentEpisode) {
+      shareUrl.searchParams.set("sqShow", shareShow.id);
+      shareUrl.searchParams.set("sqEpisode", _currentEpisode.id || "");
+      shareUrl.hash = "watch";
+    }
+    const showTitle = _currentShowTitle || "StarQuest";
+    const episodeTitle = (_currentEpisode && _currentEpisode.title) || "";
+    const text = episodeTitle
+      ? "Watch " + showTitle + " — " + episodeTitle + " on StarQuest ⭐"
+      : "Watch " + showTitle + " on StarQuest ⭐";
+    return {
+      title: showTitle + " on StarQuest",
+      text,
+      url: shareUrl.toString(),
+      contentId: (_currentEpisode && _currentShowTitle)
         ? (_currentShowTitle + "|" + (_currentEpisode.id || _currentEpisode.title || "episode"))
-        : "unknown-content";
-      const shareData = { title: "StarQuest", text, url };
-
-      const rewardCompletedShare = (method) => {
-        if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
-          showTokenToast("Share completed. Sign in to build StarCoin progress.");
-          return;
-        }
-
-        const show = _currentEpisode ? findShowForEpisode(_currentEpisode) : null;
-        const shareResult = StarQuestAuth.recordShare(contentId, {
-          verified: false,
-          status: "completed_client_reported",
-          method,
-          url,
-          showTitle: _currentShowTitle || "",
-          episodeId: (_currentEpisode && (_currentEpisode.id || _currentEpisode.title)) || "",
-          companyId: (show && (show.companyId || show.network || show.studio)) || null,
-        });
-
-        if (!shareResult.ok) {
-          showTokenToast(
-            shareResult.error === "share_cooldown"
-              ? "This show already earned share progress recently."
-              : (shareResult.message || "Share completed, but progress could not be saved.")
-          );
-          return;
-        }
-
-        if (shareResult.awarded > 0) {
-          showTokenToast("⭐ StarCoin created: 10 completed shares reached.");
-        } else {
-          const remaining = shareResult.sharesPerCoin - shareResult.progressToNextCoin;
-          showTokenToast("🔗 Share counted. " + remaining + (remaining === 1 ? " share" : " shares") + " until the next StarCoin.");
-        }
-      };
-
-      const copyFallback = async () => {
-        const copyText = text + "\n" + url;
-        try {
-          if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
-          await navigator.clipboard.writeText(copyText);
-          rewardCompletedShare("clipboard_copy");
-          return;
-        } catch (_) {
-          /* Older Android webviews sometimes block the asynchronous Clipboard
-             API even for a real tap. Keep a synchronous selected-text fallback. */
-          const field = document.createElement("textarea");
-          field.value = copyText;
-          field.setAttribute("readonly", "");
-          field.style.position = "fixed";
-          field.style.opacity = "0";
-          document.body.appendChild(field);
-          field.select();
-          field.setSelectionRange(0, field.value.length);
-          let copied = false;
-          try {
-            copied = typeof document.execCommand === "function" && document.execCommand("copy");
-          } catch (_) {
-            copied = false;
-          }
-          field.remove();
-          if (copied) {
-            rewardCompletedShare("clipboard_copy_legacy");
-            return;
-          }
-          window.prompt("Copy this StarQuest link to share:", copyText);
-          showTokenToast("Select and copy the link to share it.");
-        }
-      };
-
-      shareInFlight = true;
-      const idleLabel = shareBtn.textContent;
-      shareBtn.disabled = true;
-      shareBtn.setAttribute("aria-busy", "true");
-      shareBtn.textContent = "Sharing…";
-
-      try {
-        let canUseNativeShare = false;
-        try {
-          canUseNativeShare = typeof navigator.share === "function"
-            && (typeof navigator.canShare !== "function" || navigator.canShare(shareData));
-        } catch (_) {
-          canUseNativeShare = false;
-        }
-
-        if (!canUseNativeShare) {
-          await copyFallback();
-          return;
-        }
-
-        try {
-          await navigator.share(shareData);
-          rewardCompletedShare("web_share_api");
-        } catch (error) {
-          if (error && error.name === "AbortError") {
-            showTokenToast("Share canceled — no progress added.");
-          } else {
-            await copyFallback();
-          }
-        }
-      } catch (_) {
-        await copyFallback();
-      } finally {
-        shareInFlight = false;
-        shareBtn.disabled = false;
-        shareBtn.removeAttribute("aria-busy");
-        shareBtn.textContent = idleLabel;
-      }
-    });
+        : "unknown-content",
+      show: shareShow,
+      episode: _currentEpisode
+    };
   }
+
+  function setShareStatus(message) {
+    if (shareSheetStatus) shareSheetStatus.textContent = message;
+  }
+
+  function closeShareSheet() {
+    if (!shareBackdrop) return;
+    shareBackdrop.hidden = true;
+    shareBackdrop.classList.remove("open");
+    document.body.classList.remove("share-open");
+  }
+
+  function openShareSheet() {
+    activeShare = currentSharePayload();
+    if (shareSheetProgram) shareSheetProgram.textContent = activeShare.text;
+    if (shareSmsLink) shareSmsLink.href = "sms:?&body=" + encodeURIComponent(activeShare.text + "\n" + activeShare.url);
+    if (shareEmailLink) {
+      shareEmailLink.href = "mailto:?subject=" + encodeURIComponent(activeShare.title) +
+        "&body=" + encodeURIComponent(activeShare.text + "\n\n" + activeShare.url);
+    }
+    if (shareNativeBtn) {
+      shareNativeBtn.hidden = typeof navigator.share !== "function";
+      shareNativeBtn.disabled = false;
+      shareNativeBtn.textContent = "📱 Share with phone";
+    }
+    setShareStatus("Choose how you want to share it.");
+    if (shareBackdrop) {
+      shareBackdrop.hidden = false;
+      shareBackdrop.classList.add("open");
+      document.body.classList.add("share-open");
+      setTimeout(() => {
+        const firstAction = shareNativeBtn && !shareNativeBtn.hidden ? shareNativeBtn : shareCopyBtn;
+        if (firstAction) firstAction.focus();
+      }, 0);
+    }
+  }
+
+  function rewardCompletedShare(method) {
+    if (!activeShare) return;
+    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
+      setShareStatus("Share completed. Sign in to build verified StarCoin progress.");
+      return;
+    }
+    const show = activeShare.show;
+    const episode = activeShare.episode;
+    const shareResult = StarQuestAuth.recordShare(activeShare.contentId, {
+      verified: false,
+      status: "completed_client_reported",
+      method,
+      url: activeShare.url,
+      showTitle: _currentShowTitle || "",
+      episodeId: (episode && (episode.id || episode.title)) || "",
+      companyId: (show && (show.companyId || show.network || show.studio)) || null,
+    });
+    if (!shareResult.ok) {
+      setShareStatus(
+        shareResult.error === "share_cooldown"
+          ? "This program already received share progress recently."
+          : (shareResult.message || "Shared, but progress could not be saved.")
+      );
+      return;
+    }
+    if (shareResult.awarded > 0) {
+      setShareStatus("⭐ StarCoin created: the share requirement was reached.");
+    } else {
+      const remaining = shareResult.sharesPerCoin - shareResult.progressToNextCoin;
+      setShareStatus("Share completed. " + remaining + (remaining === 1 ? " share" : " shares") + " until the next StarCoin.");
+    }
+  }
+
+  async function copyActiveShare() {
+    if (!activeShare) activeShare = currentSharePayload();
+    const copyText = activeShare.text + "\n" + activeShare.url;
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
+      await navigator.clipboard.writeText(copyText);
+      setShareStatus("Exact episode link copied. Paste it into any message.");
+      return true;
+    } catch (_) {
+      const field = document.createElement("textarea");
+      field.value = copyText;
+      field.setAttribute("readonly", "");
+      field.style.position = "fixed";
+      field.style.opacity = "0";
+      document.body.appendChild(field);
+      field.select();
+      field.setSelectionRange(0, field.value.length);
+      let copied = false;
+      try {
+        copied = typeof document.execCommand === "function" && document.execCommand("copy");
+      } catch (_) {
+        copied = false;
+      }
+      field.remove();
+      if (copied) {
+        setShareStatus("Exact episode link copied. Paste it into any message.");
+        return true;
+      }
+      window.prompt("Copy this StarQuest link:", copyText);
+      setShareStatus("Select and copy the link, then paste it into a message.");
+      return false;
+    }
+  }
+
+  if (shareBtn) shareBtn.addEventListener("click", openShareSheet);
+  if (shareSheetClose) shareSheetClose.addEventListener("click", closeShareSheet);
+  if (shareBackdrop) shareBackdrop.addEventListener("click", (event) => {
+    if (event.target === shareBackdrop) closeShareSheet();
+  });
+  if (shareCopyBtn) shareCopyBtn.addEventListener("click", copyActiveShare);
+  if (shareSmsLink) shareSmsLink.addEventListener("click", () => setShareStatus("Opening your text-message app…"));
+  if (shareEmailLink) shareEmailLink.addEventListener("click", () => setShareStatus("Opening your email app…"));
+  if (shareNativeBtn) shareNativeBtn.addEventListener("click", async () => {
+    if (shareInFlight) return;
+    if (!activeShare) activeShare = currentSharePayload();
+    shareInFlight = true;
+    shareNativeBtn.disabled = true;
+    shareNativeBtn.textContent = "Opening phone share…";
+    setShareStatus("Opening your phone's share choices…");
+    try {
+      await navigator.share({ title: activeShare.title, text: activeShare.text, url: activeShare.url });
+      rewardCompletedShare("web_share_api");
+    } catch (error) {
+      if (error && error.name === "AbortError") {
+        setShareStatus("Share canceled. Choose another option when ready.");
+      } else {
+        setShareStatus("Phone sharing was unavailable. Use Text, Email, or Copy Link below.");
+      }
+    } finally {
+      shareInFlight = false;
+      shareNativeBtn.disabled = false;
+      shareNativeBtn.textContent = "📱 Share with phone";
+    }
+  });
 
   /* ─────────────────────────────────────────────────────────────
      TOKEN TOAST
