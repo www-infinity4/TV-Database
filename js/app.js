@@ -1445,10 +1445,19 @@
   const elementValueInput = $("avatar-element-value");
   const designAISuggest = $("avatar-ai-suggest");
   const designAIStatus = $("avatar-ai-status");
+  const avatarCrownId = $("avatar-crown-id");
+  const avatarChainList = $("avatar-chain-list");
+  const avatarChangeRequest = $("avatar-change-request");
+  const avatarApplyRequest = $("avatar-apply-request");
+  const avatarForkCurrent = $("avatar-fork-current");
+  const avatarCopyChain = $("avatar-copy-chain");
+  const avatarImportDesign = $("avatar-import-design");
   const DESIGN_KEY = "starquest_personal_design";
   const designSizes = ["Compact", "Comfortable", "Showcase"];
   let activeDesignTarget = "Your whole StarQuest page";
   let activeDesignKey = "brand-name";
+  let pendingChainParentId = null;
+  let pendingChainDesignId = null;
   let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, overrides: {} };
   const AVATAR_COIN_MARK = "★";
   function distributorSummary() {
@@ -1512,6 +1521,77 @@
     if (elementValueInput) elementValueInput.value = (pendingDesign.overrides && pendingDesign.overrides[activeDesignKey]) || (entry ? entry.original : "");
   }
 
+  function designFromChainRecord(record) {
+    if (!record || !record.settings) return null;
+    return {
+      name: record.name || "My StarQuest",
+      scope: record.scope || "site",
+      mode: record.creationMode || "human",
+      theme: record.settings.theme || "cosmic",
+      cardSize: Number.isInteger(Number(record.settings.cardSize)) ? Number(record.settings.cardSize) : 1,
+      autoAdapt: !!record.settings.autoAdapt,
+      overrides: { ...(record.settings.overrides || {}) }
+    };
+  }
+
+  function renderAvatarChain() {
+    if (!window.AvatarCoinChain) return;
+    const identity = AvatarCoinChain.identity();
+    if (avatarCrownId) avatarCrownId.textContent = identity.crownId;
+    if (!avatarChainList) return;
+    const records = AvatarCoinChain.readChain().records
+      .filter((record) => record.siteId === AvatarCoinChain.siteId)
+      .slice(-8)
+      .reverse();
+    avatarChainList.innerHTML = "";
+    if (!records.length) {
+      const empty = document.createElement("p");
+      empty.className = "avatar-chain__empty";
+      empty.textContent = "Save this design to create version 1 of its Crown chain.";
+      avatarChainList.appendChild(empty);
+      return;
+    }
+    records.forEach((record) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "avatar-chain-version";
+      button.dataset.avatarVersionId = record.id;
+      const parent = record.forkedFromId ? " · remix" : (record.parentVersionId ? " · continued" : " · origin");
+      button.innerHTML = "<strong></strong><span></span><small></small>";
+      button.querySelector("strong").textContent = record.name + " · v" + record.version;
+      button.querySelector("span").textContent = record.targetLabel + parent;
+      button.querySelector("small").textContent = String(record.versionHash || "").slice(0, 16);
+      avatarChainList.appendChild(button);
+    });
+  }
+
+  function previewNaturalDesignRequest() {
+    if (!avatarChangeRequest) return;
+    const request = avatarChangeRequest.value.trim();
+    if (!request) {
+      if (profileMessage) profileMessage.textContent = "Describe the page change you want first.";
+      return;
+    }
+    const lower = request.toLowerCase();
+    ["cosmic", "midnight", "golden"].forEach((theme) => {
+      if (lower.includes(theme)) pendingDesign.theme = theme;
+    });
+    const sizeMap = { compact: 0, comfortable: 1, showcase: 2 };
+    Object.keys(sizeMap).forEach((size) => {
+      if (lower.includes(size)) pendingDesign.cardSize = sizeMap[size];
+    });
+    const quoted = request.match(/["“]([^"”]{1,64})["”]/);
+    const called = request.match(/(?:call|name|rename)\s+(?:it|this|the page)?\s*(?:to\s+)?([^,.]{1,64})/i);
+    const label = (quoted && quoted[1]) || (called && called[1]);
+    if (label) {
+      if (!pendingDesign.overrides) pendingDesign.overrides = {};
+      pendingDesign.overrides[activeDesignKey] = label.trim().slice(0, 64);
+    }
+    applyPersonalDesign(pendingDesign);
+    renderDesignControls();
+    if (profileMessage) profileMessage.textContent = "Request previewed. Save to add it to the Crown chain.";
+  }
+
   function renderProfilePortal() {
     const user = typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null;
     if ($("profile-access-balance")) $("profile-access-balance").textContent = user ? (user.tokens || 0) : "0";
@@ -1534,6 +1614,7 @@
     if (designAdaptReason) designAdaptReason.textContent = adapted.reason;
     applyPersonalDesign(pendingDesign);
     renderDesignControls();
+    renderAvatarChain();
   }
 
   function openProfilePortal(target, scope, key) {
@@ -1633,30 +1714,111 @@
   });
   if (profileClose) profileClose.addEventListener("click", closeProfilePortal);
   if (profileBackdrop) profileBackdrop.addEventListener("click", (event) => { if (event.target === profileBackdrop) closeProfilePortal(); });
-  if (profileSave) profileSave.addEventListener("click", () => {
+  if (profileSave) profileSave.addEventListener("click", async () => {
+    profileSave.disabled = true;
     localStorage.setItem(DESIGN_KEY, JSON.stringify(pendingDesign));
     applyPersonalDesign(pendingDesign);
-    if (profileMessage) profileMessage.textContent = "Your Avatar Coin design is saved on this device.";
+    try {
+      const record = window.AvatarCoinChain
+        ? await AvatarCoinChain.saveVersion(pendingDesign, {
+            targetKey: activeDesignKey,
+            targetLabel: activeDesignTarget,
+            siteSymbol: AVATAR_COIN_MARK,
+            designId: pendingChainDesignId || undefined,
+            parentVersionId: pendingChainParentId === null ? undefined : pendingChainParentId
+          })
+        : null;
+      if (record) {
+        pendingChainParentId = record.id;
+        pendingChainDesignId = record.designId;
+      }
+      renderAvatarChain();
+      if (profileMessage) {
+        profileMessage.textContent = record
+          ? "Saved as Crown chain version " + record.version + "."
+          : "Your Avatar Coin design is saved on this device.";
+      }
+    } catch (_) {
+      if (profileMessage) profileMessage.textContent = "The page design saved, but its chain record could not be created.";
+    } finally {
+      profileSave.disabled = false;
+    }
   });
   if (designCopy) designCopy.addEventListener("click", async () => {
-    const record = {
-      schema: "avatar-coin-design/v1",
-      id: "site:starquest:design:local-" + Date.now().toString(36),
+    const current = window.AvatarCoinChain ? AvatarCoinChain.current() : null;
+    const record = current || {
+      schema: "avatar-coin-design/v2",
       name: pendingDesign.name || "My StarQuest",
       scope: pendingDesign.scope,
-      target: activeDesignTarget,
+      targetLabel: activeDesignTarget,
       creationMode: pendingDesign.mode,
-      author: "local-user",
-      parent: null,
       settings: { theme: pendingDesign.theme, cardSize: pendingDesign.cardSize, autoAdapt: pendingDesign.autoAdapt, overrides: pendingDesign.overrides },
-      createdAt: new Date().toISOString(),
-      status: "local-unpublished"
+      status: "unsaved-preview"
     };
     try {
       await navigator.clipboard.writeText(JSON.stringify(record, null, 2));
-      if (profileMessage) profileMessage.textContent = "Portable Avatar Coin design record copied.";
+      if (profileMessage) profileMessage.textContent = "Current Avatar Coin version copied with its attribution.";
     } catch (_) {
       if (profileMessage) profileMessage.textContent = "Copy was blocked by this browser. Your saved design is unchanged.";
+    }
+  });
+  if (avatarApplyRequest) avatarApplyRequest.addEventListener("click", previewNaturalDesignRequest);
+  if (avatarChainList) avatarChainList.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-avatar-version-id]");
+    if (!button || !window.AvatarCoinChain) return;
+    const record = AvatarCoinChain.readChain().records.find((item) => item.id === button.dataset.avatarVersionId);
+    const design = designFromChainRecord(record);
+    if (!design) return;
+    pendingDesign = design;
+    pendingChainParentId = record.id;
+    pendingChainDesignId = record.designId;
+    applyPersonalDesign(pendingDesign);
+    renderDesignControls();
+    if (profileMessage) profileMessage.textContent = "Version " + record.version + " is previewing. Save to continue from it.";
+  });
+  if (avatarForkCurrent) avatarForkCurrent.addEventListener("click", async () => {
+    if (!window.AvatarCoinChain) return;
+    const current = AvatarCoinChain.current();
+    if (!current) {
+      if (profileMessage) profileMessage.textContent = "Save the first version before starting a new branch.";
+      return;
+    }
+    const record = await AvatarCoinChain.fork(current.id, (pendingDesign.name || current.name) + " remix");
+    const design = designFromChainRecord(record);
+    if (design) pendingDesign = design;
+    pendingChainParentId = record.id;
+    pendingChainDesignId = record.designId;
+    localStorage.setItem(DESIGN_KEY, JSON.stringify(pendingDesign));
+    applyPersonalDesign(pendingDesign);
+    renderDesignControls();
+    renderAvatarChain();
+    if (profileMessage) profileMessage.textContent = "New attributed branch created from " + current.name + ".";
+  });
+  if (avatarCopyChain) avatarCopyChain.addEventListener("click", async () => {
+    if (!window.AvatarCoinChain) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(AvatarCoinChain.exportChain(), null, 2));
+      if (profileMessage) profileMessage.textContent = "The full Crown design chain was copied.";
+    } catch (_) {
+      if (profileMessage) profileMessage.textContent = "The browser blocked copying the chain.";
+    }
+  });
+  if (avatarImportDesign) avatarImportDesign.addEventListener("click", async () => {
+    if (!window.AvatarCoinChain) return;
+    const source = window.prompt("Paste an Avatar Coin design record:");
+    if (!source) return;
+    try {
+      const record = await AvatarCoinChain.importRecord(source);
+      const design = designFromChainRecord(record);
+      if (design) {
+        pendingDesign = design;
+        applyPersonalDesign(pendingDesign);
+        renderDesignControls();
+      }
+      renderAvatarChain();
+      if (profileMessage) profileMessage.textContent = "Imported design previewed with its original attribution.";
+    } catch (error) {
+      if (profileMessage) profileMessage.textContent = error.message || "That design record could not be imported.";
     }
   });
   if (designReset) designReset.addEventListener("click", () => {
@@ -1665,7 +1827,8 @@
     applyPersonalDesign(pendingDesign);
     renderDesignControls();
     if (designAdaptReason) designAdaptReason.textContent = "Automatic adaptation is off.";
-    if (profileMessage) profileMessage.textContent = "Avatar Coin design reset to the StarQuest default.";
+    renderAvatarChain();
+    if (profileMessage) profileMessage.textContent = "Avatar Coin design reset to the StarQuest default. Crown history remains available.";
   });
 
   applyPersonalDesign(readPersonalDesign());

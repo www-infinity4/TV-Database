@@ -2277,3 +2277,100 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   .nav__wallet-progress small { display: none; }
   .nav__wallet-divider { height: 20px; }
 }
+
+
+/* ── Avatar Coin Crown design chain ── */
+.avatar-chain {
+  margin: 22px 0;
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(14,165,233,.08);
+  border: 1px solid rgba(125,211,252,.22);
+}
+.avatar-chain__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+.avatar-chain__header h3 { margin: 0 0 5px; }
+.avatar-chain__header p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: .74rem;
+  line-height: 1.45;
+}
+.avatar-chain__id {
+  max-width: 210px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  color: #bae6fd;
+  background: rgba(2,132,199,.14);
+  font: 600 .58rem/1.35 monospace;
+  overflow-wrap: anywhere;
+}
+.avatar-request {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-top: 16px;
+}
+.avatar-request label {
+  grid-column: 1 / -1;
+  color: #e0f2fe;
+  font-size: .76rem;
+  font-weight: 800;
+}
+.avatar-request textarea {
+  min-height: 68px;
+  resize: vertical;
+  padding: 11px;
+  border-radius: 10px;
+  color: #fff;
+  background: #111827;
+  border: 1px solid rgba(255,255,255,.16);
+  font: inherit;
+}
+.avatar-chain__list {
+  display: grid;
+  gap: 7px;
+  max-height: 220px;
+  margin-top: 14px;
+  overflow-y: auto;
+}
+.avatar-chain-version {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px 10px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  color: #f8fafc;
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px;
+}
+.avatar-chain-version:hover,
+.avatar-chain-version:focus-visible { border-color: rgba(250,204,21,.55); }
+.avatar-chain-version strong,
+.avatar-chain-version span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.avatar-chain-version span { color: var(--text-muted); font-size: .68rem; }
+.avatar-chain-version small {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: center;
+  color: #93c5fd;
+  font: 600 .56rem/1 monospace;
+}
+.avatar-chain__empty { color: var(--text-muted); font-size: .72rem; }
+.avatar-chain__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+@media (max-width: 700px) {
+  .avatar-chain__header { display: grid; }
+  .avatar-chain__id { max-width: 100%; }
+  .avatar-request { grid-template-columns: 1fr; }
+  .avatar-request label { grid-column: auto; }
+  .avatar-chain-version { grid-template-columns: 1fr; }
+  .avatar-chain-version small { grid-column: 1; grid-row: auto; }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "c13b0/avatar-coin-site/v1",
+  "siteId": "starquest",
+  "siteName": "StarQuest",
+  "marker": {
+    "symbol": "★",
+    "label": "StarQuest Avatar Coin portal",
+    "placement": "beside the exact editable title or component"
+  },
+  "portal": {
+    "module": "js/avatar-coin.js",
+    "recordSchema": "avatar-coin-design/v2",
+    "localChain": true,
+    "sharedPublishing": false
+  },
+  "capabilities": [
+    "contextual-title-editing",
+    "theme-preview",
+    "card-size-preview",
+    "natural-language-supported-controls",
+    "permanent-crown-id",
+    "hashed-version-history",
+    "parent-and-fork-attribution",
+    "record-import",
+    "chain-export"
+  ],
+  "compatibleMarkers": {
+    "starquest": "★",
+    "alien-radio": "alien-head",
+    "other-realms": "realm-declared-symbol"
+  },
+  "rights": {
+    "claimIsRegistration": false,
+    "reviewRequiredBeforePublicActivation": true
+  }
+}
