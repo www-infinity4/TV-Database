@@ -2329,6 +2329,7 @@
 
   function isEpisodePlayableSQ(ep) {
     if (!ep || typeof ep !== "object") return false;
+    if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing" || ep.sourceStatus === "unverified") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i.test(ep.archiveFile);
     // Item-only Archive.org records are resolved from metadata at playback time.
@@ -2600,7 +2601,17 @@
     }
   }
 
-  function rewardCompletedShare(method) {
+  function activeShareWasFullyWatched() {
+    if (!activeShare || !activeShare.episode || !activeShare.show) return false;
+    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return false;
+    const episode = activeShare.episode;
+    const show = activeShare.show;
+    const episodeId = show.id + "|S" + episode.season + "E" + episode.episode;
+    const watched = StarQuestAuth.getHistory().find((item) => item.episodeId === episodeId);
+    return !!(watched && (watched.completed || Number(watched.completionRate) >= 0.98));
+  }
+
+  function rewardCompletedShare(method, verifiedDelivery) {
     if (!activeShare) return;
     if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
       setShareStatus("Share completed. Sign in to build verified StarCoin progress.");
@@ -2608,10 +2619,12 @@
     }
     const show = activeShare.show;
     const episode = activeShare.episode;
+    const fullyWatched = activeShareWasFullyWatched();
+    const verified = verifiedDelivery === true;
     const shareResult = StarQuestAuth.recordShare(activeShare.contentId, {
-      verified: false,
-      fullyWatched: false,
-      status: "pending_verification",
+      verified,
+      fullyWatched,
+      status: verified && fullyWatched ? "verified_eligible" : "pending_verification",
       method,
       url: activeShare.url,
       showTitle: _currentShowTitle || "",
@@ -2645,6 +2658,7 @@
       if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
       await navigator.clipboard.writeText(copyText);
       setShareStatus("Exact episode link copied. Paste it into any message.");
+      rewardCompletedShare("copy_link", false);
       return true;
     } catch (_) {
       const field = document.createElement("textarea");
@@ -2664,6 +2678,7 @@
       field.remove();
       if (copied) {
         setShareStatus("Exact episode link copied. Paste it into any message.");
+        rewardCompletedShare("copy_link", false);
         return true;
       }
       window.prompt("Copy this StarQuest link:", copyText);
@@ -2693,7 +2708,7 @@
         return;
       }
       await navigator.share({ title: activeShare.title, text: activeShare.text, url: activeShare.url });
-      rewardCompletedShare("web_share_api");
+      rewardCompletedShare("web_share_api", true);
     } catch (error) {
       if (error && error.name === "AbortError") {
         setShareStatus("Share canceled. Choose another option when ready.");
