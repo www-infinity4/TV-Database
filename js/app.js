@@ -1525,7 +1525,24 @@
 
   function renderDesignControls() {
     if (profileEditTarget) profileEditTarget.textContent = activeDesignTarget;
-    document.querySelectorAll("[data-design-theme]").forEach((button) => {
+    /* Portal markers can live inside links and can be re-mounted by the editable-page
+     observer. Capture their click at the document boundary so the marker always wins
+     over parent navigation and still works after dynamic page updates. */
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    const marker = target && target.closest ? target.closest("[data-avatar-portal]") : null;
+    if (!marker) return;
+    event.preventDefault();
+    event.stopPropagation();
+    closeSidebar();
+    openProfilePortal(
+      marker.dataset.designTarget || marker.dataset.avatarTarget || "StarQuest name",
+      marker.dataset.designScope || marker.dataset.avatarScope || "site",
+      marker.dataset.designKey || marker.dataset.avatarKey || "brand-name"
+    );
+  }, true);
+
+  document.querySelectorAll("[data-design-theme]").forEach((button) => {
       button.classList.toggle("selected", button.dataset.designTheme === pendingDesign.theme);
     });
     if (profileCardSize) profileCardSize.value = String(pendingDesign.cardSize);
