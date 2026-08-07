@@ -121,7 +121,7 @@
 
   function isEpisodePlayable(ep) {
     if (!ep || typeof ep !== "object") return false;
-    if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing") return false;
+    if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing" || ep.sourceStatus === "unverified") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
     // Item-only Archive.org records are resolved from metadata at playback time.
@@ -411,7 +411,7 @@
   function renderRow(container, shows) {
     if (!container) return;
     container.innerHTML = "";
-    shows.filter(isShowAvailable).forEach((show) => {
+    shows.forEach((show) => {
       container.appendChild(createShowCard(show));
     });
     updateCarouselButtons(container);
@@ -517,7 +517,7 @@
           <span class="fallback-subtitle">${escHTML((show.genre || []).slice(0, 2).join(" · ") || show.years)}</span>
         </div>
         <div class="show-card__play-overlay" aria-hidden="true">
-          <div class="play-icon-circle">${show.payToWatch ? "↗" : "▶"}</div>
+          <div class="play-icon-circle">${showUnavailable ? "⛔" : (show.payToWatch ? "↗" : "▶")}</div>
         </div>
         ${movieBadge}${payBadge}
       </div>
@@ -528,7 +528,7 @@
           <span class="show-card__genre">${escHTML(show.genre[0])}</span>
           <span>${escHTML(show.years)}</span>
         </div>
-        ${showUnavailable ? '<div class="history-empty" style="display:block;margin-top:4px;">Unavailable</div>' : ""}
+        ${showUnavailable ? '<div class="history-empty" style="display:block;margin-top:4px;">Source unavailable after audit</div>' : ""}
         ${isLocked ? '<button class="btn btn-primary unlock-btn" type="button" style="margin-top:6px">Unlock • ' + escHTML(String(unlockCost)) + ' ⭐</button>' : ""}
         ${unlockCost > 0 && !isLocked ? '<div class="history-empty" style="display:block;margin-top:4px;">Unlocked</div>' : ""}
       </div>
@@ -678,7 +678,7 @@
         </div>
         <div class="episode-info">
           <div class="episode-title">S${ep.season} E${ep.episode} · ${escHTML(ep.title)}</div>
-          <div class="episode-desc">${escHTML(ep.description)}</div>
+          <div class="episode-desc">${escHTML(!isPlayable && ep.sourceNote ? ep.sourceNote : ep.description)}</div>
         </div>
         <span class="episode-duration">${escHTML(ep.duration)}</span>
         <div class="episode-play" aria-hidden="true">${!isPlayable ? "⛔" : (isLockedEp ? "🔒" : "▶")}</div>
@@ -987,7 +987,7 @@
         s.title.toLowerCase().includes(q) ||
         s.genre.some((g) => g.toLowerCase().includes(q)) ||
         s.description.toLowerCase().includes(q)
-    ).filter(isShowAvailable).sort(byScoreFreeFirst);
+    ).sort(byScoreFreeFirst);
 
     DOM.searchResultsTitle.innerHTML =
       'Results for <strong>"' + escHTML(q) + '"</strong> — ' + results.length + " show" + (results.length !== 1 ? "s" : "");
@@ -1018,7 +1018,6 @@
   function filterByGenre(genre) {
     state.activeGenre = genre;
     const shows = (genre === "all" ? getFeaturedShows() : getShowsByGenre(genre))
-      .filter(isShowAvailable)
       .slice()
       .sort(byScoreFreeFirst);
 
@@ -1107,10 +1106,10 @@
         </div>
         <div class="episode-info">
           <div class="episode-title">${escHTML(seasonLabel)} · ${escHTML(ep.title)}</div>
-          <div class="episode-desc">${escHTML(ep.description)}</div>
+          <div class="episode-desc">${escHTML(!isPlayable && ep.sourceNote ? ep.sourceNote : ep.description)}</div>
         </div>
         <span class="episode-duration">${escHTML(ep.duration)}</span>
-        <div class="episode-play" aria-hidden="true">▶</div>
+        <div class="episode-play" aria-hidden="true">${!isPlayable ? "⛔" : "▶"}</div>
       `;
       const play = () => {
         closeAllEps();
@@ -1227,6 +1226,7 @@
   function archiveValidationStatus(ep) {
     if (ep.sourceStatus === "restricted") return "restricted by source";
     if (ep.sourceStatus === "file-missing") return "file missing";
+    if (ep.sourceStatus === "unverified") return "unverified after source audit";
     if (!ep.archiveId && !ep.youtubeId) return "identifier missing";
     if (ep.youtubeId) return "embedded player";
     if (typeof ep.archiveFile === "string" && ep.archiveFile) {
@@ -2329,6 +2329,7 @@
 
   function isEpisodePlayableSQ(ep) {
     if (!ep || typeof ep !== "object") return false;
+    if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing" || ep.sourceStatus === "unverified") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return /\\.(mp4|m4v|webm|ogv|ogg|mov)$/i.test(ep.archiveFile);
     // Item-only Archive.org records are resolved from metadata at playback time.
@@ -2576,15 +2577,17 @@
   function openShareSheet() {
     activeShare = currentSharePayload();
     if (shareSheetProgram) shareSheetProgram.textContent = activeShare.text;
-    if (shareSmsLink) shareSmsLink.href = "sms:?&body=" + encodeURIComponent(activeShare.text + "\n" + activeShare.url);
+    if (shareSmsLink) shareSmsLink.href = "sms:?body=" + encodeURIComponent(activeShare.text + "\n" + activeShare.url);
     if (shareEmailLink) {
       shareEmailLink.href = "mailto:?subject=" + encodeURIComponent(activeShare.title) +
         "&body=" + encodeURIComponent(activeShare.text + "\n\n" + activeShare.url);
     }
     if (shareNativeBtn) {
-      shareNativeBtn.hidden = typeof navigator.share !== "function";
+      shareNativeBtn.hidden = false;
       shareNativeBtn.disabled = false;
-      shareNativeBtn.textContent = "📱 Share with phone";
+      shareNativeBtn.textContent = typeof navigator.share === "function"
+        ? "📱 Share with phone"
+        : "🔗 Copy share link";
     }
     setShareStatus("Choose how you want to share it.");
     if (shareBackdrop) {
@@ -2598,7 +2601,17 @@
     }
   }
 
-  function rewardCompletedShare(method) {
+  function activeShareWasFullyWatched() {
+    if (!activeShare || !activeShare.episode || !activeShare.show) return false;
+    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return false;
+    const episode = activeShare.episode;
+    const show = activeShare.show;
+    const episodeId = show.id + "|S" + episode.season + "E" + episode.episode;
+    const watched = StarQuestAuth.getHistory().find((item) => item.episodeId === episodeId);
+    return !!(watched && (watched.completed || Number(watched.completionRate) >= 0.98));
+  }
+
+  function rewardCompletedShare(method, verifiedDelivery) {
     if (!activeShare) return;
     if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
       setShareStatus("Share completed. Sign in to build verified StarCoin progress.");
@@ -2606,10 +2619,12 @@
     }
     const show = activeShare.show;
     const episode = activeShare.episode;
+    const fullyWatched = activeShareWasFullyWatched();
+    const verified = verifiedDelivery === true;
     const shareResult = StarQuestAuth.recordShare(activeShare.contentId, {
-      verified: false,
-      fullyWatched: false,
-      status: "pending_verification",
+      verified,
+      fullyWatched,
+      status: verified && fullyWatched ? "verified_eligible" : "pending_verification",
       method,
       url: activeShare.url,
       showTitle: _currentShowTitle || "",
@@ -2643,6 +2658,7 @@
       if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
       await navigator.clipboard.writeText(copyText);
       setShareStatus("Exact episode link copied. Paste it into any message.");
+      rewardCompletedShare("copy_link", false);
       return true;
     } catch (_) {
       const field = document.createElement("textarea");
@@ -2662,6 +2678,7 @@
       field.remove();
       if (copied) {
         setShareStatus("Exact episode link copied. Paste it into any message.");
+        rewardCompletedShare("copy_link", false);
         return true;
       }
       window.prompt("Copy this StarQuest link:", copyText);
@@ -2686,8 +2703,12 @@
     shareNativeBtn.textContent = "Opening phone share…";
     setShareStatus("Opening your phone's share choices…");
     try {
+      if (typeof navigator.share !== "function") {
+        await copyActiveShare();
+        return;
+      }
       await navigator.share({ title: activeShare.title, text: activeShare.text, url: activeShare.url });
-      rewardCompletedShare("web_share_api");
+      rewardCompletedShare("web_share_api", true);
     } catch (error) {
       if (error && error.name === "AbortError") {
         setShareStatus("Share canceled. Choose another option when ready.");
@@ -2697,7 +2718,9 @@
     } finally {
       shareInFlight = false;
       shareNativeBtn.disabled = false;
-      shareNativeBtn.textContent = "📱 Share with phone";
+      shareNativeBtn.textContent = typeof navigator.share === "function"
+        ? "📱 Share with phone"
+        : "🔗 Copy share link";
     }
   });
 

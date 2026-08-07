@@ -12326,6 +12326,73 @@ if (verifiedHulk1994) {
   });
 }
 
+// Source-health audit: hard failures are removed from Play buttons; network
+// timeouts and server errors stay visible in the data but are not advertised
+// as playable until an exact-file recheck passes.
+const sourceAuditHardMissingItems = new Set([
+  "the.twilight.zone.s01e01",
+  "TheTwilightZone-TheHitch-hiker",
+  "BradyBunch_s01e01",
+  "MaryTylerMoore_s01e01",
+  "HappyDays_s01e01",
+  "ConnectionswithJamesBurke",
+  "Nerds2.0.1",
+  "The.Day.The.Universe.Changed.1985",
+  "Let_It_Be_1970_film",
+]);
+
+const sourceAuditUnverifiedItems = new Set([
+  "theadventuresofhuckleberryfinn_201611",
+  "mtv-8-8-81-first-ever-saturday-night-concert-reo-speedwagon-live-infidelity",
+]);
+
+const sourceAuditRestrictedEpisodes = new Set([
+  "sein-s01e01",
+  "gilligan-s01e01",
+]);
+
+const sourceAuditUnverifiedEpisodes = new Set([
+  "beaver-s01e01",
+  "andy-s01e01",
+  "disney-silly-symphonies-animal-tales-1986-full",
+  "hulk66-s01e01",
+  "hulk94-s01e03",
+  "hulk94-s01e04",
+  "hulk94-s01e05",
+  "hulk94-s01e06",
+  "hulk94-s01e07",
+  "hulk94-s01e08",
+  "hulk94-s01e09",
+  "hulk94-s01e10",
+  "hulk94-s01e11",
+  "hulk94-s01e12",
+  "hulk94-s01e13",
+  "hulk94-s02e01",
+  "hulk94-s02e02",
+  "hulk94-s02e03",
+  "hulk94-s02e04",
+  "hulk94-s02e05",
+  "hulk94-s02e06",
+  "hulk94-s02e07",
+  "hulk94-s02e08",
+  "the-wolf-man-1941-full",
+]);
+
+SHOWS.forEach((show) => {
+  (show.episodes || []).forEach((episode) => {
+    if (sourceAuditHardMissingItems.has(episode.archiveId)) {
+      episode.sourceStatus = "file-missing";
+      episode.sourceNote = "The audited Internet Archive item returns 404.";
+    } else if (sourceAuditRestrictedEpisodes.has(episode.id)) {
+      episode.sourceStatus = "restricted";
+      episode.sourceNote = "The audited direct stream rejects public playback.";
+    } else if (sourceAuditUnverifiedItems.has(episode.archiveId) || sourceAuditUnverifiedEpisodes.has(episode.id)) {
+      episode.sourceStatus = "unverified";
+      episode.sourceNote = "The exact source timed out or returned a server error during the full catalog audit.";
+    }
+  });
+});
+
 const CATEGORIES = [
   { id: "featured", label: "Featured Classics" },
   { id: "drama", label: "Drama" },
