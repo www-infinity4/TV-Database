@@ -1933,6 +1933,8 @@
     const watchWrapEl = $("wallet-watch-progress-wrap");
     const lifetimeEl = $("wallet-lifetime-shares");
     const starPowerEl = $("wallet-star-power");
+    const navShareEl = $("nav-share-progress");
+    const navSharesLeftEl = $("nav-shares-left");
 
     const tokens  = (user && user.tokens) || 0;
     const pending = (user && user.pendingShareCredits) || 0;
@@ -1942,7 +1944,10 @@
     const watchRemainder = Math.max(0, eligible - rewarded) % 3600;
 
     if (balEl)   balEl.textContent  = tokens;
+    const sharesLeft = pending === 0 ? SHARES_PER_COIN : SHARES_PER_COIN - pending;
     if (shareEl) shareEl.textContent = pending + " / " + SHARES_PER_COIN;
+    if (navShareEl) navShareEl.textContent = pending + "/" + SHARES_PER_COIN;
+    if (navSharesLeftEl) navSharesLeftEl.textContent = sharesLeft + (sharesLeft === 1 ? " share left" : " shares left");
     if (barEl)   barEl.style.width  = Math.min(100, (pending / SHARES_PER_COIN) * 100) + "%";
     if (wrapEl)  wrapEl.setAttribute("aria-valuenow", pending);
     if (watchEl) watchEl.textContent = watchRemainder + " / 3600s";
@@ -2315,7 +2320,11 @@
      ──────────────────────────────────────────────────────────── */
   const shareBtn = $("player-share-btn");
   if (shareBtn) {
+    let shareInFlight = false;
+
     shareBtn.addEventListener("click", async () => {
+      if (shareInFlight) return;
+
       const url = window.location.href;
       const text = _currentShowTitle
         ? "Watching " + _currentShowTitle + " on StarQuest ⭐ — classic TV galaxy!"
@@ -2323,43 +2332,81 @@
       const contentId = (_currentEpisode && _currentShowTitle)
         ? (_currentShowTitle + "|" + (_currentEpisode.id || _currentEpisode.title || "episode"))
         : "unknown-content";
-      const rewardShare = (verified) => {
-        if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return;
-        const shareResult = StarQuestAuth.recordShare(contentId, { verified });
-        if (!shareResult.ok) {
-          if (shareResult.error === "share_cooldown") {
-            showTokenToast("Share progress cooldown active for this content.");
-          }
+      const shareData = { title: "StarQuest", text, url };
+
+      const rewardCompletedShare = (method) => {
+        if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
+          showTokenToast("Share completed. Sign in to build StarCoin progress.");
           return;
         }
+
+        const show = _currentEpisode ? findShowForEpisode(_currentEpisode) : null;
+        const shareResult = StarQuestAuth.recordShare(contentId, {
+          verified: false,
+          status: "completed_client_reported",
+          method,
+          url,
+          showTitle: _currentShowTitle || "",
+          episodeId: (_currentEpisode && (_currentEpisode.id || _currentEpisode.title)) || "",
+          companyId: (show && (show.companyId || show.network || show.studio)) || null,
+        });
+
+        if (!shareResult.ok) {
+          showTokenToast(
+            shareResult.error === "share_cooldown"
+              ? "This show already earned share progress recently."
+              : (shareResult.message || "Share completed, but progress could not be saved.")
+          );
+          return;
+        }
+
         if (shareResult.awarded > 0) {
-          showTokenToast("⭐ +1 StarCoin from sharing (prototype).");
+          showTokenToast("⭐ StarCoin created: 10 completed shares reached.");
         } else {
           const remaining = shareResult.sharesPerCoin - shareResult.progressToNextCoin;
-          showTokenToast("🔗 Shared (" + (verified ? "verified" : "unverified local") + "). " + remaining + " more for a StarCoin.");
+          showTokenToast("🔗 Share counted. " + remaining + (remaining === 1 ? " share" : " shares") + " until the next StarCoin.");
         }
       };
 
-      const copyFallback = () => {
-        navigator.clipboard.writeText(url + " — " + text).then(() => {
-          showTokenToast("Link copied (unverified local share).");
-          rewardShare(false);
-        }).catch(() => {
-          prompt("Copy this link to share:", url);
-          showTokenToast("Unverified local share fallback used.");
-          rewardShare(false);
-        });
-      };
-
-      if (navigator.share) {
+      const copyFallback = async () => {
+        const copyText = url + " — " + text;
         try {
-          await navigator.share({ title: "StarQuest", text, url });
-          rewardShare(true);
+          if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
+          await navigator.clipboard.writeText(copyText);
+          showTokenToast("Link copied. Send it to count a completed share.");
         } catch {
-          showTokenToast("Share canceled — no reward granted.");
+          window.prompt("Copy this StarQuest link to share:", copyText);
+          showTokenToast("Copy the link and send it. Copying alone does not mint a coin.");
         }
-      } else {
-        copyFallback();
+      };
+
+      shareInFlight = true;
+      shareBtn.disabled = true;
+      shareBtn.setAttribute("aria-busy", "true");
+
+      try {
+        const canUseNativeShare = typeof navigator.share === "function"
+          && (typeof navigator.canShare !== "function" || navigator.canShare(shareData));
+
+        if (!canUseNativeShare) {
+          await copyFallback();
+          return;
+        }
+
+        try {
+          await navigator.share(shareData);
+          rewardCompletedShare("web_share_api");
+        } catch (error) {
+          if (error && error.name === "AbortError") {
+            showTokenToast("Share canceled — no progress added.");
+          } else {
+            await copyFallback();
+          }
+        }
+      } finally {
+        shareInFlight = false;
+        shareBtn.disabled = false;
+        shareBtn.removeAttribute("aria-busy");
       }
     });
   }
