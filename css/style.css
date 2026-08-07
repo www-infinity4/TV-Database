@@ -1514,27 +1514,34 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
 
 @media (max-width: 520px) {
   .nav {
-    grid-template-columns: auto minmax(0, 1fr);
-    padding-left: 8px;
-    padding-right: 8px;
-    gap: 5px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding-left: 7px;
+    padding-right: 7px;
+    gap: 3px;
   }
   .nav__brand {
     min-width: 0;
     align-items: center;
   }
   .nav__logo {
-    gap: 0;
-    font-size: 1rem;
+    min-width: 0;
+    gap: 3px;
+    font-size: .78rem;
+    letter-spacing: 0;
   }
   .nav__logo span {
-    display: none;
+    display: inline;
+    overflow: hidden;
+    font-size: .64rem;
+    text-overflow: clip;
   }
   .nav__brand > .design-star {
-    width: 34px;
-    height: 42px;
-    margin-left: 1px;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 44px;
+    margin-left: 0;
     touch-action: manipulation;
+    pointer-events: auto;
     position: relative;
     z-index: 3;
   }
@@ -1542,30 +1549,39 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
     min-width: 0;
     margin-left: 0;
     justify-content: flex-end;
-    gap: 4px;
+    gap: 2px;
   }
   .nav__search { display: none; }
   .nav-profile-avatar {
-    width: 40px;
+    flex: 0 0 38px;
+    width: 38px;
     height: 42px;
     touch-action: manipulation;
+    pointer-events: auto;
     position: relative;
     z-index: 3;
   }
   .nav__wallet {
     min-width: 0;
-    gap: 3px;
-    padding: 5px 6px;
-    font-size: .56rem;
+    gap: 0;
+    padding: 5px 5px;
+    font-size: .54rem;
+    border-radius: 12px;
   }
-  .nav__wallet-divider {
+  .nav__wallet-balance,
+  .nav__wallet-divider,
+  .nav__wallet-progress small {
     display: none;
+  }
+  .nav__wallet-progress strong {
+    font-size: .54rem;
   }
   .hamburger {
     flex: 0 0 42px;
     width: 42px;
-    height: 42px;
+    height: 44px;
     touch-action: manipulation;
+    pointer-events: auto;
     position: relative;
     z-index: 3;
   }
