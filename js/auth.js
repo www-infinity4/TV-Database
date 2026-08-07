@@ -723,19 +723,22 @@
       }
       const opts = options && typeof options === "object" ? options : {};
       const now = Date.now();
+      const qualifiesForProgress = opts.verified === true && opts.fullyWatched === true;
 
       const result = mutateCurrentUser((user) => {
         if (!user.shareCooldownByContent || typeof user.shareCooldownByContent !== "object") {
           user.shareCooldownByContent = {};
         }
-        const lastShareTs = toInt(user.shareCooldownByContent[id], 0);
-        if (now - lastShareTs < SHARE_COOLDOWN_MS) {
-          return {
-            ok: false,
-            error: "share_cooldown",
-            message: "You already earned share progress for this content recently.",
-            retryInMs: SHARE_COOLDOWN_MS - (now - lastShareTs),
-          };
+        if (qualifiesForProgress) {
+          const lastShareTs = toInt(user.shareCooldownByContent[id], 0);
+          if (now - lastShareTs < SHARE_COOLDOWN_MS) {
+            return {
+              ok: false,
+              error: "share_cooldown",
+              message: "You already earned verified share progress for this content recently.",
+              retryInMs: SHARE_COOLDOWN_MS - (now - lastShareTs),
+            };
+          }
         }
 
         if (!Array.isArray(user.shareEvents)) user.shareEvents = [];
@@ -744,17 +747,23 @@
           contentId: id,
           createdAt: now,
           verified: !!opts.verified,
-          verificationState: opts.verified ? "verified" : "client_reported",
-          status: opts.status || (opts.verified ? "verified" : "completed_client_reported"),
+          fullyWatched: !!opts.fullyWatched,
+          verificationState: qualifiesForProgress
+            ? "verified_eligible"
+            : (opts.verified ? "verified_watch_incomplete" : "pending_verification"),
+          status: opts.status || (qualifiesForProgress ? "verified_eligible" : "pending_verification"),
           method: opts.method || "unknown",
           url: opts.url || null,
           showTitle: opts.showTitle || null,
           episodeId: opts.episodeId || null,
           companyId: opts.companyId || null,
-          payoutEligible: false,
+          payoutEligible: qualifiesForProgress,
         };
         user.shareEvents.push(event);
         user.shareEvents = user.shareEvents.slice(-250);
+        if (!qualifiesForProgress) {
+          return { event, awarded: 0, credited: false };
+        }
         user.shareCooldownByContent[id] = now;
         user.shareCount = Math.max(0, toInt(user.shareCount, 0)) + 1;
         user.pendingShareCredits = Math.max(0, toInt(user.pendingShareCredits, 0)) + 1;
@@ -774,7 +783,7 @@
           );
         }
 
-        return { event, awarded };
+        return { event, awarded, credited: true };
       });
 
       if (!result.ok) {
@@ -804,6 +813,7 @@
       return {
         ok: true,
         awarded: result.result.awarded,
+        credited: !!result.result.credited,
         event: result.result.event,
         lifetimeShareCount: result.user.shareCount,
         progressToNextCoin: result.user.pendingShareCredits,
