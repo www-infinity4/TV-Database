@@ -1686,6 +1686,23 @@
     star.setAttribute("aria-label", "Customize " + title.textContent.trim());
     title.appendChild(star);
   });
+  /* Portal markers can live inside links and can be re-mounted by the editable-page
+     observer. Capture their click at the document boundary so the marker always wins
+     over parent navigation and still works after dynamic page updates. */
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    const marker = target && target.closest ? target.closest("[data-avatar-portal]") : null;
+    if (!marker) return;
+    event.preventDefault();
+    event.stopPropagation();
+    closeSidebar();
+    openProfilePortal(
+      marker.dataset.designTarget || marker.dataset.avatarTarget || "StarQuest name",
+      marker.dataset.designScope || marker.dataset.avatarScope || "site",
+      marker.dataset.designKey || marker.dataset.avatarKey || "brand-name"
+    );
+  }, true);
+
   document.querySelectorAll(".design-star, #nav-profile-avatar, #sidebar-profile-avatar").forEach((star) => {
     star.textContent = AVATAR_COIN_MARK;
     star.addEventListener("click", (event) => {
