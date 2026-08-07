@@ -1635,6 +1635,17 @@
     const detail = event.detail || {};
     openProfilePortal(detail.target, detail.scope, detail.key);
   });
+  document.addEventListener("avatarcoin:edit-request", (event) => {
+    const detail = event.detail || {};
+    if (!detail.key || !detail.node) return;
+    originalElementLabels[detail.key] = {
+      node: detail.node,
+      kind: detail.kind || "text-node",
+      original: detail.original || detail.target || ""
+    };
+    closeSidebar();
+    openProfilePortal(detail.target || "Page element", "component", detail.key);
+  });
 
   [sidebarProfileBtn].forEach((button) => {
     if (button) button.addEventListener("click", () => { closeSidebar(); openProfilePortal("StarQuest name", "site", "brand-name"); });
@@ -1832,6 +1843,9 @@
   });
 
   applyPersonalDesign(readPersonalDesign());
+  if (window.AvatarCoinChain && typeof AvatarCoinChain.observeEditablePage === "function") {
+    AvatarCoinChain.observeEditablePage();
+  }
 
   /* ─────────────────────────────────────────────────────────────
      UPDATE UI FOR LOGGED-IN / LOGGED-OUT STATE
