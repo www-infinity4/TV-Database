@@ -665,6 +665,96 @@
     </div>
   </div>
 
+  <!-- Critical controls stay independent from catalog/player startup. -->
+  <script>
+    (function () {
+      "use strict";
+
+      function byId(id) { return document.getElementById(id); }
+
+      function openSidebarFallback() {
+        var sidebar = byId("sidebar");
+        var backdrop = byId("sidebar-backdrop");
+        var button = byId("hamburger-btn");
+        if (sidebar) sidebar.classList.add("open");
+        if (backdrop) backdrop.classList.add("open");
+        if (button) {
+          button.classList.add("open");
+          button.setAttribute("aria-expanded", "true");
+        }
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeSidebarFallback() {
+        var sidebar = byId("sidebar");
+        var backdrop = byId("sidebar-backdrop");
+        var button = byId("hamburger-btn");
+        if (sidebar) sidebar.classList.remove("open");
+        if (backdrop) backdrop.classList.remove("open");
+        if (button) {
+          button.classList.remove("open");
+          button.setAttribute("aria-expanded", "false");
+        }
+        document.body.style.overflow = "";
+      }
+
+      function openPortalFallback(marker) {
+        var backdrop = byId("profile-portal-backdrop");
+        var target = byId("profile-edit-target");
+        if (target && marker) {
+          target.textContent = marker.getAttribute("data-design-target") || "Your StarQuest page";
+        }
+        if (backdrop) backdrop.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closePortalFallback() {
+        var backdrop = byId("profile-portal-backdrop");
+        if (backdrop) backdrop.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      function bindCriticalControls() {
+        var hamburger = byId("hamburger-btn");
+        var sidebarClose = byId("sidebar-close");
+        var sidebarBackdrop = byId("sidebar-backdrop");
+        var portalClose = byId("profile-portal-close");
+        var profileAvatar = byId("nav-profile-avatar");
+        var sidebarAvatar = byId("sidebar-profile-avatar");
+        var sidebarProfile = byId("sidebar-profile-btn");
+
+        if (hamburger && hamburger.dataset.criticalControl !== "true") {
+          hamburger.dataset.criticalControl = "true";
+          hamburger.addEventListener("click", openSidebarFallback);
+        }
+        if (sidebarClose) sidebarClose.addEventListener("click", closeSidebarFallback);
+        if (sidebarBackdrop) sidebarBackdrop.addEventListener("click", closeSidebarFallback);
+        if (portalClose) portalClose.addEventListener("click", closePortalFallback);
+        [profileAvatar, sidebarAvatar, sidebarProfile].forEach(function (control) {
+          if (!control) return;
+          control.addEventListener("click", function () {
+            closeSidebarFallback();
+            openPortalFallback(control);
+          });
+        });
+
+        document.addEventListener("click", function (event) {
+          var source = event.target;
+          var marker = source && source.closest ? source.closest("[data-avatar-portal]") : null;
+          if (!marker) return;
+          event.preventDefault();
+          openPortalFallback(marker);
+        }, true);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bindCriticalControls, { once: true });
+      } else {
+        bindCriticalControls();
+      }
+    })();
+  </script>
+
   <!-- Scripts -->
   <script src="js/data.js?v=20260808"></script>
   <script src="js/archive-discovery.js?v=20260818"></script>
