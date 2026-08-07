@@ -744,7 +744,14 @@
           contentId: id,
           createdAt: now,
           verified: !!opts.verified,
-          status: opts.verified ? "verified" : "unverified_local_share",
+          verificationState: opts.verified ? "verified" : "client_reported",
+          status: opts.status || (opts.verified ? "verified" : "completed_client_reported"),
+          method: opts.method || "unknown",
+          url: opts.url || null,
+          showTitle: opts.showTitle || null,
+          episodeId: opts.episodeId || null,
+          companyId: opts.companyId || null,
+          payoutEligible: false,
         };
         user.shareEvents.push(event);
         user.shareEvents = user.shareEvents.slice(-250);
