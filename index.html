@@ -169,7 +169,7 @@
   <aside id="sidebar" class="sidebar" role="complementary" aria-label="StarQuest menu">
     <div class="sidebar__header">
       <div class="sidebar__logo">⭐ <span>StarQuest</span></div>
-      <button id="sidebar-close" class="sidebar-close" aria-label="Close menu">✕</button>
+      <button id="sidebar-close" class="sidebar-close" aria-label="Close menu" onclick="event.preventDefault(); event.stopImmediatePropagation(); document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-backdrop').classList.remove('open'); document.getElementById('hamburger-btn').classList.remove('open'); document.getElementById('hamburger-btn').setAttribute('aria-expanded', 'false'); document.body.style.overflow=''; return false;">✕</button>
     </div>
     <div id="sidebar-user" class="sidebar-user">
       <button id="sidebar-profile-avatar" class="sidebar-user__avatar" type="button" aria-label="Open Avatar Coin design portal">☆</button>
