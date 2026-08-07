@@ -441,11 +441,12 @@ ul { list-style: none; }
 }
 .show-card__title .editable-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .card-avatar-marker {
-  flex: 0 0 auto; width: 22px; height: 22px; margin-left: 5px; border-radius: 50%;
-  color: #facc15; background: rgba(250,204,21,.08); border: 1px solid rgba(250,204,21,.22);
-  font-size: .72rem; line-height: 1;
+  flex: 0 0 auto; width: 30px; height: 30px; margin-left: 7px; border-radius: 50%;
+  color: #fff3a3; background: rgba(250,204,21,.2); border: 1px solid rgba(250,204,21,.62);
+  box-shadow: 0 0 0 2px rgba(250,204,21,.1), 0 0 14px rgba(250,204,21,.22);
+  font-size: 1rem; line-height: 1;
 }
-.card-avatar-marker:hover, .card-avatar-marker:focus-visible { background: rgba(250,204,21,.2); transform: scale(1.08); }
+.card-avatar-marker:hover, .card-avatar-marker:focus-visible { background: rgba(250,204,21,.34); transform: scale(1.08); }
 
 .show-card__meta {
   display: flex;
@@ -1525,14 +1526,14 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   }
   .nav__logo {
     min-width: 0;
-    gap: 3px;
-    font-size: .78rem;
-    letter-spacing: 0;
+    gap: 6px;
+    font-size: 1rem;
+    letter-spacing: 1px;
   }
   .nav__logo span {
     display: inline;
-    overflow: hidden;
-    font-size: .64rem;
+    overflow: visible;
+    font-size: 1rem;
     text-overflow: clip;
   }
   .nav__brand > .design-star {
@@ -1584,6 +1585,24 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
     pointer-events: auto;
     position: relative;
     z-index: 3;
+  }
+}
+
+@media (max-width: 360px) {
+  :root { --nav-h: 108px; }
+  .nav {
+    grid-template-columns: 1fr;
+    grid-template-rows: 54px 48px;
+    height: var(--nav-h);
+    align-content: center;
+  }
+  .nav__brand {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .nav__right {
+    width: 100%;
+    justify-content: flex-end;
   }
 }
 
@@ -2479,14 +2498,16 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
 
 /* Page-wide Avatar Coin edit points */
 .avatar-wave-marker {
-  width: 19px;
-  height: 19px;
-  margin: 0 4px 0 5px;
+  width: 28px;
+  height: 28px;
+  margin: 0 6px;
   padding: 0;
-  font-size: .72rem;
-  vertical-align: super;
-  border: 1px solid rgba(250,204,21,.34);
-  background: rgba(250,204,21,.08);
+  font-size: 1rem;
+  vertical-align: middle;
+  color: #fff3a3;
+  border: 1px solid rgba(250,204,21,.66);
+  background: rgba(250,204,21,.2);
+  box-shadow: 0 0 0 2px rgba(250,204,21,.08), 0 0 14px rgba(250,204,21,.2);
 }
 p + .avatar-wave-marker,
 label + .avatar-wave-marker,
