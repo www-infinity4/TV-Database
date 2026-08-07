@@ -2515,6 +2515,7 @@
       if (shareInFlight) return;
 
       const shareUrl = new URL(window.location.href);
+      shareUrl.searchParams.delete("deploy");
       const shareShow = _currentEpisode ? findShowForEpisode(_currentEpisode) : null;
       if (shareShow && _currentEpisode) {
         shareUrl.searchParams.set("sqShow", shareShow.id);
@@ -2565,24 +2566,53 @@
       };
 
       const copyFallback = async () => {
-        const copyText = url + " — " + text;
+        const copyText = text + "\n" + url;
         try {
           if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
           await navigator.clipboard.writeText(copyText);
           rewardCompletedShare("clipboard_copy");
-        } catch {
+          return;
+        } catch (_) {
+          /* Older Android webviews sometimes block the asynchronous Clipboard
+             API even for a real tap. Keep a synchronous selected-text fallback. */
+          const field = document.createElement("textarea");
+          field.value = copyText;
+          field.setAttribute("readonly", "");
+          field.style.position = "fixed";
+          field.style.opacity = "0";
+          document.body.appendChild(field);
+          field.select();
+          field.setSelectionRange(0, field.value.length);
+          let copied = false;
+          try {
+            copied = typeof document.execCommand === "function" && document.execCommand("copy");
+          } catch (_) {
+            copied = false;
+          }
+          field.remove();
+          if (copied) {
+            rewardCompletedShare("clipboard_copy_legacy");
+            return;
+          }
           window.prompt("Copy this StarQuest link to share:", copyText);
-          showTokenToast("Copy the link and send it. Copying alone does not mint a coin.");
+          showTokenToast("Select and copy the link to share it.");
         }
       };
 
       shareInFlight = true;
+      const idleLabel = shareBtn.textContent;
       shareBtn.disabled = true;
       shareBtn.setAttribute("aria-busy", "true");
+      shareBtn.textContent = "Sharing…";
 
       try {
-        const canUseNativeShare = typeof navigator.share === "function"
-          && (typeof navigator.canShare !== "function" || navigator.canShare(shareData));
+        let canUseNativeShare = false;
+        try {
+          canUseNativeShare = typeof navigator.share === "function"
+            && (typeof navigator.canShare !== "function" || navigator.canShare(shareData));
+        } catch (_) {
+          canUseNativeShare = false;
+        }
 
         if (!canUseNativeShare) {
           await copyFallback();
@@ -2599,10 +2629,13 @@
             await copyFallback();
           }
         }
+      } catch (_) {
+        await copyFallback();
       } finally {
         shareInFlight = false;
         shareBtn.disabled = false;
         shareBtn.removeAttribute("aria-busy");
+        shareBtn.textContent = idleLabel;
       }
     });
   }

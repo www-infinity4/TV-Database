@@ -677,6 +677,11 @@ ul { list-style: none; }
 .player-back:hover { background: rgba(255,255,255,.2); }
 
 .player-ep-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: .92rem;
   font-weight: 600;
   color: rgba(255,255,255,.9);
@@ -1669,6 +1674,7 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
 
 /* ── Player updates ── */
 .player-topbar__right {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1684,7 +1690,12 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   font-size: .82rem;
   font-weight: 700;
   font-family: var(--body-font);
+  min-width: 88px;
+  min-height: 40px;
   cursor: pointer;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 2;
   transition: background var(--transition);
 }
 .player-share-btn:hover { background: rgba(255,215,0,.22); }
@@ -2276,6 +2287,30 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
 @media (max-width: 520px) {
   .nav__wallet-progress small { display: none; }
   .nav__wallet-divider { height: 20px; }
+
+  .player-topbar {
+    padding: 0 8px;
+    gap: 8px;
+  }
+  .player-back {
+    flex: 0 0 auto;
+    padding: 7px 9px;
+    font-size: .78rem;
+  }
+  .player-ep-title {
+    font-size: .72rem;
+  }
+  .player-topbar__right {
+    gap: 6px;
+  }
+  .player-token-notif {
+    display: none !important;
+  }
+  .player-share-btn {
+    min-width: 76px;
+    min-height: 42px;
+    padding: 7px 9px;
+  }
 }
 
 
