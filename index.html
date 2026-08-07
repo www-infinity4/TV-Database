@@ -740,6 +740,13 @@
 
         document.addEventListener("click", function (event) {
           var source = event.target;
+          var closeControl = source && source.closest ? source.closest("#sidebar-close") : null;
+          if (closeControl) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            closeSidebarFallback();
+            return;
+          }
           var marker = source && source.closest ? source.closest("[data-avatar-portal]") : null;
           if (!marker) return;
           event.preventDefault();
