@@ -838,23 +838,21 @@
         DOM.playerLoading.style.display = "none";
       }, { once: true });
     } else {
+      /* Item-only Archive.org records are playable without downloading or
+         inspecting the item's full metadata first. The Archive player selects
+         its stream-ready derivative and honors archiveIndex for playlists. */
+      const embedUrl = buildEmbedUrl(episode);
       DOM.playerVideo.onloadedmetadata = null;
       DOM.playerVideo.oncanplay = null;
       DOM.playerVideo.onerror = null;
       DOM.playerVideo.style.display = "none";
       DOM.playerVideo.removeAttribute("src");
       DOM.playerVideo.load();
-      DOM.playerFrame.style.display = "none";
-      DOM.playerFrame.src = "about:blank";
-      document.dispatchEvent(new CustomEvent("starquest:resolve-archive-episode", {
-        detail: {
-          identifier: episode.archiveId,
-          showTitle,
-          season: episode.season,
-          episode: episode.episode,
-          episodeTitle: episode.title
-        }
-      }));
+      DOM.playerFrame.style.display = "block";
+      DOM.playerFrame.src = embedUrl;
+      DOM.playerFrame.addEventListener("load", () => {
+        DOM.playerLoading.style.display = "none";
+      }, { once: true });
     }
   }
 
@@ -1227,12 +1225,12 @@
     if (ep.sourceStatus === "restricted") return "restricted by source";
     if (ep.sourceStatus === "file-missing") return "file missing";
     if (!ep.archiveId && !ep.youtubeId) return "identifier missing";
-    if (ep.youtubeId) return "external fallback only";
+    if (ep.youtubeId) return "embedded player";
     if (typeof ep.archiveFile === "string" && ep.archiveFile) {
-      return EXT_PLAYABLE.test(ep.archiveFile) ? "working" : "not directly streamable";
+      return EXT_PLAYABLE.test(ep.archiveFile) ? "direct stream" : "not browser streamable";
     }
-    if (ep.archiveId && typeof ep.archiveIndex === "number") return "external fallback only";
-    return "file missing";
+    if (ep.archiveId) return "archive embedded player";
+    return "identifier missing";
   }
 
   window.StarQuestArchiveValidationReport = function () {
@@ -1257,6 +1255,22 @@
   window.initHero = initHero;
   initHero();
   initRows();
+
+  /* Shared links open the exact program instead of dropping recipients at the
+     generic home screen. Invalid or removed IDs safely fall back to browse. */
+  (function openSharedPlayerRoute() {
+    const params = new URLSearchParams(window.location.search);
+    const showId = params.get("sqShow");
+    const episodeId = params.get("sqEpisode");
+    if (!showId || !episodeId) return;
+    const show = SHOWS.find((item) => item.id === showId);
+    const episode = show && show.episodes && show.episodes.find((item) => item.id === episodeId);
+    if (!show || !episode || !isEpisodePlayable(episode)) return;
+    const splash = document.getElementById("splash-screen");
+    if (splash) splash.style.display = "none";
+    setTimeout(() => openPlayer(episode, show.title), 0);
+  })();
+
   if (window.StarQuestArchiveDiscovery) window.StarQuestArchiveDiscovery.load();
 })();
 
@@ -2268,17 +2282,11 @@
         playerVideo.removeAttribute("src");
         playerVideo.load();
       }
-      playerFrame.style.display = "none";
-      playerFrame.src = "about:blank";
-      document.dispatchEvent(new CustomEvent("starquest:resolve-archive-episode", {
-        detail: {
-          identifier: ep.archiveId,
-          showTitle,
-          season: ep.season,
-          episode: ep.episode,
-          episodeTitle: ep.title
-        }
-      }));
+      playerFrame.style.display = "block";
+      playerFrame.src = buildPlayerUrl(ep);
+      playerFrame.addEventListener("load", () => {
+        if (playerLoad) playerLoad.style.display = "none";
+      }, { once: true });
     }
 
     startWatchTimer(ep, showTitle);
@@ -2502,7 +2510,14 @@
     shareBtn.addEventListener("click", async () => {
       if (shareInFlight) return;
 
-      const url = window.location.href;
+      const shareUrl = new URL(window.location.href);
+      const shareShow = _currentEpisode ? findShowForEpisode(_currentEpisode) : null;
+      if (shareShow && _currentEpisode) {
+        shareUrl.searchParams.set("sqShow", shareShow.id);
+        shareUrl.searchParams.set("sqEpisode", _currentEpisode.id || "");
+        shareUrl.hash = "watch";
+      }
+      const url = shareUrl.toString();
       const text = _currentShowTitle
         ? "Watching " + _currentShowTitle + " on StarQuest ⭐ — classic TV galaxy!"
         : "Check out StarQuest ⭐ — free classic TV!";
@@ -2550,7 +2565,7 @@
         try {
           if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
           await navigator.clipboard.writeText(copyText);
-          showTokenToast("Link copied. Send it to count a completed share.");
+          rewardCompletedShare("clipboard_copy");
         } catch {
           window.prompt("Copy this StarQuest link to share:", copyText);
           showTokenToast("Copy the link and send it. Copying alone does not mint a coin.");
