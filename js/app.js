@@ -411,7 +411,7 @@
   function renderRow(container, shows) {
     if (!container) return;
     container.innerHTML = "";
-    shows.filter(isShowAvailable).forEach((show) => {
+    shows.forEach((show) => {
       container.appendChild(createShowCard(show));
     });
     updateCarouselButtons(container);
@@ -517,7 +517,7 @@
           <span class="fallback-subtitle">${escHTML((show.genre || []).slice(0, 2).join(" · ") || show.years)}</span>
         </div>
         <div class="show-card__play-overlay" aria-hidden="true">
-          <div class="play-icon-circle">${show.payToWatch ? "↗" : "▶"}</div>
+          <div class="play-icon-circle">${showUnavailable ? "⛔" : (show.payToWatch ? "↗" : "▶")}</div>
         </div>
         ${movieBadge}${payBadge}
       </div>
@@ -528,7 +528,7 @@
           <span class="show-card__genre">${escHTML(show.genre[0])}</span>
           <span>${escHTML(show.years)}</span>
         </div>
-        ${showUnavailable ? '<div class="history-empty" style="display:block;margin-top:4px;">Unavailable</div>' : ""}
+        ${showUnavailable ? '<div class="history-empty" style="display:block;margin-top:4px;">Source unavailable after audit</div>' : ""}
         ${isLocked ? '<button class="btn btn-primary unlock-btn" type="button" style="margin-top:6px">Unlock • ' + escHTML(String(unlockCost)) + ' ⭐</button>' : ""}
         ${unlockCost > 0 && !isLocked ? '<div class="history-empty" style="display:block;margin-top:4px;">Unlocked</div>' : ""}
       </div>
@@ -678,7 +678,7 @@
         </div>
         <div class="episode-info">
           <div class="episode-title">S${ep.season} E${ep.episode} · ${escHTML(ep.title)}</div>
-          <div class="episode-desc">${escHTML(ep.description)}</div>
+          <div class="episode-desc">${escHTML(!isPlayable && ep.sourceNote ? ep.sourceNote : ep.description)}</div>
         </div>
         <span class="episode-duration">${escHTML(ep.duration)}</span>
         <div class="episode-play" aria-hidden="true">${!isPlayable ? "⛔" : (isLockedEp ? "🔒" : "▶")}</div>
@@ -987,7 +987,7 @@
         s.title.toLowerCase().includes(q) ||
         s.genre.some((g) => g.toLowerCase().includes(q)) ||
         s.description.toLowerCase().includes(q)
-    ).filter(isShowAvailable).sort(byScoreFreeFirst);
+    ).sort(byScoreFreeFirst);
 
     DOM.searchResultsTitle.innerHTML =
       'Results for <strong>"' + escHTML(q) + '"</strong> — ' + results.length + " show" + (results.length !== 1 ? "s" : "");
@@ -1018,7 +1018,6 @@
   function filterByGenre(genre) {
     state.activeGenre = genre;
     const shows = (genre === "all" ? getFeaturedShows() : getShowsByGenre(genre))
-      .filter(isShowAvailable)
       .slice()
       .sort(byScoreFreeFirst);
 
@@ -1107,7 +1106,7 @@
         </div>
         <div class="episode-info">
           <div class="episode-title">${escHTML(seasonLabel)} · ${escHTML(ep.title)}</div>
-          <div class="episode-desc">${escHTML(ep.description)}</div>
+          <div class="episode-desc">${escHTML(!isPlayable && ep.sourceNote ? ep.sourceNote : ep.description)}</div>
         </div>
         <span class="episode-duration">${escHTML(ep.duration)}</span>
         <div class="episode-play" aria-hidden="true">▶</div>
