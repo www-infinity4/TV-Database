@@ -2240,3 +2240,40 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
     max-width: calc(100% - 24px);
   }
 }
+
+
+/* ── Wallet share-to-coin counter ── */
+.nav__wallet-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav__wallet-divider {
+  width: 1px;
+  height: 26px;
+  background: rgba(255,215,0,.28);
+}
+.nav__wallet-progress {
+  display: grid;
+  gap: 1px;
+  line-height: 1.05;
+}
+.nav__wallet-progress strong {
+  color: var(--gold);
+  font-size: .58rem;
+}
+.nav__wallet-progress small {
+  color: var(--text-muted);
+  font-family: var(--body-font);
+  font-size: .58rem;
+  font-weight: 700;
+}
+.player-share-btn[aria-busy="true"] {
+  opacity: .7;
+  cursor: progress;
+}
+
+@media (max-width: 520px) {
+  .nav__wallet-progress small { display: none; }
+  .nav__wallet-divider { height: 20px; }
+}
