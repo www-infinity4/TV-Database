@@ -128,5 +128,18 @@
     emit(results);
   }
 
-  window.StarQuestArchiveDiscovery = { load };
+  async function inspect(identifier) {
+    const id = cleanText(identifier, 180);
+    if (!id) return { ok: false, identifier: "", reason: "missing_identifier" };
+    try {
+      const file = await exactPlayableFile(id);
+      return file
+        ? { ok: true, identifier: id, file: file.name, size: Number(file.size || 0), source: file.source || "" }
+        : { ok: false, identifier: id, reason: "no_playable_file" };
+    } catch (error) {
+      return { ok: false, identifier: id, reason: "metadata_error", message: String(error && error.message || error) };
+    }
+  }
+
+  window.StarQuestArchiveDiscovery = { load, inspect };
 })();
