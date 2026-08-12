@@ -2709,14 +2709,33 @@
     }
   }
 
+
+  function recordUnverifiedShare(method) {
+    if (!activeShare) activeShare = currentSharePayload();
+    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return null;
+    const show = activeShare.show;
+    const episode = activeShare.episode;
+    return StarQuestAuth.recordShare(activeShare.contentId, {
+      verified: false,
+      confirmed: false,
+      fullyWatched: activeShareWasFullyWatched(),
+      status: "client_handoff_unverified",
+      method,
+      url: activeShare.url,
+      showTitle: _currentShowTitle || "",
+      episodeId: (episode && (episode.id || episode.title)) || "",
+      companyId: (show && (show.companyId || show.network || show.studio)) || null,
+    });
+  }
+
   async function copyActiveShare() {
     if (!activeShare) activeShare = currentSharePayload();
     const copyText = activeShare.text + "\n" + activeShare.url;
     try {
       if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
       await navigator.clipboard.writeText(copyText);
-      setShareStatus("Exact episode link copied. Paste it into any message.");
-      rewardCompletedShare("copy_link", true);
+      recordUnverifiedShare("copy_link");
+      setShareStatus("Exact episode link copied and saved to audit history. It does not count toward 1/10 until a verified native share completes.");
       return true;
     } catch (_) {
       const field = document.createElement("textarea");
@@ -2735,8 +2754,8 @@
       }
       field.remove();
       if (copied) {
-        setShareStatus("Exact episode link copied. Paste it into any message.");
-        rewardCompletedShare("copy_link", true);
+        recordUnverifiedShare("copy_link");
+        setShareStatus("Exact episode link copied and saved to audit history. It does not count toward 1/10 until a verified native share completes.");
         return true;
       }
       window.prompt("Copy this StarQuest link:", copyText);
@@ -2752,12 +2771,12 @@
   });
   if (shareCopyBtn) shareCopyBtn.addEventListener("click", copyActiveShare);
   if (shareSmsLink) shareSmsLink.addEventListener("click", () => {
-    setShareStatus("Opening your text-message app…");
-    rewardCompletedShare("sms_handoff", true);
+    recordUnverifiedShare("sms_handoff");
+    setShareStatus("Opening your text-message app… This handoff is audited without StarCoin credit.");
   });
   if (shareEmailLink) shareEmailLink.addEventListener("click", () => {
-    setShareStatus("Opening your email app…");
-    rewardCompletedShare("email_handoff", true);
+    recordUnverifiedShare("email_handoff");
+    setShareStatus("Opening your email app… This handoff is audited without StarCoin credit.");
   });
   if (shareNativeBtn) shareNativeBtn.addEventListener("click", async () => {
     if (shareInFlight) return;
@@ -2787,6 +2806,12 @@
         : "🔗 Copy share link";
     }
   });
+
+  if (window.StarQuestShareSafetyNet && typeof window.StarQuestShareSafetyNet.markAppReady === "function") {
+    window.StarQuestShareSafetyNet.markAppReady();
+  } else {
+    window.StarQuestShareAppReady = true;
+  }
 
   /* ─────────────────────────────────────────────────────────────
      TOKEN TOAST
