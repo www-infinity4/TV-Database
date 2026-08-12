@@ -1,7 +1,8 @@
 /**
  * StarQuest — AI Companion (Cosmo)
- * Primary engine: Chrome Built-in AI (Gemini Nano via window.LanguageModel).
- * Fallback: rich rule-based knowledge base — works in every browser.
+ * Primary local engine: Gemma through the official LiteRT-LM Web API.
+ * Network, Chrome and rule-based fallbacks keep basic chat available on
+ * devices that cannot run the large WebGPU model.
  *
  * Features:
  *  - Real conversation memory (last 12 exchanges)
@@ -559,10 +560,13 @@
       "You are like a knowledgeable best friend who has watched every show. You speak casually, naturally, and with genuine enthusiasm — like texting a friend.\n" +
       "You drop trivia and behind-the-scenes facts as if you just remembered them mid-conversation. Keep replies lively and meaty — usually 3-6 sentences unless the user asks for something brief.\n" +
       "You react with personality: 'Dude, did you see that?!', 'Oh man this episode is wild', 'Fun fact —', etc.\n" +
-      "You never give robotic encyclopedia entries. You never make up episode timestamps or fake facts.\n" +
+      "You never give robotic encyclopedia entries. You never make up episode timestamps, prices, availability, products, or facts.\n" +
+      "Treat fetched movie summaries and source URLs as evidence. If you are unsure, say so and offer to look it up.\n" +
       "When recommending shows, always reference specific titles from the StarQuest catalogue and explain WHY based on what the user has watched.\n" +
+      "Commercial suggestions are allowed only when StarQuest marks them as enabled and relevant. Always label them as sponsored, never use hidden or subliminal persuasion, never claim urgency you cannot verify, and never say an order was placed without separate viewer confirmation.\n" +
       "StarCoins are earned by watching (1/hour) and sharing (1 per 10 shares). They will unlock pay-per-view content.\n" +
-      cat + hist + ctx
+      cat + hist + ctx +
+      (global.StarQuestCosmoLive ? global.StarQuestCosmoLive.contextBlurb() + global.StarQuestCosmoLive.preferenceBlurb() : "")
     );
   }
 
@@ -689,16 +693,22 @@
     if (list && list.length) return pickRandom(list);
     /* Generic fallback */
     const generics = [
-      `You know what's wild about ${showTitle}? Every episode was a completely different production challenge.`,
-      `${showTitle} — this is genuinely one of the most underrated things you can watch for free anywhere.`,
-      `The people who made ${showTitle} had no idea it would still be this watchable decades later.`,
+      `What detail in ${showTitle} just caught your eye? Tell me and I'll look up the connection.`,
+      `I'm watching along with ${showTitle}. Want the verified history, cast information, or collectibles connected to it?`,
+      `That scene in ${showTitle} has a lot going on. Ask me about anything you noticed and I'll trace it instead of guessing.`,
     ];
     return pickRandom(generics);
   }
 
   async function generatePopInText(showId, showTitle, epTitle) {
-    const userPrompt = `Generate ONE casual watch-along comment (up to 3 short sentences) about watching "${showTitle}" — episode "${epTitle}". Sound like a friend texting, excited, and drop a surprising trivia fact or reaction when possible. No lists, no headers, just natural speech.`;
-    /* Try Pollinations first */
+    const offer = global.StarQuestCosmoLive && global.StarQuestCosmoLive.sponsoredSuggestion();
+    if (offer) return `${offer.label}: ${offer.text} ${offer.url}`;
+    const userPrompt = `Generate ONE casual watch-along comment (up to 2 short sentences) about watching "${showTitle}" — episode "${epTitle}". Use only verified context. If no specific fact is verified, ask a friendly observational question instead of inventing trivia. Do not advertise unless a labeled sponsored offer is explicitly supplied.`;
+    if (global.StarQuestGemma && global.StarQuestGemma.status().ready) {
+      const gemmaResponse = await global.StarQuestGemma.prompt(buildSystemPrompt() + "\n" + userPrompt);
+      if (gemmaResponse) return gemmaResponse;
+    }
+    /* Network fallback */
     const pollinResponse = await _callPollinations([
       { role: "system", content: buildSystemPrompt() },
       { role: "user",   content: userPrompt },
@@ -718,8 +728,29 @@
      ──────────────────────────────────────────────────────────── */
 
   async function chat(userMessage) {
-    /* 1. Try Pollinations.ai — free, no API key, real LLM with full
-          conversation memory (works just like ChatGPT / Gemini). */
+    if (global.StarQuestCosmoLive) {
+      global.StarQuestCosmoLive.remember(userMessage);
+      const listResponse = global.StarQuestCosmoLive.handleListIntent(userMessage);
+      if (listResponse) {
+        _convHistory.push({ role: "user", text: userMessage }, { role: "assistant", text: listResponse });
+        _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
+        saveConvHistory();
+        return listResponse;
+      }
+    }
+
+    /* 1. Use the viewer-started local Gemma model when ready. */
+    if (global.StarQuestGemma && global.StarQuestGemma.status().ready) {
+      const gemmaResponse = await global.StarQuestGemma.prompt(buildSystemPrompt() + "\nUser: " + userMessage);
+      if (gemmaResponse) {
+        _convHistory.push({ role: "user", text: userMessage }, { role: "assistant", text: gemmaResponse });
+        _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
+        saveConvHistory();
+        return gemmaResponse;
+      }
+    }
+
+    /* 2. Network LLM fallback. */
     const pollinResponse = await _callPollinations(buildMessages(userMessage));
     if (pollinResponse) {
       _convHistory.push({ role: "user",      text: userMessage });
@@ -729,7 +760,7 @@
       return pollinResponse;
     }
 
-    /* 2. Try Chrome Built-in AI (Gemini Nano) if available. */
+    /* 3. Try Chrome Built-in AI if available. */
     if (_aiReady && _aiSession) {
       const aiResponse = await _promptAI(userMessage);
       if (aiResponse) {
@@ -741,7 +772,18 @@
       }
     }
 
-    /* 3. Rule-based fallback — always works, no network needed. */
+    /* 4. Live sourced answer before the offline knowledge fallback. */
+    if (global.StarQuestCosmoLive) {
+      const sourced = global.StarQuestCosmoLive.answerFromLiveContext(userMessage);
+      if (sourced) {
+        _convHistory.push({ role: "user", text: userMessage }, { role: "assistant", text: sourced });
+        _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
+        saveConvHistory();
+        return sourced;
+      }
+    }
+
+    /* 5. Rule-based fallback — basic chat still works offline. */
     const response = generateResponse(userMessage);
     _convHistory.push({ role: "user",      text: userMessage });
     _convHistory.push({ role: "assistant", text: response });
@@ -765,18 +807,30 @@
     /** Call once on page load to attempt Chrome AI init (secondary engine) */
     init: initChromeAI,
 
-    /** Always true — Pollinations.ai is available in every browser */
-    isAIMode() { return true; },
+    isAIMode() {
+      return !!((_aiReady && _aiSession) || (global.StarQuestGemma && global.StarQuestGemma.status().ready));
+    },
+
+    async startGemma() {
+      if (!global.StarQuestGemma) return { state: "error", detail: "Gemma adapter did not load." };
+      return global.StarQuestGemma.start(buildSystemPrompt());
+    },
 
     /** Set currently-playing context so Cosmo knows what you're watching */
     setContext(showId, showTitle, epTitle) {
       _currentContext = { showId, show: showTitle, episode: epTitle || "" };
+      if (global.StarQuestCosmoLive) global.StarQuestCosmoLive.setContext(_currentContext);
       if (_aiReady) _rebuildSession();
     },
 
     /** Clear context when player closes */
     clearContext() {
       _currentContext = null;
+      if (global.StarQuestCosmoLive) global.StarQuestCosmoLive.setContext(null);
+    },
+
+    updatePlayback(snapshot) {
+      if (global.StarQuestCosmoLive) global.StarQuestCosmoLive.updatePlayback(snapshot);
     },
 
     /** Main chat entry point — always returns a Promise<string> */
@@ -802,7 +856,7 @@
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
       loadConvHistory();
-      /* Pollinations.ai is always available — show AI badge right away */
+      /* Basic Cosmo is ready; richer engines report their own status. */
       document.dispatchEvent(new CustomEvent("starquest:ai-ready"));
       /* Also try Chrome Built-in AI as secondary engine */
       initChromeAI();

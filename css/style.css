@@ -1831,7 +1831,7 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   bottom: 86px;
   right: 28px;
   z-index: 500;
-  width: 340px;
+  width: 430px;
   max-width: calc(100vw - 40px);
   background: #12122a;
   border: 1px solid rgba(0,70,173,.4);
@@ -1878,6 +1878,37 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   flex-shrink: 0;
 }
 .ai-panel__close:hover { background: var(--accent); color: #fff; }
+.ai-panel__header-actions { display: flex; align-items: center; gap: 7px; }
+.ai-panel__control {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(255,255,255,.08); color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+}
+.ai-panel__control:hover { background: var(--accent2); color: #fff; }
+
+.cosmo-engine-strip {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 12px; background: rgba(0,0,0,.23); border-bottom: 1px solid var(--border);
+  color: var(--text-muted); font-size: .68rem;
+}
+.cosmo-engine-strip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cosmo-engine-strip button {
+  flex-shrink: 0; padding: 5px 9px; border-radius: 12px;
+  background: rgba(0,70,173,.28); color: #fff; border: 1px solid rgba(69,151,255,.55);
+  font-size: .65rem; font-weight: 700;
+}
+.cosmo-engine-strip button:disabled { opacity: .65; cursor: default; }
+.cosmo-controls {
+  padding: 10px 13px; border-bottom: 1px solid var(--border);
+  background: #0d0d20; color: var(--text-muted); font-size: .72rem;
+}
+.cosmo-controls[hidden] { display: none; }
+.cosmo-controls label { display: flex; align-items: center; gap: 8px; margin: 7px 0; color: var(--text-primary); }
+.cosmo-controls input { accent-color: var(--accent2); }
+.cosmo-controls p { margin: 9px 0; font-size: .65rem; line-height: 1.4; }
+.cosmo-shopping-head { display: flex; align-items: center; justify-content: space-between; margin-top: 9px; }
+.cosmo-shopping-head button { color: #ffb2b2; font-size: .62rem; background: transparent; }
+.cosmo-controls ul { margin: 5px 0 0; padding-left: 18px; max-height: 74px; overflow: auto; }
 
 /* ── AI Messages ── */
 .ai-messages {
@@ -1922,6 +1953,8 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   border-bottom-right-radius: 4px;
   color: var(--text-primary);
 }
+.ai-msg__bubble a { color: #9fd3ff; text-decoration: underline; }
+.ai-msg--sponsored .ai-msg__bubble { border-color: #d7a62a; background: rgba(215,166,42,.12); }
 
 .ai-msg__avatar {
   font-size: 1.1rem;
@@ -1936,6 +1969,12 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   padding: 10px 12px;
   border-top: 1px solid var(--border);
 }
+.ai-voice {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255,255,255,.07); border: 1px solid var(--border); color: #fff;
+}
+.ai-voice.is-listening { background: #c52439; box-shadow: 0 0 0 5px rgba(197,36,57,.18); animation: voicePulse 1s infinite; }
+@keyframes voicePulse { 50% { transform: scale(1.08); } }
 
 .ai-input {
   flex: 1;

@@ -106,7 +106,10 @@
   const TV_SHOW_BOOST = 40;
   const NON_TV_PENALTY = -35;
   const MAX_HISTORY_ITEMS = 200;
-  const COSMO_POPIN_SCHEDULE_MS = [12000, 45000, 90000];
+  /* Sparse companion rhythm: first check-in after three minutes, then at
+     twelve and twenty-five minutes. Sponsored notes have an additional
+     twenty-minute cap inside cosmo-live.js. */
+  const COSMO_POPIN_SCHEDULE_MS = [180000, 720000, 1500000];
   const COSMO_POPIN_DISMISS_MS = 14000;
 
   function showDecade(show) {
@@ -741,6 +744,24 @@
     }
   }
 
+  function scheduleCosmoPopIns(show, showTitle, episode) {
+    clearCosmoPopInTimers();
+    const settings = window.StarQuestCosmoLive ? StarQuestCosmoLive.getSettings() : { watchAlong: false };
+    if (!settings.watchAlong) return;
+    COSMO_POPIN_SCHEDULE_MS.forEach((delay) => {
+      _popInTimers.push(setTimeout(() => {
+        if (DOM.playerPage.classList.contains("open")) showCosmoPopIn(show, showTitle, episode);
+      }, delay));
+    });
+  }
+
+  function currentCaptionText(video) {
+    try {
+      return Array.from(video.textTracks || []).flatMap((track) => Array.from(track.activeCues || []))
+        .map((cue) => cue.text || "").filter(Boolean).join(" ");
+    } catch (_) { return ""; }
+  }
+
   function attemptInstantPlayback() {
     const playPromise = DOM.playerVideo.play();
     if (playPromise && typeof playPromise.catch === "function") {
@@ -799,9 +820,7 @@
       StarQuestAI.setContext(show ? show.id : null, showTitle, episode.title);
     }
 
-    /* Automatic AI pop-ins are disabled during playback. They were unrelated
-       to the program and could be mistaken for part of the episode. */
-    clearCosmoPopInTimers();
+    scheduleCosmoPopIns(show, showTitle, episode);
 
     if (typeof episode.archiveFile === "string" && episode.archiveId) {
       /* Use a native <video> element with the direct archive.org download URL.
@@ -817,6 +836,15 @@
       DOM.playerVideo.oncanplay = () => {
         DOM.playerLoading.style.display = "none";
         attemptInstantPlayback();
+      };
+      DOM.playerVideo.ontimeupdate = () => {
+        if (typeof StarQuestAI !== "undefined" && StarQuestAI.updatePlayback) {
+          StarQuestAI.updatePlayback({
+            currentTime: DOM.playerVideo.currentTime,
+            duration: DOM.playerVideo.duration,
+            transcript: currentCaptionText(DOM.playerVideo),
+          });
+        }
       };
       DOM.playerVideo.onerror = () => {
         DOM.playerLoading.style.display = "none";
@@ -879,6 +907,7 @@
     DOM.playerVideo.onloadedmetadata = null;
     DOM.playerVideo.oncanplay = null;
     DOM.playerVideo.onerror = null;
+    DOM.playerVideo.ontimeupdate = null;
     DOM.playerVideo.pause();
     DOM.playerVideo.removeAttribute("src");
     DOM.playerVideo.load();
@@ -2785,13 +2814,23 @@
   const aiMessages    = $("ai-messages");
   const aiInput       = $("ai-input");
   const aiSend        = $("ai-send");
+  const aiVoice       = $("ai-voice");
+  const cosmoControlsBtn = $("cosmo-controls-btn");
+  const cosmoControls = $("cosmo-controls");
+  const cosmoStartGemma = $("cosmo-start-gemma");
+  const cosmoEngineStatus = $("cosmo-engine-status");
+  const cosmoWatchalongToggle = $("cosmo-watchalong-toggle");
+  const cosmoSponsorsToggle = $("cosmo-sponsors-toggle");
+  const cosmoSpeakToggle = $("cosmo-speak-toggle");
+  const cosmoShoppingList = $("cosmo-shopping-list");
+  const cosmoClearList = $("cosmo-clear-list");
   const sidebarCosmoBtn = $("sidebar-cosmo-btn");
   const sidebarAIBadge  = $("sidebar-ai-badge");
 
   document.addEventListener("starquest:ai-ready", () => {
     /* Show AI badge in the panel header */
     const subtitle = $("ai-panel-subtitle") || document.querySelector(".ai-panel__subtitle");
-    if (subtitle) subtitle.textContent = "⚡ AI Powered · Ask me anything!";
+    if (subtitle) subtitle.textContent = "Movie-aware · voice ready · viewer controlled";
     if (sidebarAIBadge) sidebarAIBadge.style.display = "";
   });
 
@@ -2834,14 +2873,18 @@
     if (!aiMessages) return;
     const msg = document.createElement("div");
     msg.className = "ai-msg ai-msg--" + role;
+    const escaped = escHTMLSQ(text);
+    const linked = escaped.replace(/(https:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">Open link ↗</a>');
     msg.innerHTML = `
       <div class="ai-msg__avatar">${role === "bot" ? "🤖" : "👤"}</div>
-      <div class="ai-msg__bubble">${escHTMLSQ(text)}</div>
+      <div class="ai-msg__bubble">${linked}</div>
     `;
+    if (/^Sponsored suggestion:/i.test(String(text))) msg.classList.add("ai-msg--sponsored");
     aiMessages.appendChild(msg);
     aiMessages.scrollTop = aiMessages.scrollHeight;
     /* Keep sidebar preview in sync if sidebar is open */
     if (sidebar && sidebar.classList.contains("open")) renderConvoHistory();
+    if (role === "bot" && window.StarQuestCosmoLive) StarQuestCosmoLive.speak(text);
   }
 
   async function sendAIMessage() {
@@ -2880,6 +2923,72 @@
       sendAIMessage();
     });
   });
+
+  function renderCosmoShopping() {
+    if (!cosmoShoppingList || !window.StarQuestCosmoLive) return;
+    const items = StarQuestCosmoLive.getShoppingList();
+    cosmoShoppingList.innerHTML = items.length
+      ? items.map((item) => "<li>" + escHTMLSQ(item.name) + "</li>").join("")
+      : "<li>Nothing added yet.</li>";
+  }
+
+  function syncCosmoControls() {
+    if (!window.StarQuestCosmoLive) return;
+    const settings = StarQuestCosmoLive.getSettings();
+    if (cosmoWatchalongToggle) cosmoWatchalongToggle.checked = !!settings.watchAlong;
+    if (cosmoSponsorsToggle) cosmoSponsorsToggle.checked = !!settings.sponsoredSuggestions;
+    if (cosmoSpeakToggle) cosmoSpeakToggle.checked = !!settings.speakReplies;
+    renderCosmoShopping();
+  }
+
+  if (cosmoControlsBtn && cosmoControls) cosmoControlsBtn.addEventListener("click", () => {
+    const opening = cosmoControls.hidden;
+    cosmoControls.hidden = !opening;
+    cosmoControlsBtn.setAttribute("aria-expanded", String(opening));
+    if (opening) syncCosmoControls();
+  });
+  if (cosmoWatchalongToggle) cosmoWatchalongToggle.addEventListener("change", () => StarQuestCosmoLive.updateSettings({ watchAlong: cosmoWatchalongToggle.checked }));
+  if (cosmoSponsorsToggle) cosmoSponsorsToggle.addEventListener("change", () => StarQuestCosmoLive.updateSettings({ sponsoredSuggestions: cosmoSponsorsToggle.checked }));
+  if (cosmoSpeakToggle) cosmoSpeakToggle.addEventListener("change", () => StarQuestCosmoLive.updateSettings({ speakReplies: cosmoSpeakToggle.checked }));
+  if (cosmoClearList) cosmoClearList.addEventListener("click", () => StarQuestCosmoLive.clearShoppingList());
+  document.addEventListener("starquest:shopping-updated", renderCosmoShopping);
+
+  let voiceRecognition = null;
+  if (aiVoice && window.StarQuestCosmoLive) {
+    voiceRecognition = StarQuestCosmoLive.createRecognition((transcript) => {
+      aiInput.value = transcript;
+      sendAIMessage();
+    }, (voiceState, error) => {
+      aiVoice.classList.toggle("is-listening", voiceState === "listening");
+      aiVoice.setAttribute("aria-label", voiceState === "listening" ? "Listening—tap to stop" : "Talk to Cosmo");
+      if (voiceState === "error") appendAIMessage("bot", "I couldn't hear that clearly (" + error + "). You can type it instead.");
+    });
+    if (!voiceRecognition) {
+      aiVoice.disabled = true;
+      aiVoice.title = "Voice recognition is not available in this browser";
+    } else {
+      aiVoice.addEventListener("click", () => {
+        try { voiceRecognition.start(); } catch (_) { try { voiceRecognition.stop(); } catch (_) {} }
+      });
+    }
+  }
+
+  function renderGemmaState(info) {
+    if (!cosmoEngineStatus || !info) return;
+    cosmoEngineStatus.textContent = info.detail;
+    if (cosmoStartGemma) {
+      cosmoStartGemma.disabled = info.state === "loading" || info.state === "ready" || info.state === "unsupported";
+      cosmoStartGemma.textContent = info.state === "ready" ? "Gemma running" : info.state === "loading" ? "Loading Gemma…" : "Start Gemma";
+    }
+  }
+  if (cosmoStartGemma) cosmoStartGemma.addEventListener("click", async () => {
+    renderGemmaState({ state: "loading", detail: "Preparing Gemma…" });
+    const info = window.StarQuestAI && StarQuestAI.startGemma ? await StarQuestAI.startGemma() : { state: "error", detail: "Gemma is unavailable." };
+    renderGemmaState(info);
+  });
+  document.addEventListener("starquest:gemma-state", (event) => renderGemmaState(event.detail));
+  if (window.StarQuestGemma) renderGemmaState(StarQuestGemma.status());
+  syncCosmoControls();
 
   /* ─────────────────────────────────────────────────────────────
      ESCAPE KEY — close all overlays

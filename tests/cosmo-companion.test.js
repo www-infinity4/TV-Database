@@ -1,0 +1,65 @@
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+
+const storage = new Map();
+const events = [];
+const window = {
+  navigator: {},
+  location: { href: "https://example.test" },
+  speechSynthesis: null,
+  fetch: async () => ({
+    ok: true,
+    json: async () => ({ query: { pages: { 1: { pageid: 1, title: "Back to the Future", extract: "A 1985 science-fiction comedy film.", fullurl: "https://en.wikipedia.org/wiki/Back_to_the_Future" } } } }),
+  }),
+};
+const context = vm.createContext({
+  window,
+  navigator: window.navigator,
+  fetch: window.fetch,
+  URL,
+  Date,
+  console,
+  setTimeout,
+  clearTimeout,
+  CustomEvent: class CustomEvent { constructor(type, options) { this.type = type; this.detail = options && options.detail; } },
+  document: { dispatchEvent(event) { events.push(event); } },
+  localStorage: {
+    getItem(key) { return storage.has(key) ? storage.get(key) : null; },
+    setItem(key, value) { storage.set(key, value); },
+  },
+});
+window.window = window;
+window.document = context.document;
+window.localStorage = context.localStorage;
+
+vm.runInContext(fs.readFileSync("js/gemma-engine.js", "utf8"), context);
+vm.runInContext(fs.readFileSync("js/cosmo-live.js", "utf8"), context);
+
+assert.equal(window.StarQuestGemma.supported(), false);
+assert.equal(window.StarQuestGemma.status().state, "idle");
+
+const added = window.StarQuestCosmoLive.handleListIntent("Add popcorn to my grocery list");
+assert.match(added, /added popcorn/i);
+assert.equal(window.StarQuestCosmoLive.getShoppingList().map((item) => item.name).join(","), "popcorn");
+assert.equal(window.StarQuestCosmoLive.sponsoredSuggestion(), null, "sponsored suggestions default off");
+
+(async () => {
+  const info = await window.StarQuestCosmoLive.setContext({ showId: "bttf", show: "Back to the Future", episode: "Movie" });
+  assert.equal(info.title, "Back to the Future");
+  assert.match(window.StarQuestCosmoLive.contextBlurb(), /Verified lookup/);
+  assert.match(window.StarQuestCosmoLive.answerFromLiveContext("What movie are we watching?"), /Verified source/);
+  window.StarQuestCosmoLive.updateSettings({ sponsoredSuggestions: true });
+  const offer = window.StarQuestCosmoLive.sponsoredSuggestion();
+  assert.equal(offer.label, "Sponsored suggestion");
+  assert.match(offer.url, /^https:\/\/www\.ebay\.com\/sch\/i\.html/);
+
+  const unsupported = await window.StarQuestGemma.start("test");
+  assert.equal(unsupported.state, "unsupported");
+  assert.ok(events.some((event) => event.type === "starquest:gemma-state"));
+
+  const appSource = fs.readFileSync("js/app.js", "utf8");
+  assert.match(appSource, /180000, 720000, 1500000/);
+  assert.match(appSource, /scheduleCosmoPopIns/);
+  console.log("Cosmo Gemma consent, live context, shopping list and sponsor controls: ok");
+})().catch((error) => { console.error(error); process.exitCode = 1; });
