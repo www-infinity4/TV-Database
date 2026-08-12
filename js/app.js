@@ -1664,9 +1664,14 @@
     openProfilePortal(detail.target || "Page element", "component", detail.key);
   });
 
-  [sidebarProfileBtn].forEach((button) => {
-    if (button) button.addEventListener("click", () => { closeSidebar(); openProfilePortal("StarQuest name", "site", "brand-name"); });
+  document.addEventListener("starquest:portal-open-request", (event) => {
+    const detail = event.detail || {};
+    openProfilePortal(detail.target || "StarQuest name", detail.scope || "site", detail.key || "brand-name");
   });
+
+  if (!window.StarQuestControls && sidebarProfileBtn) {
+    sidebarProfileBtn.addEventListener("click", () => { closeSidebar(); openProfilePortal("StarQuest name", "site", "brand-name"); });
+  }
   const brandName = $("nav-brand-name");
   if (brandName) originalElementLabels["brand-name"] = { node: brandName, kind: "element", original: "StarQuest" };
   document.querySelectorAll(".section-title").forEach((title) => {
@@ -1689,21 +1694,23 @@
   /* Portal markers can live inside links and can be re-mounted by the editable-page
      observer. Capture their click at the document boundary so the marker always wins
      over parent navigation and still works after dynamic page updates. */
-  document.addEventListener("click", (event) => {
-    const target = event.target;
-    const marker = target && target.closest ? target.closest("[data-avatar-portal]") : null;
-    if (!marker) return;
-    event.preventDefault();
-    event.stopPropagation();
-    closeSidebar();
-    openProfilePortal(
-      marker.dataset.designTarget || marker.dataset.avatarTarget || "StarQuest name",
-      marker.dataset.designScope || marker.dataset.avatarScope || "site",
-      marker.dataset.designKey || marker.dataset.avatarKey || "brand-name"
-    );
-  }, true);
+  if (!window.StarQuestControls) {
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+      const marker = target && target.closest ? target.closest("[data-avatar-portal]") : null;
+      if (!marker) return;
+      event.preventDefault();
+      event.stopPropagation();
+      closeSidebar();
+      openProfilePortal(
+        marker.dataset.designTarget || marker.dataset.avatarTarget || "StarQuest name",
+        marker.dataset.designScope || marker.dataset.avatarScope || "site",
+        marker.dataset.designKey || marker.dataset.avatarKey || "brand-name"
+      );
+    }, true);
+  }
 
-  document.querySelectorAll(".design-star, #nav-profile-avatar, #sidebar-profile-avatar").forEach((star) => {
+  document.querySelectorAll(".design-star:not([data-avatar-portal])").forEach((star) => {
     star.textContent = AVATAR_COIN_MARK;
     star.addEventListener("click", (event) => {
       event.preventDefault();
@@ -1950,6 +1957,10 @@
   const sidebarSignoutBtn= $("sidebar-signout-btn");
 
   function openSidebar() {
+    if (window.StarQuestControls) {
+      window.StarQuestControls.openSidebar();
+      return;
+    }
     if (sidebar) sidebar.classList.add("open");
     if (sidebarBackdrop) sidebarBackdrop.classList.add("open");
     if (hamburgerBtn) { hamburgerBtn.classList.add("open"); hamburgerBtn.setAttribute("aria-expanded", "true"); }
@@ -1961,15 +1972,26 @@
   }
 
   function closeSidebar() {
-    if (sidebar) sidebar.classList.remove("open");
-    if (sidebarBackdrop) sidebarBackdrop.classList.remove("open");
-    if (hamburgerBtn) { hamburgerBtn.classList.remove("open"); hamburgerBtn.setAttribute("aria-expanded", "false"); }
-    document.body.style.overflow = "";
+    if (window.StarQuestControls) window.StarQuestControls.closeSidebar();
+    else {
+      if (sidebar) sidebar.classList.remove("open");
+      if (sidebarBackdrop) sidebarBackdrop.classList.remove("open");
+      if (hamburgerBtn) { hamburgerBtn.classList.remove("open"); hamburgerBtn.setAttribute("aria-expanded", "false"); }
+      document.body.style.overflow = "";
+    }
   }
 
-  if (hamburgerBtn) hamburgerBtn.addEventListener("click", openSidebar);
-  if (sidebarClose) sidebarClose.addEventListener("click", closeSidebar);
-  if (sidebarBackdrop) sidebarBackdrop.addEventListener("click", closeSidebar);
+  if (!window.StarQuestControls) {
+    if (hamburgerBtn) hamburgerBtn.addEventListener("click", openSidebar);
+    if (sidebarClose) sidebarClose.addEventListener("click", closeSidebar);
+    if (sidebarBackdrop) sidebarBackdrop.addEventListener("click", closeSidebar);
+  }
+  document.addEventListener("starquest:sidebar-opened", () => {
+    renderHistoryList();
+    renderLedgerList();
+    renderWalletCard(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
+    renderConvoHistory();
+  });
 
   if (sidebarSigninBtn) sidebarSigninBtn.addEventListener("click", () => { closeSidebar(); openAuthModal("signin"); });
   if (sidebarSignoutBtn) sidebarSignoutBtn.addEventListener("click", () => {
