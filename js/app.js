@@ -494,7 +494,10 @@
         ? "Unlock " + show.title + " for " + unlockCost + " StarCoins"
         : showUnavailable
           ? show.title + " is unavailable"
-        : show.type === "movie" ? "Watch " + show.title : "View " + show.title);
+        : "Watch " + show.title);
+
+    const hasEpisodeBrowser = !showUnavailable && !isLocked &&
+      show.type !== "movie" && Array.isArray(show.episodes) && show.episodes.length > 1;
 
     const movieBadge = show.type === "movie" && !show.payToWatch
       ? '<div class="ep-season-badge movie-badge">🎬 MOVIE</div>'
@@ -530,6 +533,7 @@
         </div>
         ${showUnavailable ? '<div class="history-empty" style="display:block;margin-top:4px;">Source unavailable after audit</div>' : ""}
         ${isLocked ? '<button class="btn btn-primary unlock-btn" type="button" style="margin-top:6px">Unlock • ' + escHTML(String(unlockCost)) + ' ⭐</button>' : ""}
+        ${hasEpisodeBrowser ? '<button class="btn btn-secondary browse-episodes-btn" type="button" style="margin-top:6px;width:100%;font-size:.72rem;">Browse episodes</button>' : ""}
         ${unlockCost > 0 && !isLocked ? '<div class="history-empty" style="display:block;margin-top:4px;">Unlocked</div>' : ""}
       </div>
     `;
@@ -560,6 +564,15 @@
       });
     }
 
+    const browseEpisodesBtn = card.querySelector(".browse-episodes-btn");
+    if (browseEpisodesBtn) {
+      browseEpisodesBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openModal(show);
+      });
+    }
+
     if (showUnavailable) {
       const noPlay = (e) => {
         e.preventDefault();
@@ -587,8 +600,9 @@
       card.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") promptUnlock(e);
       });
-    } else if (show.type === "movie" && show.episodes && show.episodes.length > 0) {
-      /* Free movies play directly — no intermediate modal */
+    } else {
+      /* Every playable catalog card starts its primary episode in one action.
+         Multi-episode shows keep browsing on their dedicated button above. */
       const play = () => {
         const episode = getPrimaryEpisode(show);
         if (episode) openPlayer(episode, show.title);
@@ -596,14 +610,6 @@
       card.addEventListener("click", play);
       card.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
-      });
-    } else {
-      card.addEventListener("click", () => openModal(show));
-      card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          openModal(show);
-        }
       });
     }
 
