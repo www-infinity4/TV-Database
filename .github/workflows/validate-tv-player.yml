@@ -40,8 +40,15 @@ jobs:
           resolver = Path('js/archive-resolver.js').read_text(encoding='utf-8')
 
           checks = {
-              'resolver script is loaded after app.js': (
-                  index.index('js/app.js') < index.index('js/archive-resolver.js')
+              'optional resolver loads after app.js when present': (
+                  'js/archive-resolver.js' not in index
+                  or index.index('js/app.js') < index.index('js/archive-resolver.js')
+              ),
+              'Share safety net loads before app.js': (
+                  index.index('js/share-safety-net.js') < index.index('js/app.js')
+              ),
+              'Share safety net remains independent': (
+                  'StarQuestShareSafetyNet' in Path('js/share-safety-net.js').read_text(encoding='utf-8')
               ),
               'Reading Rainbow catalog remains present': 'id: "reading-rainbow"' in data,
               'Reading Rainbow uses live collection': 'ReadingRainbowTVSeries' in data,
