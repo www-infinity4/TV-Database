@@ -169,7 +169,7 @@
   <aside id="sidebar" class="sidebar" role="complementary" aria-label="StarQuest menu">
     <div class="sidebar__header">
       <div class="sidebar__logo">⭐ <span>StarQuest</span></div>
-      <button id="sidebar-close" class="sidebar-close" aria-label="Close menu" onclick="event.preventDefault(); event.stopImmediatePropagation(); document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-backdrop').classList.remove('open'); document.getElementById('hamburger-btn').classList.remove('open'); document.getElementById('hamburger-btn').setAttribute('aria-expanded', 'false'); document.body.style.overflow=''; return false;">✕</button>
+      <button id="sidebar-close" class="sidebar-close" type="button" aria-label="Close menu">✕</button>
     </div>
     <div id="sidebar-user" class="sidebar-user">
       <button id="sidebar-profile-avatar" class="sidebar-user__avatar" type="button" aria-label="Open Avatar Coin design portal">☆</button>
@@ -672,17 +672,23 @@
 
       function byId(id) { return document.getElementById(id); }
 
+      function emit(name, detail) {
+        document.dispatchEvent(new CustomEvent(name, { detail: detail || {} }));
+      }
+
       function openSidebarFallback() {
         var sidebar = byId("sidebar");
         var backdrop = byId("sidebar-backdrop");
         var button = byId("hamburger-btn");
         if (sidebar) sidebar.classList.add("open");
+        if (sidebar) sidebar.setAttribute("aria-hidden", "false");
         if (backdrop) backdrop.classList.add("open");
         if (button) {
           button.classList.add("open");
           button.setAttribute("aria-expanded", "true");
         }
         document.body.style.overflow = "hidden";
+        emit("starquest:sidebar-opened");
       }
 
       function closeSidebarFallback() {
@@ -690,85 +696,99 @@
         var backdrop = byId("sidebar-backdrop");
         var button = byId("hamburger-btn");
         if (sidebar) sidebar.classList.remove("open");
+        if (sidebar) sidebar.setAttribute("aria-hidden", "true");
         if (backdrop) backdrop.classList.remove("open");
         if (button) {
           button.classList.remove("open");
           button.setAttribute("aria-expanded", "false");
         }
         document.body.style.overflow = "";
+        emit("starquest:sidebar-closed");
+      }
+
+      function portalDetail(marker) {
+        return {
+          target: marker && (marker.getAttribute("data-design-target") || marker.getAttribute("data-avatar-target")) || "StarQuest name",
+          scope: marker && (marker.getAttribute("data-design-scope") || marker.getAttribute("data-avatar-scope")) || "site",
+          key: marker && (marker.getAttribute("data-design-key") || marker.getAttribute("data-avatar-key")) || "brand-name"
+        };
       }
 
       function openPortalFallback(marker) {
         var backdrop = byId("profile-portal-backdrop");
         var target = byId("profile-edit-target");
+        var detail = portalDetail(marker);
         if (target && marker) {
-          target.textContent = marker.getAttribute("data-design-target") || "Your StarQuest page";
+          target.textContent = detail.target;
         }
         if (backdrop) backdrop.classList.add("open");
+        if (backdrop) backdrop.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
+        emit("starquest:portal-open-request", detail);
       }
 
       function closePortalFallback() {
         var backdrop = byId("profile-portal-backdrop");
         if (backdrop) backdrop.classList.remove("open");
+        if (backdrop) backdrop.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
+        emit("starquest:portal-closed");
       }
 
       function bindCriticalControls() {
-        var hamburger = byId("hamburger-btn");
-        var sidebarClose = byId("sidebar-close");
-        var sidebarBackdrop = byId("sidebar-backdrop");
-        var portalClose = byId("profile-portal-close");
-        var profileAvatar = byId("nav-profile-avatar");
-        var sidebarAvatar = byId("sidebar-profile-avatar");
-        var sidebarProfile = byId("sidebar-profile-btn");
-
-        if (hamburger && hamburger.dataset.criticalControl !== "true") {
-          hamburger.dataset.criticalControl = "true";
-          hamburger.addEventListener("click", openSidebarFallback);
-        }
-        if (sidebarClose) sidebarClose.addEventListener("click", closeSidebarFallback);
-        if (sidebarBackdrop) sidebarBackdrop.addEventListener("click", closeSidebarFallback);
-        if (portalClose) portalClose.addEventListener("click", closePortalFallback);
-        [profileAvatar, sidebarAvatar, sidebarProfile].forEach(function (control) {
-          if (!control) return;
-          control.addEventListener("click", function () {
-            closeSidebarFallback();
-            openPortalFallback(control);
-          });
-        });
-
         document.addEventListener("click", function (event) {
           var source = event.target;
-          var closeControl = source && source.closest ? source.closest("#sidebar-close") : null;
-          if (closeControl) {
+          if (!source || !source.closest) return;
+          var hamburger = source.closest("#hamburger-btn");
+          if (hamburger) {
             event.preventDefault();
-            event.stopImmediatePropagation();
+            event.stopPropagation();
+            if (byId("sidebar") && byId("sidebar").classList.contains("open")) closeSidebarFallback();
+            else openSidebarFallback();
+            return;
+          }
+          if (source.closest("#sidebar-close") || source === byId("sidebar-backdrop")) {
+            event.preventDefault();
+            event.stopPropagation();
             closeSidebarFallback();
             return;
           }
-          var marker = source && source.closest ? source.closest("[data-avatar-portal]") : null;
-          if (!marker) return;
-          event.preventDefault();
-          openPortalFallback(marker);
+          if (source.closest("#profile-portal-close") || source === byId("profile-portal-backdrop")) {
+            event.preventDefault();
+            event.stopPropagation();
+            closePortalFallback();
+            return;
+          }
+          var marker = source.closest("[data-avatar-portal], #nav-profile-avatar, #sidebar-profile-avatar, #sidebar-profile-btn");
+          if (marker) {
+            event.preventDefault();
+            event.stopPropagation();
+            closeSidebarFallback();
+            openPortalFallback(marker);
+          }
         }, true);
+
+        window.StarQuestControls = {
+          openSidebar: openSidebarFallback,
+          closeSidebar: closeSidebarFallback,
+          openPortal: openPortalFallback,
+          closePortal: closePortalFallback
+        };
       }
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", bindCriticalControls, { once: true });
-      } else {
-        bindCriticalControls();
-      }
+      /* This script sits after every control in the document, so bind now.
+         app.js loads next and can detect this router before adding listeners. */
+      bindCriticalControls();
     })();
   </script>
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260824"></script>
   <script src="js/archive-discovery.js?v=20260818"></script>
-  <script src="js/auth.js?v=20260820"></script>
-  <script src="js/distributor-ledger.js?v=20260808"></script>
+  <script src="js/auth.js?v=20260821"></script>
+  <script src="js/distributor-ledger.js?v=20260809"></script>
   <script src="js/ai.js?v=20260811"></script>
   <script src="js/avatar-coin.js?v=20260814"></script>
-  <script src="js/app.js?v=20260827"></script>
+  <script src="js/app.js?v=20260829"></script>
 </body>
 </html>

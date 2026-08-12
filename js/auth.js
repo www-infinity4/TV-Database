@@ -723,7 +723,12 @@
       }
       const opts = options && typeof options === "object" ? options : {};
       const now = Date.now();
-      const qualifiesForProgress = opts.verified === true && opts.fullyWatched === true;
+      // A browser can confirm that its share action completed (native share
+      // promise resolved, clipboard write succeeded, or an external composer
+      // was opened), but it cannot prove that a recipient viewed the message.
+      // Count the confirmed client action toward the visible 1/10 wallet cycle.
+      // Completed-watch state remains separate for distributor attribution.
+      const qualifiesForProgress = opts.confirmed === true || opts.verified === true;
 
       const result = mutateCurrentUser((user) => {
         if (!user.shareCooldownByContent || typeof user.shareCooldownByContent !== "object") {
@@ -748,16 +753,14 @@
           createdAt: now,
           verified: !!opts.verified,
           fullyWatched: !!opts.fullyWatched,
-          verificationState: qualifiesForProgress
-            ? "verified_eligible"
-            : (opts.verified ? "verified_watch_incomplete" : "pending_verification"),
-          status: opts.status || (qualifiesForProgress ? "verified_eligible" : "pending_verification"),
+          verificationState: qualifiesForProgress ? "client_confirmed" : "pending_verification",
+          status: opts.status || (qualifiesForProgress ? "client_confirmed" : "pending_verification"),
           method: opts.method || "unknown",
           url: opts.url || null,
           showTitle: opts.showTitle || null,
           episodeId: opts.episodeId || null,
           companyId: opts.companyId || null,
-          payoutEligible: qualifiesForProgress,
+          payoutEligible: qualifiesForProgress && !!opts.fullyWatched,
         };
         user.shareEvents.push(event);
         user.shareEvents = user.shareEvents.slice(-250);
