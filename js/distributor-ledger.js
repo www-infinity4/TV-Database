@@ -91,11 +91,13 @@
       const title = String(titleNode && titleNode.textContent || document.title || "StarQuest").trim();
       const url = new URL(location.href);
       url.searchParams.delete("deploy");
+      const showId = url.searchParams.get("sqShow") || "starquest";
+      const episodeId = url.searchParams.get("sqEpisode") || title || "content";
       return {
         title: title + " on StarQuest",
         text: "Watch " + title + " on StarQuest ⭐",
         url: url.toString(),
-        contentId: url.searchParams.get("sqEpisode") || title || "starquest-content"
+        contentId: showId + "|" + episodeId
       };
     }
 
@@ -169,6 +171,7 @@
       }
       const result = global.StarQuestAuth.recordShare(payload.contentId, {
         verified: verified === true,
+        confirmed: verified === true,
         fullyWatched: fallbackFullyWatched(payload),
         status: "share_safety_net",
         method,
@@ -181,8 +184,8 @@
         return;
       }
       if (result.awarded > 0) setStatus("⭐ StarCoin created from verified share progress.");
-      else if (result.credited) setStatus("Verified share recorded. " + (result.sharesPerCoin - result.progressToNextCoin) + " until the next StarCoin.");
-      else setStatus("Share recorded; StarCoin progress waits for the completed-watch requirement.");
+      else if (result.credited) setStatus("Confirmed share action recorded. " + (result.sharesPerCoin - result.progressToNextCoin) + " until the next StarCoin.");
+      else setStatus("The share action could not be confirmed, so the wallet counter was not changed.");
     }
 
     shareButton.addEventListener("click", function () {
@@ -205,12 +208,12 @@
           if (error && error.name === "AbortError") setStatus("Share canceled.");
           else {
             await copyFallback(payload);
-            recordFallbackShare(payload, "copy_fallback_safety_net", false);
+          recordFallbackShare(payload, "copy_fallback_safety_net", true);
           }
         }
       } else {
         await copyFallback(payload);
-        recordFallbackShare(payload, "copy_fallback_safety_net", false);
+        recordFallbackShare(payload, "copy_fallback_safety_net", true);
       }
     }, true);
 
@@ -220,7 +223,17 @@
       event.stopImmediatePropagation();
       const payload = currentPayload();
       await copyFallback(payload);
-      recordFallbackShare(payload, "copy_link_safety_net", false);
+      recordFallbackShare(payload, "copy_link_safety_net", true);
+    }, true);
+
+    if (smsLink) smsLink.addEventListener("click", function () {
+      if (backdrop.dataset.shareFallbackActive !== "true") return;
+      recordFallbackShare(currentPayload(), "sms_handoff_safety_net", true);
+    }, true);
+
+    if (emailLink) emailLink.addEventListener("click", function () {
+      if (backdrop.dataset.shareFallbackActive !== "true") return;
+      recordFallbackShare(currentPayload(), "email_handoff_safety_net", true);
     }, true);
 
     if (closeButton) closeButton.addEventListener("click", closeFallback);
