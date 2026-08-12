@@ -17,16 +17,24 @@ require("../js/auth.js");
   const user = await auth.register("share-tester", "pass1234");
   assert.equal(user.username, "share-tester");
 
-  const pending = auth.recordShare("show|pending", { confirmed: false, method: "unknown" });
+  const pending = auth.recordShare("show|pending", {
+    confirmed: false,
+    verified: false,
+    method: "copy_link",
+    status: "client_handoff_unverified"
+  });
   assert.equal(pending.ok, true);
   assert.equal(pending.credited, false);
   assert.equal(pending.progressToNextCoin, 0);
+  assert.equal(auth.currentUser().shareEvents.at(-1).verificationState, "pending_verification");
+  assert.equal(auth.currentUser().shareEvents.at(-1).payoutEligible, false);
 
   for (let index = 1; index <= 10; index += 1) {
     const result = auth.recordShare(`show|episode-${index}`, {
       confirmed: true,
+      verified: true,
       fullyWatched: false,
-      method: "copy_link"
+      method: "web_share_api"
     });
     assert.equal(result.ok, true);
     assert.equal(result.credited, true);
@@ -41,9 +49,13 @@ require("../js/auth.js");
   assert.equal(current.shareEvents.at(-1).payoutEligible, false);
   assert.equal(auth.getLedger().at(-1).type, "share_reward");
 
-  const duplicate = auth.recordShare("show|episode-10", { confirmed: true, method: "copy_link" });
+  const duplicate = auth.recordShare("show|episode-10", {
+    confirmed: true,
+    verified: true,
+    method: "web_share_api"
+  });
   assert.equal(duplicate.ok, false);
   assert.equal(duplicate.error, "share_cooldown");
   assert.equal(auth.getBalance(), 1);
-  console.log("share action -> 1/10 progress -> StarCoin -> cooldown: ok");
+  console.log("unverified copy -> no credit; 10 verified native shares -> StarCoin; cooldown: ok");
 })().catch(error => { console.error(error); process.exitCode = 1; });
