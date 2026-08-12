@@ -1,6 +1,21 @@
 # TV-Database
 TV episodes from 1970-2000 
 
+## Cosmo living companion
+
+Cosmo now has a consent-based Gemma and live-context architecture instead of depending only on programmed commands:
+
+- **Gemma 4 E2B on-device:** the Google AI Edge Web runtime loads the public web model only after the viewer presses **Start Gemma**. The current model is about 2.0 GB, WebGPU is required, and the UI reports unsupported/loading/ready/error states honestly rather than silently consuming bandwidth.
+- **Live movie lookup:** opening a program retrieves an in-memory Wikipedia summary and source URL for Cosmo's prompt. Movie research is refreshed for the viewing session rather than stored as a prewritten script.
+- **Playback context:** native video time and available caption cues are passed to Cosmo. Cross-origin iframe video cannot expose frames, audio or playback time to StarQuest.
+- **Voice conversation:** microphone recognition starts only when the viewer presses the microphone button. Spoken replies are separately optional.
+- **Sparse watch-along:** comments occur at approximately 3, 12 and 25 minutes when enabled, rather than interrupting every few seconds.
+- **Relevant offers:** commercial suggestions are off by default, explicitly labeled **Sponsored suggestion**, limited to one per 20 minutes, and use a live marketplace search rather than an invented price.
+- **Shopping list:** “add popcorn to my grocery list” creates a local, reviewable list. Cosmo never places an order without a future retailer integration and a separate confirmation.
+- **Truth boundary:** Cosmo is instructed not to invent prices, product availability, timestamps or facts. When the lookup has no evidence, he asks what the viewer noticed instead of presenting generic trivia as scene knowledge.
+
+The current Gemma 4 browser path is text-in/text-out. Automatic scene vision and movie-audio transcription therefore remain adapter work; the current implementation uses program metadata, native playback time, available captions and viewer speech without claiming it can see inaccessible cross-origin video.
+
 ESPN Power Bats™
 ESPN Fast Pitch™
 ESPN Fall Classic™
