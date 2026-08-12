@@ -483,7 +483,7 @@
   function createShowCard(show) {
     const unlockCost = Number.isFinite(Number(show.starCoinCost))
       ? Math.max(0, Math.trunc(Number(show.starCoinCost)))
-      : (show.payToWatch ? 3 : 0);
+      : (show.payToWatch ? 1 : 0);
     const contentId = "show:" + show.id;
     const isUnlocked = unlockCost <= 0 || (typeof StarQuestAuth !== "undefined" && StarQuestAuth.isContentUnlocked(contentId));
     const isLocked = unlockCost > 0 && !isUnlocked;
@@ -552,7 +552,15 @@
           document.dispatchEvent(new CustomEvent("starquest:require-auth"));
           return;
         }
-        const unlockResult = StarQuestAuth.unlockContent(contentId, unlockCost, show.title);
+        if (!window.StarQuestInfinityWallet || !window.StarQuestInfinityWallet.isConnected()) {
+          document.dispatchEvent(new CustomEvent("starquest:notice", { detail: { message: "Connect the Unified Infinity Wallet before spending StarCoins." } }));
+          return;
+        }
+        const unlockResult = StarQuestAuth.unlockContent(contentId, unlockCost, show.title, {
+          companyId: show.companyId || show.network || show.studio || null,
+          companyName: show.companyName || show.network || show.studio || (show.title + " rights company — unresolved"),
+          creditedPeople: Array.isArray(show.creditedPeople) ? show.creditedPeople : [],
+        });
         if (!unlockResult.ok) {
           const balance = StarQuestAuth.getBalance();
           document.dispatchEvent(new CustomEvent("starquest:toast", {
@@ -660,7 +668,7 @@
 
     const showCost = Number.isFinite(Number(show.starCoinCost))
       ? Math.max(0, Math.trunc(Number(show.starCoinCost)))
-      : (show.payToWatch ? 3 : 0);
+      : (show.payToWatch ? 1 : 0);
     const isUnlocked = showCost <= 0 || (typeof StarQuestAuth !== "undefined" && StarQuestAuth.isContentUnlocked("show:" + show.id));
 
     show.episodes.forEach((ep, i) => {
@@ -778,7 +786,7 @@
     const showCost = showForEpisode
       ? (Number.isFinite(Number(showForEpisode.starCoinCost))
         ? Math.max(0, Math.trunc(Number(showForEpisode.starCoinCost)))
-        : (showForEpisode.payToWatch ? 3 : 0))
+        : (showForEpisode.payToWatch ? 1 : 0))
       : 0;
     if (showForEpisode && showCost > 0) {
       const contentId = "show:" + showForEpisode.id;

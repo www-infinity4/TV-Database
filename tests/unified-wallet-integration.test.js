@@ -1,0 +1,16 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const app = fs.readFileSync('js/app.js', 'utf8');
+const data = fs.readFileSync('js/data.js', 'utf8');
+const auth = fs.readFileSync('js/auth.js', 'utf8');
+const integration = fs.readFileSync('js/infinity-wallet-integration.js', 'utf8');
+assert.doesNotMatch(app, /payToWatch \? 3/);
+assert.doesNotMatch(data, /starCoinCost: 3/);
+assert.match(app, /Connect the Unified Infinity Wallet before spending StarCoins/);
+assert.match(auth, /ledgerEventId/);
+assert.match(integration, /beneficiaryClass: 'COMPANY', units: 1000/);
+assert.match(integration, /beneficiaryClass: 'PERSON', units: 100/);
+assert.match(integration, /receiveStarCoin/);
+assert.match(integration, /recordNormalExchange/);
+console.log('one-StarCoin unlock and unified wallet royalty routing: ok');
