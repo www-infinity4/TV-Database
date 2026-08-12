@@ -5,6 +5,10 @@ on:
     paths:
       - index.html
       - js/app.js
+      - js/share-safety-net.js
+      - js/auth.js
+      - tests/share-flow.test.js
+      - tests/share-safety-net.test.js
       - js/data.js
       - js/archive-resolver.js
       - .github/workflows/validate-tv-player.yml
@@ -21,7 +25,10 @@ jobs:
         run: |
           node --check js/data.js
           node --check js/app.js
+          node --check js/share-safety-net.js
           node --check js/archive-resolver.js
+          node tests/share-flow.test.js
+          node tests/share-safety-net.test.js
       - name: Check player integration and regression records
         run: |
           python3 - <<'PY'
