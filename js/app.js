@@ -2555,8 +2555,8 @@
       title: showTitle + " on StarQuest",
       text,
       url: shareUrl.toString(),
-      contentId: (_currentEpisode && _currentShowTitle)
-        ? (_currentShowTitle + "|" + (_currentEpisode.id || _currentEpisode.title || "episode"))
+      contentId: (_currentEpisode && shareShow)
+        ? (shareShow.id + "|" + (_currentEpisode.id || _currentEpisode.title || "episode"))
         : "unknown-content",
       show: shareShow,
       episode: _currentEpisode
@@ -2611,20 +2611,21 @@
     return !!(watched && (watched.completed || Number(watched.completionRate) >= 0.98));
   }
 
-  function rewardCompletedShare(method, verifiedDelivery) {
+  function rewardCompletedShare(method, confirmedAction) {
     if (!activeShare) return;
     if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
-      setShareStatus("Share completed. Sign in to build verified StarCoin progress.");
+      setShareStatus("Share action completed. Sign in to build StarCoin progress.");
       return;
     }
     const show = activeShare.show;
     const episode = activeShare.episode;
     const fullyWatched = activeShareWasFullyWatched();
-    const verified = verifiedDelivery === true;
+    const confirmed = confirmedAction === true;
     const shareResult = StarQuestAuth.recordShare(activeShare.contentId, {
-      verified,
+      verified: confirmed,
+      confirmed,
       fullyWatched,
-      status: verified && fullyWatched ? "verified_eligible" : "pending_verification",
+      status: confirmed ? "client_confirmed" : "pending_verification",
       method,
       url: activeShare.url,
       showTitle: _currentShowTitle || "",
@@ -2640,11 +2641,11 @@
       return;
     }
     if (!shareResult.credited) {
-      setShareStatus("Share sent. Verification is pending; the wallet counter changes only after the completed watch and share are verified.");
+      setShareStatus("The share action could not be confirmed, so the wallet counter was not changed.");
       return;
     }
     if (shareResult.awarded > 0) {
-      setShareStatus("⭐ StarCoin created: the 10th fully watched, verified share was reached.");
+      setShareStatus("⭐ StarCoin created: the 10th confirmed share action was reached.");
     } else {
       const remaining = shareResult.sharesPerCoin - shareResult.progressToNextCoin;
       setShareStatus("Share completed. " + remaining + (remaining === 1 ? " share" : " shares") + " until the next StarCoin.");
@@ -2658,7 +2659,7 @@
       if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
       await navigator.clipboard.writeText(copyText);
       setShareStatus("Exact episode link copied. Paste it into any message.");
-      rewardCompletedShare("copy_link", false);
+      rewardCompletedShare("copy_link", true);
       return true;
     } catch (_) {
       const field = document.createElement("textarea");
@@ -2678,7 +2679,7 @@
       field.remove();
       if (copied) {
         setShareStatus("Exact episode link copied. Paste it into any message.");
-        rewardCompletedShare("copy_link", false);
+        rewardCompletedShare("copy_link", true);
         return true;
       }
       window.prompt("Copy this StarQuest link:", copyText);
@@ -2693,8 +2694,14 @@
     if (event.target === shareBackdrop) closeShareSheet();
   });
   if (shareCopyBtn) shareCopyBtn.addEventListener("click", copyActiveShare);
-  if (shareSmsLink) shareSmsLink.addEventListener("click", () => setShareStatus("Opening your text-message app…"));
-  if (shareEmailLink) shareEmailLink.addEventListener("click", () => setShareStatus("Opening your email app…"));
+  if (shareSmsLink) shareSmsLink.addEventListener("click", () => {
+    setShareStatus("Opening your text-message app…");
+    rewardCompletedShare("sms_handoff", true);
+  });
+  if (shareEmailLink) shareEmailLink.addEventListener("click", () => {
+    setShareStatus("Opening your email app…");
+    rewardCompletedShare("email_handoff", true);
+  });
   if (shareNativeBtn) shareNativeBtn.addEventListener("click", async () => {
     if (shareInFlight) return;
     if (!activeShare) activeShare = currentSharePayload();
