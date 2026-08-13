@@ -525,7 +525,7 @@
       };
     },
 
-    unlockContent(contentId, cost, title) {
+    unlockContent(contentId, cost, title, options) {
       const id = String(contentId || "").trim();
       if (!id) {
         return { ok: false, error: "invalid_content", message: "Invalid content ID." };
@@ -553,7 +553,7 @@
             return { ok: false, error: "insufficient_funds", message: "Not enough StarCoins." };
           }
           user.tokens = balance - unlockCost;
-          appendLedger(
+          const unlockTx = appendLedger(
             user,
             -unlockCost,
             "Unlock: " + (title || id),
@@ -561,6 +561,7 @@
             "content_unlock",
             "content unlock"
           );
+          user.lastUnlockLedgerEventId = unlockTx && unlockTx.id;
         }
 
         const unlock = {
@@ -568,6 +569,8 @@
           title: title || id,
           cost: unlockCost,
           unlockedAt: Date.now(),
+          ledgerEventId: user.lastUnlockLedgerEventId || null,
+          rights: options && typeof options === "object" ? options : {},
         };
         user.unlockedContent[id] = unlock;
 
