@@ -59,7 +59,11 @@ assert.equal(window.StarQuestCosmoLive.sponsoredSuggestion(), null, "sponsored s
   assert.ok(events.some((event) => event.type === "starquest:gemma-state"));
 
   const appSource = fs.readFileSync("js/app.js", "utf8");
+  const aiSource = fs.readFileSync("js/ai.js", "utf8");
   assert.match(appSource, /180000, 720000, 1500000/);
   assert.match(appSource, /scheduleCosmoPopIns/);
+  assert.match(appSource, /Opening Cosmo must never wait on a model or network request/);
+  assert.doesNotMatch(appSource, /StarQuestAI\.chat\("hello"\)/);
+  assert.match(aiSource, /controller\.abort\(\), 7000/);
   console.log("Cosmo Gemma consent, live context, shopping list and sponsor controls: ok");
 })().catch((error) => { console.error(error); process.exitCode = 1; });

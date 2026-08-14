@@ -2888,18 +2888,23 @@
     if (!aiPanel) return;
     aiPanel.style.display = "flex";
     aiPanel.style.flexDirection = "column";
-    /* Greet if no messages yet */
+    aiPanel.setAttribute("aria-hidden", "false");
+    if (aiFab) aiFab.setAttribute("aria-expanded", "true");
+    document.body.classList.add("cosmo-open");
+    /* Opening Cosmo must never wait on a model or network request. */
     if (aiMessages && aiMessages.children.length === 0) {
-      const greeting = (typeof StarQuestAI !== "undefined")
-        ? StarQuestAI.chat("hello")
-        : Promise.resolve("Hi! I'm Cosmo, StarQuest's AI companion. Ask me about any classic show!");
-      Promise.resolve(greeting).then((text) => appendAIMessage("bot", text));
+      appendAIMessage("bot", "Hi! I'm Cosmo, StarQuest's living companion. Ask me about a show, what to watch, your StarCoins, or anything playing now.");
     }
     if (aiInput) aiInput.focus();
   }
 
   function closeAIPanel() {
-    if (aiPanel) aiPanel.style.display = "none";
+    if (aiPanel) {
+      aiPanel.style.display = "none";
+      aiPanel.setAttribute("aria-hidden", "true");
+    }
+    if (aiFab) aiFab.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("cosmo-open");
   }
 
   function appendAIMessage(role, text) {
