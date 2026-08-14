@@ -722,6 +722,49 @@
     return getPopIn(showId, showTitle);
   }
 
+  let _infinityLanguageEngine = null;
+  let _infinitySiteBus = null;
+  let _infinityCatalogueLoaded = false;
+
+  function infinityLanguageEngine() {
+    if (!global.InfinityAIKernel) return null;
+    if (!_infinityLanguageEngine) _infinityLanguageEngine = new global.InfinityAIKernel.InfinityLanguageEngine();
+    if (!_infinityCatalogueLoaded && typeof SHOWS !== "undefined") {
+      _infinityLanguageEngine.addDocuments(SHOWS.map((show) => ({
+        id: "starquest-show:" + show.id,
+        title: show.title,
+        tags: [].concat(show.genre || [], show.years || "", "StarQuest catalogue"),
+        text: show.title + " (" + (show.years || "year unknown") + ") is a StarQuest " +
+          [].concat(show.genre || []).join("/") + " title. " + String(show.description || "") +
+          " StarQuest score: " + String(show.score || "unrated") + "."
+      })));
+      _infinityCatalogueLoaded = true;
+    }
+    return _infinityLanguageEngine;
+  }
+
+  function infinityLanguageResponse(question) {
+    const engine = infinityLanguageEngine();
+    if (!engine) return null;
+    const result = engine.answer(question, { site: "STARQUEST", playback: _currentContext });
+    return result.confidence >= 0.25 ? result.text : null;
+  }
+
+  function publishInfinitySiteEvent(type, payload) {
+    if (!global.InfinityAIKernel) return;
+    if (!_infinitySiteBus) _infinitySiteBus = new global.InfinityAIKernel.InfinitySiteBus();
+    const suffix = (payload && (payload.showId || payload.title)) || "event";
+    _infinitySiteBus.append({
+      eventId: "starquest:" + String(type).toLowerCase() + ":" + Date.now() + ":" + String(suffix).replace(/[^a-z0-9]+/gi, "-"),
+      type,
+      sourceSite: "STARQUEST",
+      payload: payload || {}
+    }).then((event) => {
+      const engine = infinityLanguageEngine();
+      if (engine) engine.learnFromEvent(event);
+    }).catch(() => {});
+  }
+
   /* ─────────────────────────────────────────────────────────────
      MAIN CHAT FUNCTION
      Returns a Promise<string> always.
@@ -750,7 +793,16 @@
       return quickResponse;
     }
 
-    /* 1. Use the viewer-started local Gemma model when ready. */
+    /* 1. The shared Infinity engine answers from this site's own catalogue and project knowledge. */
+    const infinityResponse = infinityLanguageResponse(userMessage);
+    if (infinityResponse) {
+      _convHistory.push({ role: "user", text: userMessage }, { role: "assistant", text: infinityResponse });
+      _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
+      saveConvHistory();
+      return infinityResponse;
+    }
+
+    /* 2. Use the viewer-started local Gemma model when ready. */
     if (global.StarQuestGemma && global.StarQuestGemma.status().ready) {
       const gemmaResponse = await global.StarQuestGemma.prompt(buildSystemPrompt() + "\nUser: " + userMessage);
       if (gemmaResponse) {
@@ -761,7 +813,7 @@
       }
     }
 
-    /* 2. Network LLM fallback. */
+    /* 3. Optional network LLM fallback for questions outside local Infinity knowledge. */
     const pollinResponse = await _callPollinations(buildMessages(userMessage));
     if (pollinResponse) {
       _convHistory.push({ role: "user",      text: userMessage });
@@ -771,7 +823,7 @@
       return pollinResponse;
     }
 
-    /* 3. Try Chrome Built-in AI if available. */
+    /* 4. Try Chrome Built-in AI if available. */
     if (_aiReady && _aiSession) {
       const aiResponse = await _promptAI(userMessage);
       if (aiResponse) {
@@ -783,7 +835,7 @@
       }
     }
 
-    /* 4. Live sourced answer before the offline knowledge fallback. */
+    /* 5. Live sourced answer before the offline knowledge fallback. */
     if (global.StarQuestCosmoLive) {
       const sourced = global.StarQuestCosmoLive.answerFromLiveContext(userMessage);
       if (sourced) {
@@ -794,7 +846,7 @@
       }
     }
 
-    /* 5. Rule-based fallback — basic chat still works offline. */
+    /* 6. Rule-based fallback — basic chat still works offline. */
     const response = generateResponse(userMessage);
     _convHistory.push({ role: "user",      text: userMessage });
     _convHistory.push({ role: "assistant", text: response });
@@ -831,6 +883,7 @@
     setContext(showId, showTitle, epTitle) {
       _currentContext = { showId, show: showTitle, episode: epTitle || "" };
       if (global.StarQuestCosmoLive) global.StarQuestCosmoLive.setContext(_currentContext);
+      publishInfinitySiteEvent("PLAYBACK_CONTEXT_SET", { showId, title: showTitle, episode: epTitle || "" });
       if (_aiReady) _rebuildSession();
     },
 
