@@ -456,11 +456,11 @@
   /**
    * Call Pollinations.ai text generation API.
    * Returns the response string, or null if the request fails.
-   * Aborts after 20 seconds to avoid hanging indefinitely.
+   * Aborts after 7 seconds so the dependable local Cosmo response is never hidden behind a stalled network request.
    */
   async function _callPollinations(messages) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 20000);
+    const timer = setTimeout(() => controller.abort(), 7000);
     try {
       const res = await fetch("https://text.pollinations.ai/", {
         method: "POST",
@@ -737,6 +737,17 @@
         saveConvHistory();
         return listResponse;
       }
+    }
+
+    /* Greetings and identity questions are answered immediately on every device. */
+    const quickQuestion = normalize(userMessage);
+    if (/^(hi|hello|hey|howdy|sup|yo|greetings)\b/.test(quickQuestion) ||
+        quickQuestion.includes("who are you") || quickQuestion.includes("your name")) {
+      const quickResponse = generateResponse(userMessage);
+      _convHistory.push({ role: "user", text: userMessage }, { role: "assistant", text: quickResponse });
+      _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
+      saveConvHistory();
+      return quickResponse;
     }
 
     /* 1. Use the viewer-started local Gemma model when ready. */
