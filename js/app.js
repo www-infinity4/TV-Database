@@ -3025,10 +3025,15 @@
   const cosmoWatchalongToggle = $("cosmo-watchalong-toggle");
   const cosmoSponsorsToggle = $("cosmo-sponsors-toggle");
   const cosmoSpeakToggle = $("cosmo-speak-toggle");
+  const cosmoHandsFreeToggle = $("cosmo-handsfree-toggle");
   const cosmoShoppingList = $("cosmo-shopping-list");
   const cosmoClearList = $("cosmo-clear-list");
   const sidebarCosmoBtn = $("sidebar-cosmo-btn");
   const sidebarAIBadge  = $("sidebar-ai-badge");
+
+  function handsFreeVoiceEnabled() {
+    return !!(window.StarQuestCosmoLive && StarQuestCosmoLive.getSettings().handsFreeVoice);
+  }
 
   document.addEventListener("starquest:ai-ready", () => {
     /* Show AI badge in the panel header */
@@ -3089,7 +3094,7 @@
     if (aiMessages && aiMessages.children.length === 0) {
       appendAIMessage("bot", "Hi! I'm Cosmo, StarQuest's living companion. Ask me about a show, what to watch, your StarCoins, or anything playing now.");
     }
-    if (aiInput) aiInput.focus();
+    if (aiInput && !handsFreeVoiceEnabled()) aiInput.focus();
   }
 
   function closeAIPanel() {
@@ -3146,7 +3151,7 @@
     } finally {
       typingEl.remove();
       if (aiSend) aiSend.disabled = false;
-      if (aiInput) aiInput.focus();
+      if (aiInput && !handsFreeVoiceEnabled()) aiInput.focus();
     }
   }
 
@@ -3179,6 +3184,7 @@
     if (cosmoWatchalongToggle) cosmoWatchalongToggle.checked = !!settings.watchAlong;
     if (cosmoSponsorsToggle) cosmoSponsorsToggle.checked = !!settings.sponsoredSuggestions;
     if (cosmoSpeakToggle) cosmoSpeakToggle.checked = !!settings.speakReplies;
+    if (cosmoHandsFreeToggle) cosmoHandsFreeToggle.checked = !!settings.handsFreeVoice;
     renderCosmoShopping();
   }
 
@@ -3195,24 +3201,75 @@
   document.addEventListener("starquest:shopping-updated", renderCosmoShopping);
 
   let voiceRecognition = null;
+
+  function setVoiceStatus(state, detail) {
+    if (aiVoice) {
+      const listening = ["listening", "awake", "command", "restarting"].includes(state);
+      aiVoice.classList.toggle("is-listening", listening);
+      aiVoice.setAttribute("aria-label", listening ? "Cosmo hands-free listening is active" : "Start hands-free Cosmo");
+    }
+    if (!cosmoEngineStatus) return;
+    if (state === "listening") cosmoEngineStatus.textContent = "Hands-free ready · say “Cosmo” and your question";
+    if (state === "awake") cosmoEngineStatus.textContent = "Cosmo is listening · say what you need";
+    if (state === "command") cosmoEngineStatus.textContent = "Cosmo heard: " + detail;
+    if (state === "restarting") cosmoEngineStatus.textContent = "Cosmo is reopening his microphone…";
+  }
+
+  async function submitVoiceCommand(command) {
+    const text = String(command || "").trim();
+    if (!text || !aiInput) return;
+    openAIPanel();
+    aiInput.value = text;
+    await sendAIMessage();
+  }
+
+  function startHandsFreeVoice() {
+    if (!voiceRecognition) return false;
+    StarQuestCosmoLive.updateSettings({ handsFreeVoice: true, speakReplies: true });
+    syncCosmoControls();
+    voiceRecognition.start();
+    return true;
+  }
+
+  function stopHandsFreeVoice() {
+    if (voiceRecognition) voiceRecognition.stop();
+    if (window.StarQuestCosmoLive) StarQuestCosmoLive.updateSettings({ handsFreeVoice: false });
+    syncCosmoControls();
+  }
+
   if (aiVoice && window.StarQuestCosmoLive) {
-    voiceRecognition = StarQuestCosmoLive.createRecognition((transcript) => {
-      aiInput.value = transcript;
-      sendAIMessage();
-    }, (voiceState, error) => {
-      aiVoice.classList.toggle("is-listening", voiceState === "listening");
-      aiVoice.setAttribute("aria-label", voiceState === "listening" ? "Listening—tap to stop" : "Talk to Cosmo");
-      if (voiceState === "error") appendAIMessage("bot", "I couldn't hear that clearly (" + error + "). You can type it instead.");
+    voiceRecognition = StarQuestCosmoLive.createHandsFreeRecognition(submitVoiceCommand, (voiceState, detail) => {
+      setVoiceStatus(voiceState, detail);
+      if (voiceState === "error" && ["not-allowed", "service-not-allowed"].includes(detail)) {
+        StarQuestCosmoLive.updateSettings({ handsFreeVoice: false });
+        syncCosmoControls();
+        appendAIMessage("bot", "Microphone permission is off. Allow it once in your browser settings, then open Cosmo again.");
+      } else if (voiceState === "error" && detail === "audio-capture") {
+        appendAIMessage("bot", "I can't reach a microphone on this device right now.");
+      }
     });
     if (!voiceRecognition) {
       aiVoice.disabled = true;
-      aiVoice.title = "Voice recognition is not available in this browser";
+      aiVoice.title = "Hands-free voice recognition is not available in this browser";
+      if (cosmoHandsFreeToggle) cosmoHandsFreeToggle.disabled = true;
     } else {
+      aiVoice.title = "Cosmo listens for his name after microphone permission is approved";
       aiVoice.addEventListener("click", () => {
-        try { voiceRecognition.start(); } catch (_) { try { voiceRecognition.stop(); } catch (_) {} }
+        if (voiceRecognition.isActive()) stopHandsFreeVoice();
+        else startHandsFreeVoice();
       });
+      const primeHandsFree = () => {
+        if (handsFreeVoiceEnabled() && !voiceRecognition.isActive()) startHandsFreeVoice();
+      };
+      document.addEventListener("pointerdown", primeHandsFree, { capture: true, once: true });
+      document.addEventListener("starquest:cosmo-opened", primeHandsFree);
     }
   }
+
+  if (cosmoHandsFreeToggle) cosmoHandsFreeToggle.addEventListener("change", () => {
+    if (cosmoHandsFreeToggle.checked) startHandsFreeVoice();
+    else stopHandsFreeVoice();
+  });
 
   function renderGemmaState(info) {
     if (!cosmoEngineStatus || !info) return;
