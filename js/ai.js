@@ -228,6 +228,16 @@
     return text.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
   }
 
+  function queryContainsTitle(query, title) {
+    const q = normalize(query);
+    const titleNorm = normalize(title);
+    if (!q || !titleNorm) return false;
+    /* Very short catalogue titles such as "M" must match a complete word.
+       Otherwise every question containing that letter becomes a movie query. */
+    if (titleNorm.length <= 2) return q.split(" ").includes(titleNorm);
+    return q.includes(titleNorm) || (q.length >= 4 && titleNorm.includes(q));
+  }
+
   function matchShow(query) {
     const q = normalize(query);
     const entries = Object.entries(KNOWLEDGE.shows);
@@ -240,7 +250,7 @@
     if (typeof SHOWS !== "undefined") {
       for (const show of SHOWS) {
         const titleNorm = normalize(show.title);
-        if (q.includes(titleNorm) || titleNorm.includes(q)) {
+        if (queryContainsTitle(q, titleNorm)) {
           return {
             key: titleNorm,
             data: {
@@ -419,24 +429,15 @@
       return "⭐ StarQuest is your personal classic TV & movie streaming galaxy! We focus on 1950s–1990s content from the public domain and archive.org. Watch free, earn StarCoins for watching and sharing, and eventually unlock premium pay-per-view content. It's like the video rental store of the 90s — but better!";
     }
 
-    /* Fallback with a show trivia */
-    if (typeof SHOWS !== "undefined" && SHOWS.length) {
-      const rShow = SHOWS[Math.floor(Math.random() * Math.min(15, SHOWS.length))];
-      return (
-        pickRandom(KNOWLEDGE.unknown) +
-        `\n\n💡 Random fact: Did you know ${rShow.title} (${rShow.years}) has a score of ★ ${rShow.score}? Ask me about it!`
-      );
-    }
-    return pickRandom(KNOWLEDGE.unknown);
+    return "I don't have a reliable offline answer for that yet. Cosmo's live AI endpoint is not connected on this device, so I won't guess or substitute an unrelated movie. I can still help with StarQuest titles, playback, recommendations, watch history, StarCoins, and the catalogue ledger.";
   }
 
   /* ─────────────────────────────────────────────────────────────
      NETWORK AI
-     StarQuest is a static GitHub Pages site, so a secret OpenAI API key
-     must never be embedded here. This browser-safe provider supplies the
-     live conversational path while Gemma and local catalogue answers remain
-     dependable fallbacks. A first-party OpenAI proxy can replace this URL
-     later without changing the Cosmo chat contract.
+     StarQuest is a static GitHub Pages site, so provider secrets must never
+     be embedded here. Cosmo calls the configured Infinity AI gateway, which
+     keeps credentials and model access server-side. During local development
+     it can use the existing loopback Infinity runtime.
      ──────────────────────────────────────────────────────────── */
 
   /**
@@ -469,6 +470,15 @@
     }));
   }
 
+  function networkEndpoint() {
+    const configured = global.STARQUEST_COSMO_CONFIG && global.STARQUEST_COSMO_CONFIG.aiEndpoint;
+    if (configured) return String(configured).trim();
+    if (/^(localhost|127\.0\.0\.1)$/.test(global.location && global.location.hostname || "")) {
+      return "http://127.0.0.1:11435/v1/reason";
+    }
+    return "";
+  }
+
   function readNetworkText(raw) {
     const value = String(raw || "").trim();
     if (!value || /^<!doctype html/i.test(value)) return null;
@@ -476,43 +486,51 @@
       const parsed = JSON.parse(value);
       return String(
         (parsed.choices && parsed.choices[0] && parsed.choices[0].message && parsed.choices[0].message.content) ||
-        parsed.output_text || parsed.text || ""
+        parsed.output || parsed.output_text || parsed.text || ""
       ).trim() || null;
     } catch (_) {
       return value;
     }
   }
 
-  async function _callPollinations(messages) {
+  async function _callNetworkAI(messages) {
+    const endpoint = networkEndpoint();
+    if (!endpoint) {
+      setNetworkState("unconfigured", "Live AI needs the secure Infinity gateway; offline tools remain available.");
+      return null;
+    }
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 10000);
-    setNetworkState("thinking", "Cosmo is thinking with network AI…");
+    setNetworkState("thinking", "Cosmo is thinking with Infinity AI…");
     try {
-      const res = await fetch("https://text.pollinations.ai/", {
+      const latest = messages[messages.length - 1] || {};
+      const res = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "text/plain, application/json" },
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
-          messages,
-          model:   "openai",
-          seed:    -1,
-          private: true,       /* do not log conversations */
+          input: String(latest.content || ""),
+          context: {
+            application: "StarQuest",
+            system: String((messages[0] && messages[0].content) || "").slice(0, 12000),
+            conversation: messages.slice(1, -1).slice(-12)
+          }
         }),
         signal: controller.signal,
       });
       if (!res.ok) {
-        setNetworkState("fallback", "Network AI returned " + res.status + "; offline backup is active.");
+        setNetworkState("fallback", "Infinity AI returned " + res.status + "; offline tools are active.");
         return null;
       }
       const text = readNetworkText(await res.text());
       if (!text) {
-        setNetworkState("fallback", "Network AI returned an empty reply; offline backup is active.");
+        setNetworkState("fallback", "Infinity AI returned an empty reply; offline tools are active.");
         return null;
       }
-      setNetworkState("connected", "Network AI connected");
+      setNetworkState("connected", "Infinity AI connected");
       return text;
     } catch (error) {
-      const reason = error && error.name === "AbortError" ? "Network AI timed out" : "Network AI could not be reached";
-      setNetworkState("fallback", reason + "; offline backup is active.");
+      const reason = error && error.name === "AbortError" ? "Infinity AI timed out" : "Infinity AI could not be reached";
+      setNetworkState("fallback", reason + "; offline tools are active.");
       return null;
     } finally {
       clearTimeout(timer);
@@ -744,7 +762,7 @@
       if (gemmaResponse) return gemmaResponse;
     }
     /* Network fallback */
-    const pollinResponse = await _callPollinations([
+    const pollinResponse = await _callNetworkAI([
       { role: "system", content: buildSystemPrompt() },
       { role: "user",   content: userPrompt },
     ]);
@@ -865,7 +883,7 @@
     }
 
     /* 2. Real network AI handles open conversation before any fuzzy catalogue lookup. */
-    const pollinResponse = await _callPollinations(buildMessages(userMessage));
+    const pollinResponse = await _callNetworkAI(buildMessages(userMessage));
     if (pollinResponse) {
       _convHistory.push({ role: "user",      text: userMessage });
       _convHistory.push({ role: "assistant", text: pollinResponse });
@@ -922,7 +940,7 @@
       { role: "system", content: "You are a concise interface naming designer. Return only one short replacement label, 2 to 5 words, with no quotes, explanation, trademark symbol, or punctuation at the end." },
       { role: "user", content: "Create a fresh label for this StarQuest interface element. Element: " + String(target || "interface") + ". Current label: " + String(currentValue || "").slice(0, 80) }
     ];
-    const suggestion = await _callPollinations(messages);
+    const suggestion = await _callNetworkAI(messages);
     if (!suggestion) return null;
     return suggestion.replace(/["'`]/g, "").split(/\r?\n/)[0].trim().slice(0, 64) || null;
   }
