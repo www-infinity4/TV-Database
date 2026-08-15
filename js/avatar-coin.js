@@ -107,6 +107,8 @@
         theme: design.theme,
         cardSize: design.cardSize,
         autoAdapt: !!design.autoAdapt,
+        avatarStyle: design.avatarStyle || "cosmic",
+        avatarLabel: String(design.avatarLabel || "SQ").slice(0, 4),
         overrides: design.overrides || {}
       },
       privacy: ctx.privacy || "private",
@@ -150,6 +152,8 @@
       theme: source.settings.theme,
       cardSize: source.settings.cardSize,
       autoAdapt: false,
+      avatarStyle: source.settings.avatarStyle || "cosmic",
+      avatarLabel: source.settings.avatarLabel || "SQ",
       overrides: { ...(source.settings.overrides || {}) }
     }, {
       designId: id("avatar-design"),

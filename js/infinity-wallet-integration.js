@@ -2,6 +2,8 @@
 (function () {
   'use strict';
   const button = document.getElementById('unified-wallet-connect');
+  const buttonLabel = document.getElementById('unified-wallet-label');
+  const buttonDetail = document.getElementById('unified-wallet-detail');
   const status = document.getElementById('unified-wallet-status');
   if (!window.InfinityUnifiedWallet) {
     if (status) status.textContent = 'Unified wallet engine unavailable. Paid unlocks remain closed.';
@@ -14,7 +16,9 @@
   function setStatus(message) { if (status) status.textContent = message; }
   function render() {
     const connected = current();
-    if (button) button.textContent = connected ? 'Unified Wallet · ' + connected.walletId.slice(-8) : 'Connect Unified Wallet';
+    if (buttonLabel) buttonLabel.textContent = connected ? 'Unified Wallet · ' + connected.walletId.slice(-8) : 'Connect Unified Wallet';
+    if (buttonDetail) buttonDetail.textContent = connected ? 'Open wallet and account activity' : 'Use across Infinity websites';
+    if (button) button.classList.toggle('connected', !!connected);
     setStatus(connected ? 'Movie unlocks and rights allocations will use the unified wallet.' : 'Connect before using StarCoins to unlock a movie.');
   }
   if (button) button.addEventListener('click', function () {

@@ -42,7 +42,7 @@
   <link rel="preconnect" href="https://text.pollinations.ai" crossorigin />
   <link rel="dns-prefetch" href="https://text.pollinations.ai" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20260823" />
+  <link rel="stylesheet" href="css/style.css?v=20260815-vhs1" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
 </head>
 <body>
@@ -118,8 +118,27 @@
       <button id="profile-portal-close" class="auth-close" aria-label="Close Avatar Coin portal">✕</button>
       <div class="profile-portal__eyebrow">STARQUEST AVATAR COIN</div>
       <h2 id="profile-portal-title">Personal Design Portal</h2>
-      <p class="profile-portal__intro">The small star beside an element opens controls for that exact element. It represents editable StarQuest design—not a profile picture.</p>
+      <p class="profile-portal__intro">Change your account avatar and personalize StarQuest from one place. Small stars beside page elements still open controls for that exact element.</p>
       <p class="profile-edit-context">Editing: <strong id="profile-edit-target">Your whole StarQuest page</strong></p>
+
+      <section class="account-avatar-settings" aria-labelledby="account-avatar-title">
+        <div class="account-avatar-settings__preview" aria-hidden="true">
+          <span class="vhs-avatar vhs-avatar--cosmic" data-vhs-avatar><span class="vhs-avatar__label" data-vhs-label>SQ</span><span class="vhs-avatar__reels"><i></i><i></i></span></span>
+        </div>
+        <div class="account-avatar-settings__controls">
+          <div class="profile-portal__eyebrow">ACCOUNT SETTINGS</div>
+          <h3 id="account-avatar-title">Choose your VHS avatar</h3>
+          <p>Your tape appears in the circle at the top and beside your account in the hamburger menu.</p>
+          <div class="vhs-style-options" role="group" aria-label="VHS avatar color">
+            <button type="button" data-vhs-style="cosmic">Cosmic</button>
+            <button type="button" data-vhs-style="blue">Blue</button>
+            <button type="button" data-vhs-style="gold">Gold</button>
+            <button type="button" data-vhs-style="red">Red</button>
+          </div>
+          <label class="vhs-label-field">Tape label<input id="vhs-avatar-label" type="text" maxlength="4" value="SQ" placeholder="SQ" aria-describedby="vhs-label-help" /></label>
+          <small id="vhs-label-help">Use up to four letters or numbers.</small>
+        </div>
+      </section>
 
       <div class="element-editor" aria-labelledby="element-editor-title">
         <h3 id="element-editor-title">Change this element</h3>
@@ -198,7 +217,9 @@
       <button id="sidebar-close" class="sidebar-close" type="button" aria-label="Close menu">✕</button>
     </div>
     <div id="sidebar-user" class="sidebar-user">
-      <button id="sidebar-profile-avatar" class="sidebar-user__avatar" type="button" aria-label="Open Avatar Coin design portal">☆</button>
+      <button id="sidebar-profile-avatar" class="sidebar-user__avatar" type="button" aria-label="Open account and avatar settings">
+        <span class="vhs-avatar vhs-avatar--cosmic" data-vhs-avatar aria-hidden="true"><span class="vhs-avatar__label" data-vhs-label>SQ</span><span class="vhs-avatar__reels"><i></i><i></i></span></span>
+      </button>
       <div class="sidebar-user__info">
         <div id="sidebar-username" class="sidebar-user__name">Guest</div>
         <div id="sidebar-wallet" class="sidebar-wallet" title="Your StarCoins">
@@ -244,11 +265,16 @@
         <span>🔗 +1 coin / 10 successful shares (prototype)</span>
       </div>
       <div class="wallet-card__earn-hints"><span id="unified-wallet-status">Connect before using StarCoins to unlock a movie.</span></div>
+      <button id="unified-wallet-connect" class="sidebar-unified-wallet" type="button">
+        <span class="sidebar-unified-wallet__icon" aria-hidden="true">◈</span>
+        <span><strong id="unified-wallet-label">Connect Unified Wallet</strong><small id="unified-wallet-detail">Use across Infinity websites</small></span>
+        <span aria-hidden="true">›</span>
+      </button>
     </div>
 
     <nav class="sidebar-nav" aria-label="Sidebar navigation">
       <button id="sidebar-profile-btn" class="sidebar-nav__item" type="button">
-        <span>☆</span> Avatar Coin Design Portal
+        <span>📼</span> Account &amp; Avatar Settings
       </button>
       <button id="sidebar-signin-btn" class="sidebar-nav__item">
         <span>👤</span> Sign In / Register
@@ -323,7 +349,9 @@
         <input id="search-input" type="search" placeholder="Search the galaxy…" aria-label="Search TV shows" autocomplete="off" spellcheck="false" />
         <button id="clear-search" class="sr-only" aria-label="Clear search">✕</button>
       </div>
-      <button id="nav-profile-avatar" class="nav-profile-avatar" type="button" aria-label="Open Avatar Coin design portal">☆</button>
+      <button id="nav-profile-avatar" class="nav-profile-avatar" type="button" aria-label="Open account and avatar settings">
+        <span class="vhs-avatar vhs-avatar--cosmic" data-vhs-avatar aria-hidden="true"><span class="vhs-avatar__label" data-vhs-label>SQ</span><span class="vhs-avatar__reels"><i></i><i></i></span></span>
+      </button>
       <div id="nav-wallet" class="nav__wallet" title="Your StarCoins and share progress" aria-label="StarCoin wallet">
         <span class="nav__wallet-balance">⭐ <span id="nav-token-count">0</span></span>
         <span class="nav__wallet-divider" aria-hidden="true"></span>
@@ -332,7 +360,6 @@
           <small id="nav-shares-left">10 shares left</small>
         </span>
       </div>
-      <button id="unified-wallet-connect" class="btn btn-secondary" type="button">Connect Unified Wallet</button>
       <button id="hamburger-btn" class="hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
         <span></span><span></span><span></span>
       </button>
@@ -917,12 +944,12 @@
   <script src="js/gemma-engine.js?v=20260812"></script>
   <script src="js/cosmo-live.js?v=20260812"></script>
   <script src="js/ai.js?v=20260814-kernel1"></script>
-  <script src="js/avatar-coin.js?v=20260814"></script>
+  <script src="js/avatar-coin.js?v=20260815-vhs1"></script>
   <script src="js/share-safety-net.js?v=20260812"></script>
   <script src="https://www-infinity4.github.io/Mint-For-Infinity/unified-wallet.js?v=20260812"></script>
-  <script src="js/infinity-wallet-integration.js?v=20260812"></script>
+  <script src="js/infinity-wallet-integration.js?v=20260815-vhs1"></script>
   <script src="js/opening-rotation.js?v=20260814-rotation1"></script>
-  <script src="js/app.js?v=20260814-cosmo3"></script>
+  <script src="js/app.js?v=20260815-vhs1"></script>
   <script src="js/user-worlds.js?v=20260812"></script>
 <script src="https://www-infinity4.github.io/Mint-For-Infinity/infinity-wallet-menu.js?v=20260814-menu2"></script></body>
 </html>
