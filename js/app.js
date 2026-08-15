@@ -3040,9 +3040,7 @@
   document.addEventListener("starquest:cosmo-provider", (event) => {
     if (!cosmoEngineStatus) return;
     const detail = event.detail || {};
-    if (detail.state === "thinking") cosmoEngineStatus.textContent = "Cosmo is thinking with network AI…";
-    else if (detail.state === "connected") cosmoEngineStatus.textContent = "Cosmo ready · network AI connected";
-    else if (detail.state === "fallback") cosmoEngineStatus.textContent = "Cosmo ready · offline backup active";
+    if (detail.message) cosmoEngineStatus.textContent = detail.message;
   });
 
   function renderCatalogLedgerStatus(summary) {
