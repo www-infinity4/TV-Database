@@ -10,6 +10,7 @@ Each zone selects a small adapter from the immutable repository registry.
 | Readers and Research | Documents, retrieval, indexing, evidence | MarkItDown, Haystack, RAGFlow, Qdrant |
 | Writers and Coders | Proposed patches and isolated software-agent work | Aider, OpenHands, MCP Python SDK |
 | Voice and Validation | Speech input, browser tests, security quarantine | whisper.cpp, Playwright, Trivy |
+| Autonomous Agents | Gateway, sessions, tools, schedules, local inference | nanobot, LocalAI, vibe-tools |
 
 The Crown Index stores public provenance. Operational authority is separate:
 signed commands, protected credentials, allowlisted adapters, immutable pins,

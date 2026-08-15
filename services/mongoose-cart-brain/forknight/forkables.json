@@ -189,6 +189,61 @@
       "license_scope": "repository; bundled models and services reviewed separately",
       "integration": "quarantined_rag_reference",
       "state": "adapter_candidate"
+    },
+    {
+      "repository": "HKUDS/nanobot",
+      "url": "https://github.com/HKUDS/nanobot",
+      "role": "lightweight_agent_gateway_reference",
+      "default_branch": "main",
+      "pin": "8dc08853e46de26bcb51e23b6dd7e8c34df198df",
+      "license_spdx": "MIT",
+      "license_scope": "repository; providers and connected tools retain separate terms",
+      "integration": "quarantined_agent_adapter",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "kyrolabs/awesome-agents",
+      "url": "https://github.com/kyrolabs/awesome-agents",
+      "role": "agent_discovery_feed",
+      "default_branch": "main",
+      "pin": "0a3f4e92cf1bae8a1a15edfff0eff4c4148ba32e",
+      "license_spdx": "",
+      "license_scope": "no repository license detected; linked repositories retain separate terms",
+      "integration": "link_only_metadata",
+      "state": "rejected_no_license"
+    },
+    {
+      "repository": "open-webui/open-webui",
+      "url": "https://github.com/open-webui/open-webui",
+      "role": "self_hosted_ai_dashboard_reference",
+      "default_branch": "main",
+      "pin": "01f4282f1ffe0d6212f58d3afbeae21fffd0c4be",
+      "license_spdx": "custom",
+      "license_scope": "Open WebUI License with branding restrictions; historical materials may retain prior licenses",
+      "integration": "architecture_reference_only",
+      "state": "license_review"
+    },
+    {
+      "repository": "mudler/LocalAI",
+      "url": "https://github.com/mudler/LocalAI",
+      "role": "multimodal_local_inference_gateway",
+      "default_branch": "master",
+      "pin": "db21c47a7691ac0baf304a84ade911ca4eed2ec8",
+      "license_spdx": "MIT",
+      "license_scope": "repository; models and dynamically installed backends retain separate terms",
+      "integration": "openai_compatible_sidecar",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "eastlondoner/vibe-tools",
+      "url": "https://github.com/eastlondoner/vibe-tools",
+      "role": "multi_provider_developer_tool_reference",
+      "default_branch": "main",
+      "pin": "4a1d17cf501db3a719a9c2bf0ee0d288282a63a7",
+      "license_spdx": "MIT",
+      "license_scope": "repository; connected providers and services separate",
+      "integration": "quarantined_cli_reference",
+      "state": "adapter_candidate"
     }
   ]
 }
