@@ -90,6 +90,105 @@
       "license_scope": "repository",
       "integration": "quarantine_scan_cli",
       "state": "adapter_candidate"
+    },
+    {
+      "repository": "bobeff/open-source-games",
+      "url": "https://github.com/bobeff/open-source-games",
+      "role": "game_architecture_catalog",
+      "default_branch": "main",
+      "pin": "3a9ab8fc892a2cdadf8989a72ba7624a11e39cec",
+      "license_spdx": "CC0-1.0",
+      "license_scope": "catalog; linked projects retain their own licenses",
+      "integration": "metadata_reference",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "FronkonGames/Awesome-Gamedev",
+      "url": "https://github.com/FronkonGames/Awesome-Gamedev",
+      "role": "game_development_tool_catalog",
+      "default_branch": "main",
+      "pin": "fc0f586ffe178305f9de183900ea21019e4ad5f8",
+      "license_spdx": "MIT",
+      "license_scope": "catalog; linked projects retain their own licenses",
+      "integration": "metadata_reference",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "bitcraft3r/0xVenture-Capitalist",
+      "url": "https://github.com/bitcraft3r/0xVenture-Capitalist",
+      "role": "incremental_game_loop_reference",
+      "default_branch": "main",
+      "pin": "b98590560a6af5275770c83178c1c6132d1140fd",
+      "license_spdx": "MIT",
+      "license_scope": "repository",
+      "integration": "quarantined_design_reference",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "Aider-AI/aider",
+      "url": "https://github.com/Aider-AI/aider",
+      "role": "code_writer_and_editor",
+      "default_branch": "main",
+      "pin": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+      "license_spdx": "Apache-2.0",
+      "license_scope": "repository",
+      "integration": "reviewed_cli_adapter",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "OpenHands/OpenHands",
+      "url": "https://github.com/OpenHands/OpenHands",
+      "role": "software_agent_reference",
+      "default_branch": "main",
+      "pin": "0d15c5e79e91a659f238954e1db8a3da289c4801",
+      "license_spdx": "MIT",
+      "license_scope": "repository; external services and models separate",
+      "integration": "quarantined_agent_reference",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "langchain-ai/langgraph",
+      "url": "https://github.com/langchain-ai/langgraph",
+      "role": "stateful_agent_graphs",
+      "default_branch": "main",
+      "pin": "644815f9e5bc52ad8f7a5227a456227e9c3e639b",
+      "license_spdx": "MIT",
+      "license_scope": "repository",
+      "integration": "graph_contract_reference",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "deepset-ai/haystack",
+      "url": "https://github.com/deepset-ai/haystack",
+      "role": "reader_retrieval_pipeline",
+      "default_branch": "main",
+      "pin": "5ede1e4303e46a937d65540d0e7c7413f65111d0",
+      "license_spdx": "Apache-2.0",
+      "license_scope": "repository; optional integrations separate",
+      "integration": "pipeline_contract_reference",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "microsoft/markitdown",
+      "url": "https://github.com/microsoft/markitdown",
+      "role": "document_reader_normalizer",
+      "default_branch": "main",
+      "pin": "fd239d5d2be43d9b68329730206b9312c7d5a388",
+      "license_spdx": "MIT",
+      "license_scope": "repository",
+      "integration": "isolated_document_adapter",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "infiniflow/ragflow",
+      "url": "https://github.com/infiniflow/ragflow",
+      "role": "document_retrieval_and_knowledge_graph_reference",
+      "default_branch": "main",
+      "pin": "554fb1133ac3861732235ad9c377eb5e0a770665",
+      "license_spdx": "Apache-2.0",
+      "license_scope": "repository; bundled models and services reviewed separately",
+      "integration": "quarantined_rag_reference",
+      "state": "adapter_candidate"
     }
   ]
 }
