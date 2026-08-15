@@ -727,14 +727,15 @@
       <label><input id="cosmo-watchalong-toggle" type="checkbox"> Friendly watch-along notes</label>
       <label><input id="cosmo-sponsors-toggle" type="checkbox"> Clearly labeled relevant offers</label>
       <label><input id="cosmo-speak-toggle" type="checkbox"> Read Cosmo's replies aloud</label>
-      <p>Microphone use starts only when you press the microphone. Offers are capped and never place an order.</p>
+      <label><input id="cosmo-handsfree-toggle" type="checkbox"> Hands-free wake word: “Cosmo”</label>
+      <p>Approve microphone permission once. After that, say “Cosmo” followed by your question—no microphone or Send button needed. The microphone pauses while Cosmo speaks and when this page is hidden. Offers are capped and never place an order.</p>
       <div class="cosmo-shopping-head"><b>Shopping list</b><button id="cosmo-clear-list" type="button">Clear</button></div>
       <ul id="cosmo-shopping-list"><li>Nothing added yet.</li></ul>
     </section>
     <div id="ai-messages" class="ai-messages" role="log" aria-live="polite"></div>
     <div class="ai-input-row">
       <input id="ai-input" type="text" class="ai-input" placeholder="Ask Cosmo about any show…" aria-label="Message to Cosmo" autocomplete="off" maxlength="300" />
-      <button id="ai-voice" class="ai-voice" type="button" aria-label="Talk to Cosmo" title="Press once to speak">🎙</button>
+      <button id="ai-voice" class="ai-voice" type="button" aria-label="Start hands-free Cosmo" title="Approve microphone once, then say Cosmo">🎙</button>
       <button id="ai-send" class="ai-send" aria-label="Send message">➤</button>
     </div>
     <div class="ai-suggestions">
@@ -929,14 +930,14 @@
   <script src="js/distributor-ledger.js?v=20260809"></script>
   <script src="https://www-infinity4.github.io/Mint-For-Infinity/infinity-ai-kernel.js?v=20260814-kernel2"></script>
   <script src="js/gemma-engine.js?v=20260812"></script>
-  <script src="js/cosmo-live.js?v=20260812"></script>
+  <script src="js/cosmo-live.js?v=20260815-handsfree1"></script>
   <script src="js/ai.js?v=20260815-cosmo2"></script>
   <script src="js/avatar-coin.js?v=20260815-vhs1"></script>
   <script src="js/share-safety-net.js?v=20260815-share1"></script>
   <script src="https://www-infinity4.github.io/Mint-For-Infinity/unified-wallet.js?v=20260812"></script>
   <script src="js/infinity-wallet-integration.js?v=20260815-vhs1"></script>
   <script src="js/opening-rotation.js?v=20260814-rotation1"></script>
-  <script src="js/app.js?v=20260815-share1"></script>
+  <script src="js/app.js?v=20260815-handsfree1"></script>
   <script src="js/user-worlds.js?v=20260812"></script>
 <script src="https://www-infinity4.github.io/Mint-For-Infinity/infinity-wallet-menu.js?v=20260814-menu2"></script></body>
 </html>
