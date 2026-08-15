@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-15T22:00:00Z",
+  "generated_at": "2026-08-15T23:00:00Z",
   "policy": "policy.json",
   "entries": [
     {
@@ -243,6 +243,17 @@
       "license_spdx": "MIT",
       "license_scope": "repository; connected providers and services separate",
       "integration": "quarantined_cli_reference",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "danny-avila/LibreChat",
+      "url": "https://github.com/danny-avila/LibreChat",
+      "role": "multi_profile_ai_workspace_reference",
+      "default_branch": "main",
+      "pin": "eaef87fa2684025627e25d649a56f4f2a63417a7",
+      "license_spdx": "MIT",
+      "license_scope": "repository; connected providers, models, plugins, tools, and deployment services retain separate terms",
+      "integration": "quarantined_workspace_reference",
       "state": "adapter_candidate"
     }
   ]

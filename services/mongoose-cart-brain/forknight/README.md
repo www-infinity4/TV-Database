@@ -32,6 +32,8 @@ containers, APIs, or pinned source references over permanent forks.
 - policy.json — machine-readable promotion gates.
 - scanner.py — dependency-free evaluator and GitHub search shard generator.
 - test_scanner.py — deterministic safety and scoring tests.
+- rounds/ — verified ingestion decisions, including unresolved names.
+- zones/ — stable adapter boundaries and the Infinity / Omni direction model.
 
 ## Run
 

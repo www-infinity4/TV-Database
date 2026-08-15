@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "coordinate_model": "n_dimensional_cartesian",
+  "units": "normalized",
+  "modes": [
+    {
+      "id": "FOCAL",
+      "meaning": "one selected origin or destination",
+      "direction": "none"
+    },
+    {
+      "id": "INFINITY_VECTOR",
+      "meaning": "unbounded directed extent along a selected vector",
+      "direction": "outward"
+    },
+    {
+      "id": "OMNI_SOURCE",
+      "meaning": "coverage radiating from a focal source across active dimensions",
+      "direction": "outward"
+    },
+    {
+      "id": "CONVERGENT_SINK",
+      "meaning": "independent boundary streams converge on a focal core",
+      "direction": "inward"
+    },
+    {
+      "id": "SOURCE_SINK",
+      "meaning": "outward expansion and inward gravity coexist as separate channels",
+      "direction": "bidirectional"
+    },
+    {
+      "id": "GOLDEN_ANGLE",
+      "meaning": "deterministic radial sampling using the golden angle",
+      "direction": "outward"
+    },
+    {
+      "id": "SPIRAL_OUT",
+      "meaning": "radius grows as phase advances",
+      "direction": "outward"
+    },
+    {
+      "id": "SPIRAL_IN",
+      "meaning": "radius shrinks toward the focal core as phase advances",
+      "direction": "inward"
+    },
+    {
+      "id": "RECURSIVE",
+      "meaning": "bounded repetition of a selected mode with explicit depth and fanout caps",
+      "direction": "inherited"
+    }
+  ],
+  "required_caps": {
+    "max_dimensions": 8,
+    "max_streams_phone": 512,
+    "max_recursive_depth": 6,
+    "seed_required": true
+  }
+}
