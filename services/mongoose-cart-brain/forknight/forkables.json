@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-15T22:00:00Z",
+  "policy": "policy.json",
+  "entries": [
+    {
+      "repository": "ggml-org/llama.cpp",
+      "url": "https://github.com/ggml-org/llama.cpp",
+      "role": "local_llm_inference",
+      "default_branch": "master",
+      "pin": "ece963f41b0b02d7a0d61436ae365762c073a4c8",
+      "license_spdx": "MIT",
+      "license_scope": "repository",
+      "integration": "openai_compatible_sidecar",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "ollama/ollama",
+      "url": "https://github.com/ollama/ollama",
+      "role": "local_model_manager",
+      "default_branch": "main",
+      "pin": "d67ad83426633195089509347ffd4fe795120198",
+      "license_spdx": "MIT",
+      "license_scope": "repository CLI source; model licenses separate",
+      "integration": "http_sidecar",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "BerriAI/litellm",
+      "url": "https://github.com/BerriAI/litellm",
+      "role": "multi_provider_model_gateway",
+      "default_branch": "litellm_internal_staging",
+      "pin": "8035fb3d273a0da0b5808dd44f8b40077ae46b7b",
+      "license_spdx": "mixed",
+      "license_scope": "MIT outside enterprise directory; enterprise license inside enterprise directory",
+      "integration": "openai_compatible_sidecar",
+      "state": "license_review"
+    },
+    {
+      "repository": "modelcontextprotocol/python-sdk",
+      "url": "https://github.com/modelcontextprotocol/python-sdk",
+      "role": "tool_protocol",
+      "default_branch": "main",
+      "pin": "52ad0a8876f97f631b6e7cb973a786b253088a4d",
+      "license_spdx": "MIT",
+      "license_scope": "repository",
+      "integration": "python_package",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "ggml-org/whisper.cpp",
+      "url": "https://github.com/ggml-org/whisper.cpp",
+      "role": "speech_to_text",
+      "default_branch": "master",
+      "pin": "1fe009caeda75f69bc864d6370b10674e45a92bd",
+      "license_spdx": "MIT",
+      "license_scope": "repository; optional external media components reviewed separately",
+      "integration": "local_process_sidecar",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "qdrant/qdrant",
+      "url": "https://github.com/qdrant/qdrant",
+      "role": "vector_index",
+      "default_branch": "master",
+      "pin": "74f3e85b9473c62560006c043e13737ce6b48412",
+      "license_spdx": "Apache-2.0",
+      "license_scope": "repository",
+      "integration": "http_sidecar",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "url": "https://github.com/microsoft/playwright",
+      "role": "browser_validation",
+      "default_branch": "main",
+      "pin": "d5a185a894ab3ab17ff77a44e116a1339c6bdaed",
+      "license_spdx": "Apache-2.0",
+      "license_scope": "repository",
+      "integration": "test_only_cli",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "aquasecurity/trivy",
+      "url": "https://github.com/aquasecurity/trivy",
+      "role": "dependency_secret_and_vulnerability_scan",
+      "default_branch": "main",
+      "pin": "d98911ea338b061f8bef0baeef85b35660013b32",
+      "license_spdx": "Apache-2.0",
+      "license_scope": "repository",
+      "integration": "quarantine_scan_cli",
+      "state": "adapter_candidate"
+    }
+  ]
+}

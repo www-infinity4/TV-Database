@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "discovery": {
+    "maximum_results_per_query": 1000,
+    "shard_dimensions": ["topic", "language", "created_month"],
+    "deduplicate_by": "repository_node_id",
+    "store_rejected_metadata": true
+  },
+  "promotion": {
+    "allowed_licenses": ["MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC"],
+    "review_licenses": ["MPL-2.0", "LGPL-2.1", "LGPL-3.0", "GPL-2.0", "GPL-3.0", "AGPL-3.0", "custom", "mixed"],
+    "reject_conditions": ["no_license", "archived", "disabled", "malware_signal", "secret_in_source", "mutable_ref_only"],
+    "required_evidence": [
+      "canonical_repository",
+      "immutable_commit_sha",
+      "license_spdx",
+      "license_scope",
+      "retrieved_at",
+      "security_scan_result",
+      "test_result",
+      "adapter_contract"
+    ]
+  },
+  "authority": {
+    "discovery_may_execute": false,
+    "discovery_may_fork": false,
+    "discovery_may_push": false,
+    "discovery_may_merge": false,
+    "promotion_requires_owner_review": true,
+    "default_branch_requires_verified_pr": true
+  }
+}
