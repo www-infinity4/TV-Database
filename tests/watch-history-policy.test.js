@@ -44,6 +44,6 @@ require("../js/auth.js");
   assert.match(app, /starquest:episode-opened/);
   assert.match(app, /twitter\.com\/intent\/tweet\?text=/);
   assert.match(app, /rewardCompletedShare\("twitter_intent", true\)/);
-  assert.doesNotMatch(html, /coin \/ hour watched|Eligible watch-time/);
+  assert.doesNotMatch(html, /coin \/ hour watched|Eligible watch-time|Earn StarCoins by watching/);
   console.log("playback logs history; watch time mints nothing; Twitter carries payload and 1\/10 credit: ok");
 })().catch(error => { console.error(error); process.exitCode = 1; });
