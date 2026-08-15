@@ -11,7 +11,6 @@
   const SYNC_HASH_PREFIX = "sync-";
   const SHARES_PER_COIN = 10;
   const SHARE_COOLDOWN_MS = 5 * 60 * 1000;
-  const WATCH_SECONDS_PER_COIN = 3600;
 
   /* ── Secure password hashing using Web Crypto PBKDF2 ── */
 
@@ -197,7 +196,6 @@
       : {};
 
     const shareEvents = Array.isArray(user.shareEvents) ? user.shareEvents.slice(-250) : [];
-    const watchRewardEvents = Array.isArray(user.watchRewardEvents) ? user.watchRewardEvents.slice(-250) : [];
 
     return {
       username,
@@ -214,9 +212,6 @@
       shareCooldownByContent: user.shareCooldownByContent && typeof user.shareCooldownByContent === "object"
         ? user.shareCooldownByContent
         : {},
-      eligibleWatchSeconds: Math.max(0, toInt(user.eligibleWatchSeconds, 0)),
-      rewardedWatchSeconds: Math.max(0, toInt(user.rewardedWatchSeconds, 0)),
-      watchRewardEvents,
       unlockedContent,
       ledger,
     };
@@ -346,9 +341,6 @@
         watchPositions: {},
         shareCount: 0,
         pendingShareCredits: 0,
-        eligibleWatchSeconds: 0,
-        rewardedWatchSeconds: 0,
-        watchRewardEvents: [],
         shareEvents: [],
         shareCooldownByContent: {},
         unlockedContent: {},
@@ -782,7 +774,7 @@
           appendLedger(
             user,
             1,
-            "Share reward (prototype): 10 shares",
+            "Share reward: 10 completed shares",
             event.id,
             "share_reward",
             "share reward"
@@ -845,10 +837,6 @@
           return { ok: false, error: "invalid_seconds", message: "Watch progress must be positive." };
         }
 
-        user.eligibleWatchSeconds = Math.max(0, toInt(user.eligibleWatchSeconds, 0) + addSeconds);
-        user.rewardedWatchSeconds = Math.max(0, toInt(user.rewardedWatchSeconds, 0));
-        if (!Array.isArray(user.watchRewardEvents)) user.watchRewardEvents = [];
-
         if (meta.episodeId) {
           const historyIndex = Array.isArray(user.watchHistory)
             ? user.watchHistory.findIndex((item) => item.episodeId === meta.episodeId)
@@ -864,39 +852,7 @@
           }
         }
 
-        const availableRewardSeconds = Math.max(0, user.eligibleWatchSeconds - user.rewardedWatchSeconds);
-        const rewardCount = Math.floor(availableRewardSeconds / WATCH_SECONDS_PER_COIN);
-        const awardedEvents = [];
-
-        for (let i = 0; i < rewardCount; i++) {
-          const eventId = createEventId("watch-reward");
-          user.rewardedWatchSeconds += WATCH_SECONDS_PER_COIN;
-          user.tokens = Math.max(0, toInt(user.tokens, 0) + 1);
-          const event = {
-            id: eventId,
-            contentId: id,
-            createdAt: Date.now(),
-            rewardedSeconds: user.rewardedWatchSeconds,
-            eligibleWatchSeconds: user.eligibleWatchSeconds,
-            amount: 1,
-          };
-          user.watchRewardEvents.push(event);
-          user.watchRewardEvents = user.watchRewardEvents.slice(-250);
-          appendLedger(
-            user,
-            1,
-            "Watch reward: 1 hour eligible watch-time",
-            eventId,
-            "watch_reward",
-            "watch reward"
-          );
-          awardedEvents.push(event);
-        }
-
-        return {
-          rewardCount,
-          awardedEvents,
-        };
+        return { recordedSeconds: addSeconds, rewardCount: 0 };
       });
 
       if (!result.ok) {
@@ -910,29 +866,19 @@
       dispatch("starquest:watch-progress", {
         user: result.user,
         contentId: id,
-        eligibleWatchSeconds: result.user.eligibleWatchSeconds,
-        rewardedWatchSeconds: result.user.rewardedWatchSeconds,
+        watchedSeconds: meta.watchedSeconds || 0,
       });
-
-      if (result.result.rewardCount > 0) {
-        dispatch("starquest:tokens-updated", {
-          user: result.user,
-          balance: result.user.tokens,
-        });
-      }
 
       return {
         ok: true,
-        awarded: result.result.rewardCount,
-        events: result.result.awardedEvents,
-        eligibleWatchSeconds: result.user.eligibleWatchSeconds,
-        rewardedWatchSeconds: result.user.rewardedWatchSeconds,
+        awarded: 0,
+        events: [],
+        watchedSeconds: meta.watchedSeconds || 0,
         balance: result.user.tokens,
       };
     },
 
     SHARES_PER_COIN,
-    WATCH_SECONDS_PER_COIN,
     SHARE_COOLDOWN_MS,
   };
 

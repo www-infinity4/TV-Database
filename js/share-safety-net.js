@@ -2,8 +2,8 @@
  * StarQuest share safety net.
  *
  * Loaded before app.js so the visible Share control still works when the main
- * catalog/player bundle fails. Fallback handoffs are audited locally and never
- * mint StarCoin progress; app.js owns verified native-share rewards.
+ * catalog/player bundle fails. app.js owns normal share rewards; this fallback
+ * still preserves Twitter payloads and 1/10 progress if the main bundle fails.
  */
 (function (global) {
   "use strict";
@@ -76,6 +76,7 @@
     const backdrop = byId("share-backdrop");
     const program = byId("share-sheet-program");
     const nativeButton = byId("share-native-btn");
+    const twitter = byId("share-twitter-link");
     const sms = byId("share-sms-link");
     const email = byId("share-email-link");
 
@@ -85,6 +86,10 @@
     if (email) {
       email.href = "mailto:?subject=" + encodeURIComponent(activeShare.title)
         + "&body=" + encodeURIComponent(activeShare.text + "\n\n" + activeShare.url);
+    }
+    if (twitter) {
+      twitter.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(activeShare.text)
+        + "&url=" + encodeURIComponent(activeShare.url);
     }
     if (nativeButton) {
       nativeButton.hidden = false;
@@ -172,6 +177,26 @@
     }
   }
 
+  function creditFallbackTwitter() {
+    if (!activeShare) activeShare = payload();
+    if (!global.StarQuestAuth || !global.StarQuestAuth.currentUser || !global.StarQuestAuth.currentUser()) {
+      status("Twitter opened with the StarQuest title and link. Sign in to build StarCoin progress.");
+      return;
+    }
+    const result = global.StarQuestAuth.recordShare(activeShare.url, {
+      confirmed: true,
+      verified: true,
+      method: "twitter_intent_safety_net",
+      url: activeShare.url,
+      showTitle: activeShare.title
+    });
+    if (result && result.ok && result.credited) {
+      status(result.awarded > 0
+        ? "⭐ Twitter share opened with the title and link. StarCoin created at 10/10."
+        : "Twitter share opened with the title and link. Progress: " + result.progressToNextCoin + "/10.");
+    }
+  }
+
   document.addEventListener("click", function (event) {
     const source = event.target && event.target.closest ? event.target : null;
     if (!source) return;
@@ -202,6 +227,10 @@
       event.preventDefault();
       event.stopPropagation();
       nativeFallback();
+      return;
+    }
+    if (source.closest("#share-twitter-link")) {
+      creditFallbackTwitter();
       return;
     }
     if (source.closest("#share-sms-link")) {

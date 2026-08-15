@@ -948,6 +948,12 @@
     document.body.classList.add("player-open");
     document.body.style.overflow = "hidden";
 
+    /* One canonical playback event drives history, resume state, sharing,
+       and Cosmo context. Do not rely on observing CSS class changes. */
+    document.dispatchEvent(new CustomEvent("starquest:episode-opened", {
+      detail: { ep: episode, showTitle }
+    }));
+
     /* Tell Cosmo what we're watching */
     const show = (typeof SHOWS !== "undefined")
       ? SHOWS.find((s) => s.title === showTitle) : null;
@@ -1814,10 +1820,8 @@
   function renderProfilePortal() {
     const user = typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null;
     if ($("profile-access-balance")) $("profile-access-balance").textContent = user ? (user.tokens || 0) : "0";
-    const eligible = user ? Math.max(0, Number(user.eligibleWatchSeconds) || 0) : 0;
-    const settled = user ? Math.max(0, Number(user.rewardedWatchSeconds) || 0) : 0;
-    const progress = Math.max(0, Math.min(100, Math.floor(((eligible - settled) / 3600) * 100)));
-    if ($("profile-watch-progress")) $("profile-watch-progress").textContent = progress + "%";
+    const watchedTitles = user && Array.isArray(user.watchHistory) ? user.watchHistory.length : 0;
+    if ($("profile-watch-progress")) $("profile-watch-progress").textContent = watchedTitles;
     if ($("profile-unlocked-count")) $("profile-unlocked-count").textContent = user ? Object.keys(user.unlockedContent || {}).length : "0";
     const distributor = distributorSummary();
     if ($("profile-distributor-coins")) $("profile-distributor-coins").textContent = distributor.coins;
@@ -2374,9 +2378,6 @@
     const shareEl = $("wallet-share-count");
     const barEl   = $("wallet-share-bar");
     const wrapEl  = $("wallet-progress-bar-wrap");
-    const watchEl = $("wallet-watch-count");
-    const watchBarEl = $("wallet-watch-bar");
-    const watchWrapEl = $("wallet-watch-progress-wrap");
     const lifetimeEl = $("wallet-lifetime-shares");
     const starPowerEl = $("wallet-star-power");
     const navShareEl = $("nav-share-progress");
@@ -2385,9 +2386,6 @@
     const tokens  = (user && user.tokens) || 0;
     const pending = (user && user.pendingShareCredits) || 0;
     const lifetimeShares = (user && user.shareCount) || 0;
-    const eligible = (user && user.eligibleWatchSeconds) || 0;
-    const rewarded = (user && user.rewardedWatchSeconds) || 0;
-    const watchRemainder = Math.max(0, eligible - rewarded) % 3600;
 
     if (balEl)   balEl.textContent  = tokens;
     const sharesLeft = pending === 0 ? SHARES_PER_COIN : SHARES_PER_COIN - pending;
@@ -2396,9 +2394,6 @@
     if (navSharesLeftEl) navSharesLeftEl.textContent = sharesLeft + (sharesLeft === 1 ? " share left" : " shares left");
     if (barEl)   barEl.style.width  = Math.min(100, (pending / SHARES_PER_COIN) * 100) + "%";
     if (wrapEl)  wrapEl.setAttribute("aria-valuenow", pending);
-    if (watchEl) watchEl.textContent = watchRemainder + " / 3600s";
-    if (watchBarEl) watchBarEl.style.width = Math.min(100, (watchRemainder / 3600) * 100) + "%";
-    if (watchWrapEl) watchWrapEl.setAttribute("aria-valuenow", watchRemainder);
     if (lifetimeEl) lifetimeEl.textContent = "🔗 Lifetime shares: " + lifetimeShares;
     if (starPowerEl) starPowerEl.textContent = "✨ Star Power (sharing): " + Math.floor(lifetimeShares / SHARES_PER_COIN);
   }
@@ -2601,7 +2596,7 @@
             /* Grab current episode from the first IIFE's state via the player title */
             const titleEl = $("player-ep-title");
             /* Start timer — episode will be set shortly */
-            setTimeout(() => startWatchTimerFromCurrent(), 300);
+            setTimeout(() => { if (!_watchTracker) startWatchTimerFromCurrent(); }, 300);
           } else {
             stopWatchTimer();
           }
@@ -2689,7 +2684,7 @@
       _watchTracker.watchedSeconds += delta;
       StarQuestAuth.saveWatchPosition(_watchTracker.episodeId, Math.floor(_watchTracker.watchedSeconds));
       StarQuestAuth.updateHistoryProgress(_watchTracker.episodeId, Math.floor(_watchTracker.watchedSeconds), _watchTracker.duration);
-      const watchResult = StarQuestAuth.recordWatchProgress(_watchTracker.episodeId, delta, {
+      StarQuestAuth.recordWatchProgress(_watchTracker.episodeId, delta, {
         episodeId: _watchTracker.episodeId,
         watchedSeconds: Math.floor(_watchTracker.watchedSeconds),
         duration: _watchTracker.duration,
@@ -2701,10 +2696,6 @@
         })
         : null;
 
-      if (watchResult && watchResult.ok && watchResult.awarded > 0) {
-        showPlayerTokenNotif();
-        showTokenToast("⭐ +" + watchResult.awarded + " StarCoin for watch-time!");
-      }
       if (distributorResult && distributorResult.produced > 0) {
         showTokenToast("⭐ " + distributorResult.produced + " distributor StarCoin produced by verified watch-time.");
       }
@@ -2766,6 +2757,7 @@
   const shareSheetProgram = $("share-sheet-program");
   const shareSheetStatus = $("share-sheet-status");
   const shareNativeBtn = $("share-native-btn");
+  const shareTwitterLink = $("share-twitter-link");
   const shareSmsLink = $("share-sms-link");
   const shareEmailLink = $("share-email-link");
   const shareCopyBtn = $("share-copy-btn");
@@ -2816,6 +2808,10 @@
     if (shareEmailLink) {
       shareEmailLink.href = "mailto:?subject=" + encodeURIComponent(activeShare.title) +
         "&body=" + encodeURIComponent(activeShare.text + "\n\n" + activeShare.url);
+    }
+    if (shareTwitterLink) {
+      shareTwitterLink.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(activeShare.text) +
+        "&url=" + encodeURIComponent(activeShare.url);
     }
     if (shareNativeBtn) {
       shareNativeBtn.hidden = false;
@@ -2948,6 +2944,9 @@
     if (event.target === shareBackdrop) closeShareSheet();
   });
   if (shareCopyBtn) shareCopyBtn.addEventListener("click", copyActiveShare);
+  if (shareTwitterLink) shareTwitterLink.addEventListener("click", () => {
+    rewardCompletedShare("twitter_intent", true);
+  });
   if (shareSmsLink) shareSmsLink.addEventListener("click", () => {
     recordUnverifiedShare("sms_handoff");
     setShareStatus("Opening your text-message app… This handoff is audited without StarCoin credit.");

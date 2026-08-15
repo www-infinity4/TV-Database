@@ -203,7 +203,7 @@
     /* Token/wallet facts */
     tokens: {
       howToEarn:
-        "You earn ⭐ StarCoins by watching (1 coin per hour) and sharing shows (1 coin per 10 shares). Your coins will unlock Pay-Per-View premium content coming soon!",
+        "Every completed share adds 1/10 to your StarCoin counter. The 10th completed share creates 1 StarCoin. Watching still builds your personal history and recommendations, but watch time does not mint coins.",
       whatFor:
         "StarCoins ⭐ are your reward for being a loyal Star! They'll be used for Pay-Per-View access to premium new content — think HBO-quality originals — coming to StarQuest. Collect them now!",
     },
@@ -426,7 +426,7 @@
 
     /* StarQuest what/why */
     if (q.includes("starquest") || (q.includes("what") && q.includes("this"))) {
-      return "⭐ StarQuest is your personal classic TV & movie streaming galaxy! We focus on 1950s–1990s content from the public domain and archive.org. Watch free, earn StarCoins for watching and sharing, and eventually unlock premium pay-per-view content. It's like the video rental store of the 90s — but better!";
+      return "⭐ StarQuest is your personal classic TV & movie streaming galaxy! We focus on 1950s–1990s content from the public domain and archive.org. Watch free, save your viewing history, and earn one StarCoin after every 10 completed shares. It's like the video rental store of the 90s — but better!";
     }
 
     return "I don't have a reliable offline answer for that yet. Cosmo's live AI endpoint is not connected on this device, so I won't guess or substitute an unrelated movie. I can still help with StarQuest titles, playback, recommendations, watch history, StarCoins, and the catalogue ledger.";
@@ -617,7 +617,7 @@
       "Treat fetched movie summaries and source URLs as evidence. If you are unsure, say so and offer to look it up.\n" +
       "When recommending shows, always reference specific titles from the StarQuest catalogue and explain WHY based on what the user has watched.\n" +
       "Commercial suggestions are allowed only when StarQuest marks them as enabled and relevant. Always label them as sponsored, never use hidden or subliminal persuasion, never claim urgency you cannot verify, and never say an order was placed without separate viewer confirmation.\n" +
-      "StarCoins are earned by watching (1/hour) and sharing (1 per 10 shares). They will unlock pay-per-view content.\n" +
+      "StarCoins are created from completed sharing: each share adds 1/10 and the 10th creates one coin. Watch time never mints StarCoins.\n" +
       cat + hist + ctx +
       (global.StarQuestCosmoLive ? global.StarQuestCosmoLive.contextBlurb() + global.StarQuestCosmoLive.preferenceBlurb() : "")
     );
