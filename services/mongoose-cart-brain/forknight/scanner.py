@@ -11,7 +11,7 @@ from datetime import date
 from pathlib import Path
 from typing import Iterable
 
-ALLOWED_LICENSES = {"MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC"}
+ALLOWED_LICENSES = {"MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "CC0-1.0"}
 REVIEW_LICENSES = {"MPL-2.0", "LGPL-2.1", "LGPL-3.0", "GPL-2.0", "GPL-3.0", "AGPL-3.0", "custom", "mixed"}
 SHA_LENGTH = 40
 
