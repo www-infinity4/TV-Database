@@ -61,7 +61,7 @@
       </div>
       <div class="splash__features">
         <div class="splash__feature"><span>📺</span><span>1950s–1990s Classics</span></div>
-        <div class="splash__feature"><span>⭐</span><span>Earn StarCoins Watching</span></div>
+        <div class="splash__feature"><span>⭐</span><span>Earn 1 StarCoin Every 10 Shares</span></div>
         <div class="splash__feature"><span>🤖</span><span>AI Show Companion</span></div>
         <div class="splash__feature"><span>📜</span><span>Watch History</span></div>
       </div>
@@ -193,7 +193,7 @@
 
       <div class="coin-map" aria-label="Coin and credit locations">
         <article><span>Viewer access</span><strong id="profile-access-balance">0</strong><small>Credits used to unlock content</small></article>
-        <article><span>Next watch credit</span><strong id="profile-watch-progress">0%</strong><small>Eligible viewing progress</small></article>
+        <article><span>Watched titles</span><strong id="profile-watch-progress">0</strong><small>Saved in your history</small></article>
         <article><span>Distributor StarCoins</span><strong id="profile-distributor-coins">0</strong><small id="profile-distributor-status">Unclaimed until rights are verified</small></article>
         <article><span>Unlocked titles</span><strong id="profile-unlocked-count">0</strong><small>Available permanently in this browser</small></article>
       </div>
@@ -238,30 +238,18 @@
       </div>
       <div class="wallet-card__progress" title="Shares toward next StarCoin">
         <div class="wallet-progress__label">
-          <span>🔗 Shares toward next StarCoin (prototype)</span>
+          <span>🔗 Shares toward next StarCoin</span>
           <span id="wallet-share-count" class="wallet-share-count">0 / 10</span>
         </div>
         <div class="wallet-progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="wallet-progress-bar-wrap">
           <div id="wallet-share-bar" class="wallet-progress__fill" style="width:0%"></div>
         </div>
       </div>
-      <div class="wallet-card__progress" title="Eligible watch time toward next StarCoin">
-        <div class="wallet-progress__label">
-          <span>📺 Eligible watch-time</span>
-          <span id="wallet-watch-count" class="wallet-share-count">0 / 3600s</span>
-        </div>
-        <div class="wallet-progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="3600" aria-valuenow="0" id="wallet-watch-progress-wrap">
-          <div id="wallet-watch-bar" class="wallet-progress__fill" style="width:0%"></div>
-        </div>
-      </div>
       <div class="wallet-card__earn-hints">
         <span id="wallet-lifetime-shares">🔗 Lifetime shares: 0</span>
         <span id="wallet-star-power">✨ Star Power (sharing): 0</span>
       </div>
-      <div class="wallet-card__earn-hints">
-        <span>📺 +1 coin / hour watched</span>
-        <span>🔗 +1 coin / 10 successful shares (prototype)</span>
-      </div>
+      <div class="wallet-card__earn-hints"><span>🔗 Every completed share adds 1/10. The 10th share creates 1 StarCoin.</span></div>
       <div class="wallet-card__earn-hints"><span id="unified-wallet-status">Connect before using StarCoins to unlock a movie.</span></div>
       <button id="unified-wallet-connect" class="sidebar-unified-wallet" type="button">
         <span class="sidebar-unified-wallet__icon" aria-hidden="true">◈</span>
@@ -692,6 +680,7 @@
       <p id="share-sheet-program" class="share-sheet__program"></p>
       <div class="share-sheet__actions">
         <button id="share-native-btn" class="share-action share-action--primary" type="button">📱 Share with phone</button>
+        <a id="share-twitter-link" class="share-action" href="#" target="_blank" rel="noopener noreferrer">𝕏 Share with Twitter</a>
         <a id="share-sms-link" class="share-action" href="#">💬 Send by text</a>
         <a id="share-email-link" class="share-action" href="#">✉️ Send by email</a>
         <button id="share-copy-btn" class="share-action" type="button">🔗 Copy exact link</button>
@@ -936,18 +925,18 @@
   <script src="js/data.js?v=20260815-startup-repair"></script>
   <script src="js/catalog-ledger.js?v=20260814-ledger1"></script>
   <script src="js/archive-discovery.js?v=20260818"></script>
-  <script src="js/auth.js?v=20260821"></script>
+  <script src="js/auth.js?v=20260815-share1"></script>
   <script src="js/distributor-ledger.js?v=20260809"></script>
   <script src="https://www-infinity4.github.io/Mint-For-Infinity/infinity-ai-kernel.js?v=20260814-kernel2"></script>
   <script src="js/gemma-engine.js?v=20260812"></script>
   <script src="js/cosmo-live.js?v=20260812"></script>
   <script src="js/ai.js?v=20260815-cosmo2"></script>
   <script src="js/avatar-coin.js?v=20260815-vhs1"></script>
-  <script src="js/share-safety-net.js?v=20260812"></script>
+  <script src="js/share-safety-net.js?v=20260815-share1"></script>
   <script src="https://www-infinity4.github.io/Mint-For-Infinity/unified-wallet.js?v=20260812"></script>
   <script src="js/infinity-wallet-integration.js?v=20260815-vhs1"></script>
   <script src="js/opening-rotation.js?v=20260814-rotation1"></script>
-  <script src="js/app.js?v=20260815-cosmo2"></script>
+  <script src="js/app.js?v=20260815-share1"></script>
   <script src="js/user-worlds.js?v=20260812"></script>
 <script src="https://www-infinity4.github.io/Mint-For-Infinity/infinity-wallet-menu.js?v=20260814-menu2"></script></body>
 </html>

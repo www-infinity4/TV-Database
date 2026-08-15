@@ -27,7 +27,7 @@ class Node {
 
 const ids = [
   "player-share-btn", "player-ep-title", "share-backdrop", "share-sheet-program",
-  "share-sheet-status", "share-native-btn", "share-sms-link", "share-email-link",
+  "share-sheet-status", "share-native-btn", "share-twitter-link", "share-sms-link", "share-email-link",
   "share-copy-btn", "share-sheet-close"
 ];
 const nodes = Object.fromEntries(ids.map(id => [id, new Node(id)]));
@@ -80,6 +80,8 @@ const click = target => {
   assert.equal(nodes["share-backdrop"].classList.contains("open"), true);
   assert.match(nodes["share-sms-link"].href, /^sms:/);
   assert.match(nodes["share-email-link"].href, /^mailto:/);
+  assert.match(nodes["share-twitter-link"].href, /^https:\/\/twitter\.com\/intent\/tweet\?text=/);
+  assert.match(nodes["share-twitter-link"].href, /&url=/);
 
   const copyEvent = click(nodes["share-copy-btn"]);
   assert.equal(copyEvent.prevented, true);

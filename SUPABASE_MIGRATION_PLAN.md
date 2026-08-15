@@ -18,7 +18,7 @@ This repository currently uses a **local-browser prototype** account model only.
 - Unlock writes and wallet debits happen atomically in one DB transaction.
 
 ## 4) Watch/share reward records
-- Add `watch_reward_events` with unique event IDs, source content, elapsed eligible seconds.
+- Store watch-history and resume events separately from all StarCoin rewards.
 - Add `share_reward_events` with verifiable referral/share tokens (not client-claimed only).
 - Prevent replay/double-award with unique constraints and idempotency keys.
 
