@@ -347,7 +347,7 @@
     </div>
     <div class="hero__overlay" aria-hidden="true"></div>
     <div class="hero__content">
-      <div class="hero__badge">⭐ Featured Classic</div>
+      <div class="hero__badge" id="hero-badge">✦ Tonight's opening</div>
       <h1 class="hero__title" id="hero-title"></h1>
       <div class="hero__meta">
         <span class="score" id="hero-score"></span>
@@ -359,6 +359,7 @@
       <div class="hero__btns">
         <button id="hero-play-btn" class="btn btn-primary">▶ Play</button>
         <button id="hero-info-btn" class="btn btn-secondary">ℹ More Info</button>
+        <button id="hero-shuffle-btn" class="btn hero-shuffle" type="button" aria-label="Choose a different opening show or movie">↻ Surprise Me</button>
       </div>
     </div>
   </section>
@@ -668,8 +669,10 @@
   </div>
 
   <!-- AI COMPANION — COSMO -->
-  <button id="ai-fab" class="ai-fab" aria-label="Open Cosmo AI companion" title="Ask Cosmo anything about classic TV!">
-    <span>🤖</span><span class="ai-fab__label">Cosmo</span>
+  <button id="ai-fab" class="ai-fab" aria-label="Open Cosmo AI companion" aria-expanded="false" aria-controls="ai-panel" title="Ask Cosmo anything about classic TV!">
+    <span class="ai-fab__orb" aria-hidden="true">🤖</span>
+    <span class="ai-fab__copy"><strong>Cosmo</strong><small>Discover · ask · watch</small></span>
+    <span class="ai-fab__spark" aria-hidden="true">✦</span>
   </button>
 
   <div id="ai-panel" class="ai-panel" role="dialog" aria-modal="false" aria-labelledby="ai-panel-title" style="display:none">
@@ -686,6 +689,10 @@
     <div id="cosmo-engine-strip" class="cosmo-engine-strip" aria-live="polite">
       <span id="cosmo-engine-status">Cosmo ready · Infinity language engine</span>
       <button id="cosmo-start-gemma" type="button">Optional: start on-device Gemma</button>
+    </div>
+    <div class="cosmo-ledger-strip" aria-live="polite">
+      <span aria-hidden="true">🧾</span>
+      <span id="cosmo-catalog-status">Building the catalog rights ledger…</span>
     </div>
     <section id="cosmo-controls" class="cosmo-controls" hidden aria-label="Cosmo companion controls">
       <label><input id="cosmo-watchalong-toggle" type="checkbox"> Friendly watch-along notes</label>
@@ -706,6 +713,7 @@
       <button class="ai-suggest" data-q="What are secrets about Ghostbusters?">Ghostbusters secrets</button>
       <button class="ai-suggest" data-q="Recommend something to watch">Recommend me something</button>
       <button class="ai-suggest" data-q="How do I earn StarCoins?">Earn coins?</button>
+      <button class="ai-suggest" data-q="Is every title in the rights ledger and paid?">Rights ledger</button>
     </div>
   </div>
 
@@ -779,6 +787,36 @@
         emit("starquest:portal-closed");
       }
 
+      function setCosmoFallback(opening) {
+        var panel = byId("ai-panel");
+        var button = byId("ai-fab");
+        if (panel) {
+          panel.style.display = opening ? "flex" : "none";
+          panel.style.flexDirection = opening ? "column" : "";
+          panel.setAttribute("aria-hidden", opening ? "false" : "true");
+        }
+        if (button) button.setAttribute("aria-expanded", opening ? "true" : "false");
+        if (document.body.classList) {
+          if (opening) document.body.classList.add("cosmo-open");
+          else document.body.classList.remove("cosmo-open");
+        }
+        emit(opening ? "starquest:cosmo-opened" : "starquest:cosmo-closed");
+      }
+
+      function toggleCosmoFallback() {
+        var panel = byId("ai-panel");
+        setCosmoFallback(!panel || panel.style.display === "none" || panel.getAttribute("aria-hidden") === "true");
+      }
+
+      function toggleCosmoControlsFallback() {
+        var controls = byId("cosmo-controls");
+        var button = byId("cosmo-controls-btn");
+        if (!controls) return;
+        var opening = !!controls.hidden;
+        controls.hidden = !opening;
+        if (button) button.setAttribute("aria-expanded", String(opening));
+      }
+
       function bindCriticalControls() {
         document.addEventListener("click", function (event) {
           var source = event.target;
@@ -803,6 +841,31 @@
             closePortalFallback();
             return;
           }
+          if (source.closest("#ai-fab")) {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleCosmoFallback();
+            return;
+          }
+          if (source.closest("#sidebar-cosmo-btn") || source.closest("#sidebar-continue-chat")) {
+            event.preventDefault();
+            event.stopPropagation();
+            closeSidebarFallback();
+            setCosmoFallback(true);
+            return;
+          }
+          if (source.closest("#ai-panel-close")) {
+            event.preventDefault();
+            event.stopPropagation();
+            setCosmoFallback(false);
+            return;
+          }
+          if (source.closest("#cosmo-controls-btn")) {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleCosmoControlsFallback();
+            return;
+          }
           var marker = source.closest("[data-avatar-portal], #nav-profile-avatar, #sidebar-profile-avatar, #sidebar-profile-btn");
           if (marker) {
             event.preventDefault();
@@ -816,7 +879,10 @@
           openSidebar: openSidebarFallback,
           closeSidebar: closeSidebarFallback,
           openPortal: openPortalFallback,
-          closePortal: closePortalFallback
+          closePortal: closePortalFallback,
+          openCosmo: function () { setCosmoFallback(true); },
+          closeCosmo: function () { setCosmoFallback(false); },
+          cosmoRouted: true
         };
       }
 
@@ -828,6 +894,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260830"></script>
+  <script src="js/catalog-ledger.js?v=20260814-ledger1"></script>
   <script src="js/archive-discovery.js?v=20260818"></script>
   <script src="js/auth.js?v=20260821"></script>
   <script src="js/distributor-ledger.js?v=20260809"></script>
@@ -839,7 +906,8 @@
   <script src="js/share-safety-net.js?v=20260812"></script>
   <script src="https://www-infinity4.github.io/Mint-For-Infinity/unified-wallet.js?v=20260812"></script>
   <script src="js/infinity-wallet-integration.js?v=20260812"></script>
-  <script src="js/app.js?v=20260814-cosmo2"></script>
+  <script src="js/opening-rotation.js?v=20260814-rotation1"></script>
+  <script src="js/app.js?v=20260814-cosmo3"></script>
   <script src="js/user-worlds.js?v=20260812"></script>
 <script src="https://www-infinity4.github.io/Mint-For-Infinity/infinity-wallet-menu.js?v=20260814-menu2"></script></body>
 </html>

@@ -35,12 +35,15 @@
   /* ── DOM refs ── */
   const DOM = {
     heroTitle: document.getElementById("hero-title"),
+    heroBadge: document.getElementById("hero-badge"),
+    heroBgArt: document.querySelector(".hero__bg-art"),
     heroDesc: document.getElementById("hero-desc"),
     heroScore: document.getElementById("hero-score"),
     heroRating: document.getElementById("hero-rating"),
     heroYears: document.getElementById("hero-years"),
     heroPlayBtn: document.getElementById("hero-play-btn"),
     heroInfoBtn: document.getElementById("hero-info-btn"),
+    heroShuffleBtn: document.getElementById("hero-shuffle-btn"),
     heroGenres: document.getElementById("hero-genres"),
 
     searchInput: document.getElementById("search-input"),
@@ -329,19 +332,37 @@
   function initHero() {
     const featured = getFeaturedShows().filter(isShowAvailable);
     if (!featured.length) return;
-    /* If user has watch history, pick the highest-affinity featured show */
     const profile = historyStats();
-    let show;
-    if (profile) {
-      show = featured.slice().sort(byPersonalized(profile, {}))[0];
-    } else {
-      show = getShowById("mash") || getShowById("due-south") || featured[0];
+    const ordered = profile
+      ? featured.slice().sort(byPersonalized(profile, {}))
+      : featured.slice().sort(byScoreFreeFirst);
+
+    function rotateOpening() {
+      const show = window.StarQuestOpening
+        ? StarQuestOpening.choose(ordered)
+        : ordered[Math.floor(Math.random() * ordered.length)];
+      if (show) renderHero(show);
     }
-    renderHero(show);
+
+    rotateOpening();
+    if (DOM.heroShuffleBtn) DOM.heroShuffleBtn.onclick = rotateOpening;
   }
 
   function renderHero(show) {
     state.currentShow = show;
+    if (DOM.heroBadge) {
+      const kind = window.StarQuestOpening ? StarQuestOpening.kind(show) : (show.type === "movie" ? "Movie" : "Show");
+      DOM.heroBadge.textContent = "✦ Tonight's opening " + kind;
+    }
+    if (DOM.heroBgArt) {
+      const image = String(show.thumbnail || "").trim();
+      if (image) {
+        const safeImage = encodeURI(image).replace(/"/g, "%22");
+        DOM.heroBgArt.style.setProperty("--hero-image", 'url("' + safeImage + '")');
+      } else {
+        DOM.heroBgArt.style.removeProperty("--hero-image");
+      }
+    }
     DOM.heroTitle.textContent = show.title;
     DOM.heroDesc.textContent = show.description;
     DOM.heroScore.textContent = "★ " + show.score;
@@ -2852,6 +2873,7 @@
   const cosmoControls = $("cosmo-controls");
   const cosmoStartGemma = $("cosmo-start-gemma");
   const cosmoEngineStatus = $("cosmo-engine-status");
+  const cosmoCatalogStatus = $("cosmo-catalog-status");
   const cosmoWatchalongToggle = $("cosmo-watchalong-toggle");
   const cosmoSponsorsToggle = $("cosmo-sponsors-toggle");
   const cosmoSpeakToggle = $("cosmo-speak-toggle");
@@ -2867,12 +2889,27 @@
     if (sidebarAIBadge) sidebarAIBadge.style.display = "";
   });
 
-  if (aiFab) aiFab.addEventListener("click", toggleAIPanel);
-  if (aiPanelClose) aiPanelClose.addEventListener("click", closeAIPanel);
-  if (sidebarCosmoBtn) sidebarCosmoBtn.addEventListener("click", () => {
-    closeSidebar();
-    openAIPanel();
-  });
+  function renderCatalogLedgerStatus(summary) {
+    if (!cosmoCatalogStatus || !summary) return;
+    cosmoCatalogStatus.textContent = summary.titlesLedgered + "/" + summary.titles +
+      " titles ledgered · " + summary.analyzed + " analyzed · " +
+      summary.provisionalInfinityAccrued + " provisional scan accruals · " +
+      summary.contractsRecorded + " contracts recorded · " + summary.payoutsCompleted + " settled";
+  }
+  document.addEventListener("starquest:catalog-ledger-ready", (event) => renderCatalogLedgerStatus(event.detail));
+  if (window.StarQuestCatalogLedger) renderCatalogLedgerStatus(StarQuestCatalogLedger.summary());
+
+  const cosmoControlRouter = window.StarQuestControls && window.StarQuestControls.cosmoRouted;
+  if (aiFab && !cosmoControlRouter) aiFab.addEventListener("click", toggleAIPanel);
+  if (aiPanelClose && !cosmoControlRouter) aiPanelClose.addEventListener("click", closeAIPanel);
+  if (sidebarCosmoBtn && !cosmoControlRouter) sidebarCosmoBtn.addEventListener("click", () => {
+      closeSidebar();
+      openAIPanel();
+    });
+  if (cosmoControlRouter) {
+    document.addEventListener("starquest:cosmo-opened", openAIPanel);
+    document.addEventListener("starquest:cosmo-closed", closeAIPanel);
+  }
 
   function toggleAIPanel() {
     if (!aiPanel) return;
@@ -2979,7 +3016,7 @@
     renderCosmoShopping();
   }
 
-  if (cosmoControlsBtn && cosmoControls) cosmoControlsBtn.addEventListener("click", () => {
+  if (cosmoControlsBtn && cosmoControls && !cosmoControlRouter) cosmoControlsBtn.addEventListener("click", () => {
     const opening = cosmoControls.hidden;
     cosmoControls.hidden = !opening;
     cosmoControlsBtn.setAttribute("aria-expanded", String(opening));
