@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "cart-120-forknight-discovery",
+  "number": 120,
+  "name": "FORKNIGHT Repository Discovery",
+  "accepts": ["DISCOVER_TOOLS", "REFRESH_PROVENANCE", "SCORE_FORKABLES"],
+  "emits": ["FORKABLE_REPORT", "QUARANTINE_REQUEST", "ADAPTER_PROPOSAL"],
+  "capabilities": ["github_public_metadata_read", "license_read", "provenance_hash"],
+  "forbidden_capabilities": [
+    "execute_discovered_code",
+    "read_secrets",
+    "write_default_branch",
+    "merge_pull_request",
+    "create_bulk_forks"
+  ],
+  "entrypoint": "scanner.py",
+  "default_mode": "source_sink",
+  "human_review_required_for": ["fork", "vendor", "install", "execute", "publish", "merge"]
+}
