@@ -5,14 +5,15 @@
   const SETTINGS_KEY = "starquest_cosmo_settings_v2";
   const LIST_KEY = "starquest_cosmo_shopping_v1";
   const PREF_KEY = "starquest_cosmo_preferences_v1";
-  const defaults = { watchAlong: true, sponsoredSuggestions: false, speakReplies: false };
-  let settings = load(SETTINGS_KEY, defaults);
+  const defaults = { watchAlong: true, sponsoredSuggestions: false, speakReplies: true, handsFreeVoice: true };
+  let settings = { ...defaults, ...load(SETTINGS_KEY, defaults) };
   let shopping = load(LIST_KEY, []);
   let preferences = load(PREF_KEY, { likes: [], needs: [] });
   let context = null;
   let movieInfo = null;
   let lastSponsoredAt = 0;
   const infoCache = new Map();
+  let handsFreeController = null;
 
   function load(key, fallback) {
     try {
@@ -138,9 +139,14 @@
     };
   }
   function speak(text) {
-    if (!settings.speakReplies || !global.speechSynthesis) return;
+    if (!settings.speakReplies || !global.speechSynthesis || !global.SpeechSynthesisUtterance) return;
+    const utterance = new global.SpeechSynthesisUtterance(String(text || "").replace(/https?:\/\/\S+/g, ""));
+    if (handsFreeController) handsFreeController.pause();
+    const resume = () => { if (handsFreeController) handsFreeController.resume(); };
+    utterance.onend = resume;
+    utterance.onerror = resume;
     global.speechSynthesis.cancel();
-    global.speechSynthesis.speak(new SpeechSynthesisUtterance(String(text || "").replace(/https?:\/\/\S+/g, "")));
+    global.speechSynthesis.speak(utterance);
   }
   function createRecognition(onText, onState) {
     const Recognition = global.SpeechRecognition || global.webkitSpeechRecognition;
@@ -156,9 +162,137 @@
     return recognition;
   }
 
+  function createHandsFreeRecognition(onCommand, onState) {
+    const Recognition = global.SpeechRecognition || global.webkitSpeechRecognition;
+    if (!Recognition) return null;
+    const recognition = new Recognition();
+    let active = false;
+    let running = false;
+    let paused = false;
+    let fatal = false;
+    let restartTimer = 0;
+    let wakeWindowUntil = 0;
+
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.continuous = true;
+    recognition.maxAlternatives = 1;
+
+    function report(state, detail) {
+      if (onState) onState(state, detail || "");
+    }
+    function clearRestart() {
+      if (restartTimer) global.clearTimeout(restartTimer);
+      restartTimer = 0;
+    }
+    function visible() {
+      return !global.document || global.document.visibilityState !== "hidden";
+    }
+    function safeStart() {
+      clearRestart();
+      if (!active || paused || fatal || running || !visible()) return;
+      try {
+        recognition.start();
+      } catch (_) {
+        restartTimer = global.setTimeout(safeStart, 500);
+      }
+    }
+    function scheduleRestart() {
+      clearRestart();
+      if (active && !paused && !fatal && visible()) restartTimer = global.setTimeout(safeStart, 350);
+    }
+    function commandFrom(transcript) {
+      const clean = String(transcript || "").trim();
+      const wake = clean.match(/\bcosmo\b[\s,:;.!?-]*(.*)$/i);
+      if (wake) {
+        wakeWindowUntil = Date.now() + 10000;
+        const command = String(wake[1] || "").trim();
+        if (!command) {
+          report("awake", "Say what you need");
+          return null;
+        }
+        wakeWindowUntil = 0;
+        return command;
+      }
+      if (Date.now() < wakeWindowUntil) {
+        wakeWindowUntil = 0;
+        return clean;
+      }
+      return null;
+    }
+
+    recognition.onstart = () => {
+      running = true;
+      report("listening", "Say Cosmo, then your question");
+    };
+    recognition.onend = () => {
+      running = false;
+      report(active && !paused ? "restarting" : "idle");
+      scheduleRestart();
+    };
+    recognition.onerror = (event) => {
+      const error = event && event.error ? event.error : "unknown";
+      if (["not-allowed", "service-not-allowed", "audio-capture"].includes(error)) {
+        fatal = true;
+        active = false;
+      }
+      report("error", error);
+    };
+    recognition.onresult = (event) => {
+      for (let index = event.resultIndex || 0; index < event.results.length; index += 1) {
+        const result = event.results[index];
+        if (!result.isFinal) continue;
+        const transcript = result[0] && result[0].transcript;
+        const command = commandFrom(transcript);
+        if (command) {
+          report("command", command);
+          onCommand && onCommand(command, transcript);
+        }
+      }
+    };
+
+    const controller = {
+      recognition,
+      start() {
+        active = true;
+        paused = false;
+        fatal = false;
+        safeStart();
+      },
+      stop() {
+        active = false;
+        paused = false;
+        clearRestart();
+        try { recognition.stop(); } catch (_) {}
+        report("idle");
+      },
+      pause() {
+        if (!active) return;
+        paused = true;
+        clearRestart();
+        try { recognition.abort(); } catch (_) { try { recognition.stop(); } catch (_) {} }
+      },
+      resume() {
+        if (!active) return;
+        paused = false;
+        scheduleRestart();
+      },
+      isActive() { return active; },
+    };
+    handsFreeController = controller;
+
+    if (global.document && global.document.addEventListener) {
+      global.document.addEventListener("visibilitychange", () => {
+        if (!visible()) controller.pause();
+        else controller.resume();
+      });
+    }
+    return controller;
+  }
+
   global.StarQuestCosmoLive = {
     lookupMovie, setContext, updatePlayback, contextBlurb, answerFromLiveContext, preferenceBlurb, remember,
     handleListIntent, addItem, getShoppingList, clearShoppingList, getSettings,
-    updateSettings, sponsoredSuggestion, speak, createRecognition,
+    updateSettings, sponsoredSuggestion, speak, createRecognition, createHandsFreeRecognition,
   };
 })(window);
