@@ -431,9 +431,12 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
-     POLLINATIONS.AI  (primary — 100 % free, no API key, real LLM)
-     Uses the OpenAI-compatible chat endpoint. No authentication,
-     CORS-enabled, backed by GPT-4o-mini.
+     NETWORK AI
+     StarQuest is a static GitHub Pages site, so a secret OpenAI API key
+     must never be embedded here. This browser-safe provider supplies the
+     live conversational path while Gemma and local catalogue answers remain
+     dependable fallbacks. A first-party OpenAI proxy can replace this URL
+     later without changing the Cosmo chat contract.
      ──────────────────────────────────────────────────────────── */
 
   /**
@@ -458,26 +461,58 @@
    * Returns the response string, or null if the request fails.
    * Aborts after 7 seconds so the dependable local Cosmo response is never hidden behind a stalled network request.
    */
+  let _networkState = "ready";
+  function setNetworkState(state, detail) {
+    _networkState = state;
+    document.dispatchEvent(new CustomEvent("starquest:cosmo-provider", {
+      detail: { state, provider: "network-ai", message: detail || "" }
+    }));
+  }
+
+  function readNetworkText(raw) {
+    const value = String(raw || "").trim();
+    if (!value || /^<!doctype html/i.test(value)) return null;
+    try {
+      const parsed = JSON.parse(value);
+      return String(
+        (parsed.choices && parsed.choices[0] && parsed.choices[0].message && parsed.choices[0].message.content) ||
+        parsed.output_text || parsed.text || ""
+      ).trim() || null;
+    } catch (_) {
+      return value;
+    }
+  }
+
   async function _callPollinations(messages) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 7000);
+    const timer = setTimeout(() => controller.abort(), 10000);
+    setNetworkState("thinking", "Cosmo is thinking with network AI…");
     try {
       const res = await fetch("https://text.pollinations.ai/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Accept": "text/plain, application/json" },
         body: JSON.stringify({
           messages,
-          model:   "openai",   /* Pollinations model identifier — maps to GPT-4o-mini */
+          model:   "openai",
           seed:    -1,
           private: true,       /* do not log conversations */
         }),
         signal: controller.signal,
       });
-      if (!res.ok) return null;
-      const text = (await res.text()).trim();
-      return text || null;
-    } catch (_) {
-      /* Network unavailable, service down, or request aborted — callers fall through */
+      if (!res.ok) {
+        setNetworkState("fallback", "Network AI returned " + res.status + "; offline backup is active.");
+        return null;
+      }
+      const text = readNetworkText(await res.text());
+      if (!text) {
+        setNetworkState("fallback", "Network AI returned an empty reply; offline backup is active.");
+        return null;
+      }
+      setNetworkState("connected", "Network AI connected");
+      return text;
+    } catch (error) {
+      const reason = error && error.name === "AbortError" ? "Network AI timed out" : "Network AI could not be reached";
+      setNetworkState("fallback", reason + "; offline backup is active.");
       return null;
     } finally {
       clearTimeout(timer);
@@ -747,7 +782,17 @@
     const engine = infinityLanguageEngine();
     if (!engine) return null;
     const result = engine.answer(question, { site: "STARQUEST", playback: _currentContext });
-    return result.confidence >= 0.25 ? result.text : null;
+    return result.confidence >= 0.55 ? result.text : null;
+  }
+
+  function isCatalogueQuestion(question) {
+    const text = normalize(question);
+    if (/\b(show|movie|film|episode|season|actor|actress|cast|director|watch|recommend|starquest|archive|genre|comedy|drama|sci fi|crime|cartoon|television|tv)\b/.test(text)) return true;
+    if (typeof SHOWS === "undefined") return false;
+    return SHOWS.some((show) => {
+      const title = normalize(show.title);
+      return title.length >= 4 && text.includes(title);
+    });
   }
 
   function publishInfinitySiteEvent(type, payload) {
@@ -808,16 +853,7 @@
       return ledgerResponse;
     }
 
-    /* 1. The shared Infinity engine answers from this site's own catalogue and project knowledge. */
-    const infinityResponse = infinityLanguageResponse(userMessage);
-    if (infinityResponse) {
-      _convHistory.push({ role: "user", text: userMessage }, { role: "assistant", text: infinityResponse });
-      _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
-      saveConvHistory();
-      return infinityResponse;
-    }
-
-    /* 2. Use the viewer-started local Gemma model when ready. */
+    /* 1. Use the viewer-started local Gemma model when ready. */
     if (global.StarQuestGemma && global.StarQuestGemma.status().ready) {
       const gemmaResponse = await global.StarQuestGemma.prompt(buildSystemPrompt() + "\nUser: " + userMessage);
       if (gemmaResponse) {
@@ -828,7 +864,7 @@
       }
     }
 
-    /* 3. Optional network LLM fallback for questions outside local Infinity knowledge. */
+    /* 2. Real network AI handles open conversation before any fuzzy catalogue lookup. */
     const pollinResponse = await _callPollinations(buildMessages(userMessage));
     if (pollinResponse) {
       _convHistory.push({ role: "user",      text: userMessage });
@@ -838,7 +874,7 @@
       return pollinResponse;
     }
 
-    /* 4. Try Chrome Built-in AI if available. */
+    /* 3. Try Chrome Built-in AI if available. */
     if (_aiReady && _aiSession) {
       const aiResponse = await _promptAI(userMessage);
       if (aiResponse) {
@@ -847,6 +883,17 @@
         if (_convHistory.length > MAX_CONV_HISTORY) _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
         saveConvHistory();
         return aiResponse;
+      }
+    }
+
+    /* 4. Use the shared Infinity catalogue engine only for relevant media questions. */
+    if (isCatalogueQuestion(userMessage)) {
+      const infinityResponse = infinityLanguageResponse(userMessage);
+      if (infinityResponse) {
+        _convHistory.push({ role: "user", text: userMessage }, { role: "assistant", text: infinityResponse });
+        _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
+        saveConvHistory();
+        return infinityResponse;
       }
     }
 
@@ -918,6 +965,8 @@
     /** Generate a pop-in comment for the current show */
     generatePopIn: generatePopInText,
     suggestDesignName,
+
+    providerStatus() { return { state: _networkState, provider: "network-ai" }; },
 
     /** Clear conversation memory (and localStorage) */
     clearHistory() {

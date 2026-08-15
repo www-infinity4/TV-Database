@@ -3037,6 +3037,13 @@
     if (subtitle) subtitle.textContent = "Movie-aware · voice ready · viewer controlled";
     if (sidebarAIBadge) sidebarAIBadge.style.display = "";
   });
+  document.addEventListener("starquest:cosmo-provider", (event) => {
+    if (!cosmoEngineStatus) return;
+    const detail = event.detail || {};
+    if (detail.state === "thinking") cosmoEngineStatus.textContent = "Cosmo is thinking with network AI…";
+    else if (detail.state === "connected") cosmoEngineStatus.textContent = "Cosmo ready · network AI connected";
+    else if (detail.state === "fallback") cosmoEngineStatus.textContent = "Cosmo ready · offline backup active";
+  });
 
   function renderCatalogLedgerStatus(summary) {
     if (!cosmoCatalogStatus || !summary) return;
@@ -3122,15 +3129,24 @@
     typingEl.className = "ai-msg ai-msg--bot";
     typingEl.innerHTML = '<div class="ai-msg__avatar">🤖</div><div class="ai-msg__bubble ai-typing">…</div>';
     if (aiMessages) { aiMessages.appendChild(typingEl); aiMessages.scrollTop = aiMessages.scrollHeight; }
-    /* Minimum visual delay + wait for AI response */
-    const [response] = await Promise.all([
-      (typeof StarQuestAI !== "undefined")
-        ? StarQuestAI.chat(text)
-        : Promise.resolve("I don't have that info right now. Try asking about a specific classic show!"),
-      new Promise((r) => setTimeout(r, 500)),
-    ]);
-    typingEl.remove();
-    appendAIMessage("bot", response);
+    if (aiSend) aiSend.disabled = true;
+    try {
+      /* Minimum visual delay + wait for AI response. */
+      const [response] = await Promise.all([
+        (typeof StarQuestAI !== "undefined")
+          ? StarQuestAI.chat(text)
+          : Promise.resolve("Cosmo's chat engine did not load. Refresh StarQuest and try once more."),
+        new Promise((r) => setTimeout(r, 500)),
+      ]);
+      appendAIMessage("bot", String(response || "I couldn't form a reply, but the chat is still active. Please try that once more."));
+    } catch (error) {
+      appendAIMessage("bot", "I hit a temporary AI connection problem, but I didn't freeze. Please send that again while I switch to my backup.");
+      console.warn("Cosmo chat recovered from a provider failure", error);
+    } finally {
+      typingEl.remove();
+      if (aiSend) aiSend.disabled = false;
+      if (aiInput) aiInput.focus();
+    }
   }
 
   if (aiSend) aiSend.addEventListener("click", sendAIMessage);
