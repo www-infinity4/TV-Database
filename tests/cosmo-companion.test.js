@@ -68,6 +68,6 @@ assert.equal(window.StarQuestCosmoLive.sponsoredSuggestion(), null, "sponsored s
   assert.match(aiSource, /InfinityLanguageEngine/);
   assert.match(aiSource, /PLAYBACK_CONTEXT_SET/);
   const indexSource = fs.readFileSync("index.html", "utf8");
-  assert.match(indexSource, /infinity-ai-kernel\.js\?v=20260814-kernel1/);
+  assert.match(indexSource, /infinity-ai-kernel\.js\?v=20260814-kernel2/);
   console.log("Cosmo Gemma consent, live context, shopping list and sponsor controls: ok");
 })().catch((error) => { console.error(error); process.exitCode = 1; });

@@ -793,6 +793,21 @@
       return quickResponse;
     }
 
+    if (global.StarQuestCatalogLedger && /ledger|rights|license|paid|payout|computer.*watch|rewatch/.test(quickQuestion)) {
+      const ledger = global.StarQuestCatalogLedger.summary();
+      const ledgerResponse = "🧾 StarQuest has ledger records for " + ledger.titlesLedgered +
+        " titles and " + ledger.episodes + " episodes. " + ledger.authorizedAnalysisQueued +
+        " episodes are authorized for automated analysis, " + ledger.rightsReviewHeld +
+        " are held for rights review, and " + ledger.sourceBlocked +
+        " have a blocked source. Each unique authorized Cosmo scan can create one provisional Infinity accrual; " +
+        ledger.provisionalInfinityAccrued + " are currently accrued. A repeat scan with the same source fingerprint creates no duplicate credit. " +
+        "The scan is not counted as a human impression. A real deposit still requires an active rights contract, funded approval, and a transaction reference; this browser reports " + ledger.payoutsCompleted + " completed payouts.";
+      _convHistory.push({ role: "user", text: userMessage }, { role: "assistant", text: ledgerResponse });
+      _convHistory = _convHistory.slice(-MAX_CONV_HISTORY);
+      saveConvHistory();
+      return ledgerResponse;
+    }
+
     /* 1. The shared Infinity engine answers from this site's own catalogue and project knowledge. */
     const infinityResponse = infinityLanguageResponse(userMessage);
     if (infinityResponse) {

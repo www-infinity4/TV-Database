@@ -15,6 +15,8 @@ class Node {
     this.attributes = { ...attributes };
     this.classList = new ClassList();
     this.textContent = "";
+    this.style = {};
+    this.hidden = false;
   }
   setAttribute(name, value) { this.attributes[name] = String(value); }
   getAttribute(name) { return Object.prototype.hasOwnProperty.call(this.attributes, name) ? this.attributes[name] : null; }
@@ -30,12 +32,17 @@ class Node {
 
 const nodes = Object.fromEntries([
   "sidebar", "sidebar-backdrop", "hamburger-btn", "profile-portal-backdrop",
-  "profile-edit-target", "sidebar-close", "profile-portal-close"
+  "profile-edit-target", "sidebar-close", "profile-portal-close", "ai-fab",
+  "ai-panel", "ai-panel-close", "sidebar-cosmo-btn", "sidebar-continue-chat",
+  "cosmo-controls-btn", "cosmo-controls"
 ].map(id => [id, new Node(id)]));
+nodes["ai-panel"].style.display = "none";
+nodes["ai-panel"].setAttribute("aria-hidden", "true");
+nodes["cosmo-controls"].hidden = true;
 const listeners = {};
 const emitted = [];
 const document = {
-  body: { style: {} },
+  body: { style: {}, classList: new ClassList() },
   getElementById: id => nodes[id] || null,
   addEventListener(name, listener) { (listeners[name] ||= []).push(listener); },
   dispatchEvent(event) { emitted.push(event); (listeners[event.type] || []).forEach(listener => listener(event)); }
@@ -79,4 +86,17 @@ assert.equal(
 
 click(eventFor(nodes["profile-portal-close"]));
 assert.equal(nodes["profile-portal-backdrop"].classList.contains("open"), false);
+
+click(eventFor(nodes["ai-fab"]));
+assert.equal(nodes["ai-panel"].style.display, "flex");
+assert.equal(nodes["ai-panel"].getAttribute("aria-hidden"), "false");
+assert.equal(nodes["ai-fab"].getAttribute("aria-expanded"), "true");
+
+click(eventFor(nodes["cosmo-controls-btn"]));
+assert.equal(nodes["cosmo-controls"].hidden, false);
+assert.equal(nodes["cosmo-controls-btn"].getAttribute("aria-expanded"), "true");
+
+click(eventFor(nodes["ai-panel-close"]));
+assert.equal(nodes["ai-panel"].style.display, "none");
+assert.equal(nodes["ai-fab"].getAttribute("aria-expanded"), "false");
 console.log("hamburger toggle and Avatar Coin portal routing: ok");
