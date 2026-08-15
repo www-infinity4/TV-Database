@@ -3082,6 +3082,10 @@
     aiPanel.setAttribute("aria-hidden", "false");
     if (aiFab) aiFab.setAttribute("aria-expanded", "true");
     document.body.classList.add("cosmo-open");
+    if (cosmoEngineStatus && window.StarQuestAI && StarQuestAI.providerStatus) {
+      const provider = StarQuestAI.providerStatus();
+      if (provider.message) cosmoEngineStatus.textContent = provider.message;
+    }
     /* Opening Cosmo must never wait on a model or network request. */
     if (aiMessages && aiMessages.children.length === 0) {
       appendAIMessage("bot", "Hi! I'm Cosmo, StarQuest's living companion. Ask me about a show, what to watch, your StarCoins, or anything playing now.");

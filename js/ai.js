@@ -984,7 +984,16 @@
     generatePopIn: generatePopInText,
     suggestDesignName,
 
-    providerStatus() { return { state: _networkState, provider: "network-ai" }; },
+    providerStatus() {
+      const configured = !!networkEndpoint();
+      return {
+        state: configured ? _networkState : "unconfigured",
+        provider: "infinity-ai",
+        message: configured
+          ? "Infinity AI gateway is configured."
+          : "Live AI needs the secure Infinity gateway; offline tools remain available."
+      };
+    },
 
     /** Clear conversation memory (and localStorage) */
     clearHistory() {

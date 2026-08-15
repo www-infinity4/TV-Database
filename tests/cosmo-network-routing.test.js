@@ -45,7 +45,9 @@ assert.match(send, /finally \{/);
 assert.match(send, /typingEl\.remove\(\)/);
 assert.match(send, /aiSend\.disabled = false/);
 
-assert.match(html, /network AI with offline backup/);
+assert.match(html, /offline tools available/);
+assert.match(app, /StarQuestAI\.providerStatus\(\)/);
+assert.match(ai, /Live AI needs the secure Infinity gateway/);
 assert.match(html, /js\/ai\.js\?v=20260815-cosmo2/);
 assert.match(html, /js\/app\.js\?v=20260815-cosmo2/);
 
