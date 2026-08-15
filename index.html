@@ -311,7 +311,7 @@
     <div class="nav__brand"><a href="#" class="nav__logo" aria-label="StarQuest Home">⭐ <span id="nav-brand-name">StarQuest</span></a><button class="design-star" type="button" data-avatar-portal data-avatar-symbol="★" data-design-target="StarQuest name" data-design-key="brand-name" data-design-scope="site" aria-label="Open Avatar Coin editor for the StarQuest name">★</button></div>
     <ul class="nav__links" role="list">
       <li><a href="#" class="active">Home</a></li>
-      <li><a href="#reading-rainbow-section">Reading Rainbow</a></li>
+      <li><a href="#reading-rainbow-section">Next For You</a></li>
       <li><a href="#row-drama-section">Drama</a></li>
       <li><a href="#row-comedy-section">Comedy</a></li>
       <li><a href="#row-scifi-section">Sci-Fi</a></li>
@@ -398,9 +398,13 @@
 
     <section class="content-section content-section--spotlight" aria-labelledby="lbl-reading-rainbow" id="reading-rainbow-section">
       <div class="section-header">
-        <h2 class="section-title" id="lbl-reading-rainbow">📚 Reading Rainbow <span style="font-weight:400;color:var(--text-muted);font-size:.85rem;">25 verified episodes</span></h2>
-        <button class="section-more" type="button" id="reading-rainbow-browse-all">Browse all episodes</button>
+        <h2 class="section-title" id="lbl-reading-rainbow">✨ Your Next Show <span id="smart-spotlight-meta" style="font-weight:400;color:var(--text-muted);font-size:.85rem;"></span></h2>
+        <div class="section-header__actions">
+          <button class="section-more" type="button" id="smart-spotlight-clipboard" title="Reads only after you approve it and saves matching TV interests locally—not the clipboard text.">Use Clipboard Interests</button>
+          <button class="section-more" type="button" id="reading-rainbow-browse-all">Browse this show</button>
+        </div>
       </div>
+      <p id="smart-spotlight-reason" class="history-empty" style="margin:0 0 8px 0;">A fresh pick based on your StarQuest activity.</p>
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
         <div class="card-row" id="row-reading-rainbow" role="list"></div>
@@ -428,6 +432,17 @@
       <div class="card-row-wrap">
         <button class="scroll-btn left" aria-label="Scroll left">‹</button>
         <div class="card-row" id="row-due-south" role="list"></div>
+        <button class="scroll-btn right" aria-label="Scroll right">›</button>
+      </div>
+    </section>
+    <section class="content-section content-section--spotlight" aria-labelledby="lbl-hitchcock" id="hitchcock-section">
+      <div class="section-header">
+        <h2 class="section-title" id="lbl-hitchcock">🕵️ The New Alfred Hitchcock Presents <span style="font-weight:400;color:var(--text-muted);font-size:.85rem;">1985–1989 · 80 Episodes</span></h2>
+        <button class="section-more" type="button" id="hitchcock-browse-all">Browse All 80 Episodes</button>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-hitchcock" role="list"></div>
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
@@ -573,7 +588,7 @@
   <div id="all-eps-backdrop" class="all-eps-backdrop" role="dialog" aria-modal="true" aria-labelledby="all-eps-title">
     <div class="all-eps-modal">
       <div class="all-eps-header">
-        <h2 id="all-eps-title" class="all-eps-title">🍁 Due South — All Episodes</h2>
+        <h2 id="all-eps-title" class="all-eps-title">All Episodes</h2>
         <button id="all-eps-close" class="all-eps-close" aria-label="Close">✕</button>
       </div>
       <div class="all-eps-season-tabs" id="all-eps-tabs" role="tablist"></div>

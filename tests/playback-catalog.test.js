@@ -25,6 +25,7 @@ const hitchcock = show("new-alfred-hitchcock-presents");
 assert.equal(hitchcock.episodes.length, 80);
 assert.ok(hitchcock.episodes.every(episode => !episode.archiveFile.includes("/")));
 assert.equal(hitchcock.episodes[0].archiveFile, "S01E00A Incident In A Small Jail.mp4");
+assert.equal(hitchcock.archiveRoot, "The New Alfred Hitchcock Presents (1985)");
 
 const twilight1985 = show("the-twilight-zone-1985");
 assert.equal(
@@ -51,8 +52,13 @@ const archiveUrl = (episode) =>
   "https://archive.org/download/" + encodeURIComponent(episode.archiveId) + "/" +
   episode.archiveFile.split("/").map(encodeURIComponent).join("/");
 assert.equal(
-  archiveUrl(hitchcock.episodes[0]),
-  "https://archive.org/download/the-new-alfred-hitchcock-presents-complete/S01E00A%20Incident%20In%20A%20Small%20Jail.mp4"
+  "https://archive.org/download/" + encodeURIComponent(hitchcock.episodes[0].archiveId) + "/" +
+    [hitchcock.archiveRoot, "Season 1", hitchcock.episodes[0].archiveFile].map(encodeURIComponent).join("/"),
+  "https://archive.org/download/the-new-alfred-hitchcock-presents-complete/The%20New%20Alfred%20Hitchcock%20Presents%20(1985)/Season%201/S01E00A%20Incident%20In%20A%20Small%20Jail.mp4"
 );
+
+assert.match(appSource, /e\.stopPropagation\(\);\s*openModal\(show\);/);
+assert.match(appSource, /showForEpisode && showForEpisode\.archiveRoot/);
+assert.match(appSource, /openAllEps\("new-alfred-hitchcock-presents"\)/);
 
 console.log("playback catalog paths and one-tap routing: ok");

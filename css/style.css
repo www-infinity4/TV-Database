@@ -1031,6 +1031,14 @@ ul { list-style: none; }
   font-size: 1.25rem;
 }
 
+.section-header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 /* ── Utility ── */
 .hidden { display: none !important; }
 

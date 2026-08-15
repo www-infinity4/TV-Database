@@ -89,6 +89,11 @@
     rowForYou: document.getElementById("row-for-you"),
     rowReadingRainbow: document.getElementById("row-reading-rainbow"),
     readingRainbowBrowseAll: document.getElementById("reading-rainbow-browse-all"),
+    smartSpotlightMeta: document.getElementById("smart-spotlight-meta"),
+    smartSpotlightReason: document.getElementById("smart-spotlight-reason"),
+    smartSpotlightClipboard: document.getElementById("smart-spotlight-clipboard"),
+    rowHitchcock: document.getElementById("row-hitchcock"),
+    hitchcockBrowseAll: document.getElementById("hitchcock-browse-all"),
     rowStarCoinMovies: document.getElementById("row-starcoin-movies"),
     forYouSection: document.getElementById("for-you-section"),
     forYouGenreLabel: document.getElementById("for-you-genre-label"),
@@ -96,6 +101,7 @@
     allEpsTabs: document.getElementById("all-eps-tabs"),
     allEpsList: document.getElementById("all-eps-list"),
     allEpsClose: document.getElementById("all-eps-close"),
+    allEpsTitle: document.getElementById("all-eps-title"),
     dueSouthBrowseAll: document.getElementById("due-south-browse-all"),
 
     genrePills: document.querySelectorAll(".genre-pill"),
@@ -145,6 +151,42 @@
   }
 
   const DISCOVERY_KEY = "starquest.discovery.v1";
+  const CLIPBOARD_PREFS_KEY = "starquest.clipboard-preferences.v1";
+  const SPOTLIGHT_LAST_KEY = "starquest.smart-spotlight.last.v1";
+  const CLIPBOARD_STOP_WORDS = new Set([
+    "about", "after", "again", "also", "because", "before", "being", "could", "every", "from",
+    "have", "into", "just", "like", "more", "most", "only", "other", "should", "some", "that",
+    "their", "them", "then", "there", "these", "they", "this", "those", "through", "very", "what",
+    "when", "where", "which", "while", "with", "would", "your"
+  ]);
+
+  function preferenceWords(value) {
+    return String(value || "").toLowerCase().match(/[a-z][a-z'-]{2,19}/g) || [];
+  }
+
+  function loadClipboardPreferences() {
+    try {
+      const value = JSON.parse(localStorage.getItem(CLIPBOARD_PREFS_KEY) || "[]");
+      return Array.isArray(value) ? value.filter((term) => typeof term === "string").slice(0, 30) : [];
+    } catch (_) { return []; }
+  }
+
+  function catalogPreferenceWords(text) {
+    const vocabulary = new Set();
+    (typeof SHOWS !== "undefined" ? SHOWS : []).forEach((show) => {
+      preferenceWords([show.title, (show.genre || []).join(" "), show.description].join(" ")).forEach((word) => {
+        if (!CLIPBOARD_STOP_WORDS.has(word)) vocabulary.add(word);
+      });
+    });
+    const counts = {};
+    preferenceWords(String(text || "").slice(0, 12000)).forEach((word) => {
+      if (vocabulary.has(word) && !CLIPBOARD_STOP_WORDS.has(word)) counts[word] = (counts[word] || 0) + 1;
+    });
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .slice(0, 30)
+      .map(([word]) => word);
+  }
 
   function showGenres(show) {
     return (show && Array.isArray(show.genre) ? show.genre : []).map((genre) => String(genre).toLowerCase());
@@ -207,7 +249,8 @@
     const discovery = loadDiscoverySignals();
     const unlocked = typeof StarQuestAuth !== "undefined" && StarQuestAuth.getUnlockedContent
       ? StarQuestAuth.getUnlockedContent() : [];
-    if (!history.length && !discovery.searches.length && !Object.keys(discovery.shows).length && !unlocked.length) return null;
+    const clipboardPreferences = loadClipboardPreferences();
+    if (!history.length && !discovery.searches.length && !Object.keys(discovery.shows).length && !unlocked.length && !clipboardPreferences.length) return null;
     const genre = {}, decade = {}, series = {}, completedBySeries = {};
     const recencyByShow = {}, recencyByGenre = {}, recencyByDecade = {};
     const recentShows = new Set(), recent = new Set(), watchedShows = new Set();
@@ -241,7 +284,7 @@
     return {
       history, genre, decade, series, completedBySeries, recent, watchedShows,
       recencyByShow, recencyByGenre, recencyByDecade, recentShows,
-      searches: discovery.searches, explicitShows: discovery.shows
+      searches: discovery.searches, explicitShows: discovery.shows, clipboardPreferences
     };
   }
 
@@ -258,6 +301,8 @@
     const searchable = [show.title, show.description].concat(show.genre || []).join(" ").toLowerCase();
     const searchAffinity = stats.searches.reduce((sum, term, idx) =>
       sum + (searchable.includes(term) ? 1 + idx / Math.max(1, stats.searches.length) : 0), 0);
+    const clipboardAffinity = (stats.clipboardPreferences || []).reduce((sum, term) =>
+      sum + (searchable.includes(term) ? 1 : 0), 0);
     const recentlyWatched = stats.recentShows.has(show.id);
     const discoveryBonus = stats.watchedShows.has(show.id) ? 0 : 22;
     const tvBoost = isTvFirstShow(show) ? 65 : (isMusicFirst(show) ? -90 : -15);
@@ -265,11 +310,12 @@
       genreAffinity * 20 + genreRecency * 38 +
       decadeAffinity * 10 + decadeRecency * 24 +
       seriesAffinity * 18 + seriesRecency * 45 +
-      explicitInterest * 35 + searchAffinity * 55 +
+      explicitInterest * 35 + searchAffinity * 55 + clipboardAffinity * 40 +
       discoveryBonus - (recentlyWatched ? 45 : 0) +
       tvBoost + Math.min(18, Math.max(0, show.episodes.length - 1)) + (show.score || 0);
     let reason = "Recommended from your mix of favorite genres, decades, and highly rated television.";
-    if (searchAffinity > 0) reason = "Matches things you searched for in StarQuest.";
+    if (clipboardAffinity > 0) reason = "Matched to the TV interests you chose to import from your clipboard.";
+    else if (searchAffinity > 0) reason = "Matches things you searched for in StarQuest.";
     else if (explicitInterest > 0) reason = "Based on shows you opened and explored.";
     else if (seriesAffinity > 0) reason = "Based on your viewing and unlocked entertainment.";
     return { score, reason };
@@ -327,6 +373,56 @@
     document.dispatchEvent(new CustomEvent("starquest:recommendations-updated", {
       detail: { hasHistory: !!stats, recommendations: candidates.map((show) => show.id) }
     }));
+  }
+
+  function renderSmartSpotlight() {
+    const stats = historyStats();
+    const reasonMap = {};
+    const ranked = (typeof SHOWS !== "undefined" ? SHOWS.slice() : [])
+      .filter((show) => isShowAvailable(show) && isTvFirstShow(show))
+      .sort(byPersonalized(stats, reasonMap));
+    if (!ranked.length) return;
+    let lastId = "";
+    try { lastId = localStorage.getItem(SPOTLIGHT_LAST_KEY) || ""; } catch (_) {}
+    const shortlist = ranked.slice(0, Math.min(6, ranked.length));
+    const selected = shortlist.find((show) => show.id !== lastId) || shortlist[0];
+    try { localStorage.setItem(SPOTLIGHT_LAST_KEY, selected.id); } catch (_) {}
+
+    renderEpisodeRow(DOM.rowReadingRainbow, selected, 0, Math.min(8, selected.episodes.length));
+    if (DOM.smartSpotlightMeta) {
+      DOM.smartSpotlightMeta.textContent = selected.title + " · " + selected.episodes.length + " episodes";
+    }
+    if (DOM.smartSpotlightReason) {
+      DOM.smartSpotlightReason.textContent = reasonMap[selected.id] || scoreShowForUser(selected, stats).reason;
+    }
+    if (DOM.readingRainbowBrowseAll) {
+      DOM.readingRainbowBrowseAll.textContent = "Browse " + selected.title;
+      DOM.readingRainbowBrowseAll.onclick = () => openModal(selected);
+    }
+  }
+
+  if (DOM.smartSpotlightClipboard) {
+    DOM.smartSpotlightClipboard.addEventListener("click", async () => {
+      if (!navigator.clipboard || typeof navigator.clipboard.readText !== "function") {
+        document.dispatchEvent(new CustomEvent("starquest:toast", {
+          detail: { message: "Clipboard access is not available in this browser." }
+        }));
+        return;
+      }
+      try {
+        const preferences = catalogPreferenceWords(await navigator.clipboard.readText());
+        localStorage.setItem(CLIPBOARD_PREFS_KEY, JSON.stringify(preferences));
+        renderForYouRow();
+        renderSmartSpotlight();
+        document.dispatchEvent(new CustomEvent("starquest:toast", {
+          detail: { message: preferences.length ? "Your local TV interests updated." : "No matching TV interests were found." }
+        }));
+      } catch (_) {
+        document.dispatchEvent(new CustomEvent("starquest:toast", {
+          detail: { message: "Clipboard permission was not granted. Nothing was read or saved." }
+        }));
+      }
+    });
   }
 
   function initHero() {
@@ -395,10 +491,11 @@
 
   function initRows() {
     renderForYouRow();
-    renderRow(DOM.rowReadingRainbow, [getShowById("reading-rainbow")].filter(Boolean));
+    renderSmartSpotlight();
     renderRow(DOM.rowStarCoinMovies, getMovies().filter((show) => (show.starCoinCost || 0) > 0).sort(byScore));
     renderRow(DOM.rowFeatured, getFeaturedShows().slice().sort(byScoreFreeFirst));
     renderEpisodeRow(DOM.rowDueSouth, getShowById("due-south"), 0, 1);
+    renderEpisodeRow(DOM.rowHitchcock, getShowById("new-alfred-hitchcock-presents"), 0, 8);
     renderRow(DOM.rowMovies, getMovies().slice().sort(byScoreFreeFirst));
     renderRow(DOM.rowDrama, getShowsByGenre("Drama").slice().sort(byScoreFreeFirst));
     renderRow(DOM.rowComedy, getShowsByGenre("Comedy").slice().sort(byScoreFreeFirst));
@@ -603,6 +700,12 @@
         e.stopPropagation();
         openModal(show);
       });
+      browseEpisodesBtn.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        e.preventDefault();
+        e.stopPropagation();
+        openModal(show);
+      });
     }
 
     if (showUnavailable) {
@@ -614,6 +717,7 @@
       };
       card.addEventListener("click", noPlay);
       card.addEventListener("keydown", (e) => {
+        if (e.target !== card) return;
         if (e.key === "Enter" || e.key === " ") noPlay(e);
       });
     } else if (isLocked) {
@@ -630,6 +734,7 @@
       };
       card.addEventListener("click", promptUnlock);
       card.addEventListener("keydown", (e) => {
+        if (e.target !== card) return;
         if (e.key === "Enter" || e.key === " ") promptUnlock(e);
       });
     } else {
@@ -641,6 +746,7 @@
       };
       card.addEventListener("click", play);
       card.addEventListener("keydown", (e) => {
+        if (e.target !== card) return;
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
       });
     }
@@ -854,7 +960,12 @@
     if (typeof episode.archiveFile === "string" && episode.archiveId) {
       /* Use a native <video> element with the direct archive.org download URL.
          This plays the file on-site without the embed player's restrictions. */
-      const directUrl = buildArchiveDirectUrl(episode.archiveId, episode.archiveFile);
+      const directUrl = buildArchiveDirectUrl(
+        episode.archiveId,
+        episode.archiveFile,
+        showForEpisode && showForEpisode.archiveRoot,
+        episode.season
+      );
 
       DOM.playerFrame.style.display = "none";
       DOM.playerFrame.src = "about:blank";
@@ -989,13 +1100,6 @@
     if (e.target && e.target.id === "cosmo-popin-close") hideCosmoPopIn();
   });
 
-  if (DOM.readingRainbowBrowseAll) {
-    DOM.readingRainbowBrowseAll.addEventListener("click", () => {
-      const show = getShowById("reading-rainbow");
-      if (show) openModal(show);
-    });
-  }
-
   DOM.playerBack.addEventListener("click", closePlayer);
 
 
@@ -1003,11 +1107,14 @@
    * Build a direct archive.org download URL for a specific file within an item.
    * Used to play video via a native <video> element, bypassing embed restrictions.
    */
-  function buildArchiveDirectUrl(archiveId, archiveFile) {
+  function buildArchiveDirectUrl(archiveId, archiveFile, archiveRoot, season) {
     if (!archiveId || !archiveFile) return "";
+    const nestedFile = archiveRoot && !archiveFile.includes("/")
+      ? [archiveRoot, "Season " + Math.max(1, Number(season) || 1), archiveFile].join("/")
+      : archiveFile;
     return "https://archive.org/download/" +
       encodeURIComponent(archiveId) + "/" +
-      archiveFile.split("/").map(encodeURIComponent).join("/");
+      nestedFile.split("/").map(encodeURIComponent).join("/");
   }
 
   /**
@@ -1107,8 +1214,8 @@
     }
   });
 
-  /* ── All-Episodes Modal (Due South) ── */
-  const DS_SEASONS = [
+  /* ── All-Episodes Modal ── */
+  const EPISODE_SEASONS = [
     { label: "Pilot", filter: (ep) => ep.season === 0 },
     { label: "Season 1", filter: (ep) => ep.season === 1 },
     { label: "Season 2", filter: (ep) => ep.season === 2 },
@@ -1116,9 +1223,10 @@
     { label: "Season 4", filter: (ep) => ep.season === 4 },
   ];
 
-  function openAllEps() {
-    const show = getShowById("due-south");
+  function openAllEps(showId) {
+    const show = getShowById(showId);
     if (!show) return;
+    DOM.allEpsTitle.textContent = show.title + " — All " + show.episodes.length + " Episodes";
     renderAllEpsTabs(show);
     selectAllEpsTab(show, 0);
     DOM.allEpsBackdrop.classList.add("open");
@@ -1132,7 +1240,7 @@
 
   function renderAllEpsTabs(show) {
     DOM.allEpsTabs.innerHTML = "";
-    DS_SEASONS.forEach((season, i) => {
+    EPISODE_SEASONS.forEach((season, i) => {
       const eps = show.episodes.filter(season.filter);
       if (!eps.length) return;
       const btn = document.createElement("button");
@@ -1149,10 +1257,11 @@
   }
 
   function selectAllEpsTab(show, seasonIdx) {
-    const season = DS_SEASONS[seasonIdx];
+    const season = EPISODE_SEASONS[seasonIdx];
     const eps = show.episodes.filter(season.filter);
     DOM.allEpsList.innerHTML = "";
     eps.forEach((ep, i) => {
+      const isPlayable = isEpisodePlayable(ep);
       const isSpecial = ep.season === 0;
       const seasonLabel = isSpecial ? "Pilot" : "S" + ep.season + " E" + ep.episode;
       const item = document.createElement("div");
@@ -1194,10 +1303,13 @@
     if (e.target === DOM.allEpsBackdrop) closeAllEps();
   });
   if (DOM.dueSouthBrowseAll) {
-    DOM.dueSouthBrowseAll.addEventListener("click", openAllEps);
+    DOM.dueSouthBrowseAll.addEventListener("click", () => openAllEps("due-south"));
     DOM.dueSouthBrowseAll.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openAllEps(); }
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openAllEps("due-south"); }
     });
+  }
+  if (DOM.hitchcockBrowseAll) {
+    DOM.hitchcockBrowseAll.addEventListener("click", () => openAllEps("new-alfred-hitchcock-presents"));
   }
 
   /* ── Scroll buttons ── */
