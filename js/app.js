@@ -1645,14 +1645,31 @@
   const avatarForkCurrent = $("avatar-fork-current");
   const avatarCopyChain = $("avatar-copy-chain");
   const avatarImportDesign = $("avatar-import-design");
+  const vhsAvatarLabel = $("vhs-avatar-label");
   const DESIGN_KEY = "starquest_personal_design";
   const designSizes = ["Compact", "Comfortable", "Showcase"];
+  const VHS_STYLES = ["cosmic", "blue", "gold", "red"];
   let activeDesignTarget = "Your whole StarQuest page";
   let activeDesignKey = "brand-name";
   let pendingChainParentId = null;
   let pendingChainDesignId = null;
-  let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, overrides: {} };
+  let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, avatarStyle: "cosmic", avatarLabel: "SQ", overrides: {} };
   const AVATAR_COIN_MARK = "★";
+  function cleanVhsLabel(value) {
+    return String(value || "SQ").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4) || "SQ";
+  }
+
+  function applyVhsAvatar(design) {
+    const style = VHS_STYLES.includes(design.avatarStyle) ? design.avatarStyle : "cosmic";
+    const label = cleanVhsLabel(design.avatarLabel);
+    document.querySelectorAll("[data-vhs-avatar]").forEach((avatar) => {
+      VHS_STYLES.forEach((name) => avatar.classList.remove("vhs-avatar--" + name));
+      avatar.classList.add("vhs-avatar--" + style);
+      const labelNode = avatar.querySelector("[data-vhs-label]");
+      if (labelNode) labelNode.textContent = label;
+    });
+  }
+
   function distributorSummary() {
     if (!window.AINScansDistributorLedger) return { coins: 0, verified: 0, unclaimed: 0 };
     const ledger = window.AINScansDistributorLedger.read();
@@ -1673,9 +1690,11 @@
       const cardSize = Number.isInteger(storedSize) ? Math.max(0, Math.min(2, storedSize)) : 1;
       const scope = ["network", "site", "channel", "component"].includes(stored.scope) ? stored.scope : "site";
       const mode = ["human", "assisted", "adaptive"].includes(stored.mode) ? stored.mode : "human";
+      const avatarStyle = VHS_STYLES.includes(stored.avatarStyle) ? stored.avatarStyle : "cosmic";
+      const avatarLabel = cleanVhsLabel(stored.avatarLabel);
       const overrides = stored.overrides && typeof stored.overrides === "object" ? stored.overrides : {};
-      return { name: String(stored.name || "My StarQuest").slice(0, 48), scope, mode, theme, cardSize, autoAdapt: !!stored.autoAdapt, overrides };
-    } catch (_) { return { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, overrides: {} }; }
+      return { name: String(stored.name || "My StarQuest").slice(0, 48), scope, mode, theme, cardSize, autoAdapt: !!stored.autoAdapt, avatarStyle, avatarLabel, overrides };
+    } catch (_) { return { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, avatarStyle: "cosmic", avatarLabel: "SQ", overrides: {} }; }
   }
 
   function adaptiveDesign(design) {
@@ -1691,6 +1710,7 @@
   function applyPersonalDesign(design) {
     document.documentElement.dataset.userTheme = design.theme;
     document.documentElement.dataset.cardSize = String(design.cardSize);
+    applyVhsAvatar(design);
     Object.keys(originalElementLabels).forEach((key) => {
       const entry = originalElementLabels[key];
       const value = design.overrides && design.overrides[key] ? String(design.overrides[key]).slice(0, 64) : entry.original;
@@ -1710,6 +1730,10 @@
     if (designScopeInput) designScopeInput.value = pendingDesign.scope;
     if (designModeInput) designModeInput.value = pendingDesign.mode;
     if (designAutoAdapt) designAutoAdapt.checked = pendingDesign.autoAdapt;
+    document.querySelectorAll("[data-vhs-style]").forEach((button) => {
+      button.classList.toggle("selected", button.dataset.vhsStyle === pendingDesign.avatarStyle);
+    });
+    if (vhsAvatarLabel) vhsAvatarLabel.value = cleanVhsLabel(pendingDesign.avatarLabel);
     const entry = originalElementLabels[activeDesignKey];
     if (elementValueInput) elementValueInput.value = (pendingDesign.overrides && pendingDesign.overrides[activeDesignKey]) || (entry ? entry.original : "");
   }
@@ -1723,6 +1747,8 @@
       theme: record.settings.theme || "cosmic",
       cardSize: Number.isInteger(Number(record.settings.cardSize)) ? Number(record.settings.cardSize) : 1,
       autoAdapt: !!record.settings.autoAdapt,
+      avatarStyle: VHS_STYLES.includes(record.settings.avatarStyle) ? record.settings.avatarStyle : "cosmic",
+      avatarLabel: cleanVhsLabel(record.settings.avatarLabel),
       overrides: { ...(record.settings.overrides || {}) }
     };
   }
@@ -1902,6 +1928,17 @@
       renderDesignControls();
     });
   });
+  document.querySelectorAll("[data-vhs-style]").forEach((button) => {
+    button.addEventListener("click", () => {
+      pendingDesign.avatarStyle = button.dataset.vhsStyle;
+      applyVhsAvatar(pendingDesign);
+      renderDesignControls();
+    });
+  });
+  if (vhsAvatarLabel) vhsAvatarLabel.addEventListener("input", () => {
+    pendingDesign.avatarLabel = cleanVhsLabel(vhsAvatarLabel.value);
+    applyVhsAvatar(pendingDesign);
+  });
   if (profileCardSize) profileCardSize.addEventListener("input", () => {
     pendingDesign.cardSize = Number(profileCardSize.value);
     applyPersonalDesign(pendingDesign);
@@ -1980,7 +2017,7 @@
       scope: pendingDesign.scope,
       targetLabel: activeDesignTarget,
       creationMode: pendingDesign.mode,
-      settings: { theme: pendingDesign.theme, cardSize: pendingDesign.cardSize, autoAdapt: pendingDesign.autoAdapt, overrides: pendingDesign.overrides },
+      settings: { theme: pendingDesign.theme, cardSize: pendingDesign.cardSize, autoAdapt: pendingDesign.autoAdapt, avatarStyle: pendingDesign.avatarStyle, avatarLabel: pendingDesign.avatarLabel, overrides: pendingDesign.overrides },
       status: "unsaved-preview"
     };
     try {
