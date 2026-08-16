@@ -46,9 +46,9 @@ class ForknightTests(unittest.TestCase):
         first = scanner.scan(registry)
         second = scanner.scan(registry)
         self.assertEqual(first, second)
-        self.assertEqual(first["summary"]["total"], 23)
-        self.assertEqual(first["summary"]["adapter_review"], 20)
-        self.assertEqual(first["summary"]["license_review"], 2)
+        self.assertEqual(first["summary"]["total"], 32)
+        self.assertEqual(first["summary"]["adapter_review"], 28)
+        self.assertEqual(first["summary"]["license_review"], 3)
         self.assertEqual(first["summary"]["rejected"], 1)
         self.assertEqual(first["authority"]["created_forks"], False)
 

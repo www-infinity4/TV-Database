@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-15T23:00:00Z",
+  "generated_at": "2026-08-15T23:45:00Z",
   "policy": "policy.json",
   "entries": [
     {
@@ -254,6 +254,105 @@
       "license_spdx": "MIT",
       "license_scope": "repository; connected providers, models, plugins, tools, and deployment services retain separate terms",
       "integration": "quarantined_workspace_reference",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "mrdoob/three.js",
+      "url": "https://github.com/mrdoob/three.js",
+      "role": "three_dimensional_direction_field_renderer",
+      "default_branch": "dev",
+      "pin": "f2607c20976baa0544a93946ee7ac54dfaaa9bcb",
+      "license_spdx": "MIT",
+      "license_scope": "repository; imported models, textures, fonts, and examples may require separate asset review",
+      "integration": "browser_module_adapter",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "pixijs/pixijs",
+      "url": "https://github.com/pixijs/pixijs",
+      "role": "phone_first_two_dimensional_renderer",
+      "default_branch": "dev",
+      "pin": "4b141e3ced7255b39c2114b6bca03421a37b2363",
+      "license_spdx": "MIT",
+      "license_scope": "repository; loaded media and fonts retain separate terms",
+      "integration": "isolated_browser_canvas_adapter",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "antvis/X6",
+      "url": "https://github.com/antvis/X6",
+      "role": "interactive_repository_graph_renderer",
+      "default_branch": "master",
+      "pin": "b14ca27540693c610257e7687c663f122deb0006",
+      "license_spdx": "MIT",
+      "license_scope": "repository",
+      "integration": "sanitized_browser_graph_adapter",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "temporalio/sdk-python",
+      "url": "https://github.com/temporalio/sdk-python",
+      "role": "durable_human_gated_workflow_client",
+      "default_branch": "main",
+      "pin": "680a6b4f32e9d5f2484e9a2e1c604178553c3f55",
+      "license_spdx": "MIT",
+      "license_scope": "SDK repository; Temporal server, cloud service, and dependencies retain separate terms",
+      "integration": "server_side_workflow_adapter",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "eclipse-zenoh/zenoh",
+      "url": "https://github.com/eclipse-zenoh/zenoh",
+      "role": "distributed_profile_event_transport",
+      "default_branch": "main",
+      "pin": "0d03ddf2db1d8561d90d0db9aaaac053195ad8eb",
+      "license_spdx": "Apache-2.0 OR EPL-2.0",
+      "license_scope": "repository dual-license choice; bindings, plugins, and dependencies reviewed separately",
+      "integration": "authenticated_transport_sidecar",
+      "state": "license_review"
+    },
+    {
+      "repository": "automerge/automerge",
+      "url": "https://github.com/automerge/automerge",
+      "role": "local_first_conflict_free_shared_state",
+      "default_branch": "main",
+      "pin": "8d7b12f8da553afbb325e37a6c66942b8dd4d994",
+      "license_spdx": "MIT",
+      "license_scope": "repository; application synchronization and authorization layers are separate",
+      "integration": "wasm_and_javascript_state_adapter",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "open-policy-agent/opa",
+      "url": "https://github.com/open-policy-agent/opa",
+      "role": "actuator_authorization_policy_engine",
+      "default_branch": "main",
+      "pin": "16b5a013726fff3c2197f98ac4afcd6d2218588a",
+      "license_spdx": "Apache-2.0",
+      "license_scope": "repository",
+      "integration": "read_only_policy_decision_sidecar",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "tree-sitter/tree-sitter",
+      "url": "https://github.com/tree-sitter/tree-sitter",
+      "role": "incremental_source_syntax_parser",
+      "default_branch": "master",
+      "pin": "dff1fd868c750dbbae179fcd5c43ce987e4e0528",
+      "license_spdx": "MIT",
+      "license_scope": "core repository; individual language grammars are independently licensed",
+      "integration": "non_executing_ast_adapter",
+      "state": "adapter_candidate"
+    },
+    {
+      "repository": "open-telemetry/opentelemetry-python",
+      "url": "https://github.com/open-telemetry/opentelemetry-python",
+      "role": "agent_workflow_traces_metrics_and_logs",
+      "default_branch": "main",
+      "pin": "aa8e7dbdfa4bd35c1d780d8c4cd5c7d6e3983ea8",
+      "license_spdx": "Apache-2.0",
+      "license_scope": "repository; exporters and monitored services retain separate terms",
+      "integration": "redacted_telemetry_adapter",
       "state": "adapter_candidate"
     }
   ]

@@ -34,6 +34,7 @@ containers, APIs, or pinned source references over permanent forks.
 - test_scanner.py — deterministic safety and scoring tests.
 - rounds/ — verified ingestion decisions, including unresolved names.
 - zones/ — stable adapter boundaries and the Infinity / Omni direction model.
+- rounds/ROUND-5.md — live-verified visualization, workflow, policy, state, code-intelligence, and telemetry foundations.
 
 ## Run
 
