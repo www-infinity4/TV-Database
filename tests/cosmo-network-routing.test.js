@@ -49,6 +49,6 @@ assert.match(html, /offline tools available/);
 assert.match(app, /StarQuestAI\.providerStatus\(\)/);
 assert.match(ai, /Live AI needs the secure Infinity gateway/);
 assert.match(html, /js\/ai\.js\?v=20260815-cosmo2/);
-assert.match(html, /js\/app\.js\?v=20260815-share1/);
+assert.match(html, /js\/app\.js\?v=20260821-gap50/);
 
 console.log('Cosmo network-first routing and no-freeze recovery: ok');

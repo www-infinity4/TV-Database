@@ -106,13 +106,71 @@ def scan(registry: dict) -> dict:
     }
 
 
+def match_profile(registry: dict, profile: dict) -> dict:
+    """Match a project's declared needs to reviewed registry roles."""
+    entries = [item for item in registry.get("entries", []) if isinstance(item, dict)]
+    capabilities = []
+    for need in profile.get("needs", []):
+        roles = set(need.get("candidate_roles", []))
+        matches = []
+        for entry in entries:
+            if entry.get("role") not in roles:
+                continue
+            decision = evaluate(entry)
+            matches.append({
+                "repository": decision.repository,
+                "role": entry.get("role"),
+                "integration": entry.get("integration"),
+                "decision": decision.decision,
+                "pin": entry.get("pin"),
+            })
+        ready = [item for item in matches if item["decision"] == "ADAPTER_REVIEW"]
+        minimum = max(1, int(need.get("minimum_candidates", 1)))
+        capabilities.append({
+            "id": need.get("id"),
+            "priority": need.get("priority", "normal"),
+            "status": "ADAPTER_READY" if len(ready) >= minimum else ("REVIEW_REQUIRED" if matches else "DISCOVERY_GAP"),
+            "minimum_candidates": minimum,
+            "candidates": matches,
+            "acceptance_tests": need.get("acceptance_tests", []),
+        })
+
+    discovery = profile.get("discovery", {})
+    topics = discovery.get("topics", [])
+    languages = discovery.get("languages", [])
+    start_year = int(discovery.get("start_year", date.today().year))
+    end_year = int(discovery.get("end_year", start_year))
+    shards = build_search_shards(topics, languages, start_year, end_year) if topics and languages else []
+    return {
+        "schema_version": 1,
+        "project": profile.get("project"),
+        "profile_version": profile.get("version"),
+        "summary": {
+            "needs": len(capabilities),
+            "adapter_ready": sum(item["status"] == "ADAPTER_READY" for item in capabilities),
+            "review_required": sum(item["status"] == "REVIEW_REQUIRED" for item in capabilities),
+            "discovery_gaps": sum(item["status"] == "DISCOVERY_GAP" for item in capabilities),
+            "search_shards": len(shards),
+        },
+        "capabilities": capabilities,
+        "discovery": { "queries": shards },
+        "authority": {
+            "executed_code": False,
+            "created_forks": False,
+            "pushed_changes": False,
+            "merged_changes": False,
+        },
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", default="forkables.json")
     parser.add_argument("--output", default="discovery-report.json")
+    parser.add_argument("--profile", help="Optional project needs profile")
     args = parser.parse_args()
     registry = json.loads(Path(args.registry).read_text(encoding="utf-8"))
-    report = scan(registry)
+    report = match_profile(registry, json.loads(Path(args.profile).read_text(encoding="utf-8"))) if args.profile else scan(registry)
     Path(args.output).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report["summary"], sort_keys=True))
     return 0

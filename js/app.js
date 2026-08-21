@@ -152,7 +152,6 @@
 
   const DISCOVERY_KEY = "starquest.discovery.v1";
   const CLIPBOARD_PREFS_KEY = "starquest.clipboard-preferences.v1";
-  const SPOTLIGHT_LAST_KEY = "starquest.smart-spotlight.last.v1";
   const CLIPBOARD_STOP_WORDS = new Set([
     "about", "after", "again", "also", "because", "before", "being", "could", "every", "from",
     "have", "into", "just", "like", "more", "most", "only", "other", "should", "some", "that",
@@ -382,11 +381,9 @@
       .filter((show) => isShowAvailable(show) && isTvFirstShow(show))
       .sort(byPersonalized(stats, reasonMap));
     if (!ranked.length) return;
-    let lastId = "";
-    try { lastId = localStorage.getItem(SPOTLIGHT_LAST_KEY) || ""; } catch (_) {}
-    const shortlist = ranked.slice(0, Math.min(6, ranked.length));
-    const selected = shortlist.find((show) => show.id !== lastId) || shortlist[0];
-    try { localStorage.setItem(SPOTLIGHT_LAST_KEY, selected.id); } catch (_) {}
+    const selected = window.StarQuestRecommendations
+      ? StarQuestRecommendations.choose(ranked)
+      : ranked[0];
 
     renderEpisodeRow(DOM.rowReadingRainbow, selected, 0, Math.min(8, selected.episodes.length));
     if (DOM.smartSpotlightMeta) {
@@ -426,16 +423,18 @@
   }
 
   function initHero() {
-    const featured = getFeaturedShows().filter(isShowAvailable);
-    if (!featured.length) return;
+    const playableCatalog = (typeof SHOWS !== "undefined" ? SHOWS.slice() : []).filter(isShowAvailable);
+    if (!playableCatalog.length) return;
     const profile = historyStats();
     const ordered = profile
-      ? featured.slice().sort(byPersonalized(profile, {}))
-      : featured.slice().sort(byScoreFreeFirst);
+      ? playableCatalog.slice().sort(byPersonalized(profile, {}))
+      : playableCatalog.slice().sort(byScoreFreeFirst);
 
     function rotateOpening() {
-      const show = window.StarQuestOpening
-        ? StarQuestOpening.choose(ordered)
+      const show = window.StarQuestRecommendations
+        ? StarQuestRecommendations.choose(ordered)
+        : window.StarQuestOpening
+          ? StarQuestOpening.choose(ordered)
         : ordered[Math.floor(Math.random() * ordered.length)];
       if (show) renderHero(show);
     }
@@ -469,10 +468,14 @@
     DOM.heroPlayBtn.onclick = () => {
       const episode = getPrimaryEpisode(show);
       if (episode) {
+        if (window.StarQuestRecommendations) StarQuestRecommendations.engage(show.id, "watch");
         openPlayer(episode, show.title);
       }
     };
-    DOM.heroInfoBtn.onclick = () => openModal(show);
+    DOM.heroInfoBtn.onclick = () => {
+      if (window.StarQuestRecommendations) StarQuestRecommendations.engage(show.id, "click");
+      openModal(show);
+    };
   }
 
   /* ── Rows ── */
@@ -590,7 +593,10 @@
 
     registerCardEditor(card, "episode-" + (ep.id || show.id + "-" + ep.season + "-" + ep.episode), ep.title);
 
-    const play = () => openPlayer(ep, show.title);
+    const play = () => {
+      if (window.StarQuestRecommendations) StarQuestRecommendations.engage(show.id, "watch");
+      openPlayer(ep, show.title);
+    };
     card.addEventListener("click", play);
     card.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
@@ -742,7 +748,10 @@
          Multi-episode shows keep browsing on their dedicated button above. */
       const play = () => {
         const episode = getPrimaryEpisode(show);
-        if (episode) openPlayer(episode, show.title);
+        if (episode) {
+          if (window.StarQuestRecommendations) StarQuestRecommendations.engage(show.id, "watch");
+          openPlayer(episode, show.title);
+        }
       };
       card.addEventListener("click", play);
       card.addEventListener("keydown", (e) => {
@@ -1438,6 +1447,7 @@
   /* ── Init ── */
   window.renderForYouRow = renderForYouRow;
   window.initHero = initHero;
+  if (window.StarQuestRecommendations) StarQuestRecommendations.beginVisit();
   initHero();
   initRows();
 

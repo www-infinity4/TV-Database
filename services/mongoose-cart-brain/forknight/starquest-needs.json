@@ -1,0 +1,49 @@
+{
+  "project": "StarQuest",
+  "version": 1,
+  "discovery": {
+    "topics": ["recommendation-system", "speech-to-text", "browser-testing", "observability"],
+    "languages": ["JavaScript", "Python"],
+    "start_year": 2025,
+    "end_year": 2026
+  },
+  "needs": [
+    {
+      "id": "cosmo_local_ai",
+      "priority": "high",
+      "minimum_candidates": 2,
+      "candidate_roles": ["multimodal_local_inference_gateway", "local_llm_inference", "local_model_manager"],
+      "acceptance_tests": ["provider timeout returns local answer", "no API secret is shipped to the browser"]
+    },
+    {
+      "id": "voice_command_fallback",
+      "priority": "high",
+      "candidate_roles": ["speech_to_text"],
+      "acceptance_tests": ["wake word survives recognition restart", "unsupported browsers show a truthful fallback"]
+    },
+    {
+      "id": "recommendation_state",
+      "priority": "critical",
+      "candidate_roles": ["local_first_conflict_free_shared_state"],
+      "acceptance_tests": ["at least 50 other titles before a repeat", "ignored impressions lose priority", "corrupt local state recovers"]
+    },
+    {
+      "id": "browser_regression",
+      "priority": "critical",
+      "candidate_roles": ["browser_validation"],
+      "acceptance_tests": ["phone viewport controls remain usable", "hero, Cosmo, voice and playback smoke paths pass"]
+    },
+    {
+      "id": "playback_resilience",
+      "priority": "high",
+      "candidate_roles": ["agent_workflow_traces_metrics_and_logs", "browser_validation"],
+      "acceptance_tests": ["provider failure preserves source link", "failure reason is observable without collecting viewing content"]
+    },
+    {
+      "id": "verifier_policy",
+      "priority": "high",
+      "candidate_roles": ["actuator_authorization_policy_engine", "incremental_source_syntax_parser"],
+      "acceptance_tests": ["scanner cannot execute imported code", "promotion requires license, pin, security and test gates"]
+    }
+  ]
+}
