@@ -988,6 +988,16 @@
       DOM.playerVideo.preload = "auto";
       /* Register handlers before assigning src so no stale queued event
          from a prior load can slip through and trigger the wrong handler. */
+      DOM.playerVideo.onloadedmetadata = () => {
+        const resumeId = showForEpisode ? buildEpisodeId(episode, showForEpisode) : "";
+        const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
+          ? StarQuestAuth.getWatchPosition(resumeId)
+          : 0;
+        const duration = Number(DOM.playerVideo.duration) || 0;
+        if (savedPosition > 5 && (!duration || savedPosition < duration - 10)) {
+          DOM.playerVideo.currentTime = savedPosition;
+        }
+      };
       DOM.playerVideo.oncanplay = () => {
         DOM.playerLoading.style.display = "none";
         attemptInstantPlayback();
@@ -2126,6 +2136,9 @@
     const signinBtn        = $("sidebar-signin-btn");
     const signoutBtn       = $("sidebar-signout-btn");
 
+    const wallet = typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet
+      ? StarQuestAuth.currentWallet()
+      : user;
     if (user) {
       if (sidebarUsername) sidebarUsername.textContent = user.username;
       if (sidebarTokens)  sidebarTokens.textContent   = user.tokens || 0;
@@ -2135,21 +2148,21 @@
       if (signoutBtn)     signoutBtn.style.display     = "";
     } else {
       if (sidebarUsername) sidebarUsername.textContent = "Guest";
-      if (sidebarTokens)  sidebarTokens.textContent   = "0";
+      if (sidebarTokens)  sidebarTokens.textContent   = (wallet && wallet.tokens) || 0;
       if (navWallet)      navWallet.style.display      = "flex";
-      if (navTokenCount)  navTokenCount.textContent    = "0";
+      if (navTokenCount)  navTokenCount.textContent    = (wallet && wallet.tokens) || 0;
       if (signinBtn)      signinBtn.style.display      = "";
       if (signoutBtn)     signoutBtn.style.display     = "none";
     }
     renderHistoryList();
     renderLedgerList();
-    renderWalletCard(user);
+    renderWalletCard(wallet);
     renderUnlockedContent(user);
   }
 
   /* Token update event */
   document.addEventListener("starquest:tokens-updated", (e) => {
-    updateUIForUser(e.detail && e.detail.user ? e.detail.user : StarQuestAuth.currentUser());
+    updateUIForUser(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
   });
   document.addEventListener("starquest:history-updated", () => {
     renderHistoryList();
@@ -2167,10 +2180,10 @@
     if (typeof renderForYouRow === "function") renderForYouRow();
   });
   document.addEventListener("starquest:watch-progress", () => {
-    renderWalletCard(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
+    renderWalletCard(typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet ? StarQuestAuth.currentWallet() : null);
   });
   document.addEventListener("starquest:share-progress", () => {
-    renderWalletCard(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
+    renderWalletCard(typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet ? StarQuestAuth.currentWallet() : null);
   });
 
   /* ─────────────────────────────────────────────────────────────
@@ -2194,7 +2207,7 @@
     document.body.style.overflow = "hidden";
     renderHistoryList();
     renderLedgerList();
-    renderWalletCard(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
+    renderWalletCard(typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet ? StarQuestAuth.currentWallet() : null);
     renderConvoHistory();
   }
 
@@ -2216,7 +2229,7 @@
   document.addEventListener("starquest:sidebar-opened", () => {
     renderHistoryList();
     renderLedgerList();
-    renderWalletCard(typeof StarQuestAuth !== "undefined" ? StarQuestAuth.currentUser() : null);
+    renderWalletCard(typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet ? StarQuestAuth.currentWallet() : null);
     renderConvoHistory();
   });
 
@@ -2233,7 +2246,6 @@
   if (clearHistoryBtn) {
     clearHistoryBtn.addEventListener("click", () => {
       if (typeof StarQuestAuth === "undefined") return;
-      if (!StarQuestAuth.currentUser()) return;
       if (!confirm("Clear your entire watch history?")) return;
       StarQuestAuth.clearHistory();
       renderHistoryList();
@@ -2268,14 +2280,23 @@
 
       const time = formatRelativeTime(item.lastWatchedAt || item.startedAt || Date.now());
       const thumb = item.thumbnail || "";
+      const position = Math.max(0, Number(item.positionSeconds) || 0);
+      const duration = Math.max(0, Number(item.duration) || 0);
+      const percent = duration > 0 ? Math.min(100, Math.round((position / duration) * 100)) : 0;
+      const progressText = item.completed
+        ? "Watched"
+        : position > 0
+          ? formatWatchTime(position) + (duration > 0 ? " of " + formatWatchTime(duration) : "")
+          : time;
 
       el.innerHTML = `
         <img class="history-item__thumb" src="${escAttrSQ(thumb)}" alt="${escAttrSQ(item.epTitle)}" onerror="this.style.display='none'">
         <div class="history-item__info">
           <div class="history-item__show">${escHTMLSQ(item.showTitle)}</div>
           <div class="history-item__ep">${escHTMLSQ(item.epTitle)}</div>
+          <div class="history-item__progress" aria-label="${escAttrSQ(String(percent))}% watched"><i style="width:${percent}%"></i></div>
         </div>
-        <div class="history-item__time">${escHTMLSQ(time)}</div>
+        <div class="history-item__time">${escHTMLSQ(progressText)}</div>
       `;
 
       el.addEventListener("click", () => {
@@ -2313,6 +2334,14 @@
     if (hr < 24)   return hr + "h ago";
     const d = Math.floor(hr / 24);
     return d + "d ago";
+  }
+
+  function formatWatchTime(seconds) {
+    const total = Math.max(0, Math.trunc(Number(seconds) || 0));
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    const remaining = total % 60;
+    return (hours ? hours + ":" + String(minutes).padStart(2, "0") : String(minutes)) + ":" + String(remaining).padStart(2, "0");
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -2646,16 +2675,19 @@
 
   function startWatchTimer(ep, showTitle) {
     stopWatchTimer();
-    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return;
+    if (typeof StarQuestAuth === "undefined") return;
     if (!ep) return;
     const show = findShowForEpisode(ep);
     const episodeId = show ? (show.id + "|S" + ep.season + "E" + ep.episode) : (showTitle + "|" + ep.id);
     const playerVideo = $("player-video");
     if (!playerVideo) return;
+    const existingHistory = StarQuestAuth.getHistory().find((item) => item.episodeId === episodeId);
+    const savedPosition = Math.max(0, Number(StarQuestAuth.getWatchPosition(episodeId)) || 0);
 
     _watchTracker = {
       episodeId,
-      lastTime: Number(playerVideo.currentTime) || 0,
+      lastTime: Number(playerVideo.currentTime) || savedPosition,
+      positionSeconds: savedPosition,
       seeking: false,
       duration: Math.max(0, Math.trunc(Number(playerVideo.duration) || 0)),
       showId: show ? show.id : "",
@@ -2667,7 +2699,7 @@
       thumbnail: ep.thumbnail || (show && show.thumbnail) || "",
       archiveId: ep.archiveId || "",
       distributorAccount: show && show.distributorAccount ? show.distributorAccount : "",
-      watchedSeconds: Math.max(0, Math.trunc(Number(StarQuestAuth.getWatchPosition(episodeId)) || 0)),
+      watchedSeconds: Math.max(0, Number(existingHistory && existingHistory.watchedSeconds) || 0),
     };
 
     playerVideo.onseeking = () => { if (_watchTracker) _watchTracker.seeking = true; };
@@ -2692,10 +2724,18 @@
       if (!Number.isFinite(delta) || delta <= 0 || delta > 2) return;
 
       _watchTracker.watchedSeconds += delta;
-      StarQuestAuth.saveWatchPosition(_watchTracker.episodeId, Math.floor(_watchTracker.watchedSeconds));
-      StarQuestAuth.updateHistoryProgress(_watchTracker.episodeId, Math.floor(_watchTracker.watchedSeconds), _watchTracker.duration);
+      _watchTracker.positionSeconds = nowTime;
+      _watchTracker.duration = Math.max(_watchTracker.duration, Math.trunc(Number(playerVideo.duration) || 0));
+      StarQuestAuth.saveWatchPosition(_watchTracker.episodeId, Math.floor(nowTime));
+      StarQuestAuth.updateHistoryProgress(
+        _watchTracker.episodeId,
+        Math.floor(nowTime),
+        _watchTracker.duration,
+        Math.floor(_watchTracker.watchedSeconds)
+      );
       StarQuestAuth.recordWatchProgress(_watchTracker.episodeId, delta, {
         episodeId: _watchTracker.episodeId,
+        positionSeconds: Math.floor(nowTime),
         watchedSeconds: Math.floor(_watchTracker.watchedSeconds),
         duration: _watchTracker.duration,
       });
@@ -2715,11 +2755,18 @@
   function stopWatchTimer() {
     if (_watchTimer) clearInterval(_watchTimer);
     _watchTimer = null;
+    const playerVideo = $("player-video");
+    if (_watchTracker && playerVideo && typeof StarQuestAuth !== "undefined") {
+      const position = Math.max(0, Number(playerVideo.currentTime) || _watchTracker.positionSeconds || 0);
+      const duration = Math.max(_watchTracker.duration || 0, Math.trunc(Number(playerVideo.duration) || 0));
+      StarQuestAuth.saveWatchPosition(_watchTracker.episodeId, Math.floor(position));
+      StarQuestAuth.updateHistoryProgress(_watchTracker.episodeId, Math.floor(position), duration, Math.floor(_watchTracker.watchedSeconds));
+    }
     _watchTracker = null;
   }
 
   function addToHistoryNow(ep, showTitle) {
-    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return;
+    if (typeof StarQuestAuth === "undefined") return;
     if (!ep) return;
     const show = findShowForEpisode(ep);
     const showId = (show && show.id) ? show.id : "unknown";
@@ -2727,6 +2774,7 @@
     const startYear = parseInt(String((show && show.years) || "").split("–")[0], 10);
     const decade = Number.isFinite(startYear) ? (Math.floor(startYear / 10) * 10 + "s") : "";
     const duration = Math.max(0, Math.trunc((Number(ep.duration) || parseInt(String(ep.duration || "0"), 10)) * 60));
+    const existingHistory = StarQuestAuth.getHistory().find((item) => item.episodeId === episodeId);
     StarQuestAuth.addToHistory({
       episodeId,
       showId,
@@ -2736,7 +2784,8 @@
       genre: show && show.genre ? show.genre[0] : "",
       decade,
       tags: show && Array.isArray(show.genre) ? show.genre.slice(0, 4) : [],
-      watchedSeconds: Math.max(0, StarQuestAuth.getWatchPosition(episodeId)),
+      watchedSeconds: Math.max(0, Number(existingHistory && existingHistory.watchedSeconds) || 0),
+      positionSeconds: Math.max(0, StarQuestAuth.getWatchPosition(episodeId)),
       duration,
       completionRate: 0,
       startedAt: Date.now(),
@@ -2789,6 +2838,7 @@
       ? "Watch " + showTitle + " — " + episodeTitle + " on StarQuest ⭐"
       : "Watch " + showTitle + " on StarQuest ⭐";
     return {
+      attemptId: "share-attempt-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9),
       title: showTitle + " on StarQuest",
       text,
       url: shareUrl.toString(),
@@ -2844,7 +2894,7 @@
 
   function activeShareWasFullyWatched() {
     if (!activeShare || !activeShare.episode || !activeShare.show) return false;
-    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return false;
+    if (typeof StarQuestAuth === "undefined") return false;
     const episode = activeShare.episode;
     const show = activeShare.show;
     const episodeId = show.id + "|S" + episode.season + "E" + episode.episode;
@@ -2854,10 +2904,7 @@
 
   function rewardCompletedShare(method, confirmedAction) {
     if (!activeShare) return;
-    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) {
-      setShareStatus("Share action completed. Sign in to build StarCoin progress.");
-      return;
-    }
+    if (typeof StarQuestAuth === "undefined") return;
     const show = activeShare.show;
     const episode = activeShare.episode;
     const fullyWatched = activeShareWasFullyWatched();
@@ -2865,6 +2912,7 @@
     const shareResult = StarQuestAuth.recordShare(activeShare.contentId, {
       verified: confirmed,
       confirmed,
+      attemptId: activeShare.attemptId,
       fullyWatched,
       status: confirmed ? "client_confirmed" : "pending_verification",
       method,
@@ -2875,8 +2923,8 @@
     });
     if (!shareResult.ok) {
       setShareStatus(
-        shareResult.error === "share_cooldown"
-          ? "This program already received share progress recently."
+        shareResult.error === "duplicate_share_attempt"
+          ? "This share action was already counted. Open Share again for another completed share."
           : (shareResult.message || "Shared, but progress could not be saved.")
       );
       return;
@@ -2896,12 +2944,13 @@
 
   function recordUnverifiedShare(method) {
     if (!activeShare) activeShare = currentSharePayload();
-    if (typeof StarQuestAuth === "undefined" || !StarQuestAuth.currentUser()) return null;
+    if (typeof StarQuestAuth === "undefined") return null;
     const show = activeShare.show;
     const episode = activeShare.episode;
     return StarQuestAuth.recordShare(activeShare.contentId, {
       verified: false,
       confirmed: false,
+      attemptId: activeShare.attemptId,
       fullyWatched: activeShareWasFullyWatched(),
       status: "client_handoff_unverified",
       method,
