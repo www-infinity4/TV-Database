@@ -8,9 +8,10 @@
 
   const STORAGE_KEY = "starquest_users";
   const SESSION_KEY = "starquest_session";
+  const GUEST_PROFILE_KEY = "starquest_guest_profile_v1";
   const SYNC_HASH_PREFIX = "sync-";
   const SHARES_PER_COIN = 10;
-  const SHARE_COOLDOWN_MS = 5 * 60 * 1000;
+  const SHARE_ATTEMPT_HISTORY_LIMIT = 250;
 
   /* ── Secure password hashing using Web Crypto PBKDF2 ── */
 
@@ -122,6 +123,7 @@
   function normalizeHistoryEntry(entry) {
     if (!entry || typeof entry !== "object") return null;
     const watchedSeconds = Math.max(0, toInt(entry.watchedSeconds, 0));
+    const positionSeconds = Math.max(0, toInt(entry.positionSeconds, watchedSeconds));
     const duration = Math.max(0, toInt(entry.duration, 0));
     const completionRate = duration > 0
       ? Math.min(1, watchedSeconds / duration)
@@ -139,6 +141,7 @@
       decade: entry.decade || "",
       tags: Array.isArray(entry.tags) ? entry.tags.slice(0, 20) : [],
       watchedSeconds,
+      positionSeconds,
       duration,
       completionRate,
       startedAt,
@@ -212,6 +215,9 @@
       shareCooldownByContent: user.shareCooldownByContent && typeof user.shareCooldownByContent === "object"
         ? user.shareCooldownByContent
         : {},
+      shareAttemptIds: user.shareAttemptIds && typeof user.shareAttemptIds === "object"
+        ? user.shareAttemptIds
+        : {},
       unlockedContent,
       ledger,
     };
@@ -243,6 +249,74 @@
 
   function saveUsers(users) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+  }
+
+  function loadGuestProfile() {
+    const stored = parseStoredJSON(GUEST_PROFILE_KEY, null);
+    return normalizeUser(stored || {
+      username: "Guest",
+      key: "__guest__",
+      joinedAt: Date.now(),
+      tokens: 0,
+      watchHistory: [],
+      watchPositions: {},
+      shareCount: 0,
+      pendingShareCredits: 0,
+      shareEvents: [],
+      shareAttemptIds: {},
+      unlockedContent: {},
+      ledger: [],
+    }, "__guest__");
+  }
+
+  function saveGuestProfile(profile) {
+    localStorage.setItem(GUEST_PROFILE_KEY, JSON.stringify(normalizeUser(profile, "__guest__")));
+  }
+
+  function mutateViewerProfile(mutator) {
+    if (loadSession()) return mutateCurrentUser(mutator);
+    const guest = loadGuestProfile();
+    const result = mutator(guest, null);
+    if (result && result.ok === false) return result;
+    saveGuestProfile(guest);
+    return { ok: true, user: loadGuestProfile(), result };
+  }
+
+  function claimGuestProfile(user) {
+    const guest = loadGuestProfile();
+    const hasGuestData = guest.tokens || guest.pendingShareCredits || guest.shareEvents.length || guest.watchHistory.length;
+    if (!hasGuestData) return user;
+
+    const mergedHistory = new Map();
+    [...(user.watchHistory || []), ...(guest.watchHistory || [])].forEach((entry) => {
+      const existing = mergedHistory.get(entry.episodeId);
+      if (!existing || Number(entry.lastWatchedAt || 0) > Number(existing.lastWatchedAt || 0)) {
+        mergedHistory.set(entry.episodeId, entry);
+      }
+    });
+    user.watchHistory = [...mergedHistory.values()]
+      .sort((a, b) => Number(b.lastWatchedAt || 0) - Number(a.lastWatchedAt || 0))
+      .slice(0, 200);
+    user.watchPositions = { ...(user.watchPositions || {}) };
+    Object.entries(guest.watchPositions || {}).forEach(([episodeId, position]) => {
+      user.watchPositions[episodeId] = Math.max(
+        Math.max(0, toInt(user.watchPositions[episodeId], 0)),
+        Math.max(0, toInt(position, 0))
+      );
+    });
+    user.tokens = Math.max(0, toInt(user.tokens, 0)) + Math.max(0, toInt(guest.tokens, 0));
+    user.shareCount = Math.max(0, toInt(user.shareCount, 0)) + Math.max(0, toInt(guest.shareCount, 0));
+    user.pendingShareCredits = Math.max(0, toInt(user.pendingShareCredits, 0)) + Math.max(0, toInt(guest.pendingShareCredits, 0));
+    while (user.pendingShareCredits >= SHARES_PER_COIN) {
+      user.pendingShareCredits -= SHARES_PER_COIN;
+      user.tokens += 1;
+      appendLedger(user, 1, "Guest share progress claimed at sign-in", null, "share_reward", "share reward");
+    }
+    user.shareEvents = [...(user.shareEvents || []), ...(guest.shareEvents || [])].slice(-250);
+    user.ledger = [...(user.ledger || []), ...(guest.ledger || [])].slice(-500);
+    user.shareAttemptIds = { ...(user.shareAttemptIds || {}), ...(guest.shareAttemptIds || {}) };
+    localStorage.removeItem(GUEST_PROFILE_KEY);
+    return normalizeUser(user, user.key);
   }
 
   function getCurrentUserFromStore() {
@@ -330,7 +404,7 @@
         ? await hashPasswordAsync(cleanPassword, cleanUsername)
         : hashPasswordSync(cleanPassword, cleanUsername);
 
-      const user = normalizeUser({
+      const user = claimGuestProfile(normalizeUser({
         username: cleanUsername,
         key,
         passwordHash,
@@ -345,7 +419,7 @@
         shareCooldownByContent: {},
         unlockedContent: {},
         ledger: [],
-      }, key);
+      }, key));
 
       users[key] = user;
       saveUsers(users);
@@ -396,7 +470,7 @@
       if (isLegacySyncNoPrefix) {
         user.passwordHash = hasSubtle ? asyncHash : syncHash;
       }
-      users[user.key] = normalizeUser(user, user.key);
+      users[user.key] = claimGuestProfile(normalizeUser(user, user.key));
       saveUsers(users);
       saveSessionForUser(users[user.key], Date.now());
       dispatch("starquest:auth-changed", { user: this.currentUser(), action: "signin" });
@@ -434,13 +508,17 @@
     },
 
     getBalance() {
-      const user = this.currentUser();
+      const user = this.currentWallet();
       return user ? Math.max(0, toInt(user.tokens, 0)) : 0;
     },
 
     getLedger() {
-      const user = this.currentUser();
+      const user = this.currentWallet();
       return user && Array.isArray(user.ledger) ? user.ledger.slice() : [];
+    },
+
+    currentWallet() {
+      return this.currentUser() || loadGuestProfile();
     },
 
     canAfford(amount) {
@@ -452,7 +530,7 @@
     addTokens(amount, reason, referenceId, type) {
       const tokenAmount = toInt(amount, NaN);
       if (!Number.isFinite(tokenAmount) || tokenAmount <= 0) return null;
-      const result = mutateCurrentUser((user) => {
+      const result = mutateViewerProfile((user) => {
         user.tokens = Math.max(0, toInt(user.tokens, 0) + tokenAmount);
         const tx = appendLedger(
           user,
@@ -617,7 +695,7 @@
 
     saveWatchPosition(episodeId, seconds) {
       if (!episodeId) return;
-      mutateCurrentUser((user) => {
+      mutateViewerProfile((user) => {
         if (!user.watchPositions) user.watchPositions = {};
         user.watchPositions[episodeId] = Math.max(0, toInt(seconds, 0));
         return { ok: true };
@@ -625,7 +703,7 @@
     },
 
     getWatchPosition(episodeId) {
-      const user = this.currentUser();
+      const user = this.currentWallet();
       if (!user || !user.watchPositions) return 0;
       return Math.max(0, toInt(user.watchPositions[episodeId], 0));
     },
@@ -641,7 +719,7 @@
           ...(extras && typeof extras === "object" ? extras : {}),
         };
 
-      const result = mutateCurrentUser((user) => {
+      const result = mutateViewerProfile((user) => {
         if (!incoming.episodeId) {
           return { ok: false, error: "invalid_episode", message: "Invalid episode ID." };
         }
@@ -678,13 +756,14 @@
       });
     },
 
-    updateHistoryProgress(episodeId, watchedSeconds, duration) {
+    updateHistoryProgress(episodeId, positionSeconds, duration, watchedSeconds) {
       if (!episodeId) return;
-      mutateCurrentUser((user) => {
+      const result = mutateViewerProfile((user) => {
         if (!Array.isArray(user.watchHistory)) user.watchHistory = [];
         const idx = user.watchHistory.findIndex((h) => h.episodeId === episodeId);
         if (idx < 0) return { ok: true };
         const item = { ...user.watchHistory[idx] };
+        item.positionSeconds = Math.max(0, toInt(positionSeconds, item.positionSeconds || 0));
         item.watchedSeconds = Math.max(item.watchedSeconds || 0, toInt(watchedSeconds, item.watchedSeconds || 0));
         item.duration = Math.max(item.duration || 0, toInt(duration, item.duration || 0));
         item.completionRate = item.duration > 0 ? Math.min(1, item.watchedSeconds / item.duration) : item.completionRate;
@@ -693,11 +772,13 @@
         user.watchHistory[idx] = normalizeHistoryEntry(item);
         return { ok: true };
       });
+      if (result.ok) dispatch("starquest:history-progress", { episodeId, user: result.user });
     },
 
     clearHistory() {
-      const result = mutateCurrentUser((user) => {
+      const result = mutateViewerProfile((user) => {
         user.watchHistory = [];
+        user.watchPositions = {};
         return { history: [] };
       });
       if (!result.ok) return;
@@ -706,8 +787,7 @@
     },
 
     getHistory() {
-      const user = this.currentUser();
-      if (!user) return [];
+      const user = this.currentWallet();
       return Array.isArray(user.watchHistory) ? user.watchHistory.slice() : [];
     },
 
@@ -718,6 +798,7 @@
       }
       const opts = options && typeof options === "object" ? options : {};
       const now = Date.now();
+      const attemptId = String(opts.attemptId || createEventId("share-attempt"));
       // A browser can confirm that its share action completed (native share
       // promise resolved, clipboard write succeeded, or an external composer
       // was opened), but it cannot prove that a recipient viewed the message.
@@ -725,18 +806,14 @@
       // Completed-watch state remains separate for distributor attribution.
       const qualifiesForProgress = opts.confirmed === true || opts.verified === true;
 
-      const result = mutateCurrentUser((user) => {
-        if (!user.shareCooldownByContent || typeof user.shareCooldownByContent !== "object") {
-          user.shareCooldownByContent = {};
-        }
+      const result = mutateViewerProfile((user) => {
+        if (!user.shareAttemptIds || typeof user.shareAttemptIds !== "object") user.shareAttemptIds = {};
         if (qualifiesForProgress) {
-          const lastShareTs = toInt(user.shareCooldownByContent[id], 0);
-          if (now - lastShareTs < SHARE_COOLDOWN_MS) {
+          if (user.shareAttemptIds[attemptId]) {
             return {
               ok: false,
-              error: "share_cooldown",
-              message: "You already earned verified share progress for this content recently.",
-              retryInMs: SHARE_COOLDOWN_MS - (now - lastShareTs),
+              error: "duplicate_share_attempt",
+              message: "This share attempt was already counted.",
             };
           }
         }
@@ -744,6 +821,7 @@
         if (!Array.isArray(user.shareEvents)) user.shareEvents = [];
         const event = {
           id: createEventId("share"),
+          attemptId,
           contentId: id,
           createdAt: now,
           verified: !!opts.verified,
@@ -762,7 +840,10 @@
         if (!qualifiesForProgress) {
           return { event, awarded: 0, credited: false };
         }
-        user.shareCooldownByContent[id] = now;
+        user.shareAttemptIds[attemptId] = now;
+        const recentAttempts = Object.entries(user.shareAttemptIds)
+          .sort((a, b) => Number(b[1]) - Number(a[1])).slice(0, SHARE_ATTEMPT_HISTORY_LIMIT);
+        user.shareAttemptIds = Object.fromEntries(recentAttempts);
         user.shareCount = Math.max(0, toInt(user.shareCount, 0)) + 1;
         user.pendingShareCredits = Math.max(0, toInt(user.pendingShareCredits, 0)) + 1;
 
@@ -831,7 +912,7 @@
       }
       const meta = metadata && typeof metadata === "object" ? metadata : {};
 
-      const result = mutateCurrentUser((user) => {
+      const result = mutateViewerProfile((user) => {
         const addSeconds = Math.floor(step);
         if (addSeconds <= 0) {
           return { ok: false, error: "invalid_seconds", message: "Watch progress must be positive." };
@@ -843,6 +924,7 @@
             : -1;
           if (historyIndex >= 0) {
             const item = { ...user.watchHistory[historyIndex] };
+            item.positionSeconds = Math.max(0, toInt(meta.positionSeconds, item.positionSeconds || 0));
             item.watchedSeconds = Math.max(item.watchedSeconds || 0, toInt(meta.watchedSeconds, item.watchedSeconds || 0));
             item.duration = Math.max(item.duration || 0, toInt(meta.duration, item.duration || 0));
             item.completionRate = item.duration > 0 ? Math.min(1, item.watchedSeconds / item.duration) : item.completionRate;
@@ -858,8 +940,8 @@
       if (!result.ok) {
         return {
           ok: false,
-          error: result.error || "not_signed_in",
-          message: result.message || "Please sign in.",
+          error: result.error || "watch_progress_failed",
+          message: result.message || "Watch progress could not be saved.",
         };
       }
 
@@ -879,7 +961,7 @@
     },
 
     SHARES_PER_COIN,
-    SHARE_COOLDOWN_MS,
+    SHARE_ATTEMPT_HISTORY_LIMIT,
   };
 
   migrateUsers();

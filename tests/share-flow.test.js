@@ -31,6 +31,7 @@ require("../js/auth.js");
 
   for (let index = 1; index <= 10; index += 1) {
     const result = auth.recordShare(`show|episode-${index}`, {
+      attemptId: `attempt-${index}`,
       confirmed: true,
       verified: true,
       fullyWatched: false,
@@ -50,12 +51,13 @@ require("../js/auth.js");
   assert.equal(auth.getLedger().at(-1).type, "share_reward");
 
   const duplicate = auth.recordShare("show|episode-10", {
+    attemptId: "attempt-10",
     confirmed: true,
     verified: true,
     method: "web_share_api"
   });
   assert.equal(duplicate.ok, false);
-  assert.equal(duplicate.error, "share_cooldown");
+  assert.equal(duplicate.error, "duplicate_share_attempt");
   assert.equal(auth.getBalance(), 1);
-  console.log("unverified copy -> no credit; 10 verified native shares -> StarCoin; cooldown: ok");
+  console.log("unverified copy -> no credit; 10 verified native shares -> StarCoin; duplicate attempt blocked: ok");
 })().catch(error => { console.error(error); process.exitCode = 1; });
