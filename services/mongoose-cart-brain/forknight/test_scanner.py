@@ -52,6 +52,27 @@ class ForknightTests(unittest.TestCase):
         self.assertEqual(first["summary"]["rejected"], 1)
         self.assertEqual(first["authority"]["created_forks"], False)
 
+    def test_project_profile_matches_roles_without_executing_candidates(self):
+        registry = {
+            "entries": [{
+                "repository": "owner/project",
+                "role": "browser_validation",
+                "integration": "test_only_cli",
+                "pin": "c" * 40,
+                "license_spdx": "MIT",
+                "license_scope": "repository",
+            }]
+        }
+        profile = {
+            "project": "StarQuest",
+            "needs": [{"id": "browser_checks", "candidate_roles": ["browser_validation"]}],
+            "discovery": {"topics": ["testing"], "languages": ["JavaScript"], "start_year": 2026, "end_year": 2026},
+        }
+        report = scanner.match_profile(registry, profile)
+        self.assertEqual(report["summary"]["adapter_ready"], 1)
+        self.assertEqual(report["summary"]["search_shards"], 12)
+        self.assertFalse(report["authority"]["executed_code"])
+
 
 if __name__ == "__main__":
     unittest.main()
