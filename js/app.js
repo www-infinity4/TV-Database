@@ -1507,6 +1507,10 @@
   /* ── State ── */
   let _currentEpisode = null;  /* set when player opens */
   let _currentShowTitle = "";
+  // This player/account controller is a separate IIFE from the catalogue
+  // controller above, so it needs its own commit interval. Referencing the
+  // other IIFE's constant caused a ReferenceError every second during video.
+  const WATCH_PERSIST_INTERVAL_SECONDS = 10;
 
   /* ── DOM shortcuts ── */
   function $(id) { return document.getElementById(id); }
@@ -3149,11 +3153,15 @@
         await copyActiveShare();
         return;
       }
-      await navigator.share({ title: activeShare.title, text: activeShare.text, url: activeShare.url });
+      // Android may suspend or navigate away from this page while its native
+      // chooser is open, so code after await navigator.share() is not a
+      // reliable place to commit the receipt. Opening the chooser is the
+      // confirmed client handoff; the attempt ID prevents double credit.
       rewardCompletedShare("web_share_api", true);
+      await navigator.share({ title: activeShare.title, text: activeShare.text, url: activeShare.url });
     } catch (error) {
       if (error && error.name === "AbortError") {
-        setShareStatus("Share canceled. Choose another option when ready.");
+        setShareStatus("Phone share opened and the 1/10 receipt was committed. Choose another option when ready.");
       } else {
         setShareStatus("Phone sharing was unavailable. Use Text, Email, or Copy Link below.");
       }
