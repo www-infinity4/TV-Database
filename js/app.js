@@ -2199,8 +2199,12 @@
   document.addEventListener("starquest:watch-progress", () => {
     renderWalletCard(typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet ? StarQuestAuth.currentWallet() : null);
   });
+  document.addEventListener("starquest:history-progress", () => {
+    renderHistoryList();
+  });
   document.addEventListener("starquest:share-progress", (event) => {
     renderWalletCard(typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet ? StarQuestAuth.currentWallet() : null);
+    renderLedgerList();
     if (event.detail && event.detail.awarded > 0) {
       const button = $("player-share-btn");
       if (button) {
@@ -2380,7 +2384,9 @@
     const empty = $("ledger-empty");
     if (!list) return;
 
-    const user = (typeof StarQuestAuth !== "undefined") ? StarQuestAuth.currentUser() : null;
+    const user = (typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet)
+      ? StarQuestAuth.currentWallet()
+      : null;
     const ledger = (user && user.ledger) ? user.ledger.slice().reverse().slice(0, 20) : [];
 
     Array.from(list.querySelectorAll(".ledger-item")).forEach((el) => el.remove());
@@ -2398,6 +2404,7 @@
       const labelByType = {
         watch_reward: "watch reward",
         share_reward: "share reward",
+        share_credit: "share ledger commit",
         content_unlock: "content unlock",
       };
       const label = tx.label || labelByType[tx.type] || "administrator/migration adjustment";
@@ -2882,8 +2889,15 @@
   }
 
   function findShowForEpisode(ep) {
-    if (typeof SHOWS === "undefined") return null;
-    return SHOWS.find((s) => s.episodes && s.episodes.includes(ep)) || null;
+    if (typeof SHOWS === "undefined" || !ep) return null;
+    return SHOWS.find((show) => Array.isArray(show.episodes) && show.episodes.some((candidate) => {
+      if (candidate === ep) return true;
+      if (candidate.id && ep.id) return candidate.id === ep.id;
+      if (candidate.src && ep.src) return candidate.src === ep.src;
+      return candidate.title === ep.title
+        && Number(candidate.season) === Number(ep.season)
+        && Number(candidate.episode) === Number(ep.episode);
+    })) || null;
   }
 
   function showPlayerTokenNotif() {
@@ -2988,11 +3002,29 @@
     return !!(watched && (watched.completed || Number(watched.completionRate) >= 0.98));
   }
 
+  function shareAttribution(show, episode) {
+    const actors = [];
+    const rawActors = episode && (episode.actors || episode.cast);
+    if (Array.isArray(rawActors)) {
+      rawActors.forEach((actor) => {
+        const name = typeof actor === "string" ? actor : actor && actor.name;
+        if (name && !actors.includes(name)) actors.push(name);
+      });
+    }
+    return {
+      companyId: (show && (show.companyId || show.distributorAccount || show.network || show.studio))
+        || (show && show.id ? "unclaimed:" + show.id : "unclaimed:unknown-content"),
+      actors,
+      attributionStatus: actors.length ? "recorded_client_side" : "actor_credits_pending",
+    };
+  }
+
   function rewardCompletedShare(method, confirmedAction) {
     if (!activeShare) return;
     if (typeof StarQuestAuth === "undefined") return;
     const show = activeShare.show;
     const episode = activeShare.episode;
+    const attribution = shareAttribution(show, episode);
     const fullyWatched = activeShareWasFullyWatched();
     const confirmed = confirmedAction === true;
     const shareResult = StarQuestAuth.recordShare(activeShare.contentId, {
@@ -3005,7 +3037,9 @@
       url: activeShare.url,
       showTitle: _currentShowTitle || "",
       episodeId: (episode && (episode.id || episode.title)) || "",
-      companyId: (show && (show.companyId || show.network || show.studio)) || null,
+      companyId: attribution.companyId,
+      actors: attribution.actors,
+      attributionStatus: attribution.attributionStatus,
     });
     if (!shareResult.ok) {
       setShareStatus(
@@ -3033,6 +3067,7 @@
     if (typeof StarQuestAuth === "undefined") return null;
     const show = activeShare.show;
     const episode = activeShare.episode;
+    const attribution = shareAttribution(show, episode);
     return StarQuestAuth.recordShare(activeShare.contentId, {
       verified: false,
       confirmed: false,
@@ -3043,7 +3078,9 @@
       url: activeShare.url,
       showTitle: _currentShowTitle || "",
       episodeId: (episode && (episode.id || episode.title)) || "",
-      companyId: (show && (show.companyId || show.network || show.studio)) || null,
+      companyId: attribution.companyId,
+      actors: attribution.actors,
+      attributionStatus: attribution.attributionStatus,
     });
   }
 
@@ -3053,8 +3090,8 @@
     try {
       if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("clipboard_unavailable");
       await navigator.clipboard.writeText(copyText);
-      recordUnverifiedShare("copy_link");
-      setShareStatus("Exact episode link copied and saved to audit history. It does not count toward 1/10 until a verified native share completes.");
+      rewardCompletedShare("copy_link", true);
+      setShareStatus("Episode link copied. This share is committed to your 1/10 StarCoin ledger.");
       return true;
     } catch (_) {
       const field = document.createElement("textarea");
@@ -3073,8 +3110,8 @@
       }
       field.remove();
       if (copied) {
-        recordUnverifiedShare("copy_link");
-        setShareStatus("Exact episode link copied and saved to audit history. It does not count toward 1/10 until a verified native share completes.");
+        rewardCompletedShare("copy_link", true);
+        setShareStatus("Episode link copied. This share is committed to your 1/10 StarCoin ledger.");
         return true;
       }
       window.prompt("Copy this StarQuest link:", copyText);
@@ -3093,12 +3130,12 @@
     rewardCompletedShare("twitter_intent", true);
   });
   if (shareSmsLink) shareSmsLink.addEventListener("click", () => {
-    recordUnverifiedShare("sms_handoff");
-    setShareStatus("Opening your text-message app… This handoff is audited without StarCoin credit.");
+    rewardCompletedShare("sms_handoff", true);
+    setShareStatus("Text composer opened. This share is committed to your 1/10 StarCoin ledger.");
   });
   if (shareEmailLink) shareEmailLink.addEventListener("click", () => {
-    recordUnverifiedShare("email_handoff");
-    setShareStatus("Opening your email app… This handoff is audited without StarCoin credit.");
+    rewardCompletedShare("email_handoff", true);
+    setShareStatus("Email composer opened. This share is committed to your 1/10 StarCoin ledger.");
   });
   if (shareNativeBtn) shareNativeBtn.addEventListener("click", async () => {
     if (shareInFlight) return;
