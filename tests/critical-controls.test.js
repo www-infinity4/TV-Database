@@ -17,6 +17,9 @@ class Node {
     this.textContent = "";
     this.style = {};
     this.hidden = false;
+    this.disabled = false;
+    this.children = [];
+    this.value = "";
   }
   setAttribute(name, value) { this.attributes[name] = String(value); }
   getAttribute(name) { return Object.prototype.hasOwnProperty.call(this.attributes, name) ? this.attributes[name] : null; }
@@ -28,13 +31,15 @@ class Node {
       return false;
     }) ? this : null;
   }
+  appendChild(node) { this.children.push(node); node.parentNode = this; return node; }
+  focus() {}
 }
 
 const nodes = Object.fromEntries([
   "sidebar", "sidebar-backdrop", "hamburger-btn", "profile-portal-backdrop",
   "profile-edit-target", "sidebar-close", "profile-portal-close", "ai-fab",
   "ai-panel", "ai-panel-close", "sidebar-cosmo-btn", "sidebar-continue-chat",
-  "cosmo-controls-btn", "cosmo-controls"
+  "cosmo-controls-btn", "cosmo-controls", "ai-messages", "ai-input", "ai-send"
 ].map(id => [id, new Node(id)]));
 nodes["ai-panel"].style.display = "none";
 nodes["ai-panel"].setAttribute("aria-hidden", "true");
@@ -44,11 +49,14 @@ const emitted = [];
 const document = {
   body: { style: {}, classList: new ClassList() },
   getElementById: id => nodes[id] || null,
+  createElement: () => new Node(""),
   addEventListener(name, listener) { (listeners[name] ||= []).push(listener); },
   dispatchEvent(event) { emitted.push(event); (listeners[event.type] || []).forEach(listener => listener(event)); }
 };
 class CustomEvent { constructor(type, init = {}) { this.type = type; this.detail = init.detail; } }
 const window = {};
+window.setTimeout = setTimeout;
+window.clearTimeout = clearTimeout;
 
 const html = fs.readFileSync(require.resolve("../index.html"), "utf8");
 const marker = html.indexOf("Critical controls stay independent");
@@ -91,6 +99,12 @@ click(eventFor(nodes["ai-fab"]));
 assert.equal(nodes["ai-panel"].style.display, "flex");
 assert.equal(nodes["ai-panel"].getAttribute("aria-hidden"), "false");
 assert.equal(nodes["ai-fab"].getAttribute("aria-expanded"), "true");
+assert.equal(nodes["ai-messages"].children.length, 1, "Cosmo should greet even before app.js loads");
+
+nodes["ai-input"].value = "hello";
+click(eventFor(nodes["ai-send"]));
+assert.equal(nodes["ai-input"].value, "", "fallback Send route should consume the message");
+assert.equal(nodes["ai-messages"].children.length, 2, "fallback Send route should immediately show the user message");
 
 click(eventFor(nodes["cosmo-controls-btn"]));
 assert.equal(nodes["cosmo-controls"].hidden, false);

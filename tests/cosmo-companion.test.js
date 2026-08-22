@@ -56,7 +56,7 @@ vm.runInContext(fs.readFileSync("js/cosmo-live.js", "utf8"), context);
 
 assert.equal(window.StarQuestGemma.supported(), false);
 assert.equal(window.StarQuestGemma.status().state, "idle");
-assert.equal(window.StarQuestCosmoLive.getSettings().handsFreeVoice, true);
+assert.equal(window.StarQuestCosmoLive.getSettings().handsFreeVoice, false);
 assert.equal(window.StarQuestCosmoLive.getSettings().speakReplies, true);
 
 let heardCommand = "";
@@ -105,9 +105,13 @@ assert.equal(window.StarQuestCosmoLive.sponsoredSuggestion(), null, "sponsored s
   assert.match(cosmoSource, /recognition\.continuous = true/);
   assert.match(appSource, /primeHandsFree/);
   assert.match(appSource, /handsFreeVoiceEnabled/);
+  assert.doesNotMatch(aiSource, /const POPINS/);
+  assert.match(aiSource, /return null;/);
+  assert.match(aiSource, /Never claim to read thoughts/);
+  assert.match(fs.readFileSync("js/gemma-engine.js", "utf8"), /@litert-lm\/core/);
   const indexSource = fs.readFileSync("index.html", "utf8");
   assert.match(indexSource, /cosmo-handsfree-toggle/);
-  assert.match(indexSource, /say “Cosmo” followed by your question/);
+  assert.match(indexSource, /cannot read thoughts/);
   assert.match(indexSource, /infinity-ai-kernel\.js\?v=20260814-kernel2/);
   console.log("Cosmo hands-free wake word, Gemma consent, live context, shopping list and sponsor controls: ok");
 })().catch((error) => { console.error(error); process.exitCode = 1; });

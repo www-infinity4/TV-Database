@@ -728,7 +728,8 @@
       <label><input id="cosmo-sponsors-toggle" type="checkbox"> Clearly labeled relevant offers</label>
       <label><input id="cosmo-speak-toggle" type="checkbox"> Read Cosmo's replies aloud</label>
       <label><input id="cosmo-handsfree-toggle" type="checkbox"> Hands-free wake word: “Cosmo”</label>
-      <p>Approve microphone permission once. After that, say “Cosmo” followed by your question—no microphone or Send button needed. The microphone pauses while Cosmo speaks and when this page is hidden. Offers are capped and never place an order.</p>
+      <p>Cosmo learns weighted interests only from searches, titles, playback and messages you choose inside StarQuest. It cannot read thoughts, other tabs, or private browser history. Approve microphone permission only if you want voice control. Offers are capped and never place an order.</p>
+      <button id="cosmo-clear-interests" class="cosmo-clear-interests" type="button">Clear learned interests</button>
       <div class="cosmo-shopping-head"><b>Shopping list</b><button id="cosmo-clear-list" type="button">Clear</button></div>
       <ul id="cosmo-shopping-list"><li>Nothing added yet.</li></ul>
     </section>
@@ -756,6 +757,63 @@
 
       function emit(name, detail) {
         document.dispatchEvent(new CustomEvent(name, { detail: detail || {} }));
+      }
+
+      function appendCosmoFallbackMessage(role, text) {
+        var messages = byId("ai-messages");
+        if (!messages) return null;
+        var message = document.createElement("div");
+        var avatar = document.createElement("div");
+        var bubble = document.createElement("div");
+        message.className = "ai-msg ai-msg--" + role;
+        avatar.className = "ai-msg__avatar";
+        avatar.textContent = role === "bot" ? "🤖" : "👤";
+        bubble.className = "ai-msg__bubble";
+        bubble.textContent = String(text || "");
+        message.appendChild(avatar);
+        message.appendChild(bubble);
+        messages.appendChild(message);
+        messages.scrollTop = messages.scrollHeight;
+        return message;
+      }
+
+      function ensureCosmoFallbackGreeting() {
+        var messages = byId("ai-messages");
+        if (messages && messages.children.length === 0) {
+          appendCosmoFallbackMessage("bot", "Hi! I'm Cosmo. Text chat is awake now—ask me about a show, movie, StarCoins, or what to watch next.");
+        }
+      }
+
+      function sendCosmoFallback() {
+        if (window.StarQuestControls && window.StarQuestControls.cosmoChatRouted) return false;
+        var input = byId("ai-input");
+        var send = byId("ai-send");
+        if (!input) return false;
+        var text = String(input.value || "").trim();
+        if (!text) return false;
+        appendCosmoFallbackMessage("user", text);
+        input.value = "";
+        if (send) send.disabled = true;
+        var engineReply = window.StarQuestAI && typeof window.StarQuestAI.chat === "function"
+          ? Promise.resolve(window.StarQuestAI.chat(text))
+          : Promise.resolve("I'm awake, but the full Cosmo engine did not finish loading. Refresh StarQuest once; text chat will remain available.");
+        var timeoutId = 0;
+        var timeoutReply = new Promise(function (resolve) {
+          timeoutId = window.setTimeout(function () { resolve("That answer took too long, so I stopped waiting instead of freezing. Ask me again while I use the offline catalogue."); }, 10000);
+        });
+        Promise.race([
+          engineReply,
+          timeoutReply
+        ]).then(function (reply) {
+          appendCosmoFallbackMessage("bot", reply || "I'm still here. Try that question once more.");
+        }).catch(function () {
+          appendCosmoFallbackMessage("bot", "I hit a temporary problem, but text chat is still awake. Please send that again.");
+        }).then(function () {
+          if (timeoutId) window.clearTimeout(timeoutId);
+          if (send) send.disabled = false;
+          if (input && typeof input.focus === "function") input.focus();
+        });
+        return true;
       }
 
       function openSidebarFallback() {
@@ -830,6 +888,7 @@
           if (opening) document.body.classList.add("cosmo-open");
           else document.body.classList.remove("cosmo-open");
         }
+        if (opening) ensureCosmoFallbackGreeting();
         emit(opening ? "starquest:cosmo-opened" : "starquest:cosmo-closed");
       }
 
@@ -896,12 +955,25 @@
             toggleCosmoControlsFallback();
             return;
           }
+          if (source.closest("#ai-send") && sendCosmoFallback()) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
           var marker = source.closest("[data-avatar-portal], #nav-profile-avatar, #sidebar-profile-avatar, #sidebar-profile-btn");
           if (marker) {
             event.preventDefault();
             event.stopPropagation();
             closeSidebarFallback();
             openPortalFallback(marker);
+          }
+        }, true);
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key !== "Enter" || event.target !== byId("ai-input")) return;
+          if (sendCosmoFallback()) {
+            event.preventDefault();
+            event.stopPropagation();
           }
         }, true);
 
@@ -912,7 +984,9 @@
           closePortal: closePortalFallback,
           openCosmo: function () { setCosmoFallback(true); },
           closeCosmo: function () { setCosmoFallback(false); },
-          cosmoRouted: true
+          cosmoRouted: true,
+          cosmoChatRouted: false,
+          sendCosmoFallback: sendCosmoFallback
         };
       }
 
@@ -929,16 +1003,18 @@
   <script src="js/auth.js?v=20260821-resume1"></script>
   <script src="js/distributor-ledger.js?v=20260809"></script>
   <script src="https://www-infinity4.github.io/Mint-For-Infinity/infinity-ai-kernel.js?v=20260814-kernel2"></script>
-  <script src="js/gemma-engine.js?v=20260812"></script>
-  <script src="js/cosmo-live.js?v=20260815-handsfree1"></script>
-  <script src="js/ai.js?v=20260815-cosmo2"></script>
+  <script src="js/cosmo-config.js?v=20260821-gateway1"></script>
+  <script src="js/cosmo-context.js?v=20260821-weighted1"></script>
+  <script src="js/gemma-engine.js?v=20260821-litert1"></script>
+  <script src="js/cosmo-live.js?v=20260821-cosmo-awake1"></script>
+  <script src="js/ai.js?v=20260821-grounded1"></script>
   <script src="js/avatar-coin.js?v=20260815-vhs1"></script>
   <script src="js/share-safety-net.js?v=20260815-share1"></script>
   <script src="https://www-infinity4.github.io/Mint-For-Infinity/unified-wallet.js?v=20260812"></script>
   <script src="js/infinity-wallet-integration.js?v=20260815-vhs1"></script>
   <script src="js/recommendation-engine.js?v=20260821-gap50"></script>
   <script src="js/opening-rotation.js?v=20260814-rotation1"></script>
-  <script src="js/app.js?v=20260821-resume1"></script>
+  <script src="js/app.js?v=20260821-grounded1"></script>
   <script src="js/user-worlds.js?v=20260812"></script>
 <script src="https://www-infinity4.github.io/Mint-For-Infinity/infinity-wallet-menu.js?v=20260814-menu2"></script></body>
 </html>

@@ -2056,6 +2056,7 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
 .cosmo-controls label { display: flex; align-items: center; gap: 8px; margin: 7px 0; color: var(--text-primary); }
 .cosmo-controls input { accent-color: var(--accent2); }
 .cosmo-controls p { margin: 9px 0; font-size: .65rem; line-height: 1.4; }
+.cosmo-clear-interests { width: 100%; min-height: 38px; border: 1px solid var(--border); border-radius: 9px; background: rgba(255,255,255,.05); color: var(--text-primary); font-size: .72rem; }
 .cosmo-shopping-head { display: flex; align-items: center; justify-content: space-between; margin-top: 9px; }
 .cosmo-shopping-head button { color: #ffb2b2; font-size: .62rem; background: transparent; }
 .cosmo-controls ul { margin: 5px 0 0; padding-left: 18px; max-height: 74px; overflow: auto; }
