@@ -136,8 +136,7 @@
       field.remove();
     }
     if (copied) {
-      audit("copy_link");
-      status("Exact link copied and audited. It did not add StarCoin progress.");
+      creditFallback("copy_link_safety_net");
       return true;
     }
     global.prompt("Copy this StarQuest link:", copyText);
@@ -240,13 +239,11 @@
       return;
     }
     if (source.closest("#share-sms-link")) {
-      audit("sms_handoff");
-      status("Text composer opened and audited without StarCoin credit.");
+      creditFallback("sms_handoff_safety_net");
       return;
     }
     if (source.closest("#share-email-link")) {
-      audit("email_handoff");
-      status("Email composer opened and audited without StarCoin credit.");
+      creditFallback("email_handoff_safety_net");
     }
   }, true);
 
