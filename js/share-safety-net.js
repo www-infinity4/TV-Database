@@ -31,6 +31,7 @@
       ? titleNode.textContent.trim()
       : "StarQuest program";
     return {
+      attemptId: "fallback-attempt-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9),
       title: program + " on StarQuest",
       text: "Watch " + program + " on StarQuest ⭐",
       url: global.location.href
@@ -160,8 +161,7 @@
         text: activeShare.text,
         url: activeShare.url
       });
-      audit("web_share_api", "native_handoff_unverified");
-      status("Phone share completed in safety mode and was audited without StarCoin credit.");
+      creditFallback("web_share_api_safety_net");
     } catch (error) {
       status(error && error.name === "AbortError"
         ? "Share canceled. No StarCoin progress was added."
@@ -177,23 +177,29 @@
     }
   }
 
-  function creditFallbackTwitter() {
+  function creditFallback(method) {
     if (!activeShare) activeShare = payload();
-    if (!global.StarQuestAuth || !global.StarQuestAuth.currentUser || !global.StarQuestAuth.currentUser()) {
-      status("Twitter opened with the StarQuest title and link. Sign in to build StarCoin progress.");
+    if (!global.StarQuestAuth || typeof global.StarQuestAuth.recordShare !== "function") {
+      audit(method, "confirmed_but_wallet_unavailable");
+      status("Share completed, but the wallet was unavailable. Reopen StarQuest before sharing again.");
       return;
     }
     const result = global.StarQuestAuth.recordShare(activeShare.url, {
+      attemptId: activeShare.attemptId,
       confirmed: true,
       verified: true,
-      method: "twitter_intent_safety_net",
+      method,
       url: activeShare.url,
       showTitle: activeShare.title
     });
     if (result && result.ok && result.credited) {
       status(result.awarded > 0
-        ? "⭐ Twitter share opened with the title and link. StarCoin created at 10/10."
-        : "Twitter share opened with the title and link. Progress: " + result.progressToNextCoin + "/10.");
+        ? "⭐ Share completed. StarCoin created at 10/10."
+        : "Share completed. StarCoin progress: " + result.progressToNextCoin + "/10.");
+    } else {
+      status(result && result.error === "duplicate_share_attempt"
+        ? "This share was already counted. Open Share again for a new attempt."
+        : "Share completed, but StarCoin progress could not be saved.");
     }
   }
 
@@ -230,7 +236,7 @@
       return;
     }
     if (source.closest("#share-twitter-link")) {
-      creditFallbackTwitter();
+      creditFallback("twitter_intent_safety_net");
       return;
     }
     if (source.closest("#share-sms-link")) {
