@@ -896,6 +896,8 @@
 
   function scheduleCosmoPopIns(show, showTitle, episode) {
     clearCosmoPopInTimers();
+    const sceneEngine = window.StarQuestCosmoSceneEngine;
+    if (!sceneEngine || !sceneEngine.isReleaseReady()) return;
     const settings = window.StarQuestCosmoLive ? StarQuestCosmoLive.getSettings() : { watchAlong: false };
     if (!settings.watchAlong) return;
     COSMO_POPIN_SCHEDULE_MS.forEach((delay) => {

@@ -5,7 +5,7 @@
   const SETTINGS_KEY = "starquest_cosmo_settings_v2";
   const LIST_KEY = "starquest_cosmo_shopping_v1";
   const PREF_KEY = "starquest_cosmo_preferences_v1";
-  const defaults = { watchAlong: true, sponsoredSuggestions: false, speakReplies: true, handsFreeVoice: false };
+  const defaults = { watchAlong: false, sponsoredSuggestions: false, speakReplies: true, handsFreeVoice: false };
   let settings = { ...defaults, ...load(SETTINGS_KEY, defaults) };
   let shopping = load(LIST_KEY, []);
   let preferences = load(PREF_KEY, { likes: [], needs: [] });
@@ -128,15 +128,13 @@
   function getShoppingList() { return shopping.map((item) => ({ ...item })); }
   function clearShoppingList() { shopping = []; save(LIST_KEY, shopping); emit("starquest:shopping-updated", { items: [] }); }
   function sponsoredSuggestion() {
+    const sceneEngine = global.StarQuestCosmoSceneEngine;
+    if (!sceneEngine || !sceneEngine.isReleaseReady()) return null;
     if (!settings.sponsoredSuggestions || !context || Date.now() - lastSponsoredAt < 20 * 60 * 1000) return null;
-    const subject = preferences.needs.slice(-1)[0] || context.show;
-    if (!subject) return null;
+    const plan = sceneEngine.nextRenderPlan({ context, preferences, settings });
+    if (!plan || plan.mode === "none") return null;
     lastSponsoredAt = Date.now();
-    return {
-      label: "Sponsored suggestion",
-      text: `That ${subject} connection is worth exploring. I found a live marketplace search rather than inventing a price—review the seller, condition and total cost before buying.`,
-      url: "https://www.ebay.com/sch/i.html?_nkw=" + encodeURIComponent(subject),
-    };
+    return plan;
   }
   function speak(text) {
     if (!settings.speakReplies || !global.speechSynthesis || !global.SpeechSynthesisUtterance) return;

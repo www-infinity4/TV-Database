@@ -1943,32 +1943,42 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   bottom: 28px;
   right: 28px;
   z-index: 500;
-  min-width: 210px;
-  background: linear-gradient(115deg, rgba(0,70,173,.96), rgba(92,37,182,.97));
+  width: 54px;
+  height: 62px;
+  min-width: 0;
+  background: linear-gradient(155deg, rgba(17,35,64,.96), rgba(48,27,83,.97));
   color: #fff;
   border: none;
-  border-radius: 18px;
-  padding: 9px 12px 9px 9px;
+  border-radius: 22px 22px 18px 18px;
+  padding: 5px;
   font-size: .9rem;
   font-weight: 700;
   font-family: var(--body-font);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   box-shadow: 0 12px 34px rgba(0,0,0,.46), 0 0 0 1px rgba(125,184,255,.28), 0 0 28px rgba(64,102,255,.2);
   transition: transform .2s, box-shadow .2s;
 }
 .ai-fab:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-3px) scale(1.04);
   box-shadow: 0 8px 28px rgba(0,70,173,.65);
 }
-.ai-fab__orb { display:grid; place-items:center; width:43px; height:43px; border-radius:14px; background:rgba(255,255,255,.14); font-size:1.35rem; box-shadow:inset 0 0 0 1px rgba(255,255,255,.15); }
-.ai-fab__copy { display:flex; flex:1; flex-direction:column; align-items:flex-start; line-height:1.15; }
-.ai-fab__copy strong { font-size:.84rem; letter-spacing:.02em; }
-.ai-fab__copy small { color:#c8d9ff; font-size:.62rem; margin-top:4px; }
-.ai-fab__spark { color:var(--gold); animation:cosmoSpark 2.4s ease-in-out infinite; }
-@keyframes cosmoSpark { 0%,100%{transform:scale(.82);opacity:.55} 50%{transform:scale(1.18) rotate(12deg);opacity:1} }
+.cosmo-alien { position:relative; display:block; width:38px; height:49px; filter:drop-shadow(0 0 9px rgba(117,255,214,.35)); }
+.cosmo-alien__antenna { position:absolute; width:2px; height:9px; left:18px; top:0; background:#9ef9df; border-radius:2px; }
+.cosmo-alien__antenna::before { content:""; position:absolute; width:5px; height:5px; left:-1.5px; top:-2px; border-radius:50%; background:#ffe878; box-shadow:0 0 8px #ffe878; }
+.cosmo-alien__head { position:absolute; left:5px; top:7px; width:28px; height:23px; border-radius:48% 48% 44% 44%; background:linear-gradient(145deg,#b9ffe7,#62d8c1); border:1px solid rgba(255,255,255,.55); }
+.cosmo-alien__head i { position:absolute; top:8px; width:7px; height:9px; border-radius:70% 35%; background:#07192c; box-shadow:inset 0 0 0 1px #59b9ff; }
+.cosmo-alien__head i:first-child { left:5px; transform:rotate(12deg); }
+.cosmo-alien__head i:last-child { right:5px; transform:rotate(-12deg); }
+.cosmo-alien__body { position:absolute; left:10px; top:28px; width:18px; height:16px; border-radius:7px 7px 10px 10px; background:linear-gradient(#66d9c2,#347f91); }
+.cosmo-alien__body::after { content:""; position:absolute; left:3px; bottom:-5px; width:4px; height:7px; border-left:4px solid #4aa8a5; border-right:4px solid #4aa8a5; }
+.cosmo-alien__body i { position:absolute; top:2px; width:9px; height:3px; border-radius:4px; background:#66d9c2; }
+.cosmo-alien__body i:first-child { left:-7px; transform:rotate(24deg); }
+.cosmo-alien__body i:last-child { right:-7px; transform:rotate(-24deg); }
+.ai-fab__label { position:absolute; right:62px; padding:4px 7px; border-radius:7px; background:rgba(7,11,28,.92); color:#d9fff4; font-size:.67rem; opacity:0; pointer-events:none; transform:translateX(5px); transition:opacity .18s,transform .18s; }
+.ai-fab:hover .ai-fab__label,.ai-fab:focus-visible .ai-fab__label { opacity:1; transform:translateX(0); }
 
 /* ── AI Panel ── */
 .ai-panel {
@@ -2254,7 +2264,7 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   .splash__title { font-size: 1.4rem; }
   .ai-panel { right: 10px; bottom: 76px; width: calc(100vw - 20px); }
   .ai-fab { right: 14px; bottom: 16px; }
-  .ai-fab { min-width: 188px; }
+  .ai-fab { width: 50px; height: 58px; min-width: 0; }
 }
 
 /* ── For You section glow ── */

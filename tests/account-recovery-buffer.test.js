@@ -18,6 +18,14 @@ values.set("starquest_users", JSON.stringify({
     watchPositions: {}, shareCount: 0, pendingShareCredits: 0, shareEvents: [], ledger: []
   }
 }));
+values.set("starquest_users_backup_v1", JSON.stringify({
+  kris: {
+    username: "Kris", key: "kris", passwordHash: "sync-test", tokens: 1,
+    watchHistory: [{ episodeId: "cosmos|S1E1", showId: "cosmos", showTitle: "Cosmos", epTitle: "The Shores of the Cosmic Ocean", positionSeconds: 181 }],
+    watchPositions: { "cosmos|S1E1": 181 }, shareCount: 10, pendingShareCredits: 0,
+    shareEvents: [{ id: "share-old", attemptId: "old-1" }], ledger: [{ id: "tx-old", amount: 1, balance: 1 }]
+  }
+}));
 values.set("starquest_session", JSON.stringify({ key: "kris", username: "Kris", signedInAt: 1 }));
 values.set("starquest_guest_profile_v1", JSON.stringify({
   username: "Guest", key: "__guest__", tokens: 0,
@@ -29,9 +37,11 @@ values.set("starquest_guest_profile_v1", JSON.stringify({
 require("../js/auth.js");
 const auth = global.window.StarQuestAuth;
 const kris = auth.currentUser();
-assert.equal(kris.username, "Kris");
-assert.equal(kris.watchHistory.length, 2, "signed-in account reclaims stranded guest history");
+assert.equal(kris.username, "kris");
+assert.equal(kris.watchHistory.length, 3, "account reclaims both backup and stranded guest history");
 assert.equal(auth.getWatchPosition("mash|S1E1"), 93);
+assert.equal(auth.getWatchPosition("cosmos|S1E1"), 181);
+assert.equal(kris.tokens, 1, "last valid snapshot restores a missing StarCoin balance");
 assert.equal(kris.pendingShareCredits, 4, "signed-in account reclaims stranded StarCoin progress");
 assert.equal(values.has("starquest_guest_profile_v1"), false, "recovered guest profile is removed after merge");
 assert.ok(values.has("starquest_users_backup_v1"), "account updates keep a last-valid local backup");
@@ -46,4 +56,4 @@ assert.match(resolver, /video\.currentTime = resumeAt/);
 assert.match(watchdog, /STALL_LIMIT_MS = 8000/);
 assert.match(watchdog, /video\.pause\(\)/);
 assert.doesNotMatch(html, /<video[^>]+\sloop(?:\s|=|>)/i);
-console.log("Kris profile recovery, direct Archive resolver, resume and frozen-stream stop: ok");
+console.log("kris profile recovery, direct Archive resolver, resume and frozen-stream stop: ok");

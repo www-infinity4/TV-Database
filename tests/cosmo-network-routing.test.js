@@ -51,7 +51,7 @@ assert.match(ai, /Live AI needs the secure Infinity gateway/);
 assert.match(html, /js\/cosmo-config\.js\?v=20260821-gateway1/);
 assert.match(html, /js\/cosmo-context\.js\?v=20260821-weighted1/);
 assert.match(html, /js\/ai\.js\?v=20260821-grounded1/);
-assert.match(html, /js\/app\.js\?v=20260822-account-recovery3/);
+assert.match(html, /js\/app\.js\?v=20260822-cosmo-gate1/);
 assert.match(html, /cosmoChatRouted: false/);
 assert.match(app, /cosmoChatRouted = true/);
 
