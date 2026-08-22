@@ -42,8 +42,14 @@ require("../js/auth.js");
   const app = fs.readFileSync("js/app.js", "utf8");
   const html = fs.readFileSync("index.html", "utf8");
   assert.match(app, /starquest:episode-opened/);
+  assert.match(app, /const WATCH_PERSIST_INTERVAL_SECONDS = 10;/);
+  assert.match(app, /pendingPersistSeconds >= WATCH_PERSIST_INTERVAL_SECONDS/);
   assert.match(app, /twitter\.com\/intent\/tweet\?text=/);
   assert.match(app, /rewardCompletedShare\("twitter_intent", true\)/);
+  assert.ok(
+    app.indexOf('rewardCompletedShare("web_share_api", true)') < app.indexOf("await navigator.share({"),
+    "Android share receipt must commit before the native chooser backgrounds the page"
+  );
   assert.doesNotMatch(html, /coin \/ hour watched|Eligible watch-time|Earn StarCoins by watching/);
   console.log("playback logs history; watch time mints nothing; Twitter carries payload and 1\/10 credit: ok");
 })().catch(error => { console.error(error); process.exitCode = 1; });

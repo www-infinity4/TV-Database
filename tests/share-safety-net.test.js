@@ -90,6 +90,13 @@ const click = target => {
   assert.match(nodes["share-twitter-link"].href, /^https:\/\/twitter\.com\/intent\/tweet\?text=/);
   assert.match(nodes["share-twitter-link"].href, /&url=/);
 
+  const safetySource = require("node:fs").readFileSync("js/share-safety-net.js", "utf8");
+  assert.ok(
+    safetySource.indexOf('creditFallback("web_share_api_safety_net")') < safetySource.indexOf("await global.navigator.share"),
+    "safety mode must commit before Android backgrounds the page"
+  );
+  assert.match(safetySource, /if \(appReady\) return;\s+open\(\);/);
+
   const copyEvent = click(nodes["share-copy-btn"]);
   assert.equal(copyEvent.prevented, true);
   await new Promise(resolve => setImmediate(resolve));
