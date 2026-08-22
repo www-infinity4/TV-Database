@@ -1906,23 +1906,39 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
 }
 
 .player-share-btn {
-  background: rgba(255,215,0,.12);
-  border: 1px solid rgba(255,215,0,.3);
-  color: var(--gold);
-  border-radius: 20px;
-  padding: 5px 14px;
-  font-size: .82rem;
-  font-weight: 700;
+  background: linear-gradient(145deg, rgba(90,72,170,.32), rgba(20,150,190,.2));
+  border: 1px solid rgba(140,200,255,.38);
+  color: #e7f4ff;
+  border-radius: 16px;
+  padding: 5px 10px;
+  font-size: .72rem;
+  font-weight: 800;
   font-family: var(--body-font);
-  min-width: 88px;
-  min-height: 40px;
+  min-width: 104px;
+  min-height: 36px;
   cursor: pointer;
   touch-action: manipulation;
   position: relative;
   z-index: 2;
-  transition: background var(--transition);
+  box-shadow: inset 0 0 16px rgba(124,92,255,.12), 0 4px 14px rgba(0,0,0,.2);
+  transition: transform var(--transition), background var(--transition), border-color var(--transition);
 }
-.player-share-btn:hover { background: rgba(255,215,0,.22); }
+.player-share-btn:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(145deg, rgba(110,88,205,.42), rgba(26,175,215,.28));
+  border-color: rgba(180,224,255,.62);
+}
+.player-share-btn--minted {
+  color: #1b1400;
+  border-color: #ffe680;
+  background: linear-gradient(135deg, #fff0a6, #f7b919);
+  animation: shareStarMint .7s ease both;
+}
+@keyframes shareStarMint {
+  0% { transform: scale(.92); box-shadow: 0 0 0 rgba(255,220,70,0); }
+  55% { transform: scale(1.08); box-shadow: 0 0 28px rgba(255,220,70,.75); }
+  100% { transform: scale(1); box-shadow: 0 6px 20px rgba(255,190,30,.3); }
+}
 
 .player-token-notif {
   font-family: var(--pixel-font);

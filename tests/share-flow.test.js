@@ -43,6 +43,11 @@ require("../js/auth.js");
   }
 
   assert.equal(auth.getBalance(), 1);
+  const shareCommits = auth.getLedger().filter(entry => entry.type === "share_credit");
+  assert.equal(shareCommits.length, 10);
+  assert.equal(shareCommits[0].progressToNextCoin, 1);
+  assert.equal(shareCommits.at(-1).progressToNextCoin, 10);
+  assert.match(shareCommits[0].commitHash, /^sq-[0-9a-f]{8}$/);
   const current = auth.currentUser();
   assert.equal(current.shareCount, 10);
   assert.equal(current.pendingShareCredits, 0);

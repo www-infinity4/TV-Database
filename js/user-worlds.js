@@ -176,12 +176,16 @@
     const style = document.createElement("style");
     style.textContent = `
       .world-builder-launch {
-        position: fixed; right: 18px; bottom: 86px; z-index: 9998;
-        border: 1px solid rgba(255,255,255,.22); border-radius: 999px;
-        padding: 10px 15px; font: inherit; font-weight: 750; cursor: pointer;
-        color: var(--world-text, #fff);
-        background: linear-gradient(135deg, var(--world-accent, #8d5cff), var(--world-accent-2, #38cfff));
-        box-shadow: 0 12px 34px rgba(0,0,0,.35);
+        position: fixed; right: 12px; bottom: 74px; z-index: 9998;
+        min-height: 34px; border: 1px solid rgba(165,210,255,.3); border-radius: 999px;
+        padding: 6px 10px; font: 800 .68rem/1 system-ui, sans-serif; letter-spacing: .02em; cursor: pointer;
+        color: #edf7ff;
+        background: radial-gradient(circle at 24% 18%, rgba(121,96,255,.7), rgba(24,21,57,.92) 55%, rgba(8,14,32,.94));
+        box-shadow: inset 0 0 14px rgba(104,205,255,.18), 0 5px 18px rgba(0,0,0,.32);
+        opacity: .82; transition: opacity .2s ease, transform .2s ease, border-color .2s ease;
+      }
+      .world-builder-launch:hover, .world-builder-launch:focus-visible {
+        opacity: 1; transform: translateY(-1px); border-color: rgba(190,230,255,.58);
       }
       .world-builder {
         position: fixed; inset: 0; z-index: 10020; display: none;
@@ -242,7 +246,9 @@
     const launch = document.createElement("button");
     launch.type = "button";
     launch.className = "world-builder-launch";
-    launch.textContent = "Build My World";
+    launch.textContent = "🪐 World";
+    launch.title = "Build My World";
+    launch.setAttribute("aria-label", "Build My World");
     launch.setAttribute("aria-haspopup", "dialog");
 
     const overlay = document.createElement("div");

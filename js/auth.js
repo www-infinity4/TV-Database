@@ -73,6 +73,16 @@
     return prefix + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
   }
 
+  function createReceiptHash(parts) {
+    const value = parts.map((part) => String(part == null ? "" : part)).join("|");
+    let hash = 0x811c9dc5;
+    for (let index = 0; index < value.length; index += 1) {
+      hash ^= value.charCodeAt(index);
+      hash = Math.imul(hash, 0x01000193) >>> 0;
+    }
+    return "sq-" + hash.toString(16).padStart(8, "0");
+  }
+
   function dispatch(name, detail) {
     if (typeof document === "undefined") return;
     document.dispatchEvent(new CustomEvent(name, { detail }));
@@ -166,6 +176,9 @@
       balance: toInt(tx.balance, fallbackBalance),
       type: tx.type || "adjustment",
       label: tx.label || null,
+      commitHash: tx.commitHash || null,
+      progressToNextCoin: Math.max(0, toInt(tx.progressToNextCoin, 0)),
+      sharesPerCoin: Math.max(0, toInt(tx.sharesPerCoin, 0)),
     };
   }
 
@@ -223,7 +236,7 @@
         ? user.shareAttemptIds
         : {},
       unlockedContent,
-      ledger,
+      ledger: ledger.slice(-500),
     };
   }
 
@@ -300,18 +313,31 @@
   }
 
   function saveUsers(users) {
+    const next = JSON.stringify(users);
     const prior = localStorage.getItem(STORAGE_KEY);
-    if (prior) {
+
+    // A large watch history used to make the backup copy hit Android's
+    // localStorage quota first, aborting the real share/wallet write. Backups
+    // are best-effort; the primary account transaction must remain writable.
+    if (prior && prior !== next) {
       try {
         const parsed = JSON.parse(prior);
         if (parsed && typeof parsed === "object" && Object.keys(parsed).length) {
           localStorage.setItem(STORAGE_BACKUP_KEY, prior);
         }
       } catch (_) {
-        // Keep the last valid backup when the primary record is malformed.
+        // Continue to the authoritative primary write.
       }
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch (error) {
+      // Free the replaceable snapshot and retry once. Never swallow failure:
+      // recordShare must report that a receipt was not committed.
+      try { localStorage.removeItem(STORAGE_BACKUP_KEY); } catch (_) {}
+      localStorage.setItem(STORAGE_KEY, next);
+    }
   }
 
   function loadGuestProfile() {
@@ -333,7 +359,13 @@
   }
 
   function saveGuestProfile(profile) {
-    localStorage.setItem(GUEST_PROFILE_KEY, JSON.stringify(normalizeUser(profile, "__guest__")));
+    const value = JSON.stringify(normalizeUser(profile, "__guest__"));
+    try {
+      localStorage.setItem(GUEST_PROFILE_KEY, value);
+    } catch (_) {
+      try { localStorage.removeItem(STORAGE_BACKUP_KEY); } catch (_) {}
+      localStorage.setItem(GUEST_PROFILE_KEY, value);
+    }
   }
 
   function mutateViewerProfile(mutator) {
@@ -341,7 +373,15 @@
     const guest = loadGuestProfile();
     const result = mutator(guest, null);
     if (result && result.ok === false) return result;
-    saveGuestProfile(guest);
+    try {
+      saveGuestProfile(guest);
+    } catch (_) {
+      return {
+        ok: false,
+        error: "storage_unavailable",
+        message: "Star Coin progress could not be committed on this device.",
+      };
+    }
     return { ok: true, user: loadGuestProfile(), result };
   }
 
@@ -431,13 +471,22 @@
     }
 
     users[user.key] = normalizeUser(user, user.key);
-    saveUsers(users);
-    saveSessionForUser(users[user.key], session.signedInAt);
+    try {
+      saveUsers(users);
+      saveSessionForUser(users[user.key], session.signedInAt);
+    } catch (_) {
+      return {
+        ok: false,
+        error: "storage_unavailable",
+        message: "Star Coin progress could not be committed on this device.",
+      };
+    }
     return { ok: true, user: users[user.key], result };
   }
 
-  function appendLedger(user, amount, reason, referenceId, type, label) {
+  function appendLedger(user, amount, reason, referenceId, type, label, metadata) {
     if (!user.ledger) user.ledger = [];
+    const meta = metadata && typeof metadata === "object" ? metadata : {};
     const tx = {
       id: createEventId("tx"),
       ts: Date.now(),
@@ -447,8 +496,12 @@
       balance: user.tokens,
       type: type || "adjustment",
       label: label || null,
+      commitHash: meta.commitHash || null,
+      progressToNextCoin: Math.max(0, toInt(meta.progressToNextCoin, 0)),
+      sharesPerCoin: Math.max(0, toInt(meta.sharesPerCoin, 0)),
     };
     user.ledger.push(tx);
+    user.ledger = user.ledger.slice(-500);
     return tx;
   }
 
@@ -904,6 +957,7 @@
           id: createEventId("share"),
           attemptId,
           contentId: id,
+          receiptHash: createReceiptHash([attemptId, id, now, opts.method || "unknown"]),
           createdAt: now,
           verified: !!opts.verified,
           fullyWatched: !!opts.fullyWatched,
@@ -927,6 +981,19 @@
         user.shareAttemptIds = Object.fromEntries(recentAttempts);
         user.shareCount = Math.max(0, toInt(user.shareCount, 0)) + 1;
         user.pendingShareCredits = Math.max(0, toInt(user.pendingShareCredits, 0)) + 1;
+        appendLedger(
+          user,
+          0,
+          "Confirmed share receipt " + user.pendingShareCredits + "/" + SHARES_PER_COIN,
+          event.id,
+          "share_credit",
+          "share ledger commit",
+          {
+            commitHash: event.receiptHash,
+            progressToNextCoin: user.pendingShareCredits,
+            sharesPerCoin: SHARES_PER_COIN,
+          }
+        );
 
         let awarded = 0;
         while (user.pendingShareCredits >= SHARES_PER_COIN) {
@@ -960,6 +1027,7 @@
         lifetimeShareCount: result.user.shareCount,
         progressToNextCoin: result.user.pendingShareCredits,
         sharesPerCoin: SHARES_PER_COIN,
+        awarded: result.result.awarded,
         event: result.result.event,
       });
 
@@ -1000,6 +1068,11 @@
         }
 
         if (meta.episodeId) {
+          if (!user.watchPositions || typeof user.watchPositions !== "object") user.watchPositions = {};
+          user.watchPositions[meta.episodeId] = Math.max(
+            0,
+            toInt(meta.positionSeconds, user.watchPositions[meta.episodeId] || 0)
+          );
           const historyIndex = Array.isArray(user.watchHistory)
             ? user.watchHistory.findIndex((item) => item.episodeId === meta.episodeId)
             : -1;
