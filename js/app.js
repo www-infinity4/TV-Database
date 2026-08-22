@@ -115,6 +115,7 @@
   const TV_SHOW_BOOST = 40;
   const NON_TV_PENALTY = -35;
   const MAX_HISTORY_ITEMS = 200;
+  const WATCH_PERSIST_INTERVAL_SECONDS = 10;
   /* Sparse companion rhythm: first check-in after three minutes, then at
      twelve and twenty-five minutes. Sponsored notes have an additional
      twenty-minute cap inside cosmo-live.js. */
@@ -2198,8 +2199,19 @@
   document.addEventListener("starquest:watch-progress", () => {
     renderWalletCard(typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet ? StarQuestAuth.currentWallet() : null);
   });
-  document.addEventListener("starquest:share-progress", () => {
+  document.addEventListener("starquest:share-progress", (event) => {
     renderWalletCard(typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet ? StarQuestAuth.currentWallet() : null);
+    if (event.detail && event.detail.awarded > 0) {
+      const button = $("player-share-btn");
+      if (button) {
+        button.classList.add("player-share-btn--minted");
+        button.textContent = "⭐ Star Coin created";
+        setTimeout(() => {
+          button.classList.remove("player-share-btn--minted");
+          renderWalletCard(typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentWallet ? StarQuestAuth.currentWallet() : null);
+        }, 1800);
+      }
+    }
   });
 
   /* ─────────────────────────────────────────────────────────────
@@ -2447,6 +2459,11 @@
     if (shareEl) shareEl.textContent = pending + " / " + SHARES_PER_COIN;
     if (navShareEl) navShareEl.textContent = pending + "/" + SHARES_PER_COIN;
     if (navSharesLeftEl) navSharesLeftEl.textContent = sharesLeft + (sharesLeft === 1 ? " share left" : " shares left");
+    const playerShareEl = $("player-share-btn");
+    if (playerShareEl && !playerShareEl.classList.contains("player-share-btn--minted")) {
+      playerShareEl.textContent = "🛡️ Share " + pending + "/" + SHARES_PER_COIN;
+      playerShareEl.setAttribute("aria-label", "Share this program. " + pending + " of " + SHARES_PER_COIN + " toward a Star Coin.");
+    }
     if (barEl)   barEl.style.width  = Math.min(100, (pending / SHARES_PER_COIN) * 100) + "%";
     if (wrapEl)  wrapEl.setAttribute("aria-valuenow", pending);
     if (lifetimeEl) lifetimeEl.textContent = "🔗 Lifetime shares: " + lifetimeShares;
@@ -2747,6 +2764,7 @@
       archiveId: ep.archiveId || "",
       distributorAccount: show && show.distributorAccount ? show.distributorAccount : "",
       watchedSeconds: Math.max(0, Number(existingHistory && existingHistory.watchedSeconds) || 0),
+      pendingPersistSeconds: 0,
     };
 
     playerVideo.onseeking = () => { if (_watchTracker) _watchTracker.seeking = true; };
@@ -2782,30 +2800,45 @@
       _watchTracker.watchedSeconds += delta;
       _watchTracker.positionSeconds = nowTime;
       _watchTracker.duration = Math.max(_watchTracker.duration, Math.trunc(Number(playerVideo.duration) || 0));
-      StarQuestAuth.saveWatchPosition(_watchTracker.episodeId, Math.floor(nowTime));
-      StarQuestAuth.updateHistoryProgress(
-        _watchTracker.episodeId,
-        Math.floor(nowTime),
-        _watchTracker.duration,
-        Math.floor(_watchTracker.watchedSeconds)
-      );
-      StarQuestAuth.recordWatchProgress(_watchTracker.episodeId, delta, {
-        episodeId: _watchTracker.episodeId,
-        positionSeconds: Math.floor(nowTime),
-        watchedSeconds: Math.floor(_watchTracker.watchedSeconds),
-        duration: _watchTracker.duration,
-      });
-      const distributorResult = window.AINScansDistributorLedger
-        ? window.AINScansDistributorLedger.recordEligibleWatch(_watchTracker.episodeId, delta, {
-          archiveId: _watchTracker.archiveId,
-          distributorAccount: _watchTracker.distributorAccount,
-        })
-        : null;
+      _watchTracker.pendingPersistSeconds += delta;
 
-      if (distributorResult && distributorResult.produced > 0) {
-        showTokenToast("⭐ " + distributorResult.produced + " distributor StarCoin produced by verified watch-time.");
+      // Keep the one-second counter in memory, but commit history/resume data
+      // in a single transaction every ten seconds. The old four localStorage
+      // writes per second caused visible playback stalls on Android.
+      if (_watchTracker.pendingPersistSeconds >= WATCH_PERSIST_INTERVAL_SECONDS) {
+        persistWatchTracker(playerVideo);
       }
     }, 1000);
+  }
+
+  function persistWatchTracker(playerVideo) {
+    if (!_watchTracker || typeof StarQuestAuth === "undefined") return;
+    const pendingSeconds = Math.max(0, Number(_watchTracker.pendingPersistSeconds) || 0);
+    if (pendingSeconds <= 0) return;
+    const position = Math.max(0, Number(playerVideo && playerVideo.currentTime) || _watchTracker.positionSeconds || 0);
+    const duration = Math.max(_watchTracker.duration || 0, Math.trunc(Number(playerVideo && playerVideo.duration) || 0));
+    _watchTracker.pendingPersistSeconds = 0;
+
+    const watchResult = StarQuestAuth.recordWatchProgress(_watchTracker.episodeId, pendingSeconds, {
+      episodeId: _watchTracker.episodeId,
+      positionSeconds: Math.floor(position),
+      watchedSeconds: Math.floor(_watchTracker.watchedSeconds),
+      duration,
+    });
+    if (!watchResult || !watchResult.ok) {
+      _watchTracker.pendingPersistSeconds += pendingSeconds;
+      return;
+    }
+
+    const distributorResult = window.AINScansDistributorLedger
+      ? window.AINScansDistributorLedger.recordEligibleWatch(_watchTracker.episodeId, pendingSeconds, {
+        archiveId: _watchTracker.archiveId,
+        distributorAccount: _watchTracker.distributorAccount,
+      })
+      : null;
+    if (distributorResult && distributorResult.produced > 0) {
+      showTokenToast("⭐ " + distributorResult.produced + " distributor StarCoin produced by verified watch-time.");
+    }
   }
 
   function stopWatchTimer() {
@@ -2813,10 +2846,7 @@
     _watchTimer = null;
     const playerVideo = $("player-video");
     if (_watchTracker && playerVideo && typeof StarQuestAuth !== "undefined") {
-      const position = Math.max(0, Number(playerVideo.currentTime) || _watchTracker.positionSeconds || 0);
-      const duration = Math.max(_watchTracker.duration || 0, Math.trunc(Number(playerVideo.duration) || 0));
-      StarQuestAuth.saveWatchPosition(_watchTracker.episodeId, Math.floor(position));
-      StarQuestAuth.updateHistoryProgress(_watchTracker.episodeId, Math.floor(position), duration, Math.floor(_watchTracker.watchedSeconds));
+      persistWatchTracker(playerVideo);
     }
     _watchTracker = null;
   }
