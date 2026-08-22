@@ -1029,7 +1029,11 @@
     } else if (episode.youtubeId) {
       /* YouTube remains an iframe source. Archive.org never uses the iframe:
          metadata resolution selects a direct file before anything is shown. */
-      const embedUrl = buildEmbedUrl(episode);
+      const resumeId = showForEpisode ? buildEpisodeId(episode, showForEpisode) : "";
+      const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
+        ? StarQuestAuth.getWatchPosition(resumeId)
+        : 0;
+      const embedUrl = buildEmbedUrl(episode, savedPosition);
       DOM.playerVideo.onloadedmetadata = null;
       DOM.playerVideo.oncanplay = null;
       DOM.playerVideo.onerror = null;
@@ -1046,7 +1050,11 @@
       /* Item-only Archive.org records are playable without downloading or
          inspecting the item's full metadata first. The Archive player selects
          its stream-ready derivative and honors archiveIndex for playlists. */
-      const embedUrl = buildEmbedUrl(episode);
+      const resumeId = showForEpisode ? buildEpisodeId(episode, showForEpisode) : "";
+      const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
+        ? StarQuestAuth.getWatchPosition(resumeId)
+        : 0;
+      const embedUrl = buildEmbedUrl(episode, savedPosition);
       DOM.playerVideo.onloadedmetadata = null;
       DOM.playerVideo.oncanplay = null;
       DOM.playerVideo.onerror = null;
@@ -1151,9 +1159,11 @@
    * When an episode has an archiveIndex, the archive.org playlist index
    * parameter is used to jump directly to that episode.
    */
-  function buildEmbedUrl(episode) {
+  function buildEmbedUrl(episode, startSeconds) {
+    const resumeAt = Math.max(0, Math.trunc(Number(startSeconds) || 0));
     if (episode.youtubeId) {
       const params = new URLSearchParams({ autoplay: "1" });
+      if (resumeAt > 5) params.set("start", String(resumeAt));
       return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
     }
     if (!episode.archiveId) return "about:blank";
@@ -1165,6 +1175,7 @@
     if (episode.title) {
       params.set("playtext", episode.title);
     }
+    if (resumeAt > 5) params.set("start", String(resumeAt));
     return base + "?" + params.toString();
   }
 
@@ -2555,7 +2566,12 @@
         playerVideo.src = directUrl;
       }
     } else if (ep.youtubeId) {
-      const url = buildPlayerUrl(ep);
+      const show = findShowForEpisode(ep);
+      const resumeId = show ? buildEpisodeId(ep, show) : "";
+      const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
+        ? StarQuestAuth.getWatchPosition(resumeId)
+        : 0;
+      const url = buildPlayerUrl(ep, savedPosition);
       if (playerVideo) {
         playerVideo.oncanplay = null;
         playerVideo.onerror = null;
@@ -2575,7 +2591,12 @@
         playerVideo.load();
       }
       playerFrame.style.display = "block";
-      playerFrame.src = buildPlayerUrl(ep);
+      const show = findShowForEpisode(ep);
+      const resumeId = show ? buildEpisodeId(ep, show) : "";
+      const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
+        ? StarQuestAuth.getWatchPosition(resumeId)
+        : 0;
+      playerFrame.src = buildPlayerUrl(ep, savedPosition);
       if (playerLoad) playerLoad.style.display = "none";
       playerFrame.addEventListener("load", () => {
         if (playerLoad) playerLoad.style.display = "none";
@@ -2586,9 +2607,12 @@
     addToHistoryNow(ep, showTitle);
   }
 
-  function buildPlayerUrl(episode) {
+  function buildPlayerUrl(episode, startSeconds) {
+    const resumeAt = Math.max(0, Math.trunc(Number(startSeconds) || 0));
     if (episode.youtubeId) {
-      return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?autoplay=1";
+      const params = new URLSearchParams({ autoplay: "1" });
+      if (resumeAt > 5) params.set("start", String(resumeAt));
+      return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
     }
     const base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
     const params = new URLSearchParams({ autoplay: "1" });
@@ -2596,6 +2620,7 @@
       params.set("index", String(episode.archiveIndex));
     }
     if (episode.title) params.set("playtext", episode.title);
+    if (resumeAt > 5) params.set("start", String(resumeAt));
     return base + "?" + params.toString();
   }
 
@@ -2686,13 +2711,17 @@
     if (!playerVideo) return;
     const existingHistory = StarQuestAuth.getHistory().find((item) => item.episodeId === episodeId);
     const savedPosition = Math.max(0, Number(StarQuestAuth.getWatchPosition(episodeId)) || 0);
+    const usesEmbeddedPlayer = !!ep.youtubeId || !(typeof ep.archiveFile === "string" && ep.archiveId);
+    const declaredDuration = Math.max(0, Math.trunc((Number(ep.duration) || parseInt(String(ep.duration || "0"), 10)) * 60));
 
     _watchTracker = {
       episodeId,
+      usesEmbeddedPlayer,
+      lastTickAt: Date.now(),
       lastTime: Number(playerVideo.currentTime) || savedPosition,
       positionSeconds: savedPosition,
       seeking: false,
-      duration: Math.max(0, Math.trunc(Number(playerVideo.duration) || 0)),
+      duration: Math.max(declaredDuration, Math.trunc(Number(playerVideo.duration) || 0)),
       showId: show ? show.id : "",
       showTitle: showTitle || (show && show.title) || "Unknown Show",
       epTitle: ep.title || "Episode",
@@ -2716,14 +2745,23 @@
     _watchTimer = setInterval(() => {
       if (!_watchTracker) return;
       if (document.visibilityState !== "visible") return;
-      if (playerVideo.paused || playerVideo.ended) return;
       if (_watchTracker.seeking) return;
-      const rate = Number(playerVideo.playbackRate) || 1;
-      if (rate < 0.75 || rate > 1.25) return;
-
-      const nowTime = Number(playerVideo.currentTime) || 0;
-      const delta = nowTime - _watchTracker.lastTime;
-      _watchTracker.lastTime = nowTime;
+      const tickAt = Date.now();
+      let nowTime;
+      let delta;
+      if (_watchTracker.usesEmbeddedPlayer) {
+        delta = Math.min(2, Math.max(0, (tickAt - _watchTracker.lastTickAt) / 1000));
+        nowTime = _watchTracker.positionSeconds + delta;
+        if (_watchTracker.duration > 0) nowTime = Math.min(nowTime, _watchTracker.duration);
+      } else {
+        if (playerVideo.paused || playerVideo.ended) return;
+        const rate = Number(playerVideo.playbackRate) || 1;
+        if (rate < 0.75 || rate > 1.25) return;
+        nowTime = Number(playerVideo.currentTime) || 0;
+        delta = nowTime - _watchTracker.lastTime;
+        _watchTracker.lastTime = nowTime;
+      }
+      _watchTracker.lastTickAt = tickAt;
       if (!Number.isFinite(delta) || delta <= 0 || delta > 2) return;
 
       _watchTracker.watchedSeconds += delta;

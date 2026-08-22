@@ -55,6 +55,13 @@ const window = {
   },
   prompt() {}
 };
+const recordedShares = [];
+window.StarQuestAuth = {
+  recordShare(contentId, options) {
+    recordedShares.push({ contentId, options });
+    return { ok: true, credited: true, awarded: 0, progressToNextCoin: recordedShares.length };
+  }
+};
 global.window = window;
 
 require("../js/share-safety-net.js");
@@ -95,6 +102,12 @@ const click = target => {
   assert.equal(audit[0].verified, false);
   assert.equal(audit[0].credited, false);
   assert.equal(audit[0].payoutEligible, false);
+
+  click(nodes["player-share-btn"]);
+  click(nodes["share-twitter-link"]);
+  assert.equal(recordedShares.length, 1, "guest Twitter handoff must count in safety mode");
+  assert.equal(recordedShares[0].options.confirmed, true);
+  assert.match(nodes["share-sheet-status"].textContent, /1\/10/);
 
   window.StarQuestShareSafetyNet.markAppReady();
   const auditBefore = values.get("starquest_share_fallback_audit");
