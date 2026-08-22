@@ -2649,6 +2649,19 @@
     addToHistoryNow(e.detail.ep, e.detail.showTitle);
   });
 
+  document.addEventListener("starquest:archive-direct-playback", (event) => {
+    if (!_watchTracker) return;
+    const playerVideo = $("player-video");
+    _watchTracker.usesEmbeddedPlayer = false;
+    _watchTracker.lastTime = Math.max(
+      0,
+      Number(event.detail && event.detail.startSeconds) ||
+        Number(playerVideo && playerVideo.currentTime) ||
+        _watchTracker.positionSeconds || 0
+    );
+    _watchTracker.lastTickAt = Date.now();
+  });
+
   /* Patch existing openPlayer from first IIFE by decorating the player open logic */
   (function patchPlayer() {
     const playerPage = $("player-page");
