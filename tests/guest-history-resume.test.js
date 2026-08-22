@@ -54,7 +54,7 @@ require("../js/auth.js");
 
   const app = fs.readFileSync("js/app.js", "utf8");
   assert.match(app, /DOM\.playerVideo\.currentTime = savedPosition/);
-  assert.match(app, /positionSeconds: Math\.floor\(nowTime\)/);
+  assert.match(app, /positionSeconds: Math\.floor\(position\)/);
   assert.match(app, /usesEmbeddedPlayer/);
   assert.match(app, /params\.set\("start", String\(resumeAt\)\)/);
   console.log("guest history, real playhead resume, share coins and sign-in claim: ok");

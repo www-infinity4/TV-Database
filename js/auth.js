@@ -179,6 +179,11 @@
       commitHash: tx.commitHash || null,
       progressToNextCoin: Math.max(0, toInt(tx.progressToNextCoin, 0)),
       sharesPerCoin: Math.max(0, toInt(tx.sharesPerCoin, 0)),
+      contentId: tx.contentId || null,
+      companyId: tx.companyId || null,
+      actors: Array.isArray(tx.actors) ? tx.actors.slice(0, 50) : [],
+      attributionStatus: tx.attributionStatus || null,
+      payoutStatus: tx.payoutStatus || null,
     };
   }
 
@@ -499,6 +504,11 @@
       commitHash: meta.commitHash || null,
       progressToNextCoin: Math.max(0, toInt(meta.progressToNextCoin, 0)),
       sharesPerCoin: Math.max(0, toInt(meta.sharesPerCoin, 0)),
+      contentId: meta.contentId || null,
+      companyId: meta.companyId || null,
+      actors: Array.isArray(meta.actors) ? meta.actors.slice(0, 50) : [],
+      attributionStatus: meta.attributionStatus || null,
+      payoutStatus: meta.payoutStatus || null,
     };
     user.ledger.push(tx);
     user.ledger = user.ledger.slice(-500);
@@ -967,8 +977,13 @@
           url: opts.url || null,
           showTitle: opts.showTitle || null,
           episodeId: opts.episodeId || null,
-          companyId: opts.companyId || null,
+          companyId: opts.companyId || "unclaimed:unknown-content",
+          actors: Array.isArray(opts.actors) ? opts.actors.slice(0, 50) : [],
+          attributionStatus: opts.attributionStatus || "actor_credits_pending",
           payoutEligible: qualifiesForProgress && !!opts.fullyWatched,
+          payoutStatus: qualifiesForProgress && !!opts.fullyWatched
+            ? "pending_server_commit"
+            : "not_yet_eligible",
         };
         user.shareEvents.push(event);
         user.shareEvents = user.shareEvents.slice(-250);
@@ -992,6 +1007,11 @@
             commitHash: event.receiptHash,
             progressToNextCoin: user.pendingShareCredits,
             sharesPerCoin: SHARES_PER_COIN,
+            contentId: event.contentId,
+            companyId: event.companyId,
+            actors: event.actors,
+            attributionStatus: event.attributionStatus,
+            payoutStatus: event.payoutStatus,
           }
         );
 

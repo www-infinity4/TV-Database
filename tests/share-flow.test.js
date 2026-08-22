@@ -34,8 +34,11 @@ require("../js/auth.js");
       attemptId: `attempt-${index}`,
       confirmed: true,
       verified: true,
-      fullyWatched: false,
-      method: "web_share_api"
+      fullyWatched: index === 1,
+      method: "web_share_api",
+      companyId: "unclaimed:test-show",
+      actors: index === 1 ? ["Test Actor"] : [],
+      attributionStatus: index === 1 ? "recorded_client_side" : "actor_credits_pending"
     });
     assert.equal(result.ok, true);
     assert.equal(result.credited, true);
@@ -48,6 +51,10 @@ require("../js/auth.js");
   assert.equal(shareCommits[0].progressToNextCoin, 1);
   assert.equal(shareCommits.at(-1).progressToNextCoin, 10);
   assert.match(shareCommits[0].commitHash, /^sq-[0-9a-f]{8}$/);
+  assert.equal(shareCommits[0].companyId, "unclaimed:test-show");
+  assert.deepEqual(shareCommits[0].actors, ["Test Actor"]);
+  assert.equal(shareCommits[0].payoutStatus, "pending_server_commit");
+  assert.equal(auth.currentUser().shareEvents[1].payoutEligible, true);
   const current = auth.currentUser();
   assert.equal(current.shareCount, 10);
   assert.equal(current.pendingShareCredits, 0);
@@ -64,5 +71,5 @@ require("../js/auth.js");
   assert.equal(duplicate.ok, false);
   assert.equal(duplicate.error, "duplicate_share_attempt");
   assert.equal(auth.getBalance(), 1);
-  console.log("unverified copy -> no credit; 10 verified native shares -> StarCoin; duplicate attempt blocked: ok");
+  console.log("confirmed share receipts -> visible 1/10 ledger with attribution; duplicate attempt blocked: ok");
 })().catch(error => { console.error(error); process.exitCode = 1; });

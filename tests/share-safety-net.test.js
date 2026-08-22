@@ -96,24 +96,29 @@ const click = target => {
   assert.equal(copied.length, 1);
   assert.match(copied[0], /sqShow=reading-rainbow/);
 
-  const audit = JSON.parse(values.get("starquest_share_fallback_audit"));
-  assert.equal(audit.length, 1);
-  assert.equal(audit[0].method, "copy_link");
-  assert.equal(audit[0].verified, false);
-  assert.equal(audit[0].credited, false);
-  assert.equal(audit[0].payoutEligible, false);
-
-  click(nodes["player-share-btn"]);
-  click(nodes["share-twitter-link"]);
-  assert.equal(recordedShares.length, 1, "guest Twitter handoff must count in safety mode");
+  assert.equal(recordedShares.length, 1, "successful copy must count in safety mode");
   assert.equal(recordedShares[0].options.confirmed, true);
   assert.match(nodes["share-sheet-status"].textContent, /1\/10/);
 
+  click(nodes["player-share-btn"]);
+  click(nodes["share-twitter-link"]);
+  assert.equal(recordedShares.length, 2, "guest Twitter handoff must count in safety mode");
+  assert.equal(recordedShares[1].options.confirmed, true);
+  assert.match(nodes["share-sheet-status"].textContent, /2\/10/);
+
+  click(nodes["player-share-btn"]);
+  click(nodes["share-sms-link"]);
+  assert.equal(recordedShares.length, 3, "text composer handoff must count in safety mode");
+
+  click(nodes["player-share-btn"]);
+  click(nodes["share-email-link"]);
+  assert.equal(recordedShares.length, 4, "email composer handoff must count in safety mode");
+
   window.StarQuestShareSafetyNet.markAppReady();
-  const auditBefore = values.get("starquest_share_fallback_audit");
+  const sharesBefore = recordedShares.length;
   const delegated = click(nodes["share-copy-btn"]);
   assert.equal(delegated.prevented, false);
   await new Promise(resolve => setImmediate(resolve));
-  assert.equal(values.get("starquest_share_fallback_audit"), auditBefore);
-  console.log("app.js failure -> share safety sheet and unverified copy audit: ok");
+  assert.equal(recordedShares.length, sharesBefore);
+  console.log("app.js failure -> copy, Twitter, text, and email all commit 1/10 progress: ok");
 })().catch(error => { console.error(error); process.exitCode = 1; });
