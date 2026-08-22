@@ -155,16 +155,18 @@
         await copyFallback();
         return;
       }
+      // Commit before Android backgrounds the page for the native chooser.
+      // The attempt ID keeps this handoff idempotent.
+      creditFallback("web_share_api_safety_net");
       await global.navigator.share({
         title: activeShare.title,
         text: activeShare.text,
         url: activeShare.url
       });
-      creditFallback("web_share_api_safety_net");
     } catch (error) {
       status(error && error.name === "AbortError"
-        ? "Share canceled. No StarCoin progress was added."
-        : "Phone sharing was unavailable. Use Text, Email, or Copy Link.");
+        ? "Phone share opened and the 1/10 receipt was committed."
+        : "The 1/10 receipt was committed. If the phone chooser did not open, use Text, Email, or Copy Link.");
     } finally {
       shareInFlight = false;
       if (button) {
@@ -207,11 +209,10 @@
     if (!source) return;
 
     if (source.closest("#player-share-btn")) {
+      if (appReady) return;
       open();
-      if (!appReady) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
+      event.preventDefault();
+      event.stopPropagation();
       return;
     }
 
