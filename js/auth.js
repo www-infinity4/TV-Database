@@ -7,6 +7,7 @@
   "use strict";
 
   const STORAGE_KEY = "starquest_users";
+  const STORAGE_BACKUP_KEY = "starquest_users_backup_v1";
   const SESSION_KEY = "starquest_session";
   const GUEST_PROFILE_KEY = "starquest_guest_profile_v1";
   const SYNC_HASH_PREFIX = "sync-";
@@ -224,7 +225,16 @@
   }
 
   function loadUsers() {
-    const raw = parseStoredJSON(STORAGE_KEY, {});
+    let raw;
+    const primaryText = localStorage.getItem(STORAGE_KEY);
+    try {
+      raw = primaryText ? JSON.parse(primaryText) : {};
+    } catch (_) {
+      raw = parseStoredJSON(STORAGE_BACKUP_KEY, {});
+      if (raw && Object.keys(raw).length) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(raw));
+      }
+    }
     const normalized = {};
     let changed = false;
 
@@ -248,6 +258,17 @@
   }
 
   function saveUsers(users) {
+    const prior = localStorage.getItem(STORAGE_KEY);
+    if (prior) {
+      try {
+        const parsed = JSON.parse(prior);
+        if (parsed && typeof parsed === "object" && Object.keys(parsed).length) {
+          localStorage.setItem(STORAGE_BACKUP_KEY, prior);
+        }
+      } catch (_) {
+        // Keep the last valid backup when the primary record is malformed.
+      }
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
   }
 
@@ -282,9 +303,16 @@
     return { ok: true, user: loadGuestProfile(), result };
   }
 
+  function hasGuestProfileData(guest) {
+    return !!(guest && (
+      guest.tokens || guest.pendingShareCredits || guest.shareEvents.length ||
+      guest.watchHistory.length || Object.keys(guest.watchPositions || {}).length
+    ));
+  }
+
   function claimGuestProfile(user) {
     const guest = loadGuestProfile();
-    const hasGuestData = guest.tokens || guest.pendingShareCredits || guest.shareEvents.length || guest.watchHistory.length;
+    const hasGuestData = hasGuestProfileData(guest);
     if (!hasGuestData) return user;
 
     const mergedHistory = new Map();
@@ -328,7 +356,18 @@
       clearSession();
       return null;
     }
-    return user;
+    /* A short-lived session/storage failure used to send playback and share
+       events into the guest profile even while the UI still looked signed in.
+       Reclaim that stranded data whenever the real account is available, not
+       only during a fresh sign-in. */
+    const needsRecovery = hasGuestProfileData(loadGuestProfile());
+    const recovered = needsRecovery ? claimGuestProfile(user) : user;
+    if (needsRecovery) {
+      users[recovered.key] = recovered;
+      saveUsers(users);
+      saveSessionForUser(recovered, session.signedInAt);
+    }
+    return recovered;
   }
 
   function mutateCurrentUser(mutator) {

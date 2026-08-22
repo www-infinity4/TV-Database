@@ -135,7 +135,7 @@
     }
   }
 
-  async function resolveArchiveEpisode(identifier, context) {
+  async function resolveArchiveEpisode(identifier, context, startSeconds) {
     if (!identifier) return;
     const token = ++resolutionToken;
 
@@ -152,6 +152,11 @@
       frame.style.display = "none";
       frame.src = "about:blank";
       video.style.display = "block";
+      const resumeAt = Math.max(0, Math.trunc(Number(startSeconds) || 0));
+      video.onloadedmetadata = () => {
+        const duration = Number(video.duration) || 0;
+        if (resumeAt > 5 && (!duration || resumeAt < duration - 10)) video.currentTime = resumeAt;
+      };
       video.oncanplay = () => {
         if (loading) loading.style.display = "none";
         if (error) error.style.display = "none";
@@ -162,6 +167,9 @@
       };
       video.src = directUrl(identifier, file.name);
       video.load();
+      document.dispatchEvent(new CustomEvent("starquest:archive-direct-playback", {
+        detail: { identifier, startSeconds: resumeAt }
+      }));
       const promise = video.play();
       if (promise && typeof promise.catch === "function") promise.catch(() => {});
       window.setTimeout(() => { internalChange = false; }, 0);
@@ -176,7 +184,9 @@
     if (internalChange) return;
     const identifier = archiveIdFromUrl(frame.src);
     if (!identifier) return;
-    return resolveArchiveEpisode(identifier, playerContext());
+    let startSeconds = 0;
+    try { startSeconds = Number(new URL(frame.src).searchParams.get("start")) || 0; } catch (_) {}
+    return resolveArchiveEpisode(identifier, playerContext(), startSeconds);
   }
 
   document.addEventListener("starquest:resolve-archive-episode", (event) => {
@@ -194,7 +204,7 @@
       season: Number.isInteger(detail.season) ? detail.season : null,
       episode: Number.isInteger(detail.episode) ? detail.episode : null,
       episodeTitle: String(detail.episodeTitle || "")
-    });
+    }, Number(detail.startSeconds) || 0);
   });
 
   const observer = new MutationObserver(() => {
