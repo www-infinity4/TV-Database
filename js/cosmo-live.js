@@ -5,7 +5,7 @@
   const SETTINGS_KEY = "starquest_cosmo_settings_v2";
   const LIST_KEY = "starquest_cosmo_shopping_v1";
   const PREF_KEY = "starquest_cosmo_preferences_v1";
-  const defaults = { watchAlong: true, sponsoredSuggestions: false, speakReplies: true, handsFreeVoice: true };
+  const defaults = { watchAlong: true, sponsoredSuggestions: false, speakReplies: true, handsFreeVoice: false };
   let settings = { ...defaults, ...load(SETTINGS_KEY, defaults) };
   let shopping = load(LIST_KEY, []);
   let preferences = load(PREF_KEY, { likes: [], needs: [] });

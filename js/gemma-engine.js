@@ -1,15 +1,12 @@
 /**
- * StarQuest Cosmo — on-device Gemma adapter.
- *
- * Gemma is only downloaded after a viewer explicitly presses Start Gemma.
- * Google AI Edge currently requires WebGPU and a large web-compatible model.
+ * StarQuest Cosmo — consent-based, on-device Gemma adapter.
+ * The model downloads only after the viewer presses Start Gemma.
  */
 (function (global) {
   "use strict";
 
   const DEFAULT_MODEL = "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/main/gemma-4-E2B-it-web.litertlm";
-  const MODULE_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai/genai_bundle.mjs";
-  const WASM_ROOT = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai@latest/wasm";
+  const MODULE_URL = "https://cdn.jsdelivr.net/npm/@litert-lm/core/+esm";
   let engine = null;
   let conversation = null;
   let state = "idle";
@@ -27,11 +24,19 @@
     return { state, detail, supported: supported(), ready: state === "ready" };
   }
 
+  function releaseEngine() {
+    conversation = null;
+    if (engine && typeof engine.delete === "function") {
+      try { engine.delete(); } catch (_) {}
+    }
+    engine = null;
+  }
+
   async function start(systemPrompt) {
     if (conversation) return status();
     if (!supported()) {
       state = "unsupported";
-      detail = "This browser/device does not expose WebGPU. Cosmo will use his network and research fallbacks.";
+      detail = "This device does not expose WebGPU. Cosmo can use the secure network model when it is configured.";
       emit();
       return status();
     }
@@ -40,26 +45,18 @@
     emit();
     try {
       const module = await import(MODULE_URL);
+      if (!module.Engine || typeof module.Engine.create !== "function") throw new Error("LiteRT-LM Engine is unavailable");
       const model = (global.STARQUEST_COSMO_CONFIG && global.STARQUEST_COSMO_CONFIG.gemmaModelUrl) || DEFAULT_MODEL;
-      const fileset = await module.FilesetResolver.forGenAiTasks(WASM_ROOT);
-      engine = await module.LlmInference.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: model },
-        maxTokens: 4096,
-        topK: 40,
-        temperature: 0.65,
-        randomSeed: 101,
+      engine = await module.Engine.create({ model, mainExecutorSettings: { maxNumTokens: 4096 } });
+      conversation = engine.createConversation({
+        preface: { messages: [{ role: "system", content: String(systemPrompt || "") }] },
       });
-      conversation = { systemPrompt: String(systemPrompt || "") };
       state = "ready";
       detail = "Gemma 4 E2B is running locally in this browser.";
     } catch (error) {
       state = "error";
       detail = "Gemma could not start: " + (error && error.message ? error.message : "unknown loading error");
-      conversation = null;
-      if (engine && typeof engine.close === "function") {
-        try { engine.close(); } catch (_) {}
-      }
-      engine = null;
+      releaseEngine();
     }
     emit();
     return status();
@@ -68,7 +65,9 @@
   async function prompt(text) {
     if (!conversation) return null;
     try {
-      const answer = String(await engine.generateResponse(String(text || ""))).trim();
+      const response = await conversation.sendMessage(String(text || ""));
+      const blocks = response && Array.isArray(response.content) ? response.content : [];
+      const answer = blocks.map((block) => typeof block === "string" ? block : block && block.text || "").join("\n").trim();
       return answer || null;
     } catch (error) {
       state = "error";
@@ -79,11 +78,7 @@
   }
 
   async function stop() {
-    conversation = null;
-    if (engine && typeof engine.close === "function") {
-      try { engine.close(); } catch (_) {}
-    }
-    engine = null;
+    releaseEngine();
     state = "idle";
     detail = "Gemma was released from memory.";
     emit();

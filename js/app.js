@@ -227,6 +227,7 @@
     try { localStorage.setItem(DISCOVERY_KEY, JSON.stringify(signals)); } catch (_) {}
   }
 
+  let _cosmoSearchSignalTimer = null;
   function recordDiscoverySearch(query) {
     const clean = String(query || "").trim().toLowerCase();
     if (clean.length < 2) return;
@@ -234,6 +235,11 @@
     if (signals.searches[signals.searches.length - 1] !== clean) signals.searches.push(clean);
     signals.searches = signals.searches.slice(-30);
     saveDiscoverySignals(signals);
+    if (_cosmoSearchSignalTimer) clearTimeout(_cosmoSearchSignalTimer);
+    _cosmoSearchSignalTimer = setTimeout(() => {
+      document.dispatchEvent(new CustomEvent("starquest:search", { detail: { query: clean } }));
+      _cosmoSearchSignalTimer = null;
+    }, 700);
   }
 
   function recordDiscoveryShow(show) {
@@ -1091,6 +1097,7 @@
     const epTitle = episode ? episode.title : "";
 
     const display = (text) => {
+      if (!String(text || "").trim()) return;
       textEl.textContent = text;
       popEl.style.display = "flex";
       popEl.classList.add("cosmo-popin--in");
@@ -1100,11 +1107,7 @@
     };
 
     if (typeof StarQuestAI !== "undefined") {
-      StarQuestAI.generatePopIn(showId, showTitle, epTitle).then(display).catch(() => {
-        display("Enjoying the show? I've got all the behind-the-scenes secrets — ask me anything! 🤖");
-      });
-    } else {
-      display("Enjoying the show? Ask Cosmo about behind-the-scenes secrets! 🤖");
+      StarQuestAI.generatePopIn(showId, showTitle, epTitle).then(display).catch(() => {});
     }
   }
 
@@ -3087,6 +3090,7 @@
   const cosmoHandsFreeToggle = $("cosmo-handsfree-toggle");
   const cosmoShoppingList = $("cosmo-shopping-list");
   const cosmoClearList = $("cosmo-clear-list");
+  const cosmoClearInterests = $("cosmo-clear-interests");
   const sidebarCosmoBtn = $("sidebar-cosmo-btn");
   const sidebarAIBadge  = $("sidebar-ai-badge");
 
@@ -3153,7 +3157,7 @@
     if (aiMessages && aiMessages.children.length === 0) {
       appendAIMessage("bot", "Hi! I'm Cosmo, StarQuest's living companion. Ask me about a show, what to watch, your StarCoins, or anything playing now.");
     }
-    if (aiInput && !handsFreeVoiceEnabled()) aiInput.focus();
+    if (aiInput) aiInput.focus();
   }
 
   function closeAIPanel() {
@@ -3210,7 +3214,7 @@
     } finally {
       typingEl.remove();
       if (aiSend) aiSend.disabled = false;
-      if (aiInput && !handsFreeVoiceEnabled()) aiInput.focus();
+      if (aiInput) aiInput.focus();
     }
   }
 
@@ -3218,6 +3222,7 @@
   if (aiInput) aiInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") { e.preventDefault(); sendAIMessage(); }
   });
+  if (window.StarQuestControls) window.StarQuestControls.cosmoChatRouted = true;
 
   /* Suggestion chips */
   document.querySelectorAll(".ai-suggest").forEach((chip) => {
@@ -3257,6 +3262,10 @@
   if (cosmoSponsorsToggle) cosmoSponsorsToggle.addEventListener("change", () => StarQuestCosmoLive.updateSettings({ sponsoredSuggestions: cosmoSponsorsToggle.checked }));
   if (cosmoSpeakToggle) cosmoSpeakToggle.addEventListener("change", () => StarQuestCosmoLive.updateSettings({ speakReplies: cosmoSpeakToggle.checked }));
   if (cosmoClearList) cosmoClearList.addEventListener("click", () => StarQuestCosmoLive.clearShoppingList());
+  if (cosmoClearInterests) cosmoClearInterests.addEventListener("click", () => {
+    if (window.StarQuestCosmoContext) StarQuestCosmoContext.clear();
+    document.dispatchEvent(new CustomEvent("starquest:toast", { detail: { message: "Cosmo's learned interests were cleared." } }));
+  });
   document.addEventListener("starquest:shopping-updated", renderCosmoShopping);
 
   let voiceRecognition = null;
@@ -3302,7 +3311,7 @@
       if (voiceState === "error" && ["not-allowed", "service-not-allowed"].includes(detail)) {
         StarQuestCosmoLive.updateSettings({ handsFreeVoice: false });
         syncCosmoControls();
-        appendAIMessage("bot", "Microphone permission is off. Allow it once in your browser settings, then open Cosmo again.");
+        appendAIMessage("bot", "Microphone permission is off, but text chat is ready. Type below and tap Send, or tap the microphone after allowing it in your browser settings.");
       } else if (voiceState === "error" && detail === "audio-capture") {
         appendAIMessage("bot", "I can't reach a microphone on this device right now.");
       }
@@ -3320,7 +3329,6 @@
       const primeHandsFree = () => {
         if (handsFreeVoiceEnabled() && !voiceRecognition.isActive()) startHandsFreeVoice();
       };
-      document.addEventListener("pointerdown", primeHandsFree, { capture: true, once: true });
       document.addEventListener("starquest:cosmo-opened", primeHandsFree);
     }
   }

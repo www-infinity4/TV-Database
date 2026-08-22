@@ -1,0 +1,6 @@
+name = "starquest-cosmo"
+main = "cosmo-gemini-worker.mjs"
+compatibility_date = "2026-08-21"
+
+[vars]
+GEMINI_MODEL = "gemini-3.7-flash"

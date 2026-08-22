@@ -1,8 +1,9 @@
 /**
  * StarQuest — AI Companion (Cosmo)
  * Primary local engine: Gemma through the official LiteRT-LM Web API.
- * Network, Chrome and rule-based fallbacks keep basic chat available on
- * devices that cannot run the large WebGPU model.
+ * Network and Chrome fallbacks provide open conversation on devices that
+ * cannot run the large WebGPU model. Offline code is limited to transparent
+ * StarQuest tools and never pretends a scripted line came from a model.
  *
  * Features:
  *  - Real conversation memory (last 12 exchanges)
@@ -458,7 +459,7 @@
   }
 
   /**
-   * Call Pollinations.ai text generation API.
+   * Call the configured server-side AI gateway.
    * Returns the response string, or null if the request fails.
    * Aborts after 7 seconds so the dependable local Cosmo response is never hidden behind a stalled network request.
    */
@@ -512,7 +513,8 @@
           context: {
             application: "StarQuest",
             system: String((messages[0] && messages[0].content) || "").slice(0, 12000),
-            conversation: messages.slice(1, -1).slice(-12)
+            conversation: messages.slice(1, -1).slice(-12),
+            interests: global.StarQuestCosmoContext ? global.StarQuestCosmoContext.snapshot(12) : []
           }
         }),
         signal: controller.signal,
@@ -610,15 +612,16 @@
       : "";
     return (
       "You are Cosmo, the AI companion for StarQuest — a free classic TV & movies streaming site featuring 1950s–1990s content from archive.org.\n" +
-      "You are like a knowledgeable best friend who has watched every show. You speak casually, naturally, and with genuine enthusiasm — like texting a friend.\n" +
-      "You drop trivia and behind-the-scenes facts as if you just remembered them mid-conversation. Keep replies lively and meaty — usually 3-6 sentences unless the user asks for something brief.\n" +
-      "You react with personality: 'Dude, did you see that?!', 'Oh man this episode is wild', 'Fun fact —', etc.\n" +
+      "You are a knowledgeable, warm viewing companion. Speak naturally and specifically, usually in 2-5 sentences. Do not repeat stock catchphrases.\n" +
       "You never give robotic encyclopedia entries. You never make up episode timestamps, prices, availability, products, or facts.\n" +
+      "Never claim to read thoughts, minds, other tabs, browser history, private messages, or inaccessible video. Never claim actors, filmmakers, a movie, or Hollywood are reacting to the viewer personally. Treat a program's content and the viewer's private life as separate unless the viewer supplies a concrete connection.\n" +
+      "For watch-along remarks, use only the supplied title, playback time, caption text, verified lookup, and viewer-controlled StarQuest interest signals. If that evidence cannot support a useful specific comment, return exactly NO_COMMENT.\n" +
       "Treat fetched movie summaries and source URLs as evidence. If you are unsure, say so and offer to look it up.\n" +
       "When recommending shows, always reference specific titles from the StarQuest catalogue and explain WHY based on what the user has watched.\n" +
       "Commercial suggestions are allowed only when StarQuest marks them as enabled and relevant. Always label them as sponsored, never use hidden or subliminal persuasion, never claim urgency you cannot verify, and never say an order was placed without separate viewer confirmation.\n" +
       "StarCoins are created from completed sharing: each share adds 1/10 and the 10th creates one coin. Watch time never mints StarCoins.\n" +
       cat + hist + ctx +
+      (global.StarQuestCosmoContext ? global.StarQuestCosmoContext.promptContext() : "") +
       (global.StarQuestCosmoLive ? global.StarQuestCosmoLive.contextBlurb() + global.StarQuestCosmoLive.preferenceBlurb() : "")
     );
   }
@@ -686,93 +689,26 @@
     }
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     WATCH-ALONG POP-INS
-     Per-show pre-written comments used when Chrome AI is off.
-     ──────────────────────────────────────────────────────────── */
-
-  const POPINS = {
-    "due-south": [
-      "Dude, Fraser is literally the most polite human on television — this Mountie never loses his cool 😂",
-      "Fun fact: Diefenbaker was played by multiple wolf-dogs throughout the series. Wolf stunt doubles are a real job!",
-      "Paul Gross wrote, produced AND composed music for this show. The man did everything himself.",
-      "They filmed this in Toronto but set it in Chicago. Toronto standing in for the Windy City the whole time!",
-    ],
-    "real-ghostbusters": [
-      "The reason it's called 'The REAL Ghostbusters' is wild — a totally different Ghostbusters cartoon already existed from the 70s!",
-      "J. Michael Straczynski — the guy who later created Babylon 5 — wrote a ton of the best episodes here.",
-      "Bill Murray got Lorenzo Music fired from voicing Peter Venkman. Murray called the studio and complained personally 😬",
-    ],
-    "twilight-zone": [
-      "Rod Serling wrote 92 of the 156 original episodes BY HIMSELF. That's insane output.",
-      "CBS rejected the original pilot. Serling rewrote it and they picked it up — good call, CBS.",
-      "Robert Redford, Dennis Hopper, and Burt Reynolds all appeared in this before they were huge.",
-    ],
-    mash: [
-      "This show ran 11 seasons. The actual Korean War lasted 3 years. TV math is wild.",
-      "The series finale drew 106 million viewers in 1983. Nothing has touched that record in decades.",
-      "Alan Alda is the only cast member who appeared in all 11 seasons. Legend.",
-    ],
-    cheers: [
-      "Cheers almost got cancelled after its first season due to terrible ratings. Imagine that universe.",
-      "Frasier was literally supposed to be a one-episode character. One episode. And got his own spinoff.",
-      "The exterior bar shot is a real pub in Boston. It's literally called 'Cheers' now because of tourists.",
-    ],
-    seinfeld: [
-      "Larry David's rule for this show was 'no hugging, no learning.' Every character stays exactly who they are.",
-      "NBC called the pilot 'too New York, too Jewish' and almost didn't pick it up. Can you imagine?",
-      "Jerry Seinfeld turned down $5 million per episode to end the show. He walked away from $100M+ a season.",
-    ],
-    columbo: [
-      "'Just one more thing…' — Peter Falk improvised that catchphrase almost every single time.",
-      "Columbo's wife is mentioned in almost every episode but you never once see her on screen.",
-      "Steven Spielberg directed the very first Columbo TV movie. He was 24 years old.",
-    ],
-    "x-men": [
-      "The X-Men theme was rejected by the network but fans went absolutely crazy for it. Network overruled.",
-      "This show tackled civil rights and discrimination more directly than basically any other kids' show of the era.",
-      "The Phoenix Saga episodes are considered some of the finest animated storytelling ever made — for any age.",
-    ],
-    "star-trek": [
-      "The Vulcan salute was invented by Leonard Nimoy himself — based on a Jewish priestly blessing gesture.",
-      "NBC almost cancelled Star Trek after season 1. A fan letter campaign literally saved the show.",
-      "Nichelle Nichols considered leaving until Martin Luther King Jr. personally asked her to stay. Respect.",
-    ],
-  };
-
-  function getPopIn(showId, showTitle) {
-    const key = (showId || "").toLowerCase().replace(/[^a-z0-9]/g, "-");
-    const list = POPINS[key];
-    if (list && list.length) return pickRandom(list);
-    /* Generic fallback */
-    const generics = [
-      `What detail in ${showTitle} just caught your eye? Tell me and I'll look up the connection.`,
-      `I'm watching along with ${showTitle}. Want the verified history, cast information, or collectibles connected to it?`,
-      `That scene in ${showTitle} has a lot going on. Ask me about anything you noticed and I'll trace it instead of guessing.`,
-    ];
-    return pickRandom(generics);
-  }
-
   async function generatePopInText(showId, showTitle, epTitle) {
     const offer = global.StarQuestCosmoLive && global.StarQuestCosmoLive.sponsoredSuggestion();
     if (offer) return `${offer.label}: ${offer.text} ${offer.url}`;
-    const userPrompt = `Generate ONE casual watch-along comment (up to 2 short sentences) about watching "${showTitle}" — episode "${epTitle}". Use only verified context. If no specific fact is verified, ask a friendly observational question instead of inventing trivia. Do not advertise unless a labeled sponsored offer is explicitly supplied.`;
+    const userPrompt = `Generate ONE specific watch-along insight (up to 2 short sentences) for "${showTitle}" — episode "${epTitle}". Connect the current verified playback/caption evidence to the viewer-controlled weighted interests only when the connection is supported. Do not use generic scene commentary. If there is not enough evidence, return exactly NO_COMMENT.`;
     if (global.StarQuestGemma && global.StarQuestGemma.status().ready) {
       const gemmaResponse = await global.StarQuestGemma.prompt(buildSystemPrompt() + "\n" + userPrompt);
-      if (gemmaResponse) return gemmaResponse;
+      if (gemmaResponse && !/^NO_COMMENT\.?$/i.test(gemmaResponse.trim())) return gemmaResponse;
     }
     /* Network fallback */
     const pollinResponse = await _callNetworkAI([
       { role: "system", content: buildSystemPrompt() },
       { role: "user",   content: userPrompt },
     ]);
-    if (pollinResponse) return pollinResponse;
+    if (pollinResponse && !/^NO_COMMENT\.?$/i.test(pollinResponse.trim())) return pollinResponse;
     /* Chrome AI fallback */
     if (_aiReady && _aiSession) {
       const ai = await _promptAI(userPrompt);
-      if (ai) return ai;
+      if (ai && !/^NO_COMMENT\.?$/i.test(ai.trim())) return ai;
     }
-    return getPopIn(showId, showTitle);
+    return null;
   }
 
   let _infinityLanguageEngine = null;
@@ -834,6 +770,9 @@
      ──────────────────────────────────────────────────────────── */
 
   async function chat(userMessage) {
+    document.dispatchEvent(new CustomEvent("starquest:cosmo-user-message", {
+      detail: { text: String(userMessage || "") }
+    }));
     if (global.StarQuestCosmoLive) {
       global.StarQuestCosmoLive.remember(userMessage);
       const listResponse = global.StarQuestCosmoLive.handleListIntent(userMessage);
