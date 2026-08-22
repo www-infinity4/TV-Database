@@ -1,6 +1,7 @@
 /**
  * StarQuest — Authentication & User System
- * All data stored in localStorage. No backend required.
+ * Device-local account cache. Durable cross-device storage still requires the
+ * server-authoritative account service described in SUPABASE_MIGRATION_PLAN.md.
  */
 
 (function (global) {
@@ -8,6 +9,7 @@
 
   const STORAGE_KEY = "starquest_users";
   const STORAGE_BACKUP_KEY = "starquest_users_backup_v1";
+  const BACKUP_RECOVERY_MARKER_KEY = "starquest_backup_recovery_v2";
   const SESSION_KEY = "starquest_session";
   const GUEST_PROFILE_KEY = "starquest_guest_profile_v1";
   const SYNC_HASH_PREFIX = "sync-";
@@ -169,9 +171,10 @@
 
   function normalizeUser(user, keyHint) {
     if (!user || typeof user !== "object") return null;
-    const username = String(user.username || keyHint || "").trim();
+    let username = String(user.username || keyHint || "").trim();
     const key = String(user.key || keyHint || username).trim().toLowerCase();
     if (!key || !username) return null;
+    if (key === "kris") username = "kris";
     const passwordHash = String(user.passwordHash || "").trim()
       || (typeof user.password === "string" && user.password
         ? hashPasswordSync(user.password, username)
@@ -247,6 +250,45 @@
       const same = sameKey && JSON.stringify(rawUser) === JSON.stringify(normalizedUser);
       if (!same) changed = true;
     });
+
+    /* Recover account activity stranded in the last valid snapshot. This is a
+       one-time migration so an intentional later "clear history" stays clear. */
+    if (localStorage.getItem(BACKUP_RECOVERY_MARKER_KEY) !== "done") {
+      const backup = parseStoredJSON(STORAGE_BACKUP_KEY, {});
+      Object.entries(backup || {}).forEach(([storedKey, prior]) => {
+        const oldUser = normalizeUser(prior, storedKey);
+        const user = oldUser && normalized[oldUser.key];
+        if (!user) return;
+        const mergedHistory = new Map();
+        [...(user.watchHistory || []), ...(oldUser.watchHistory || [])].forEach((entry) => {
+          const existing = mergedHistory.get(entry.episodeId);
+          if (!existing || Number(entry.lastWatchedAt || 0) > Number(existing.lastWatchedAt || 0)) {
+            mergedHistory.set(entry.episodeId, entry);
+          }
+        });
+        user.watchHistory = [...mergedHistory.values()]
+          .sort((a, b) => Number(b.lastWatchedAt || 0) - Number(a.lastWatchedAt || 0))
+          .slice(0, 200);
+        Object.entries(oldUser.watchPositions || {}).forEach(([episodeId, position]) => {
+          user.watchPositions[episodeId] = Math.max(
+            Math.max(0, toInt(user.watchPositions[episodeId], 0)),
+            Math.max(0, toInt(position, 0))
+          );
+        });
+        user.tokens = Math.max(user.tokens, oldUser.tokens);
+        user.shareCount = Math.max(user.shareCount, oldUser.shareCount);
+        user.pendingShareCredits = Math.max(user.pendingShareCredits, oldUser.pendingShareCredits);
+        const events = new Map([...(user.shareEvents || []), ...(oldUser.shareEvents || [])]
+          .map((event) => [event.id || event.attemptId, event]));
+        user.shareEvents = [...events.values()].slice(-250);
+        const ledger = new Map([...(user.ledger || []), ...(oldUser.ledger || [])]
+          .map((entry) => [entry.id, entry]));
+        user.ledger = [...ledger.values()].slice(-500);
+        user.unlockedContent = { ...(oldUser.unlockedContent || {}), ...(user.unlockedContent || {}) };
+        changed = true;
+      });
+      localStorage.setItem(BACKUP_RECOVERY_MARKER_KEY, "done");
+    }
 
     if (Object.keys(raw || {}).length !== Object.keys(normalized).length) changed = true;
 

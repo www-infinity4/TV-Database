@@ -83,8 +83,7 @@ assert.equal(window.StarQuestCosmoLive.sponsoredSuggestion(), null, "sponsored s
   assert.match(window.StarQuestCosmoLive.answerFromLiveContext("What movie are we watching?"), /Verified source/);
   window.StarQuestCosmoLive.updateSettings({ sponsoredSuggestions: true });
   const offer = window.StarQuestCosmoLive.sponsoredSuggestion();
-  assert.equal(offer.label, "Sponsored suggestion");
-  assert.match(offer.url, /^https:\/\/www\.ebay\.com\/sch\/i\.html/);
+  assert.equal(offer, null, "offers stay off until the complete scene pipeline is validated");
 
   const unsupported = await window.StarQuestGemma.start("test");
   assert.equal(unsupported.state, "unsupported");
@@ -103,6 +102,7 @@ assert.equal(window.StarQuestCosmoLive.sponsoredSuggestion(), null, "sponsored s
   assert.match(aiSource, /PLAYBACK_CONTEXT_SET/);
   assert.match(cosmoSource, /createHandsFreeRecognition/);
   assert.match(cosmoSource, /recognition\.continuous = true/);
+  assert.match(cosmoSource, /sceneEngine\.isReleaseReady\(\)/);
   assert.match(appSource, /primeHandsFree/);
   assert.match(appSource, /handsFreeVoiceEnabled/);
   assert.doesNotMatch(aiSource, /const POPINS/);
