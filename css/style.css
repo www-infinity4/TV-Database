@@ -1923,6 +1923,26 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   box-shadow: inset 0 0 16px rgba(124,92,255,.12), 0 4px 14px rgba(0,0,0,.2);
   transition: transform var(--transition), background var(--transition), border-color var(--transition);
 }
+
+.player-pip-btn {
+  min-height: 36px;
+  padding: 5px 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(126,231,255,.45);
+  background: rgba(5,30,54,.78);
+  color: #dff9ff;
+  font-size: .72rem;
+  font-weight: 800;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+.player-pip-btn:hover,
+.player-pip-btn--active {
+  border-color: #8ff5ff;
+  background: linear-gradient(145deg, #0a6680, #3846a8);
+  box-shadow: 0 0 18px rgba(91,224,255,.35);
+}
+.player-pip-btn:disabled { opacity: .45; cursor: not-allowed; }
 .player-share-btn:hover {
   transform: translateY(-1px);
   background: linear-gradient(145deg, rgba(110,88,205,.42), rgba(26,175,215,.28));
@@ -2641,6 +2661,36 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
     min-height: 42px;
     padding: 7px 9px;
   }
+  .player-pip-btn {
+    min-height: 42px;
+    padding: 7px 9px;
+  }
+}
+
+.home-starcoin-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-width: min(100%, 430px);
+  margin-top: 14px;
+  padding: 10px 15px;
+  border: 1px solid rgba(255,215,0,.48);
+  border-radius: 999px;
+  color: #fff4ba;
+  background: linear-gradient(135deg, rgba(58,38,8,.78), rgba(35,20,81,.82));
+  box-shadow: 0 7px 22px rgba(0,0,0,.3), inset 0 0 18px rgba(255,215,0,.08);
+  text-align: left;
+  touch-action: manipulation;
+}
+.home-starcoin-status:hover,
+.home-starcoin-status:focus-visible { border-color: #ffe26b; transform: translateY(-1px); }
+.home-starcoin-status__star { font-size: 1.25rem; filter: drop-shadow(0 0 7px rgba(255,220,80,.65)); }
+.home-starcoin-status strong { color: #ffe36c; font-size: 1rem; white-space: nowrap; }
+.home-starcoin-status span:last-child { color: #e6e9f8; font-size: .76rem; line-height: 1.25; }
+
+@media (max-width: 520px) {
+  .home-starcoin-status { width: 100%; border-radius: 15px; padding: 11px 13px; }
+  .home-starcoin-status span:last-child { font-size: .7rem; }
 }
 
 

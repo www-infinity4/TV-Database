@@ -24,7 +24,10 @@ interface BootstrapBody extends JsonRecord {
 
 interface Env {
   DB: D1Database;
+  INFINITY_CONNECTOR_SECRET?: string;
 }
+
+const INFINITY_LEDGER_URL = "https://infinity-ledger.marvaseater.workers.dev";
 
 class HttpError extends Error {
   constructor(public status: number, public code: string, message: string) {
@@ -283,7 +286,54 @@ async function saveHistory(request: Request, env: Env, account: AccountRow): Pro
   return json(request, { ok: true, state: await loadState(env, account) });
 }
 
-async function saveShare(request: Request, env: Env, account: AccountRow): Promise<Response> {
+async function flushInfinityOutbox(env: Env): Promise<void> {
+  if (!env.INFINITY_CONNECTOR_SECRET) {
+    console.error(JSON.stringify({ event: "infinity_outbox_paused", reason: "connector_secret_missing" }));
+    return;
+  }
+  const now = Date.now();
+  const pending = await env.DB.prepare(
+    `SELECT idempotency_key, payload_json, attempts FROM infinity_outbox
+      WHERE status = 'PENDING' AND next_attempt_at <= ?1
+      ORDER BY created_at LIMIT 25`
+  ).bind(now).all<{ idempotency_key: string; payload_json: string; attempts: number }>();
+
+  for (const row of pending.results) {
+    try {
+      const response = await fetch(`${INFINITY_LEDGER_URL}/internal/v1/actions/qualify`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${env.INFINITY_CONNECTOR_SECRET}`,
+          "Content-Type": "application/json",
+        },
+        body: row.payload_json,
+      });
+      if (!response.ok) {
+        const problem = await response.json<{ error?: string }>().catch(() => ({ error: undefined }));
+        throw new Error(cleanString(problem.error, 80, `http_${response.status}`));
+      }
+      await env.DB.prepare(
+        `UPDATE infinity_outbox SET status = 'SENT', sent_at = ?2, last_error = NULL
+          WHERE idempotency_key = ?1 AND status = 'PENDING'`
+      ).bind(row.idempotency_key, Date.now()).run();
+    } catch (error) {
+      const attempts = Number(row.attempts || 0) + 1;
+      const retryDelay = Math.min(60 * 60 * 1000, 15_000 * (2 ** Math.min(attempts, 8)));
+      await env.DB.prepare(
+        `UPDATE infinity_outbox
+            SET attempts = ?2, next_attempt_at = ?3, last_error = ?4
+          WHERE idempotency_key = ?1 AND status = 'PENDING'`
+      ).bind(
+        row.idempotency_key,
+        attempts,
+        Date.now() + retryDelay,
+        cleanString(error instanceof Error ? error.message : String(error), 160, "connector_error"),
+      ).run();
+    }
+  }
+}
+
+async function saveShare(request: Request, env: Env, account: AccountRow, ctx: ExecutionContext): Promise<Response> {
   const body = await readBody<JsonRecord>(request);
   const idempotencyKey = cleanString(body.attemptId ?? body.idempotencyKey, 160);
   const contentId = cleanString(body.contentId, 500);
@@ -291,6 +341,20 @@ async function saveShare(request: Request, env: Env, account: AccountRow): Promi
   const now = Date.now();
   const shareLedgerId = randomId("ledger");
   const rewardLedgerId = randomId("ledger");
+  const infinityPayload = JSON.stringify({
+    sourceKey: "STARQUEST",
+    actionKey: "SHARE_CONFIRMED",
+    subjectId: account.id,
+    idempotencyKey: `starquest:${idempotencyKey}`,
+    sourceReference: idempotencyKey,
+    occurredAt: now,
+    evidence: {
+      contentId,
+      receiptHash: cleanString(body.receiptHash, 160),
+      fullyWatched: body.fullyWatched === true,
+      attributionStatus: cleanString(body.attributionStatus, 120, "actor_credits_pending"),
+    },
+  });
 
   const results = await env.DB.batch([
     env.DB.prepare(
@@ -339,12 +403,20 @@ async function saveShare(request: Request, env: Env, account: AccountRow): Promi
           AND r.credited_at IS NULL AND a.pending_share_credits = 0`
     ).bind(rewardLedgerId, account.id, idempotencyKey, now),
     env.DB.prepare(
+      `INSERT OR IGNORE INTO infinity_outbox
+        (idempotency_key, account_id, payload_json, status, attempts, next_attempt_at, created_at)
+       SELECT ?1, ?2, ?3, 'PENDING', 0, ?4, ?4
+         FROM share_receipts
+        WHERE idempotency_key = ?1 AND account_id = ?2 AND credited_at IS NULL`
+    ).bind(idempotencyKey, account.id, infinityPayload, now),
+    env.DB.prepare(
       `UPDATE share_receipts SET credited_at = ?3
         WHERE account_id = ?1 AND idempotency_key = ?2 AND credited_at IS NULL`
     ).bind(account.id, idempotencyKey, now),
   ]);
 
   const credited = Number(results[1].meta.changes || 0) === 1;
+  if (credited) ctx.waitUntil(flushInfinityOutbox(env));
   account = (await env.DB.prepare(
     `SELECT id, username, star_coins, pending_share_credits, share_count FROM accounts WHERE id = ?1`
   ).bind(account.id).first<AccountRow>())!;
@@ -357,7 +429,7 @@ async function saveShare(request: Request, env: Env, account: AccountRow): Promi
   });
 }
 
-async function route(request: Request, env: Env): Promise<Response> {
+async function route(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const url = new URL(request.url);
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(request) });
   if (!ALLOWED_ORIGINS.has(request.headers.get("Origin") || "") && request.method !== "GET") {
@@ -371,18 +443,21 @@ async function route(request: Request, env: Env): Promise<Response> {
   const account = await accountFromRequest(request, env);
   if (request.method === "GET" && url.pathname === "/v1/state") return json(request, { ok: true, state: await loadState(env, account) });
   if (request.method === "POST" && url.pathname === "/v1/history") return saveHistory(request, env, account);
-  if (request.method === "POST" && url.pathname === "/v1/shares") return saveShare(request, env, account);
+  if (request.method === "POST" && url.pathname === "/v1/shares") return saveShare(request, env, account, ctx);
   throw new HttpError(404, "not_found", "StarQuest ledger endpoint not found.");
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     try {
-      return await route(request, env);
+      return await route(request, env, ctx);
     } catch (error) {
       if (error instanceof HttpError) return json(request, { ok: false, error: error.code, message: error.message }, error.status);
       console.error(JSON.stringify({ event: "unhandled_error", message: error instanceof Error ? error.message : String(error) }));
       return json(request, { ok: false, error: "server_error", message: "The ledger could not complete this request." }, 500);
     }
+  },
+  async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(flushInfinityOutbox(env));
   },
 } satisfies ExportedHandler<Env>;

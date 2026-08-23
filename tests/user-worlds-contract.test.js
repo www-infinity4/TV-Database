@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const index = fs.readFileSync('index.html', 'utf8');
 const worlds = fs.readFileSync('js/user-worlds.js', 'utf8');
 
-assert.match(index, /js\/user-worlds\.js\?v=20260812/);
+assert.match(index, /js\/user-worlds\.js\?v=20260822-world-compact1/);
 assert.ok(index.indexOf('js/app.js') < index.indexOf('js/user-worlds.js'), 'world builder loads after the current app');
 assert.match(worlds, /starquest_user_worlds_v1/);
 assert.match(worlds, /worldId/);

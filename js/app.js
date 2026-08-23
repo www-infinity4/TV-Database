@@ -132,9 +132,21 @@
     return (show && show.id ? show.id : "unknown") + "|S" + ep.season + "E" + ep.episode;
   }
 
-  function isEpisodePlayable(ep) {
+  function showUnlockCost(show) {
+    if (!show || typeof show !== "object") return 0;
+    return Number.isFinite(Number(show.starCoinCost))
+      ? Math.max(0, Math.trunc(Number(show.starCoinCost)))
+      : (show.payToWatch ? 1 : 0);
+  }
+
+  function isEpisodePlayable(ep, show) {
     if (!ep || typeof ep !== "object") return false;
     if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing" || ep.sourceStatus === "unverified") return false;
+    /* A YouTube rent/buy listing is metadata, not a verified full program.
+       Never charge a StarCoin or show a working Play control for a trailer or
+       storefront link. Paid catalog records become playable only after an
+       exact full source is mapped. */
+    if (showUnlockCost(show) > 0 && ep.youtubeId && !ep.archiveId && !ep.archiveFile) return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
     // Item-only Archive.org records are resolved from metadata at playback time.
@@ -143,12 +155,12 @@
 
   function isShowAvailable(show) {
     if (!show || !Array.isArray(show.episodes) || !show.episodes.length) return false;
-    return show.episodes.some(isEpisodePlayable);
+    return show.episodes.some((ep) => isEpisodePlayable(ep, show));
   }
 
   function getPrimaryEpisode(show) {
     if (!show || !Array.isArray(show.episodes)) return null;
-    return show.episodes.find(isEpisodePlayable) || show.episodes[0] || null;
+    return show.episodes.find((ep) => isEpisodePlayable(ep, show)) || null;
   }
 
   const DISCOVERY_KEY = "starquest.discovery.v1";
@@ -430,7 +442,10 @@
   }
 
   function initHero() {
-    const playableCatalog = (typeof SHOWS !== "undefined" ? SHOWS.slice() : []).filter(isShowAvailable);
+    /* The hero promises one-tap playback. Locked and external-rental records
+       belong in their labeled shelves, never in the opening rotation. */
+    const playableCatalog = (typeof SHOWS !== "undefined" ? SHOWS.slice() : [])
+      .filter((show) => isShowAvailable(show) && showUnlockCost(show) === 0);
     if (!playableCatalog.length) return;
     const profile = historyStats();
     const ordered = profile
@@ -612,13 +627,11 @@
     return card;
   }
   function createShowCard(show) {
-    const unlockCost = Number.isFinite(Number(show.starCoinCost))
-      ? Math.max(0, Math.trunc(Number(show.starCoinCost)))
-      : (show.payToWatch ? 1 : 0);
+    const unlockCost = showUnlockCost(show);
     const contentId = "show:" + show.id;
     const isUnlocked = unlockCost <= 0 || (typeof StarQuestAuth !== "undefined" && StarQuestAuth.isContentUnlocked(contentId));
-    const isLocked = unlockCost > 0 && !isUnlocked;
     const showUnavailable = !isShowAvailable(show);
+    const isLocked = !showUnavailable && unlockCost > 0 && !isUnlocked;
     const card = document.createElement("div");
     card.className = "show-card" + (isLocked ? " show-card--pay" : "");
     card.setAttribute("role", "button");
@@ -636,7 +649,9 @@
     const movieBadge = show.type === "movie" && !show.payToWatch
       ? '<div class="ep-season-badge movie-badge">🎬 MOVIE</div>'
       : "";
-    const payBadge = isLocked
+    const payBadge = showUnavailable
+      ? ""
+      : isLocked
       ? '<div class="ep-season-badge pay-badge">🔒 ' + unlockCost + ' ⭐</div>'
       : (unlockCost > 0
         ? '<div class="ep-season-badge movie-badge">✅ Unlocked</div>'
@@ -668,7 +683,7 @@
         ${showUnavailable ? '<div class="history-empty" style="display:block;margin-top:4px;">Source unavailable after audit</div>' : ""}
         ${isLocked ? '<button class="btn btn-primary unlock-btn" type="button" style="margin-top:6px">Unlock • ' + escHTML(String(unlockCost)) + ' ⭐</button>' : ""}
         ${hasEpisodeBrowser ? '<button class="btn btn-secondary browse-episodes-btn" type="button" style="margin-top:6px;width:100%;font-size:.72rem;">Browse episodes</button>' : ""}
-        ${unlockCost > 0 && !isLocked ? '<div class="history-empty" style="display:block;margin-top:4px;">Unlocked</div>' : ""}
+        ${!showUnavailable && unlockCost > 0 && !isLocked ? '<div class="history-empty" style="display:block;margin-top:4px;">Unlocked</div>' : ""}
       </div>
     `;
 
@@ -815,7 +830,7 @@
     const isUnlocked = showCost <= 0 || (typeof StarQuestAuth !== "undefined" && StarQuestAuth.isContentUnlocked("show:" + show.id));
 
     show.episodes.forEach((ep, i) => {
-      const isPlayable = isEpisodePlayable(ep);
+      const isPlayable = isEpisodePlayable(ep, show);
       const isLockedEp = showCost > 0 && !isUnlocked;
       const item = document.createElement("div");
       item.className = "episode-item" + (isLockedEp ? " episode-item--pay" : "");
@@ -976,7 +991,7 @@
         return;
       }
     }
-    if (!isEpisodePlayable(episode)) {
+    if (!isEpisodePlayable(episode, showForEpisode)) {
       document.dispatchEvent(new CustomEvent("starquest:toast", {
         detail: { message: "This content is currently unavailable." }
       }));
@@ -1341,7 +1356,7 @@
     const eps = show.episodes.filter(season.filter);
     DOM.allEpsList.innerHTML = "";
     eps.forEach((ep, i) => {
-      const isPlayable = isEpisodePlayable(ep);
+      const isPlayable = isEpisodePlayable(ep, show);
       const isSpecial = ep.season === 0;
       const seasonLabel = isSpecial ? "Pilot" : "S" + ep.season + " E" + ep.episode;
       const item = document.createElement("div");
@@ -1525,7 +1540,7 @@
     if (!showId || !episodeId) return;
     const show = SHOWS.find((item) => item.id === showId);
     const episode = show && show.episodes && show.episodes.find((item) => item.id === episodeId);
-    if (!show || !episode || !isEpisodePlayable(episode)) return;
+    if (!show || !episode || !isEpisodePlayable(episode, show)) return;
     const splash = document.getElementById("splash-screen");
     if (splash) splash.style.display = "none";
     setTimeout(() => openPlayer(episode, show.title), 0);
@@ -2499,6 +2514,9 @@
     const navShareEl = $("nav-share-progress");
     const navSharesLeftEl = $("nav-shares-left");
     const buildingEl = $("wallet-building-balance");
+    const homeStatusEl = $("home-starcoin-status");
+    const homeProgressEl = $("home-share-progress");
+    const homeDetailEl = $("home-share-detail");
 
     const tokens  = (user && user.tokens) || 0;
     const pending = (user && user.pendingShareCredits) || 0;
@@ -2514,6 +2532,15 @@
     if (shareEl) shareEl.textContent = pending + " / " + SHARES_PER_COIN;
     if (navShareEl) navShareEl.textContent = pending + "/" + SHARES_PER_COIN;
     if (navSharesLeftEl) navSharesLeftEl.textContent = sharesLeft + (sharesLeft === 1 ? " share left" : " shares left");
+    if (homeProgressEl) homeProgressEl.textContent = pending + "/" + SHARES_PER_COIN;
+    if (homeDetailEl) {
+      homeDetailEl.textContent = tokens > 0
+        ? tokens + (tokens === 1 ? " whole StarCoin · " : " whole StarCoins · ") + sharesLeft + (sharesLeft === 1 ? " share left" : " shares left")
+        : sharesLeft + (sharesLeft === 1 ? " share until your first StarCoin" : " shares until your first StarCoin");
+    }
+    if (homeStatusEl) {
+      homeStatusEl.setAttribute("aria-label", "Open StarCoin wallet. " + pending + " of " + SHARES_PER_COIN + " shares toward the next StarCoin.");
+    }
     const playerShareEl = $("player-share-btn");
     if (playerShareEl && !playerShareEl.classList.contains("player-share-btn--minted")) {
       playerShareEl.textContent = "🛡️ Share " + pending + "/" + SHARES_PER_COIN;
@@ -2524,6 +2551,12 @@
     if (lifetimeEl) lifetimeEl.textContent = "🔗 Lifetime shares: " + lifetimeShares;
     if (starPowerEl) starPowerEl.textContent = "✨ Star Power (sharing): " + Math.floor(lifetimeShares / SHARES_PER_COIN);
   }
+
+  const homeStarCoinStatus = $("home-starcoin-status");
+  if (homeStarCoinStatus) homeStarCoinStatus.addEventListener("click", () => {
+    const hamburger = $("hamburger-btn");
+    if (hamburger) hamburger.click();
+  });
 
   /* ─────────────────────────────────────────────────────────────
      COSMO CONVERSATION HISTORY (sidebar preview)
