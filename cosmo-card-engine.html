@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080815">
+<meta name="description" content="Cosmo turns meaningful StarQuest movie and song moments into unique collectible card sets attached to Infinity tokens.">
+<title>Cosmo Card Engine · StarQuest</title>
+<style>
+:root{--ink:#070711;--panel:#111124;--line:#2d2c55;--violet:#7357ff;--cyan:#42d9ff;--gold:#f5c65b;--paper:#f6f0df;--muted:#aaa8c5}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 70% 0,#24205b 0,transparent 35%),linear-gradient(180deg,#080815,#101022 60%,#080815);color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}
+a{color:inherit}.wrap{width:min(1160px,92vw);margin:auto}.nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0}.brand{font-weight:900;letter-spacing:.08em}.brand span{color:var(--cyan)}.pill{border:1px solid #4c4a78;border-radius:999px;padding:10px 16px;text-decoration:none;background:#ffffff0b}
+.hero{padding:66px 0 54px;display:grid;grid-template-columns:1.2fr .8fr;gap:50px;align-items:center}.eyebrow{color:var(--cyan);font-weight:800;text-transform:uppercase;letter-spacing:.18em;font-size:.78rem}.hero h1{font-size:clamp(3rem,7vw,6.8rem);line-height:.88;margin:16px 0 22px;letter-spacing:-.06em}.hero h1 em{color:var(--gold);font-style:normal}.lead{color:#d6d5e7;font-size:1.18rem;line-height:1.7;max-width:720px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.button{display:inline-block;text-decoration:none;font-weight:900;padding:14px 19px;border-radius:12px;background:linear-gradient(135deg,var(--violet),#b23cff)}.button.alt{background:#16162c;border:1px solid #484670}
+.card-stack{position:relative;height:480px}.card{position:absolute;width:285px;aspect-ratio:2.5/3.5;border:16px solid var(--paper);background:#17172b;box-shadow:0 28px 70px #000a;border-radius:4px;padding:18px;overflow:hidden}.card:before{content:"";position:absolute;inset:15px;border:2px solid var(--gold)}.card.one{right:9%;top:4%;transform:rotate(8deg)}.card.two{left:4%;top:16%;transform:rotate(-9deg);background:linear-gradient(145deg,#14324b,#7b1d2c)}.card .logo{font-size:2.4rem;font-style:italic;font-weight:1000;color:#e43034;text-shadow:2px 2px #fff,4px 4px #111}.card .scene{height:65%;margin-top:20px;background:radial-gradient(circle at 60% 30%,#ffd36b,#7546d8 35%,#111 72%);clip-path:polygon(5% 0,100% 0,94% 100%,0 94%)}.card .meta{display:flex;justify-content:space-between;color:var(--gold);font-weight:900;margin-top:14px}
+.section{padding:82px 0}.section h2{font-size:clamp(2rem,5vw,4rem);margin:0 0 18px;letter-spacing:-.04em}.section-intro{max-width:760px;color:#c2c1d7;line-height:1.75}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}.box{border:1px solid var(--line);background:linear-gradient(145deg,#17172d,#0f0f20);padding:25px;border-radius:18px;min-height:190px}.num{color:var(--gold);font-weight:1000;font-size:1.7rem}.box h3{margin:15px 0 9px}.box p{color:#b9b8ce;line-height:1.6;margin:0}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:35px}.step{padding:20px 15px;border-top:3px solid var(--violet);background:#15152a}.step strong{display:block;margin-bottom:8px}.step span{font-size:.9rem;color:var(--muted);line-height:1.5}
+.rad{border:1px solid #413d78;border-radius:26px;padding:34px;background:linear-gradient(135deg,#171735,#11111e);display:grid;grid-template-columns:.8fr 1.2fr;gap:32px;align-items:center}.wheel{width:min(310px,80vw);aspect-ratio:1;border-radius:50%;border:16px solid #161616;background:radial-gradient(circle,#df2d39 0 10%,#111 11% 36%,#555 37% 42%,#171717 43%);margin:auto;box-shadow:0 0 50px #7657ff55}.rad ul{padding-left:20px;color:#cfcee0;line-height:1.8}
+.data{overflow:auto;margin-top:28px;border:1px solid var(--line);border-radius:16px}.data table{border-collapse:collapse;width:100%;min-width:760px}.data th,.data td{text-align:left;padding:16px;border-bottom:1px solid #292842}.data th{color:var(--gold);background:#18172d}.data td{color:#c8c7da}
+.note{border-left:4px solid var(--gold);padding:18px 22px;background:#17162a;color:#cfcee0;line-height:1.65;margin-top:25px}.footer{padding:42px 0 70px;color:#8e8ca9;border-top:1px solid #25243e}
+@media(max-width:820px){.hero,.rad{grid-template-columns:1fr}.hero{padding-top:35px}.card-stack{height:430px}.grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.card{width:250px}.card.one{right:1%}.card.two{left:1%}}@media(max-width:500px){.flow{grid-template-columns:1fr}.card-stack{height:390px}.card{width:215px}.nav .pill{display:none}}
+</style>
+</head>
+<body>
+<header class="wrap nav"><div class="brand">STAR<span>QUEST</span> / COSMO</div><a class="pill" href="./">Return to StarQuest</a></header>
+<main>
+<section class="wrap hero">
+<div><div class="eyebrow">The collectible layer for media</div><h1>Every story can reveal a <em>one-owner set.</em></h1><p class="lead">Cosmo watches alongside the viewer, recognizes meaningful scenes, products, music, characters and visual motifs, then builds a personalized card set attached to the movie or song’s Infinity token.</p><div class="actions"><a class="button" href="#engine">See the engine</a><a class="button alt" href="#rad">Explore the R.A.D. example</a></div></div>
+<div class="card-stack" aria-label="Conceptual collectible cards"><div class="card two"><div class="logo">COSMO</div><div class="scene"></div><div class="meta"><span>2026</span><span>1/1</span></div></div><div class="card one"><div class="logo">MAGIC PHOTO</div><div class="scene"></div><div class="meta"><span>Infinity</span><span>1/1</span></div></div></div>
+</section>
+
+<section class="section" id="engine"><div class="wrap"><div class="eyebrow">Cosmo Card Engine</div><h2>Watch. Recognize. Design. Reveal.</h2><p class="section-intro">The system is not a screenshot dump. Cosmo identifies moments with emotional, visual or cultural importance, removes interface clutter, composes a real card design, records provenance and binds the finished set to the media token and its first owner.</p>
+<div class="grid">
+<div class="box"><div class="num">01</div><h3>Moment intelligence</h3><p>Scene changes, dialogue, music cues, objects, characters and viewer reactions help Cosmo choose frames worth collecting.</p></div>
+<div class="box"><div class="num">02</div><h3>Unlimited art direction</h3><p>Every frame receives a design suited to its world: racing, fantasy, cartoons, music, science fiction, history or something entirely new.</p></div>
+<div class="box"><div class="num">03</div><h3>Personalized scarcity</h3><p>The set is generated for one viewing session and ledgered with its recipe, owner, source token and edition data.</p></div>
+<div class="box"><div class="num">04</div><h3>Three Star Coin unlock</h3><p>The viewer can peek at concealed cards, then spend three Star Coins to reveal and move the complete set into the wallet.</p></div>
+<div class="box"><div class="num">05</div><h3>Wallet custody</h3><p>Cards can be hidden, displayed, organized with the movie or song, or prepared for transfer inside the collector community.</p></div>
+<div class="box"><div class="num">06</div><h3>Contextual commerce</h3><p>Real products that naturally fit a scene can appear beside—not on top of—the collectible experience.</p></div>
+</div>
+<div class="flow"><div class="step"><strong>Play</strong><span>A movie, episode or song begins.</span></div><div class="step"><strong>Observe</strong><span>Cosmo maps meaningful moments.</span></div><div class="step"><strong>Generate</strong><span>A unique coordinated set is designed.</span></div><div class="step"><strong>Reveal</strong><span>Share/end-of-show opens the pack moment.</span></div><div class="step"><strong>Ledger</strong><span>Provenance enters the user wallet.</span></div></div>
+</div></section>
+
+<section class="section" id="rad"><div class="wrap rad"><div class="wheel" aria-hidden="true"></div><div><div class="eyebrow">Example experience</div><h2>R.A.D. becomes a living collectible and shopping world.</h2><p class="section-intro">While a viewer watches the cult BMX movie, Cosmo can recognize bikes, helmets, racing gear, locations, tricks, music and important story beats.</p><ul><li>Create a one-owner R.A.D.-inspired card set from selected viewing moments.</li><li>Offer real BMX bikes, protective gear and apparel that match the scene context.</li><li>Keep advertising separate from card ownership and provenance.</li><li>Attach the set to the movie’s Infinity token as a collectible data package.</li><li>Reveal the set at sharing or the end credits, then unlock it for three Star Coins.</li></ul></div></div></section>
+
+<section class="section"><div class="wrap"><div class="eyebrow">Infinity token attachment</div><h2>One media token, many connected artifacts.</h2><p class="section-intro">Movies and songs become hubs rather than flat catalog entries. Each Infinity token can carry the media record, rights and payout references, Cosmo observations, advertising matches and viewer-owned card sets.</p>
+<div class="data"><table><thead><tr><th>Record</th><th>Purpose</th><th>Owner / authority</th></tr></thead><tbody>
+<tr><td>Media token</td><td>Canonical movie, episode or song identity</td><td>StarQuest ledger</td></tr>
+<tr><td>Scene recipe</td><td>Frame time, crop, style seed and generation record</td><td>Cosmo engine</td></tr>
+<tr><td>Card set token</td><td>Set identity, edition, card count and reveal state</td><td>Viewer wallet</td></tr>
+<tr><td>Provenance trail</td><td>Creation, unlock, custody and authorized transfers</td><td>Append-only ledger</td></tr>
+<tr><td>Commerce matches</td><td>Relevant products, availability and disclosures</td><td>Advertiser/catalog service</td></tr>
+<tr><td>Royalty references</td><td>Rights-holder and payout routing data</td><td>Royalty ledger</td></tr>
+</tbody></table></div>
+<div class="note"><strong>Value is discovered, not promised.</strong> The ledger can prove origin, scarcity and ownership history. Collector demand determines whether a card has resale value. Production must also use licensed media imagery and clear commercial permissions before public sale or transfer.</div>
+</div></section>
+
+<section class="section"><div class="wrap"><div class="eyebrow">Build target</div><h2>Cosmo should make the reveal feel magical—and the record trustworthy.</h2><div class="grid">
+<div class="box"><h3>Capture safely</h3><p>Use authorized playback sources, scene timestamps, rights rules and privacy-preserving viewer signals.</p></div>
+<div class="box"><h3>Generate reproducibly</h3><p>Store prompts, design parameters, hashes and source references so every minted result can be audited.</p></div>
+<div class="box"><h3>Transfer deliberately</h3><p>Separate locked, revealed, wallet-held, displayed, listed and transferred states. Never move ownership on a visual button alone.</p></div>
+</div></div></section>
+</main>
+<footer class="wrap footer">Cosmo Card Engine · A StarQuest / Infinity media collectible concept · 2026</footer>
+</body></html>
