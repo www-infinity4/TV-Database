@@ -40,7 +40,7 @@
   <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
   <link rel="dns-prefetch" href="https://i.ytimg.com" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20260822-history-source5" />
+  <link rel="stylesheet" href="css/style.css?v=20260823-pip-wallet1" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
 </head>
 <body>
@@ -375,6 +375,11 @@
         <button id="hero-info-btn" class="btn btn-secondary">ℹ More Info</button>
         <button id="hero-shuffle-btn" class="btn hero-shuffle" type="button" aria-label="Choose a different opening show or movie">↻ Surprise Me</button>
       </div>
+      <button id="home-starcoin-status" class="home-starcoin-status" type="button" aria-label="Open StarCoin wallet. 0 of 10 shares toward the next StarCoin.">
+        <span class="home-starcoin-status__star" aria-hidden="true">⭐</span>
+        <strong id="home-share-progress">0/10</strong>
+        <span id="home-share-detail">toward your next StarCoin</span>
+      </button>
     </div>
   </section>
 
@@ -640,11 +645,12 @@
       <span id="player-ep-title" class="player-ep-title"></span>
       <div class="player-topbar__right">
         <span id="player-token-notif" class="player-token-notif" aria-live="polite" style="display:none">⭐ +1 StarCoin!</span>
+        <button id="player-pip-btn" class="player-pip-btn" type="button" aria-label="Float this video over other apps" title="Float video over other apps">▣ Float</button>
         <button id="player-share-btn" class="player-share-btn" type="button" aria-label="Share this program. 0 of 10 toward a Star Coin.">🛡️ Share 0/10</button>
       </div>
     </div>
     <div class="player-wrap">
-      <iframe id="player-frame" class="player-frame" src="about:blank" title="Video Player" allowfullscreen allow="autoplay; fullscreen; encrypted-media" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+      <iframe id="player-frame" class="player-frame" src="about:blank" title="Video Player" allowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
       <video id="player-video" class="player-video" controls autoplay preload="auto" playsinline style="display:none"></video>
       <div id="player-error" class="player-error" style="display:none" aria-live="polite">
         <div class="player-error__icon" aria-hidden="true">📺</div>
@@ -1021,7 +1027,8 @@
   <script src="js/infinity-wallet-integration.js?v=20260815-vhs1"></script>
   <script src="js/recommendation-engine.js?v=20260821-gap50"></script>
   <script src="js/opening-rotation.js?v=20260814-rotation1"></script>
-  <script src="js/app.js?v=20260822-history-source5"></script>
+  <script src="js/app.js?v=20260823-home-wallet1"></script>
+  <script src="js/picture-in-picture.js?v=20260823-pip1"></script>
   <script src="js/archive-resolver.js?v=20260822-direct-playback1"></script>
   <script src="js/playback-watchdog.js?v=20260822-no-loop1"></script>
   <script src="js/user-worlds.js?v=20260822-world-compact1"></script>

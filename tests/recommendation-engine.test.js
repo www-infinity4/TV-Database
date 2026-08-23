@@ -19,7 +19,7 @@ const appSource = fs.readFileSync("js/app.js", "utf8");
 const htmlSource = fs.readFileSync("index.html", "utf8");
 
 assert.match(htmlSource, /js\/recommendation-engine\.js\?v=20260821-gap50/);
-assert.match(appSource, /const playableCatalog = \(typeof SHOWS !== "undefined" \? SHOWS\.slice\(\) : \[\]\)\.filter\(isShowAvailable\)/);
+assert.match(appSource, /\.filter\(\(show\) => isShowAvailable\(show\) && showUnlockCost\(show\) === 0\)/);
 assert.match(appSource, /StarQuestRecommendations\.beginVisit\(\)/);
 
 engine.beginVisit({ storage });
