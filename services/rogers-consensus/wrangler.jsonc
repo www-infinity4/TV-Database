@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "infinity-rogers",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-08-23",
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "head_sampling_rate": 1
+    }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rogers-consensus",
+      "database_id": "4aa6a463-02c6-48c3-854f-a87c0ca5f41c"
+    }
+  ]
+}
