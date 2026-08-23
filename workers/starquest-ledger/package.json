@@ -1,0 +1,16 @@
+{
+  "name": "starquest-ledger-worker",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "check": "wrangler types && tsc --noEmit",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply DB --local",
+    "migrate:remote": "wrangler d1 migrations apply DB --remote"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "wrangler": "^4.125.0"
+  }
+}
