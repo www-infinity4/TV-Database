@@ -501,7 +501,9 @@
       return null;
     }
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 10000);
+    // Rogers runs two independent answers in parallel and then a monitoring
+    // arbiter, so allow the complete consensus round to finish.
+    const timer = setTimeout(() => controller.abort(), 20000);
     setNetworkState("thinking", "Cosmo is thinking with Infinity AI…");
     try {
       const latest = messages[messages.length - 1] || {};
