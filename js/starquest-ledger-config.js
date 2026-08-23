@@ -1,5 +1,4 @@
-// Filled with the deployed workers.dev URL after the Cloudflare account is authorized.
-// Keeping this empty prevents the live site from pretending cloud writes succeeded.
+// Cloudflare Worker backed by the permanent StarQuest D1 ledger.
 window.STARQUEST_LEDGER_CONFIG = Object.freeze({
-  endpoint: ""
+  endpoint: "https://starquest-ledger.marvaseater.workers.dev"
 });
