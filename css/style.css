@@ -2354,6 +2354,14 @@ html[data-card-size="2"] .show-card { width: 260px; flex-basis: 260px; }
   color: rgba(255,215,0,.7);
 }
 
+.wallet-building-balance {
+  margin: -3px 0 10px;
+  color: var(--gold);
+  font-size: .78rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
 .wallet-card__progress { display: flex; flex-direction: column; gap: 5px; }
 
 .wallet-progress__label {

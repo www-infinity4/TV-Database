@@ -889,7 +889,7 @@
         return { history: user.watchHistory.slice() };
       });
 
-      if (!result.ok) return;
+      if (!result.ok) return result;
       dispatch("starquest:history-updated", {
         history: result.result.history,
         user: result.user,
@@ -898,6 +898,7 @@
         history: result.result.history,
         user: result.user,
       });
+      return { ok: true, history: result.result.history, user: result.user };
     },
 
     updateHistoryProgress(episodeId, positionSeconds, duration, watchedSeconds) {
