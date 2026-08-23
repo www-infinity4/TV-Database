@@ -96,7 +96,7 @@ assert.equal(window.StarQuestCosmoLive.sponsoredSuggestion(), null, "sponsored s
   assert.match(appSource, /scheduleCosmoPopIns/);
   assert.match(appSource, /Opening Cosmo must never wait on a model or network request/);
   assert.doesNotMatch(appSource, /StarQuestAI\.chat\("hello"\)/);
-  assert.match(aiSource, /controller\.abort\(\), 10000/);
+  assert.match(aiSource, /controller\.abort\(\), 20000/);
   assert.match(aiSource, /result\.confidence >= 0\.55/);
   assert.match(aiSource, /InfinityLanguageEngine/);
   assert.match(aiSource, /PLAYBACK_CONTEXT_SET/);
