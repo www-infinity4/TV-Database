@@ -16,7 +16,7 @@ From this directory after authorizing Wrangler:
 
 1. `npm install`
 2. `npm run check`
-3. `npm run deploy` (Wrangler automatically provisions the `starquest-ledger` D1 binding.)
+3. `npm run deploy` (the checked-in configuration binds the production `starquest-ledger` D1 database.)
 4. `npm run migrate:remote`
 5. Put the returned `https://...workers.dev` URL in `js/starquest-ledger-config.js`.
 6. Open StarQuest on the Android device while signed in as `kris`. Its local
