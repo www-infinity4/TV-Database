@@ -936,6 +936,67 @@
       return Array.isArray(user.watchHistory) ? user.watchHistory.slice() : [];
     },
 
+    applyCloudState(state) {
+      if (!state || typeof state !== "object") {
+        return { ok: false, error: "invalid_cloud_state" };
+      }
+      const sessionUser = this.currentUser();
+      if (!sessionUser) return { ok: false, error: "not_signed_in" };
+      const cloudUsername = String(state.username || "").trim().toLowerCase();
+      if (!cloudUsername || cloudUsername !== sessionUser.key) {
+        return { ok: false, error: "cloud_account_mismatch" };
+      }
+
+      const result = mutateViewerProfile((user) => {
+        user.tokens = Math.max(0, toInt(state.starCoins, user.tokens || 0));
+        user.pendingShareCredits = Math.max(0, Math.min(9, toInt(
+          state.pendingShareCredits,
+          user.pendingShareCredits || 0
+        )));
+        user.shareCount = Math.max(0, toInt(state.shareCount, user.shareCount || 0));
+
+        const mergedHistory = new Map();
+        [...(user.watchHistory || []), ...(Array.isArray(state.watchHistory) ? state.watchHistory : [])]
+          .forEach((entry) => {
+            const normalized = normalizeHistoryEntry(entry);
+            if (!normalized || !normalized.episodeId) return;
+            const existing = mergedHistory.get(normalized.episodeId);
+            if (!existing || normalized.lastWatchedAt >= existing.lastWatchedAt) {
+              mergedHistory.set(normalized.episodeId, normalized);
+            }
+          });
+        user.watchHistory = [...mergedHistory.values()]
+          .sort((a, b) => b.lastWatchedAt - a.lastWatchedAt)
+          .slice(0, 200);
+        user.watchPositions = user.watchPositions && typeof user.watchPositions === "object"
+          ? user.watchPositions
+          : {};
+        user.watchHistory.forEach((entry) => {
+          user.watchPositions[entry.episodeId] = Math.max(
+            toInt(user.watchPositions[entry.episodeId], 0),
+            toInt(entry.positionSeconds, 0)
+          );
+        });
+
+        const mergedLedger = new Map();
+        [...(user.ledger || []), ...(Array.isArray(state.ledger) ? state.ledger : [])]
+          .forEach((entry) => {
+            const normalized = normalizeLedgerEntry(entry, user.tokens);
+            if (normalized && normalized.id) mergedLedger.set(normalized.id, normalized);
+          });
+        user.ledger = [...mergedLedger.values()]
+          .sort((a, b) => a.ts - b.ts)
+          .slice(-500);
+        return { ok: true };
+      });
+
+      if (!result.ok) return result;
+      dispatch("starquest:history-updated", { history: result.user.watchHistory, user: result.user, source: "cloud" });
+      dispatch("starquest:tokens-updated", { balance: result.user.tokens, user: result.user, source: "cloud" });
+      dispatch("starquest:cloud-synced", { user: result.user });
+      return { ok: true, user: result.user };
+    },
+
     recordShare(contentId, options) {
       const id = String(contentId || "").trim();
       if (!id) {
