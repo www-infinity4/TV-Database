@@ -924,9 +924,37 @@
     }
   }
 
+  function recordEpisodeOpenAtSource(episode, show, showTitle) {
+    if (!episode || !show || typeof StarQuestAuth === "undefined") return null;
+    const episodeId = buildEpisodeId(episode, show);
+    const startYear = parseInt(String(show.years || "").split("–")[0], 10);
+    const decade = Number.isFinite(startYear) ? (Math.floor(startYear / 10) * 10 + "s") : "";
+    const duration = Math.max(0, Math.trunc((Number(episode.duration) || parseInt(String(episode.duration || "0"), 10)) * 60));
+    const existing = StarQuestAuth.getHistory().find((item) => item.episodeId === episodeId);
+    return StarQuestAuth.addToHistory({
+      episodeId,
+      showId: show.id,
+      showTitle: showTitle || show.title,
+      epTitle: episode.title,
+      thumbnail: episode.thumbnail || show.thumbnail || "",
+      genre: Array.isArray(show.genre) ? (show.genre[0] || "") : "",
+      decade,
+      tags: Array.isArray(show.genre) ? show.genre.slice(0, 4) : [],
+      watchedSeconds: Math.max(0, Number(existing && existing.watchedSeconds) || 0),
+      positionSeconds: Math.max(0, StarQuestAuth.getWatchPosition(episodeId)),
+      duration,
+      completionRate: Number(existing && existing.completionRate) || 0,
+      completed: !!(existing && existing.completed),
+    });
+  }
+
   function openPlayer(episode, showTitle) {
     const showForEpisode = (typeof SHOWS !== "undefined")
-      ? SHOWS.find((s) => s.title === showTitle)
+      ? SHOWS.find((show) => show.title === showTitle || (Array.isArray(show.episodes) && show.episodes.some((candidate) =>
+        candidate === episode ||
+        (candidate.id && episode.id && candidate.id === episode.id) ||
+        (candidate.src && episode.src && candidate.src === episode.src)
+      )))
       : null;
     const showCost = showForEpisode
       ? (Number.isFinite(Number(showForEpisode.starCoinCost))
@@ -955,6 +983,16 @@
       return;
     }
     state.currentEpisode = episode;
+
+    // Save history at the exact source action that opens playback. This does
+    // not depend on a later controller receiving a custom event, so a failure
+    // elsewhere cannot leave the account stuck on an older history entry.
+    const historyResult = recordEpisodeOpenAtSource(episode, showForEpisode, showTitle);
+    if (historyResult && historyResult.ok === false) {
+      document.dispatchEvent(new CustomEvent("starquest:toast", {
+        detail: { message: historyResult.message || "Watch history could not be saved on this device." }
+      }));
+    }
 
     const isSpecial = episode.season === 0;
     const seasonLabel = isSpecial ? "Movie" : "S" + episode.season + "E" + episode.episode;
@@ -2460,12 +2498,18 @@
     const starPowerEl = $("wallet-star-power");
     const navShareEl = $("nav-share-progress");
     const navSharesLeftEl = $("nav-shares-left");
+    const buildingEl = $("wallet-building-balance");
 
     const tokens  = (user && user.tokens) || 0;
     const pending = (user && user.pendingShareCredits) || 0;
     const lifetimeShares = (user && user.shareCount) || 0;
 
     if (balEl)   balEl.textContent  = tokens;
+    if (buildingEl) {
+      buildingEl.textContent = pending > 0
+        ? (pending / SHARES_PER_COIN).toFixed(1) + " ⭐ being built from " + pending + "/" + SHARES_PER_COIN
+        : "0.0 ⭐ being built — the next share starts a new StarCoin";
+    }
     const sharesLeft = pending === 0 ? SHARES_PER_COIN : SHARES_PER_COIN - pending;
     if (shareEl) shareEl.textContent = pending + " / " + SHARES_PER_COIN;
     if (navShareEl) navShareEl.textContent = pending + "/" + SHARES_PER_COIN;
@@ -2676,7 +2720,6 @@
     _currentEpisode   = e.detail.ep;
     _currentShowTitle = e.detail.showTitle;
     startWatchTimer(e.detail.ep, e.detail.showTitle);
-    addToHistoryNow(e.detail.ep, e.detail.showTitle);
   });
 
   document.addEventListener("starquest:archive-direct-playback", (event) => {
