@@ -65,7 +65,7 @@ jobs:
               'item-only Archive records are quarantined': app.count('records stay quarantined') >= 2 and 'return !!ep.archiveId;' not in app,
               'resolver uses archive metadata': 'archive.org/metadata/' in resolver,
               'resolver handles direct playback rejection': 'video.onerror' in resolver,
-              'stale Archive resolution is cancelled': 'resolutionToken += 1' in resolver,
+              'Archive playback is event-driven': 'Archive playback is event-driven' in resolver and 'new MutationObserver' not in resolver,
               'resolver collection declaration is active': 'Large\\\\n    // collections' not in resolver,
               'Reading Rainbow shelf is present': 'id="row-reading-rainbow"' in index and 'rowReadingRainbow' in app,
               'Reading Rainbow has a direct navigation link': 'href="#reading-rainbow-section"' in index,

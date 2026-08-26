@@ -61,9 +61,15 @@ assert.match(appSource, /e\.stopPropagation\(\);\s*openModal\(show\);/);
 assert.match(appSource, /showForEpisode && showForEpisode\.archiveRoot/);
 assert.match(appSource, /openAllEps\("new-alfred-hitchcock-presents"\)/);
 assert.equal(
-  (appSource.match(/Item-only[\s\S]{0,220}return false;/g) || []).length,
+  (appSource.match(/Item-only[\s\S]{0,260}return !!ep\.archiveId;/g) || []).length,
   2,
-  "both playback controllers must quarantine item-only Archive records"
+  "both playback controllers must accept item-only records for direct resolution"
 );
+assert.equal(
+  (appSource.match(/starquest:resolve-archive-episode/g) || []).length,
+  2,
+  "both player entry points must resolve Archive items without an iframe"
+);
+assert.doesNotMatch(appSource, /playerFrame\.src = buildPlayerUrl\(ep, savedPosition\)/);
 
 console.log("playback catalog paths, audited sources, and one-tap routing: ok");
