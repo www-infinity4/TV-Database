@@ -336,6 +336,7 @@
         <input id="search-input" type="search" placeholder="Search the galaxy…" aria-label="Search TV shows" autocomplete="off" spellcheck="false" />
         <button id="clear-search" class="sr-only" aria-label="Clear search">✕</button>
       </div>
+      <button id="source-search-open" class="btn btn-secondary source-search-open" type="button" aria-label="Search verified free movie sources">🔍 Search &amp; Deploy</button>
       <button id="nav-profile-avatar" class="nav-profile-avatar" type="button" aria-label="Open account and avatar settings">
         <span class="vhs-avatar vhs-avatar--cosmic" data-vhs-avatar aria-hidden="true"><span class="vhs-avatar__label" data-vhs-label>SQ</span><span class="vhs-avatar__reels"><i></i><i></i></span></span>
       </button>
@@ -705,6 +706,49 @@
     </div>
   </div>
 
+  <!-- VERIFIED SOURCE SEARCH -->
+  <div id="source-search-backdrop" class="source-search-backdrop" role="dialog" aria-modal="true" aria-labelledby="source-search-title" hidden>
+    <section class="source-search-panel">
+      <header>
+        <div><small>VERIFIED FREE VIDEO SOURCES</small><h2 id="source-search-title">🔍 Search &amp; Deploy</h2></div>
+        <button id="source-search-close" type="button" aria-label="Close source search">✕</button>
+      </header>
+      <p>Searches Internet Archive metadata, verifies a real video download, saves it to this browser’s inventory, and opens it in the StarQuest player.</p>
+      <div class="source-search-controls">
+        <input id="source-search-input" type="search" placeholder="Movie, show, subject or actor" autocomplete="off" />
+        <select id="source-search-category" aria-label="Bring a category to the front">
+          <option value="all">All free movies</option><option value="suspense">Suspense</option>
+          <option value="thriller">Thriller</option><option value="horror">Horror</option>
+          <option value="comedy">Comedy</option><option value="drama">Drama</option>
+          <option value="science">Science &amp; documentary</option><option value="family">Family &amp; animation</option>
+        </select>
+        <button id="source-search-run" class="btn btn-primary" type="button">Search verified sources</button>
+      </div>
+      <div class="source-search-links">
+        <a id="source-search-google" href="https://www.google.com/search?q=site%3Aarchive.org%2Fdetails+full+movie" target="_blank" rel="noopener noreferrer">Search Google for Archive/YouTube sources ↗</a>
+        <span>Google is discovery only; StarQuest imports a title only after independently verifying a playable Archive file.</span>
+      </div>
+      <p id="source-search-status" role="status" aria-live="polite">Ready to search.</p>
+      <div id="source-search-results" class="source-search-results"></div>
+    </section>
+  </div>
+  <style>
+    .source-search-open{white-space:nowrap;padding:.65rem .8rem}
+    .source-search-backdrop{position:fixed;inset:0;z-index:12000;background:rgba(3,5,20,.92);padding:5vh 4vw;overflow:auto}
+    .source-search-backdrop[hidden]{display:none}
+    .source-search-panel{max-width:1050px;margin:auto;background:#0d1230;border:1px solid #6375d9;border-radius:20px;padding:20px;color:#f7f8ff;box-shadow:0 20px 80px #000}
+    .source-search-panel header{display:flex;justify-content:space-between;gap:15px;align-items:start}
+    .source-search-panel header h2{margin:.2rem 0 0}.source-search-panel header button{font-size:1.4rem;background:none;border:0;color:white}
+    .source-search-controls{display:grid;grid-template-columns:minmax(180px,2fr) minmax(150px,1fr) auto;gap:10px}
+    .source-search-controls input,.source-search-controls select{border:1px solid #5968ae;border-radius:10px;background:#080b22;color:white;padding:12px}
+    .source-search-links{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0;font-size:.9rem}.source-search-links span{color:#aeb6d8}
+    .source-search-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+    .source-search-card{background:#151b42;border:1px solid #384477;border-radius:14px;overflow:hidden}
+    .source-search-card img{width:100%;aspect-ratio:16/9;object-fit:cover;background:#080b22}
+    .source-search-card__body{padding:12px}.source-search-card h3{margin:0 0 6px}.source-search-card p{color:#b7beda;font-size:.88rem}
+    @media(max-width:720px){.source-search-open{font-size:0;width:42px;height:42px;padding:0}.source-search-open::first-letter{font-size:1.1rem}.source-search-controls{grid-template-columns:1fr}.source-search-backdrop{padding:2vh 3vw}}
+  </style>
+
   <!-- AI COMPANION — COSMO -->
   <button id="ai-fab" class="ai-fab" aria-label="Open Cosmo AI companion" aria-expanded="false" aria-controls="ai-panel" title="Open Cosmo">
     <span class="cosmo-alien" aria-hidden="true">
@@ -1011,6 +1055,7 @@
   <script src="js/data.js?v=20260815-startup-repair"></script>
   <script src="js/catalog-ledger.js?v=20260814-ledger1"></script>
   <script src="js/archive-discovery.js?v=20260818"></script>
+  <script src="js/source-search.js?v=20260826-search1"></script>
   <script src="js/auth.js?v=20260823-cloud-ledger1"></script>
   <script src="js/starquest-ledger-config.js?v=20260823-cloud-ledger2"></script>
   <script src="js/starquest-cloud-ledger.js?v=20260823-cloud-ledger2"></script>
@@ -1028,7 +1073,7 @@
   <script src="js/recommendation-engine.js?v=20260821-gap50"></script>
   <script src="js/opening-rotation.js?v=20260825-full356"></script>
   <script src="js/sona-media-card.js?v=20260825-card1"></script>
-  <script src="js/app.js?v=20260825-full356"></script>
+  <script src="js/app.js?v=20260826-search1"></script>
   <script src="js/picture-in-picture.js?v=20260823-pip1"></script>
   <script src="js/archive-resolver.js?v=20260822-direct-playback1"></script>
   <script src="js/playback-watchdog.js?v=20260822-no-loop1"></script>

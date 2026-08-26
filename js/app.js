@@ -550,6 +550,19 @@
     renderForYouRow();
   }
 
+  window.addEventListener("starquest:source-selected", event => {
+    const show = event.detail && event.detail.show;
+    if (!show || !Array.isArray(show.episodes) || !show.episodes.length) return;
+    if (!SHOWS.some(item => item.id === show.id)) SHOWS.push(show);
+    addDiscoveredShows("movies", [show]);
+    renderForYouRow();
+    const episode = getPrimaryEpisode(show);
+    if (episode) {
+      if (window.StarQuestRecommendations) StarQuestRecommendations.engage(show.id, "watch");
+      openPlayer(episode, show.title);
+    }
+  });
+
   window.addEventListener("starquest:archive-discovered", event => {
     addDiscoveredShows(event.detail?.bucket, event.detail?.shows);
   });
