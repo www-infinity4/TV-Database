@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StarQuest Game Deck</title>
+<meta name="theme-color" content="#080b22">
+<style>
+:root{color-scheme:dark;--bg:#080b22;--panel:#11183d;--line:#40508e;--gold:#ffd45b;--ink:#f7f8ff;--muted:#aab4dc}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#18245b,var(--bg) 45%);color:var(--ink);font:16px system-ui,sans-serif}
+button,input,select{font:inherit}.top{display:flex;align-items:center;gap:12px;padding:12px 4vw;position:sticky;top:0;z-index:20;background:#080b22ee;border-bottom:1px solid #28366c}.top a{color:var(--gold);text-decoration:none}.top h1{font-size:1.05rem;margin:0 auto 0 0}
+.layout{display:grid;grid-template-columns:minmax(280px,390px) 1fr;gap:18px;padding:18px;max-width:1500px;margin:auto}.panel,.deck{background:#0d1333eF;border:1px solid var(--line);border-radius:18px;padding:16px}
+.search{display:grid;gap:9px}.search input,.search select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#080b22;color:white}
+.primary{border:0;border-radius:10px;padding:12px;background:linear-gradient(135deg,#715dff,#4168e1);color:white;font-weight:800}.secondary{border:1px solid var(--line);border-radius:10px;padding:10px;background:#171f4b;color:white}
+.results{display:grid;gap:10px;margin-top:14px;max-height:62vh;overflow:auto}.game{display:grid;grid-template-columns:80px 1fr;gap:10px;padding:9px;border:1px solid #2d3b76;border-radius:12px;background:#121944}.game img{width:80px;height:72px;object-fit:cover;border-radius:8px}.game h3{font-size:.95rem;margin:0 0 4px}.game p{font-size:.78rem;color:var(--muted);margin:0 0 8px}
+.stage{min-height:420px;background:#03040d;border-radius:14px;display:grid;place-items:center;position:relative;overflow:hidden}.stage.minimized{min-height:220px;max-width:380px}.stage:fullscreen{border-radius:0}.empty{text-align:center;color:var(--muted);padding:30px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+#game{width:100%;height:100%;min-height:420px}.controller{display:none;margin:14px auto 0;max-width:620px;min-height:190px;border-radius:40px;background:#c9c9c9;color:#161616;padding:24px;position:relative;box-shadow:inset 0 0 0 7px #999}
+.controller.active{display:block}.dpad{position:absolute;left:55px;top:52px;width:105px;height:105px}.dpad:before,.dpad:after{content:"";position:absolute;background:#222;border-radius:8px}.dpad:before{left:36px;width:34px;height:105px}.dpad:after{top:36px;width:105px;height:34px}.ab{position:absolute;right:58px;top:70px;display:flex;gap:19px;transform:rotate(-12deg)}.ab b{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:#a31539;color:white;box-shadow:0 4px #650b25}.middle{position:absolute;left:42%;top:112px;display:flex;gap:12px}.middle b{background:#444;color:white;border-radius:12px;padding:5px 12px;font-size:.7rem}.controller[data-system="gba"]{border-radius:60px;background:#673b94}.controller[data-system="gba"] .dpad:before,.controller[data-system="gba"] .dpad:after{background:#ddd}.controller[data-system="snes"] .ab b:nth-child(1){background:#6948a5}.controller[data-system="snes"] .ab b:nth-child(2){background:#d33}.controller[data-system="genesis"]{background:#1b1b1b;color:white}.controller[data-system="psx"]{background:#bdbdbd}.receipt{color:var(--gold);font-size:.9rem}.fine{color:var(--muted);font-size:.78rem}
+@media(max-width:850px){.layout{grid-template-columns:1fr;padding:10px}.panel{order:2}.deck{order:1}.stage{min-height:280px}#game{min-height:280px}.controller{transform:scale(.86);transform-origin:top center;margin-bottom:-25px}}
+</style>
+</head>
+<body>
+<header class="top"><a href="./">← StarQuest</a><h1>🎮 Game Deck</h1><button id="full" class="secondary">Full screen</button><button id="mini" class="secondary">Minimize</button></header>
+<main class="layout">
+<section class="panel">
+<h2>🔍 Search &amp; Deploy Game</h2>
+<p class="fine">Automatic import accepts only Archive records carrying homebrew, public-domain, or explicit open-license evidence.</p>
+<div class="search"><input id="query" type="search" placeholder="Game title or subject"><select id="system"><option value="nes">NES-style 8-bit</option><option value="snes">SNES-style 16-bit</option><option value="gb">Game Boy</option><option value="gba">Game Boy Advance</option><option value="genesis">Genesis-style</option><option value="n64">Nintendo 64-style</option><option value="psx">PlayStation-style</option></select><button id="search" class="primary">Search verified ROM sources</button></div>
+<p id="status" role="status">Ready.</p><div id="results" class="results"></div>
+</section>
+<section class="deck">
+<div id="stage" class="stage"><div id="empty" class="empty"><h2>Choose a verified game</h2><p>The emulator loads here without leaving StarQuest.</p></div><div id="game" hidden></div></div>
+<div class="actions"><button id="share" class="secondary" disabled>Share game · +.05</button><span id="receipt" class="receipt">Play 5 minutes · +.05 | Share · +.05</span></div>
+<div id="controller" class="controller" data-system="nes"><div class="dpad"></div><div class="middle"><b>SELECT</b><b>START</b></div><div class="ab"><b>B</b><b>A</b></div></div>
+<p class="fine">Controller art changes with the selected system. Emulator keyboard, touch, save-state and core controls are supplied by EmulatorJS. Publisher payout records remain pending until a verified contract and settlement account exist.</p>
+</section>
+</main>
+<script src="js/auth.js?v=20260826-game1"></script>
+<script src="js/game-deck.js?v=20260826-game1"></script>
+</body></html>
