@@ -1022,7 +1022,7 @@
     /* One canonical playback event drives history, resume state, sharing,
        and Cosmo context. Do not rely on observing CSS class changes. */
     document.dispatchEvent(new CustomEvent("starquest:episode-opened", {
-      detail: { ep: episode, showTitle }
+      detail: { ep: episode, showTitle, show: showForEpisode }
     }));
 
     /* Tell Cosmo what we're watching */
@@ -1048,6 +1048,9 @@
       DOM.playerFrame.src = "about:blank";
       DOM.playerVideo.style.display = "block";
       DOM.playerVideo.preload = "auto";
+      /* Sona can only draw an actual playback frame when the source opts into
+         cross-origin media access. This must be set before assigning src. */
+      DOM.playerVideo.crossOrigin = "anonymous";
       /* Register handlers before assigning src so no stale queued event
          from a prior load can slip through and trigger the wrong handler. */
       DOM.playerVideo.onloadedmetadata = () => {
