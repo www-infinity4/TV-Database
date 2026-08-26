@@ -1,6 +1,10 @@
 # TV-Database
 TV episodes from 1970-2000 
 
+## Enterprises game concept
+
+The connected research-platform game concept, character abilities, multiplayer knowledge universe, talent scoring, fractional rewards, and delivery roadmap are documented in [docs/ENTERPRISES_GAME_DESIGN.md](docs/ENTERPRISES_GAME_DESIGN.md).
+
 ## Cosmo living companion
 
 Cosmo now has a consent-based Gemma and live-context architecture instead of depending only on programmed commands:
