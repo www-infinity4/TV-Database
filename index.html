@@ -331,13 +331,6 @@
       <li><a href="#row-crime-section">Crime</a></li>
     </ul>
     <div class="nav__right">
-      <div class="nav__search" role="search">
-        <span>🔍</span>
-        <input id="search-input" type="search" placeholder="Search the galaxy…" aria-label="Search TV shows" autocomplete="off" spellcheck="false" />
-        <button id="clear-search" class="sr-only" aria-label="Clear search">✕</button>
-      </div>
-      <button id="source-search-open" class="btn btn-secondary source-search-open" type="button" aria-label="Search verified free movie sources">🔍 Search &amp; Deploy</button>
-      <a class="btn btn-secondary source-search-open" href="games.html" aria-label="Open StarQuest Game Deck">🎮 Games</a>
       <button id="nav-profile-avatar" class="nav-profile-avatar" type="button" aria-label="Open account and avatar settings">
         <span class="vhs-avatar vhs-avatar--cosmic" data-vhs-avatar aria-hidden="true"><span class="vhs-avatar__label" data-vhs-label>SQ</span><span class="vhs-avatar__reels"><i></i><i></i></span></span>
       </button>
@@ -353,6 +346,17 @@
         <span></span><span></span><span></span>
       </button>
     </div>
+  </nav>
+
+  <!-- SECONDARY TOOLS: keep new controls out of the main phone header -->
+  <nav class="starquest-tools" aria-label="Search and StarQuest tools">
+    <div class="nav__search starquest-tools__catalog-search" role="search">
+      <span aria-hidden="true">🔍</span>
+      <input id="search-input" type="search" placeholder="Search shows and movies…" aria-label="Search TV shows" autocomplete="off" spellcheck="false" />
+      <button id="clear-search" class="sr-only" aria-label="Clear search">✕</button>
+    </div>
+    <button id="source-search-open" class="btn btn-secondary source-search-open starquest-tools__button" type="button" aria-label="Search verified free movie sources">📼 Archive Search</button>
+    <a class="btn btn-secondary source-search-open starquest-tools__button" href="games.html" aria-label="Open StarQuest Game Deck">🎮 Games</a>
   </nav>
 
   <!-- HERO -->
