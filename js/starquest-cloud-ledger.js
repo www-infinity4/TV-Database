@@ -113,6 +113,12 @@
         error.code = payload.error || "ledger_bootstrap_failed";
         throw error;
       }
+      // Only a newly-created cloud account imported the browser snapshot. For
+      // an existing account, any share that happened while bootstrap was in
+      // flight still needs its own durable receipt and ledger event in D1.
+      if (payload.importedLocalState !== true) {
+        bootstrapIncludedAttempts.clear();
+      }
       connectedUsername = user.key;
       applyState(payload);
       document.dispatchEvent(new CustomEvent("starquest:ledger-connected", { detail: { username: user.key } }));

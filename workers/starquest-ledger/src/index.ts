@@ -191,6 +191,7 @@ async function bootstrap(request: Request, env: Env): Promise<Response> {
     `SELECT id, username, star_coins, pending_share_credits, share_count, credential_hash
        FROM accounts WHERE username = ?1 COLLATE NOCASE`
   ).bind(username).first<AccountRow & { credential_hash: string }>();
+  const importedLocalState = !account;
 
   if (account && account.credential_hash !== credentialHash) {
     throw new HttpError(401, "account_credential_mismatch", "The StarQuest account password proof did not match.");
@@ -222,7 +223,11 @@ async function bootstrap(request: Request, env: Env): Promise<Response> {
      ON CONFLICT(token_hash) DO UPDATE SET last_seen_at = excluded.last_seen_at`
   ).bind(tokenHash, account.id, Date.now()).run();
 
-  return json(request, { ok: true, state: await loadState(env, account) });
+  return json(request, {
+    ok: true,
+    importedLocalState,
+    state: await loadState(env, account),
+  });
 }
 
 function historyStatement(env: Env, accountId: string, body: JsonRecord): D1PreparedStatement {
