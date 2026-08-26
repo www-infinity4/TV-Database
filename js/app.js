@@ -149,10 +149,10 @@
     if (showUnlockCost(show) > 0 && ep.youtubeId && !ep.archiveId && !ep.archiveFile) return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
-    // An Archive item page is not proof that a playable video file exists.
-    // Only exact, audited filenames enter the browsing catalog. Item-only
-    // records stay quarantined until the source search/resolver verifies them.
-    return false;
+    // Item-only records are allowed only because playback resolves metadata to
+    // a direct video file before anything is displayed. Archive pages are never
+    // embedded inside the StarQuest player.
+    return !!ep.archiveId;
   }
 
   function isShowAvailable(show) {
@@ -1065,7 +1065,7 @@
       DOM.playerVideo.preload = "auto";
       /* Sona can only draw an actual playback frame when the source opts into
          cross-origin media access. This must be set before assigning src. */
-      DOM.playerVideo.crossOrigin = "anonymous";
+      DOM.playerVideo.removeAttribute("crossorigin");
       /* Register handlers before assigning src so no stale queued event
          from a prior load can slip through and trigger the wrong handler. */
       DOM.playerVideo.onloadedmetadata = () => {
@@ -1121,28 +1121,25 @@
         DOM.playerLoading.style.display = "none";
       }, { once: true });
     } else {
-      /* Item-only Archive.org records are playable without downloading or
-         inspecting the item's full metadata first. The Archive player selects
-         its stream-ready derivative and honors archiveIndex for playlists. */
+      /* Resolve item metadata to a direct media file. Never put an Archive.org
+         page or embed iframe in the StarQuest player. */
       const resumeId = showForEpisode ? buildEpisodeId(episode, showForEpisode) : "";
       const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
         ? StarQuestAuth.getWatchPosition(resumeId)
         : 0;
-      const embedUrl = buildEmbedUrl(episode, savedPosition);
-      DOM.playerVideo.onloadedmetadata = null;
-      DOM.playerVideo.oncanplay = null;
-      DOM.playerVideo.onerror = null;
+      DOM.playerFrame.style.display = "none";
+      DOM.playerFrame.src = "about:blank";
       DOM.playerVideo.style.display = "none";
-      DOM.playerVideo.removeAttribute("src");
-      DOM.playerVideo.load();
-      DOM.playerFrame.style.display = "block";
-      DOM.playerFrame.src = embedUrl;
-      /* The embedded player renders its own buffering state. Do not keep the
-         StarQuest overlay waiting on a cross-origin iframe load event. */
-      DOM.playerLoading.style.display = "none";
-      DOM.playerFrame.addEventListener("load", () => {
-        DOM.playerLoading.style.display = "none";
-      }, { once: true });
+      document.dispatchEvent(new CustomEvent("starquest:resolve-archive-episode", {
+        detail: {
+          identifier: episode.archiveId,
+          showTitle,
+          season: Number.isInteger(episode.season) ? episode.season : null,
+          episode: Number.isInteger(episode.episode) ? episode.episode : null,
+          episodeTitle: episode.title,
+          startSeconds: savedPosition
+        }
+      }));
     }
   }
 
@@ -2709,23 +2706,27 @@
       playerFrame.addEventListener("load", () => { if (playerLoad) playerLoad.style.display = "none"; }, { once: true });
     } else {
       if (playerVideo) {
-        playerVideo.oncanplay = null;
-        playerVideo.onerror = null;
         playerVideo.style.display = "none";
         playerVideo.removeAttribute("src");
         playerVideo.load();
       }
-      playerFrame.style.display = "block";
+      playerFrame.style.display = "none";
+      playerFrame.src = "about:blank";
       const show = findShowForEpisode(ep);
       const resumeId = show ? buildEpisodeId(ep, show) : "";
       const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
         ? StarQuestAuth.getWatchPosition(resumeId)
         : 0;
-      playerFrame.src = buildPlayerUrl(ep, savedPosition);
-      if (playerLoad) playerLoad.style.display = "none";
-      playerFrame.addEventListener("load", () => {
-        if (playerLoad) playerLoad.style.display = "none";
-      }, { once: true });
+      document.dispatchEvent(new CustomEvent("starquest:resolve-archive-episode", {
+        detail: {
+          identifier: ep.archiveId,
+          showTitle,
+          season: Number.isInteger(ep.season) ? ep.season : null,
+          episode: Number.isInteger(ep.episode) ? ep.episode : null,
+          episodeTitle: ep.title,
+          startSeconds: savedPosition
+        }
+      }));
     }
 
     startWatchTimer(ep, showTitle);
@@ -2754,10 +2755,10 @@
     if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing" || ep.sourceStatus === "unverified") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return /\.(mp4|m4v|webm|ogv|ogg|mov)$/i.test(ep.archiveFile);
-    // An Archive item page is not proof that a playable video file exists.
-    // Only exact, audited filenames enter the browsing catalog. Item-only
-    // records stay quarantined until the source search/resolver verifies them.
-    return false;
+    // Item-only records are allowed only because playback resolves metadata to
+    // a direct video file before anything is displayed. Archive pages are never
+    // embedded inside the StarQuest player.
+    return !!ep.archiveId;
   }
 
   /* Intercept player back button to stop timer */
