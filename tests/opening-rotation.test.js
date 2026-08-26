@@ -29,4 +29,24 @@ const fourth = window.StarQuestOpening.choose(candidates, { random, storage: loc
 assert.notEqual(fourth.id, picked[2].id, "a new page opening must not repeat the previous pick");
 assert.equal(window.StarQuestOpening.kind(candidates[1]), "Movie");
 assert.equal(window.StarQuestOpening.kind(candidates[0]), "Show");
+
+const fullCatalog = Array.from({ length: 356 }, (_, index) => ({
+  id: "catalog-" + index,
+  type: index % 2 ? "movie" : "tv",
+}));
+const fullValues = new Map();
+const fullStorage = {
+  getItem(key) { return fullValues.has(key) ? fullValues.get(key) : null; },
+  setItem(key, value) { fullValues.set(key, value); },
+};
+const fullCycle = Array.from({ length: fullCatalog.length }, () =>
+  window.StarQuestOpening.choose(fullCatalog, { random, storage: fullStorage })
+);
+assert.equal(
+  new Set(fullCycle.map((show) => show.id)).size,
+  356,
+  "Top Spot must expose the complete 356-title deck before any repeat"
+);
+const nextCyclePick = window.StarQuestOpening.choose(fullCatalog, { random, storage: fullStorage });
+assert.notEqual(nextCyclePick.id, fullCycle[fullCycle.length - 1].id, "cycle boundary must not repeat the last title");
 console.log("opening rotation uses a persistent no-repeat deck: ok");
