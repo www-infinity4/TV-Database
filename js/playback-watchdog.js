@@ -13,7 +13,7 @@
   const retry = document.getElementById("player-retry-btn");
   if (!video || !loading || !error || !retry) return;
 
-  const STALL_LIMIT_MS = 8000;
+  const STALL_LIMIT_MS = 30000;
   let stallTimer = null;
   let retryPosition = 0;
 
