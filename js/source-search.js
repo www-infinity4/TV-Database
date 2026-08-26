@@ -238,6 +238,10 @@
     restoreInventory();
   }
 
+  // data.js is loaded immediately before this module, so restore saved titles
+  // before app.js builds Top Spot and the catalog shelves.
+  restoreInventory();
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind, { once: true });
   else bind();
 
