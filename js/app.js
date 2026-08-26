@@ -453,10 +453,10 @@
       : playableCatalog.slice().sort(byScoreFreeFirst);
 
     function rotateOpening() {
-      const show = window.StarQuestRecommendations
-        ? StarQuestRecommendations.choose(ordered)
-        : window.StarQuestOpening
-          ? StarQuestOpening.choose(ordered)
+      // Top Spot owns a complete persistent deck. Recommendation signals still
+      // learn from clicks and watches, but cannot pin or repeat the opening.
+      const show = window.StarQuestOpening
+        ? StarQuestOpening.choose(ordered)
         : ordered[Math.floor(Math.random() * ordered.length)];
       if (show) renderHero(show);
     }

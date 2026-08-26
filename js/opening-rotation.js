@@ -3,7 +3,6 @@
   "use strict";
 
   const STORAGE_KEY = "starquest.opening.rotation.v1";
-  const MAX_OPENING_POOL = 18;
 
   function safeStorage(candidate) {
     if (candidate) return candidate;
@@ -42,8 +41,8 @@
     const random = typeof config.random === "function" ? config.random : Math.random;
     const storage = safeStorage(config.storage);
     const candidates = (Array.isArray(orderedCandidates) ? orderedCandidates : [])
-      .filter((show) => show && typeof show.id === "string")
-      .slice(0, MAX_OPENING_POOL);
+      .filter((show, index, values) => show && typeof show.id === "string" &&
+        values.findIndex((item) => item && item.id === show.id) === index);
     if (!candidates.length) return null;
 
     const byId = new Map(candidates.map((show) => [show.id, show]));
