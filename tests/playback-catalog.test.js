@@ -60,5 +60,10 @@ assert.equal(
 assert.match(appSource, /e\.stopPropagation\(\);\s*openModal\(show\);/);
 assert.match(appSource, /showForEpisode && showForEpisode\.archiveRoot/);
 assert.match(appSource, /openAllEps\("new-alfred-hitchcock-presents"\)/);
+assert.equal(
+  (appSource.match(/Item-only[\s\S]{0,220}return false;/g) || []).length,
+  2,
+  "both playback controllers must quarantine item-only Archive records"
+);
 
-console.log("playback catalog paths and one-tap routing: ok");
+console.log("playback catalog paths, audited sources, and one-tap routing: ok");

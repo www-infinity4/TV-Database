@@ -149,8 +149,10 @@
     if (showUnlockCost(show) > 0 && ep.youtubeId && !ep.archiveId && !ep.archiveFile) return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
-    // Item-only Archive.org records are resolved from metadata at playback time.
-    return !!ep.archiveId;
+    // An Archive item page is not proof that a playable video file exists.
+    // Only exact, audited filenames enter the browsing catalog. Item-only
+    // records stay quarantined until the source search/resolver verifies them.
+    return false;
   }
 
   function isShowAvailable(show) {
@@ -2752,8 +2754,10 @@
     if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing" || ep.sourceStatus === "unverified") return false;
     if (ep.youtubeId) return true;
     if (typeof ep.archiveFile === "string" && ep.archiveId) return /\.(mp4|m4v|webm|ogv|ogg|mov)$/i.test(ep.archiveFile);
-    // Item-only Archive.org records are resolved from metadata at playback time.
-    return !!ep.archiveId;
+    // An Archive item page is not proof that a playable video file exists.
+    // Only exact, audited filenames enter the browsing catalog. Item-only
+    // records stay quarantined until the source search/resolver verifies them.
+    return false;
   }
 
   /* Intercept player back button to stop timer */

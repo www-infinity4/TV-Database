@@ -208,7 +208,15 @@
   });
 
   const observer = new MutationObserver(() => {
-    if (archiveIdFromUrl(frame.src)) resolveCurrentFrame();
+    if (archiveIdFromUrl(frame.src)) {
+      resolveCurrentFrame();
+    } else {
+      // A YouTube/direct-video selection supersedes every older Archive fetch.
+      // Invalidating here prevents a late metadata response from replacing the
+      // newly selected source and leaving an Archive page over YouTube audio.
+      resolutionToken += 1;
+      internalChange = false;
+    }
   });
   observer.observe(frame, { attributes: true, attributeFilter: ["src"] });
 

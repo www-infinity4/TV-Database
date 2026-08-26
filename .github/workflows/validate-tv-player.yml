@@ -11,6 +11,8 @@ on:
       - tests/share-safety-net.test.js
       - js/data.js
       - js/archive-resolver.js
+      - css/style.css
+      - tests/playback-catalog.test.js
       - .github/workflows/validate-tv-player.yml
 
 permissions:
@@ -29,6 +31,7 @@ jobs:
           node --check js/archive-resolver.js
           node tests/share-flow.test.js
           node tests/share-safety-net.test.js
+          node tests/playback-catalog.test.js
       - name: Check player integration and regression records
         run: |
           python3 - <<'PY'
@@ -59,10 +62,10 @@ jobs:
               'dark MASH collection removed': 'archiveId: "MASH-Complete-Series"' not in data,
               'Alfred Hitchcock catalog remains present': 'id: "new-alfred-hitchcock-presents"' in data,
               'Hitchcock collection source remains present': 'the-new-alfred-hitchcock-presents-complete' in data,
-              'item-only Archive records are playable': app.count('return !!ep.archiveId;') >= 2,
+              'item-only Archive records are quarantined': app.count('records stay quarantined') >= 2 and 'return !!ep.archiveId;' not in app,
               'resolver uses archive metadata': 'archive.org/metadata/' in resolver,
               'resolver handles direct playback rejection': 'video.onerror' in resolver,
-              'Archive item return is not commented out': 'time.\\\\n    return !!ep.archiveId' not in app,
+              'stale Archive resolution is cancelled': 'resolutionToken += 1' in resolver,
               'resolver collection declaration is active': 'Large\\\\n    // collections' not in resolver,
               'Reading Rainbow shelf is present': 'id="row-reading-rainbow"' in index and 'rowReadingRainbow' in app,
               'Reading Rainbow has a direct navigation link': 'href="#reading-rainbow-section"' in index,
