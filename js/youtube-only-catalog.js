@@ -1161,10 +1161,11 @@
   const seenVideoIds = new Set();
   existing.forEach((show) => show.episodes.forEach((episode) => seenVideoIds.add(episode.youtubeId)));
 
-  const replacements = CURATED_MOVIES.filter((movie) =>
-    movie.cleared && validVideoId(movie.videoId) && !seenVideoIds.has(movie.videoId)
-  ).map((movie, index) => {
+  const replacements = CURATED_MOVIES.filter((movie) => {
+    if (!movie.cleared || !validVideoId(movie.videoId) || seenVideoIds.has(movie.videoId)) return false;
     seenVideoIds.add(movie.videoId);
+    return true;
+  }).map((movie, index) => {
     const minutes = Math.max(1, Math.round(Number(movie.runtimeSeconds || 0) / 60));
     const slug = String(movie.channel + "-" + movie.id).toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const thumbnail = "https://img.youtube.com/vi/" + movie.videoId + "/hqdefault.jpg";
