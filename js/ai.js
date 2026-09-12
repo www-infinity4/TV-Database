@@ -427,7 +427,7 @@
 
     /* StarQuest what/why */
     if (q.includes("starquest") || (q.includes("what") && q.includes("this"))) {
-      return "⭐ StarQuest is your personal classic TV & movie streaming galaxy! We focus on 1950s–1990s content from the public domain and archive.org. Watch free, save your viewing history, and earn one StarCoin after every 10 completed shares. It's like the video rental store of the 90s — but better!";
+      return "⭐ StarQuest is your personal classic TV & movie streaming galaxy! We focus on 1950s–1990s content through verified YouTube sources. Watch free, save your viewing history, and earn one StarCoin after every 10 completed shares. It's like the video rental store of the 90s — but better!";
     }
 
     return "I don't have a reliable offline answer for that yet. Cosmo's live AI endpoint is not connected on this device, so I won't guess or substitute an unrelated movie. I can still help with StarQuest titles, playback, recommendations, watch history, StarCoins, and the catalogue ledger.";
@@ -613,7 +613,7 @@
       ? `\nThe user is currently watching: ${_currentContext.show} — "${_currentContext.episode}".`
       : "";
     return (
-      "You are Cosmo, the AI companion for StarQuest — a free classic TV & movies streaming site featuring 1950s–1990s content from archive.org.\n" +
+      "You are Cosmo, the AI companion for StarQuest — a free classic TV & movies streaming site featuring classic and modern YouTube programming.\n" +
       "You are a knowledgeable, warm viewing companion. Speak naturally and specifically, usually in 2-5 sentences. Do not repeat stock catchphrases.\n" +
       "You never give robotic encyclopedia entries. You never make up episode timestamps, prices, availability, products, or facts.\n" +
       "Never claim to read thoughts, minds, other tabs, browser history, private messages, or inaccessible video. Never claim actors, filmmakers, a movie, or Hollywood are reacting to the viewer personally. Treat a program's content and the viewer's private life as separate unless the viewer supplies a concrete connection.\n" +
