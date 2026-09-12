@@ -99,6 +99,7 @@
       targetKey: ctx.targetKey || "brand-name",
       targetLabel: ctx.targetLabel || "Site design",
       creationMode: design.mode || "human",
+      changeRequest: String(design.changeRequest || "").slice(0, 240),
       author: ctx.author || "local-user",
       parentVersionId: ctx.parentVersionId === undefined ? (previous ? previous.id : null) : ctx.parentVersionId,
       forkedFromId: ctx.forkedFromId || null,
