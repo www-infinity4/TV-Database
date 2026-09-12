@@ -448,7 +448,26 @@
       if (show) renderHero(show);
     }
 
+    let midnightOpeningTimer = 0;
+    function scheduleMidnightOpeningRefresh() {
+      if (!window.StarQuestOpening) return;
+      const changeAt = StarQuestOpening.nextChangeAt(new Date());
+      const delay = Math.max(250, changeAt.getTime() - Date.now() + 50);
+      clearTimeout(midnightOpeningTimer);
+      midnightOpeningTimer = setTimeout(() => {
+        rotateOpening(false);
+        scheduleMidnightOpeningRefresh();
+      }, Math.min(delay, 2147483647));
+    }
+
     rotateOpening(false);
+    scheduleMidnightOpeningRefresh();
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        rotateOpening(false);
+        scheduleMidnightOpeningRefresh();
+      }
+    });
     if (DOM.heroShuffleBtn) DOM.heroShuffleBtn.onclick = () => rotateOpening(true);
   }
 
