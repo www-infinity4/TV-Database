@@ -70,3 +70,13 @@
   new MutationObserver(render).observe(video, { attributes: true, attributeFilter: ["src", "style"] });
   render();
 })(window);
+
+(function loadInfinityChannelNetwork(global) {
+  "use strict";
+  if (!global.document || global.document.querySelector('script[data-infinity-channel-network]')) return;
+  const script = global.document.createElement("script");
+  script.src = "https://www-infinity4.github.io/TNT/channels.js?v=20260912d";
+  script.defer = true;
+  script.dataset.infinityChannelNetwork = "1";
+  global.document.head.appendChild(script);
+})(window);
