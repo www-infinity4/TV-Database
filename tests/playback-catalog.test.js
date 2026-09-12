@@ -1,75 +1,30 @@
+"use strict";
+
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
 
-const dataPath = require.resolve("../js/data.js");
-const appPath = require.resolve("../js/app.js");
-const dataSource = fs.readFileSync(dataPath, "utf8");
-const appSource = fs.readFileSync(appPath, "utf8");
-const context = {};
+const dataSource = fs.readFileSync("js/data.js", "utf8");
+const gateSource = fs.readFileSync("js/youtube-only-catalog.js", "utf8");
+const appSource = fs.readFileSync("js/app.js", "utf8");
+const html = fs.readFileSync("index.html", "utf8");
+const context = { window: {} };
 
-vm.runInNewContext(dataSource + ";globalThis.__shows = SHOWS;", context);
+vm.runInNewContext(dataSource + "\n" + gateSource + "\n;globalThis.__shows = SHOWS;", context);
 const shows = context.__shows;
-const show = id => shows.find(item => item.id === id);
+const episodes = shows.flatMap((show) => show.episodes || []);
+const videoIds = episodes.map((episode) => episode.youtubeId);
 
-assert.ok(Array.isArray(shows) && shows.length > 0, "catalog should load");
+assert.ok(shows.length >= 175, "YouTube-only catalog should remain a heavy content strip");
+assert.ok(shows.filter((show) => show.type === "movie").length >= 75, "catalog should retain a deep movie shelf");
+assert.ok(episodes.length > 0, "catalog should contain playable episodes");
+assert.ok(episodes.every((episode) => /^[A-Za-z0-9_-]{11}$/.test(String(episode.youtubeId || ""))), "every episode must use a valid YouTube ID");
+assert.ok(episodes.every((episode) => !episode.archiveId && !episode.archiveFile), "Archive records must not reach the live catalog");
+assert.equal(new Set(videoIds).size, videoIds.length, "YouTube video IDs should not be duplicated");
+assert.equal(JSON.stringify(shows).includes("archive.org"), false, "live catalog copy must not mention Archive");
+assert.match(appSource, /return ^\[A-Za-z0-9_-\]\{11\}\$\.test\(String\(ep\.youtubeId \|\| ""\)\)/);
+assert.ok(html.indexOf("js/data.js") < html.indexOf("js/youtube-only-catalog.js"), "YouTube gate must load immediately after source data");
+assert.ok(html.indexOf("js/youtube-only-catalog.js") < html.indexOf("js/catalog-ledger.js"), "ledger must only see the filtered YouTube catalog");
+assert.doesNotMatch(html, /archive-resolver|source-search|archive\.org/i);
 
-const readingRainbow = show("reading-rainbow");
-assert.equal(readingRainbow.episodes[0].archiveId, "ReadingRainbowTVSeries");
-assert.equal(
-  readingRainbow.episodes[0].archiveFile,
-  "Reading.Rainbow.S01E01.Tight.Times.480p.AMZN.WEB-DL.DD.2.0.x264-RTN.mp4"
-);
-
-const hitchcock = show("new-alfred-hitchcock-presents");
-assert.equal(hitchcock.episodes.length, 80);
-assert.ok(hitchcock.episodes.every(episode => !episode.archiveFile.includes("/")));
-assert.equal(hitchcock.episodes[0].archiveFile, "S01E00A Incident In A Small Jail.mp4");
-assert.equal(hitchcock.archiveRoot, "The New Alfred Hitchcock Presents (1985)");
-
-const twilight1985 = show("the-twilight-zone-1985");
-assert.equal(
-  twilight1985.episodes[0].archiveFile,
-  "The Twilight Zone 1985 S01E01 - Shatterday.mp4"
-);
-assert.ok(show("the-twilight-zone").episodes.every(episode => episode.sourceStatus === "file-missing"));
-
-const price = show("the-price-is-right");
-assert.equal(price.episodes[0].archiveFile, "September 4 1972.ia.mp4");
-
-const mash = show("mash");
-assert.equal(mash.episodes[0].archiveFile, "MASH/1/01x01 Pilot.mp4");
-
-const seinfeld = show("seinfeld");
-assert.equal(seinfeld.episodes[0].sourceStatus, "restricted");
-
-assert.match(appSource, /Every playable catalog card starts its primary episode in one action/);
-assert.match(appSource, /const episode = getPrimaryEpisode\(show\);/);
-assert.match(appSource, /class="btn btn-secondary browse-episodes-btn"/);
-assert.match(appSource, /browseEpisodesBtn\.addEventListener\("click"/);
-
-const archiveUrl = (episode) =>
-  "https://archive.org/download/" + encodeURIComponent(episode.archiveId) + "/" +
-  episode.archiveFile.split("/").map(encodeURIComponent).join("/");
-assert.equal(
-  "https://archive.org/download/" + encodeURIComponent(hitchcock.episodes[0].archiveId) + "/" +
-    [hitchcock.archiveRoot, "Season 1", hitchcock.episodes[0].archiveFile].map(encodeURIComponent).join("/"),
-  "https://archive.org/download/the-new-alfred-hitchcock-presents-complete/The%20New%20Alfred%20Hitchcock%20Presents%20(1985)/Season%201/S01E00A%20Incident%20In%20A%20Small%20Jail.mp4"
-);
-
-assert.match(appSource, /e\.stopPropagation\(\);\s*openModal\(show\);/);
-assert.match(appSource, /showForEpisode && showForEpisode\.archiveRoot/);
-assert.match(appSource, /openAllEps\("new-alfred-hitchcock-presents"\)/);
-assert.equal(
-  (appSource.match(/Item-only[\s\S]{0,260}return !!ep\.archiveId;/g) || []).length,
-  2,
-  "both playback controllers must accept item-only records for direct resolution"
-);
-assert.equal(
-  (appSource.match(/starquest:resolve-archive-episode/g) || []).length,
-  2,
-  "both player entry points must resolve Archive items without an iframe"
-);
-assert.doesNotMatch(appSource, /playerFrame\.src = buildPlayerUrl\(ep, savedPosition\)/);
-
-console.log("playback catalog paths, audited sources, and one-tap routing: ok");
+console.log("StarQuest exposes only the deduplicated YouTube catalog: ok");
