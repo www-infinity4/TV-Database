@@ -176,7 +176,7 @@
   }
 
   function mountMarkers(root, onOpen) {
-    (root || document).querySelectorAll("[data-avatar-portal]").forEach((marker) => {
+    (root || document).querySelectorAll('[data-avatar-portal][data-design-key="brand-name"]').forEach((marker) => {
       if (marker.dataset.avatarMounted === "true") return;
       marker.dataset.avatarMounted = "true";
       marker.textContent = marker.dataset.avatarSymbol || SITE_SYMBOL;
@@ -190,62 +190,12 @@
 
   function markEditablePage(root) {
     const scope = root || document;
-    const selectors = [
-      "h1", "h2", "h3", "h4", "p", "label", "legend",
-      ".hero__badge", ".hero__desc", ".modal__desc", ".panel-title",
-      ".panel-hint", ".history-empty", ".wallet-card__title",
-      ".wallet-balance-label", ".show-card__title", ".episode-title",
-      ".btn:not(.design-star)", ".sidebar-nav__item"
-    ].join(",");
-
-    function directTextNode(element) {
-      return Array.from(element.childNodes).find((node) => node.nodeType === 3 && node.nodeValue.trim()) || null;
-    }
-
-    function markElement(element) {
-      if (!element || element.dataset.avatarWaveMarked === "true") return;
-      if (element.closest("#profile-portal-backdrop") || element.closest(".avatar-wave-marker")) return;
-      if (element.matches("[data-avatar-ignore], input, textarea, select, canvas, iframe, video")) return;
-      if (element.querySelector(":scope > .design-star, :scope > .avatar-wave-marker")) return;
-      const node = directTextNode(element);
-      if (!node) return;
-      const original = node.nodeValue.trim();
-      if (!original) return;
-      const key = element.id
-        ? "id-" + element.id
-        : "wave-" + SITE_ID + "-" + Math.abs(Array.from(document.querySelectorAll(selectors)).indexOf(element));
-      element.dataset.avatarWaveMarked = "true";
-      const marker = document.createElement("button");
-      marker.type = "button";
-      marker.className = "design-star avatar-wave-marker";
-      marker.textContent = SITE_SYMBOL;
-      marker.dataset.designKey = key;
-      marker.dataset.designTarget = original.slice(0, 90);
-      marker.dataset.designScope = "component";
-      marker.setAttribute("aria-label", "Change " + original.slice(0, 90));
-      marker.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        document.dispatchEvent(new CustomEvent("avatarcoin:edit-request", {
-          detail: { element, node, key, target: original.slice(0, 90), original, kind: "text-node" }
-        }));
-      });
-      element.insertAdjacentElement("afterend", marker);
-    }
-
-    if (scope.matches && scope.matches(selectors)) markElement(scope);
-    if (scope.querySelectorAll) scope.querySelectorAll(selectors).forEach(markElement);
+    scope.querySelectorAll(".avatar-wave-marker, .card-avatar-marker").forEach((marker) => marker.remove());
   }
 
   function observeEditablePage() {
     markEditablePage(document);
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => mutation.addedNodes.forEach((node) => {
-        if (node.nodeType === 1) markEditablePage(node);
-      }));
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    return observer;
+    return { disconnect: function () {} };
   }
 
   global.AvatarCoinChain = {
