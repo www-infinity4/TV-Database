@@ -1621,7 +1621,7 @@
   let activeDesignKey = "brand-name";
   let pendingChainParentId = null;
   let pendingChainDesignId = null;
-  let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, avatarStyle: "cosmic", avatarLabel: "SQ", overrides: {} };
+  let pendingDesign = { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, avatarStyle: "cosmic", avatarLabel: "SQ", changeRequest: "Keep the current StarQuest page as the starting point. My requested changes are: ", overrides: {} };
   const AVATAR_COIN_MARK = "★";
   function cleanVhsLabel(value) {
     return String(value || "SQ").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4) || "SQ";
@@ -1661,8 +1661,8 @@
       const avatarStyle = VHS_STYLES.includes(stored.avatarStyle) ? stored.avatarStyle : "cosmic";
       const avatarLabel = cleanVhsLabel(stored.avatarLabel);
       const overrides = stored.overrides && typeof stored.overrides === "object" ? stored.overrides : {};
-      return { name: String(stored.name || "My StarQuest").slice(0, 48), scope, mode, theme, cardSize, autoAdapt: !!stored.autoAdapt, avatarStyle, avatarLabel, overrides };
-    } catch (_) { return { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, avatarStyle: "cosmic", avatarLabel: "SQ", overrides: {} }; }
+      return { name: String(stored.name || "My StarQuest").slice(0, 48), scope, mode, theme, cardSize, autoAdapt: !!stored.autoAdapt, avatarStyle, avatarLabel, changeRequest: String(stored.changeRequest || "Keep the current StarQuest page as the starting point. My requested changes are: ").slice(0, 240), overrides };
+    } catch (_) { return { name: "My StarQuest", scope: "site", mode: "human", theme: "cosmic", cardSize: 1, autoAdapt: false, avatarStyle: "cosmic", avatarLabel: "SQ", changeRequest: "Keep the current StarQuest page as the starting point. My requested changes are: ", overrides: {} }; }
   }
 
   function adaptiveDesign(design) {
@@ -1717,6 +1717,7 @@
       autoAdapt: !!record.settings.autoAdapt,
       avatarStyle: VHS_STYLES.includes(record.settings.avatarStyle) ? record.settings.avatarStyle : "cosmic",
       avatarLabel: cleanVhsLabel(record.settings.avatarLabel),
+      changeRequest: String(record.changeRequest || "").slice(0, 240),
       overrides: { ...(record.settings.overrides || {}) }
     };
   }
@@ -1796,6 +1797,7 @@
     if (profileMessage) profileMessage.textContent = "";
     const adapted = adaptiveDesign(readPersonalDesign());
     pendingDesign = adapted.design;
+    if (avatarChangeRequest) avatarChangeRequest.value = pendingDesign.changeRequest || "Keep the current StarQuest page as the starting point. My requested changes are: ";
     if (designAdaptReason) designAdaptReason.textContent = adapted.reason;
     applyPersonalDesign(pendingDesign);
     renderDesignControls();
