@@ -104,7 +104,6 @@
   };
 
   /* ── Personalization helpers ── */
-  const EXT_PLAYABLE = /\.(mp4|m4v|webm|ogv|ogg|mov)$/i;
   const TV_FIRST_TYPES = new Set(["tv", "series", "show", "soap", "vhs"]);
   /* Strong bias so "For You" feels like a TV shelf first and only falls back
      to non-series items when the playable catalogue has nothing better. */
@@ -551,9 +550,6 @@
     }
   });
 
-  window.addEventListener("starquest:archive-discovered", event => {
-    addDiscoveredShows(event.detail?.bucket, event.detail?.shows);
-  });
 
   function renderRow(container, shows) {
     if (!container) return;
@@ -597,7 +593,7 @@
              loading="lazy"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="show-card__thumb-fallback" style="display:none">
-          <span class="fallback-kicker">STARQUEST ARCHIVE</span>
+          <span class="fallback-kicker">STARQUEST YOUTUBE</span>
           <span class="fallback-title">${escHTML(show.title)}</span>
           <span class="fallback-subtitle">${escHTML(ep.title)}</span>
         </div>
@@ -665,7 +661,7 @@
              loading="lazy"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="show-card__thumb-fallback" style="display:none">
-          <span class="fallback-kicker">STARQUEST ARCHIVE</span>
+          <span class="fallback-kicker">STARQUEST YOUTUBE</span>
           <span class="fallback-title">${escHTML(show.title)}</span>
           <span class="fallback-subtitle">${escHTML((show.genre || []).slice(0, 2).join(" · ") || show.years)}</span>
         </div>
@@ -1035,60 +1031,7 @@
 
     scheduleCosmoPopIns(show, showTitle, episode);
 
-    if (typeof episode.archiveFile === "string" && episode.archiveId) {
-      /* Use a native <video> element with the direct archive.org download URL.
-         This plays the file on-site without the embed player's restrictions. */
-      const directUrl = buildArchiveDirectUrl(
-        episode.archiveId,
-        episode.archiveFile,
-        showForEpisode && showForEpisode.archiveRoot,
-        episode.season
-      );
-
-      DOM.playerFrame.style.display = "none";
-      DOM.playerFrame.src = "about:blank";
-      DOM.playerVideo.style.display = "block";
-      DOM.playerVideo.preload = "auto";
-      /* Sona can only draw an actual playback frame when the source opts into
-         cross-origin media access. This must be set before assigning src. */
-      DOM.playerVideo.removeAttribute("crossorigin");
-      /* Register handlers before assigning src so no stale queued event
-         from a prior load can slip through and trigger the wrong handler. */
-      DOM.playerVideo.onloadedmetadata = () => {
-        const resumeId = showForEpisode ? buildEpisodeId(episode, showForEpisode) : "";
-        const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
-          ? StarQuestAuth.getWatchPosition(resumeId)
-          : 0;
-        const duration = Number(DOM.playerVideo.duration) || 0;
-        if (savedPosition > 5 && (!duration || savedPosition < duration - 10)) {
-          DOM.playerVideo.currentTime = savedPosition;
-        }
-      };
-      DOM.playerVideo.oncanplay = () => {
-        DOM.playerLoading.style.display = "none";
-        attemptInstantPlayback();
-      };
-      DOM.playerVideo.ontimeupdate = () => {
-        if (typeof StarQuestAI !== "undefined" && StarQuestAI.updatePlayback) {
-          StarQuestAI.updatePlayback({
-            currentTime: DOM.playerVideo.currentTime,
-            duration: DOM.playerVideo.duration,
-            transcript: currentCaptionText(DOM.playerVideo),
-          });
-        }
-      };
-      DOM.playerVideo.onerror = () => {
-        DOM.playerLoading.style.display = "none";
-        DOM.playerVideo.style.display = "none";
-        DOM.playerError.style.display = "flex";
-        DOM.playerErrorLink.href = "https://archive.org/details/" + encodeURIComponent(episode.archiveId);
-      };
-      DOM.playerVideo.src = directUrl;
-      DOM.playerVideo.load();
-      attemptInstantPlayback();
-    } else if (episode.youtubeId) {
-      /* YouTube remains an iframe source. Archive.org never uses the iframe:
-         metadata resolution selects a direct file before anything is shown. */
+    if (episode.youtubeId) {
       const resumeId = showForEpisode ? buildEpisodeId(episode, showForEpisode) : "";
       const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
         ? StarQuestAuth.getWatchPosition(resumeId)
@@ -1102,30 +1045,15 @@
       DOM.playerVideo.load();
       DOM.playerFrame.style.display = "block";
       DOM.playerFrame.src = embedUrl;
-
       DOM.playerFrame.addEventListener("load", () => {
         DOM.playerLoading.style.display = "none";
       }, { once: true });
     } else {
-      /* Resolve item metadata to a direct media file. Never put an Archive.org
-         page or embed iframe in the StarQuest player. */
-      const resumeId = showForEpisode ? buildEpisodeId(episode, showForEpisode) : "";
-      const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
-        ? StarQuestAuth.getWatchPosition(resumeId)
-        : 0;
+      DOM.playerLoading.style.display = "none";
       DOM.playerFrame.style.display = "none";
-      DOM.playerFrame.src = "about:blank";
       DOM.playerVideo.style.display = "none";
-      document.dispatchEvent(new CustomEvent("starquest:resolve-archive-episode", {
-        detail: {
-          identifier: episode.archiveId,
-          showTitle,
-          season: Number.isInteger(episode.season) ? episode.season : null,
-          episode: Number.isInteger(episode.episode) ? episode.episode : null,
-          episodeTitle: episode.title,
-          startSeconds: savedPosition
-        }
-      }));
+      DOM.playerError.style.display = "flex";
+      DOM.playerErrorLink.href = "https://www.youtube.com/";
     }
   }
 
@@ -1196,44 +1124,13 @@
   DOM.playerBack.addEventListener("click", closePlayer);
 
 
-  /**
-   * Build a direct archive.org download URL for a specific file within an item.
-   * Used to play video via a native <video> element, bypassing embed restrictions.
-   */
-  function buildArchiveDirectUrl(archiveId, archiveFile, archiveRoot, season) {
-    if (!archiveId || !archiveFile) return "";
-    const nestedFile = archiveRoot && !archiveFile.includes("/")
-      ? [archiveRoot, "Season " + Math.max(1, Number(season) || 1), archiveFile].join("/")
-      : archiveFile;
-    return "https://archive.org/download/" +
-      encodeURIComponent(archiveId) + "/" +
-      nestedFile.split("/").map(encodeURIComponent).join("/");
-  }
-
-  /**
-   * Build the iframe embed URL for YouTube or archive.org items without a file path.
-   * When an episode has a youtubeId, a YouTube embed URL is returned.
-   * When an episode has an archiveIndex, the archive.org playlist index
-   * parameter is used to jump directly to that episode.
-   */
+  /** Build the YouTube iframe URL, including a saved resume position. */
   function buildEmbedUrl(episode, startSeconds) {
     const resumeAt = Math.max(0, Math.trunc(Number(startSeconds) || 0));
-    if (episode.youtubeId) {
-      const params = new URLSearchParams({ autoplay: "1" });
-      if (resumeAt > 5) params.set("start", String(resumeAt));
-      return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
-    }
-    if (!episode.archiveId) return "about:blank";
-    const base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
+    if (!episode || !episode.youtubeId) return "about:blank";
     const params = new URLSearchParams({ autoplay: "1" });
-    if (typeof episode.archiveIndex === "number" && !episode.archiveFile) {
-      params.set("index", String(episode.archiveIndex));
-    }
-    if (episode.title) {
-      params.set("playtext", episode.title);
-    }
     if (resumeAt > 5) params.set("start", String(resumeAt));
-    return base + "?" + params.toString();
+    return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
   }
 
   /* ── Search ── */
@@ -1495,35 +1392,6 @@
     };
   }
 
-  function archiveValidationStatus(ep) {
-    if (ep.sourceStatus === "restricted") return "restricted by source";
-    if (ep.sourceStatus === "file-missing") return "file missing";
-    if (ep.sourceStatus === "unverified") return "unverified after source audit";
-    if (!ep.archiveId && !ep.youtubeId) return "identifier missing";
-    if (ep.youtubeId) return "embedded player";
-    if (typeof ep.archiveFile === "string" && ep.archiveFile) {
-      return EXT_PLAYABLE.test(ep.archiveFile) ? "direct stream" : "not browser streamable";
-    }
-    if (ep.archiveId) return "archive embedded player";
-    return "identifier missing";
-  }
-
-  window.StarQuestArchiveValidationReport = function () {
-    const rows = [];
-    (SHOWS || []).forEach((show) => {
-      (show.episodes || []).forEach((ep) => {
-        rows.push({
-          showId: show.id,
-          episodeId: buildEpisodeId(ep, show),
-          title: ep.title,
-          status: archiveValidationStatus(ep),
-          archiveId: ep.archiveId || "",
-          archiveFile: ep.archiveFile || "",
-        });
-      });
-    });
-    return rows;
-  };
 
   /* ── Init ── */
   window.renderForYouRow = renderForYouRow;
@@ -1547,7 +1415,6 @@
     setTimeout(() => openPlayer(episode, show.title), 0);
   })();
 
-  if (window.StarQuestArchiveDiscovery) window.StarQuestArchiveDiscovery.load();
 })();
 
 /* ================================================================
@@ -2610,67 +2477,23 @@
     if (playerError) playerError.style.display = "none";
     document.body.style.overflow = "hidden";
 
-    if (typeof ep.archiveFile === "string" && ep.archiveId) {
-      /* Use direct <video> element with archive.org download URL */
-      const directUrl = "https://archive.org/download/" +
-        encodeURIComponent(ep.archiveId) + "/" +
-        ep.archiveFile.split("/").map(encodeURIComponent).join("/");
-
-      playerFrame.style.display = "none";
-      playerFrame.src = "about:blank";
-      if (playerVideo) {
-        playerVideo.style.display = "block";
-        /* Register handlers before assigning src — same reason as openPlayer above */
-        playerVideo.oncanplay = () => { if (playerLoad) playerLoad.style.display = "none"; };
-        playerVideo.onerror = () => {
-          if (playerLoad) playerLoad.style.display = "none";
-          playerVideo.style.display = "none";
-          if (playerError) playerError.style.display = "flex";
-          if (playerErrorLink) playerErrorLink.href = "https://archive.org/details/" + encodeURIComponent(ep.archiveId);
-        };
-        playerVideo.src = directUrl;
-      }
-    } else if (ep.youtubeId) {
-      const show = findShowForEpisode(ep);
-      const resumeId = show ? buildEpisodeId(ep, show) : "";
-      const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
-        ? StarQuestAuth.getWatchPosition(resumeId)
-        : 0;
-      const url = buildPlayerUrl(ep, savedPosition);
-      if (playerVideo) {
-        playerVideo.oncanplay = null;
-        playerVideo.onerror = null;
-        playerVideo.style.display = "none";
-        playerVideo.removeAttribute("src");
-        playerVideo.load();
-      }
-      playerFrame.style.display = "block";
-      playerFrame.src = url;
-      playerFrame.addEventListener("load", () => { if (playerLoad) playerLoad.style.display = "none"; }, { once: true });
-    } else {
-      if (playerVideo) {
-        playerVideo.style.display = "none";
-        playerVideo.removeAttribute("src");
-        playerVideo.load();
-      }
-      playerFrame.style.display = "none";
-      playerFrame.src = "about:blank";
-      const show = findShowForEpisode(ep);
-      const resumeId = show ? buildEpisodeId(ep, show) : "";
-      const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
-        ? StarQuestAuth.getWatchPosition(resumeId)
-        : 0;
-      document.dispatchEvent(new CustomEvent("starquest:resolve-archive-episode", {
-        detail: {
-          identifier: ep.archiveId,
-          showTitle,
-          season: Number.isInteger(ep.season) ? ep.season : null,
-          episode: Number.isInteger(ep.episode) ? ep.episode : null,
-          episodeTitle: ep.title,
-          startSeconds: savedPosition
-        }
-      }));
+    const show = findShowForEpisode(ep);
+    const resumeId = show ? buildEpisodeId(ep, show) : "";
+    const savedPosition = resumeId && typeof StarQuestAuth !== "undefined"
+      ? StarQuestAuth.getWatchPosition(resumeId)
+      : 0;
+    if (playerVideo) {
+      playerVideo.oncanplay = null;
+      playerVideo.onerror = null;
+      playerVideo.style.display = "none";
+      playerVideo.removeAttribute("src");
+      playerVideo.load();
     }
+    playerFrame.style.display = "block";
+    playerFrame.src = buildPlayerUrl(ep, savedPosition);
+    playerFrame.addEventListener("load", () => {
+      if (playerLoad) playerLoad.style.display = "none";
+    }, { once: true });
 
     startWatchTimer(ep, showTitle);
     addToHistoryNow(ep, showTitle);
@@ -2678,30 +2501,16 @@
 
   function buildPlayerUrl(episode, startSeconds) {
     const resumeAt = Math.max(0, Math.trunc(Number(startSeconds) || 0));
-    if (episode.youtubeId) {
-      const params = new URLSearchParams({ autoplay: "1" });
-      if (resumeAt > 5) params.set("start", String(resumeAt));
-      return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
-    }
-    const base = "https://archive.org/embed/" + encodeURIComponent(episode.archiveId);
+    if (!episode || !episode.youtubeId) return "about:blank";
     const params = new URLSearchParams({ autoplay: "1" });
-    if (typeof episode.archiveIndex === "number" && !episode.archiveFile) {
-      params.set("index", String(episode.archiveIndex));
-    }
-    if (episode.title) params.set("playtext", episode.title);
     if (resumeAt > 5) params.set("start", String(resumeAt));
-    return base + "?" + params.toString();
+    return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
   }
 
   function isEpisodePlayableSQ(ep) {
     if (!ep || typeof ep !== "object") return false;
     if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing" || ep.sourceStatus === "unverified") return false;
-    if (ep.youtubeId) return true;
-    if (typeof ep.archiveFile === "string" && ep.archiveId) return /\.(mp4|m4v|webm|ogv|ogg|mov)$/i.test(ep.archiveFile);
-    // Item-only records are allowed only because playback resolves metadata to
-    // a direct video file before anything is displayed. Archive pages are never
-    // embedded inside the StarQuest player.
-    return !!ep.archiveId;
+    return /^[A-Za-z0-9_-]{11}$/.test(String(ep.youtubeId || ""));
   }
 
   /* Intercept player back button to stop timer */
@@ -2719,18 +2528,6 @@
     startWatchTimer(e.detail.ep, e.detail.showTitle);
   });
 
-  document.addEventListener("starquest:archive-direct-playback", (event) => {
-    if (!_watchTracker) return;
-    const playerVideo = $("player-video");
-    _watchTracker.usesEmbeddedPlayer = false;
-    _watchTracker.lastTime = Math.max(
-      0,
-      Number(event.detail && event.detail.startSeconds) ||
-        Number(playerVideo && playerVideo.currentTime) ||
-        _watchTracker.positionSeconds || 0
-    );
-    _watchTracker.lastTickAt = Date.now();
-  });
 
   /* Patch existing openPlayer from first IIFE by decorating the player open logic */
   (function patchPlayer() {
@@ -2794,7 +2591,7 @@
     if (!playerVideo) return;
     const existingHistory = StarQuestAuth.getHistory().find((item) => item.episodeId === episodeId);
     const savedPosition = Math.max(0, Number(StarQuestAuth.getWatchPosition(episodeId)) || 0);
-    const usesEmbeddedPlayer = !!ep.youtubeId || !(typeof ep.archiveFile === "string" && ep.archiveId);
+    const usesEmbeddedPlayer = true;
     const declaredDuration = Math.max(0, Math.trunc((Number(ep.duration) || parseInt(String(ep.duration || "0"), 10)) * 60));
 
     _watchTracker = {
@@ -2812,7 +2609,7 @@
       decade: show ? (Math.floor(parseInt(String(show.years || "").split("–")[0], 10) / 10) * 10 + "s") : "",
       tags: show && show.genre ? show.genre.slice(0, 4) : [],
       thumbnail: ep.thumbnail || (show && show.thumbnail) || "",
-      archiveId: ep.archiveId || "",
+      youtubeId: ep.youtubeId || "",
       distributorAccount: show && show.distributorAccount ? show.distributorAccount : "",
       watchedSeconds: Math.max(0, Number(existingHistory && existingHistory.watchedSeconds) || 0),
       pendingPersistSeconds: 0,
@@ -2883,7 +2680,7 @@
 
     const distributorResult = window.AINScansDistributorLedger
       ? window.AINScansDistributorLedger.recordEligibleWatch(_watchTracker.episodeId, pendingSeconds, {
-        archiveId: _watchTracker.archiveId,
+        youtubeId: _watchTracker.youtubeId,
         distributorAccount: _watchTracker.distributorAccount,
       })
       : null;
