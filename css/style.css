@@ -2949,3 +2949,51 @@ label + .avatar-wave-marker,
   .share-sheet__actions { grid-template-columns: 1fr; }
   .share-action--primary { grid-column: auto; }
 }
+
+
+/* 2026-09 StarQuest control cleanup: one Avatar Star, menu-only wallet/share. */
+.card-avatar-marker,
+.avatar-wave-marker,
+.design-star:not([data-avatar-portal][data-design-key="brand-name"]) {
+  display: none !important;
+}
+.nav__brand > .design-star[data-design-key="brand-name"] {
+  display: inline-grid;
+  flex: 0 0 auto;
+}
+.sidebar-quick-actions {
+  display: grid;
+  gap: .65rem;
+  padding: .8rem 1rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.sidebar-action-button {
+  width: 100%;
+  min-height: 46px;
+  justify-content: center;
+  margin: 0;
+}
+.sidebar-schedule-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: .8rem;
+  line-height: 1.4;
+  text-align: center;
+}
+.player-menu-hamburger {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 0 0 44px;
+  min-width: 44px;
+  min-height: 44px;
+}
+@media (max-width: 640px) {
+  .nav__brand { min-width: 0; }
+  .nav__brand .nav__logo { min-width: 0; }
+  .nav__brand > .design-star[data-design-key="brand-name"] {
+    width: 36px;
+    height: 36px;
+  }
+  .player-topbar__right { gap: .4rem; }
+}
