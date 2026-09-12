@@ -50,3 +50,20 @@ assert.equal(
 const nextCyclePick = window.StarQuestOpening.choose(fullCatalog, { random, storage: fullStorage });
 assert.notEqual(nextCyclePick.id, fullCycle[fullCycle.length - 1].id, "cycle boundary must not repeat the last title");
 console.log("opening rotation uses a persistent no-repeat deck: ok");
+
+const dailyValues = new Map();
+const dailyStorage = {
+  getItem(key) { return dailyValues.has(key) ? dailyValues.get(key) : null; },
+  setItem(key, value) { dailyValues.set(key, value); },
+};
+const morning = new Date(2026, 8, 12, 8, 0, 0);
+const evening = new Date(2026, 8, 12, 22, 0, 0);
+const nextDay = new Date(2026, 8, 13, 0, 1, 0);
+const todayPick = window.StarQuestOpening.choose(candidates, { daily: true, date: morning, storage: dailyStorage });
+const refreshPick = window.StarQuestOpening.choose(candidates, { daily: true, date: evening, storage: dailyStorage });
+const tomorrowPick = window.StarQuestOpening.choose(candidates, { daily: true, date: nextDay, storage: dailyStorage });
+assert.equal(refreshPick.id, todayPick.id, "refreshing must keep the scheduled opening for the whole local day");
+assert.notEqual(tomorrowPick.id, todayPick.id, "the scheduled opening must change after local midnight");
+assert.equal(window.StarQuestOpening.nextChangeAt(morning).getHours(), 0, "the next change is local midnight");
+console.log("daily opening remains stable until local midnight: ok");
+
