@@ -124,3 +124,47 @@
 
   global.StarQuestOpening = { choose, kind, localDay, nextChangeAt, storageKey: STORAGE_KEY };
 })(window);
+
+/* Keep StarQuest's different sidebar menu synchronized with the live Infinity channel family. */
+(function syncStarQuestChannelMenu() {
+  "use strict";
+  const channels = [
+    ["⭐", "StarQuest", "https://www-infinity4.github.io/TV-Database/", true],
+    ["📺", "Hermit TV", "https://www-infinity4.github.io/Hermit-TV/"],
+    ["🚀", "Star Launcher", "https://www-infinity4.github.io/Star-Launcher/"],
+    ["🎬", "HBO", "https://www-infinity4.github.io/HBO/"],
+    ["🎞️", "Cinemax", "https://www-infinity4.github.io/Cinemax/"],
+    ["▶️", "Showtime", "https://www-infinity4.github.io/Showtime/"],
+    ["✨", "Starz", "https://www-infinity4.github.io/Starz/"],
+    ["📼", "Encore", "https://www-infinity4.github.io/Encore/"],
+    ["CN", "Cartoon Network", "https://www-infinity4.github.io/Cartoon-Network/"],
+    ["9", "WGN", "https://www-infinity4.github.io/WGN/"],
+    ["TNT", "TNT", "https://www-infinity4.github.io/TNT/"]
+  ];
+
+  function install() {
+    const nav = document.querySelector(".sidebar-nav");
+    if (!nav || nav.querySelector("[data-infinity-channel-link]")) return;
+    const cosmo = document.getElementById("sidebar-cosmo-btn");
+    const fragment = document.createDocumentFragment();
+
+    channels.forEach(([icon, name, url, current]) => {
+      const link = document.createElement("a");
+      link.href = url;
+      link.className = "sidebar-nav__item";
+      link.dataset.infinityChannelLink = "1";
+      if (current) link.setAttribute("aria-current", "page");
+      const badge = document.createElement("span");
+      badge.textContent = icon;
+      link.appendChild(badge);
+      link.appendChild(document.createTextNode(" " + name));
+      fragment.appendChild(link);
+    });
+
+    if (cosmo) nav.insertBefore(fragment, cosmo);
+    else nav.appendChild(fragment);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", install, { once:true });
+  else install();
+})(window);
