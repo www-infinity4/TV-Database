@@ -1,18 +1,18 @@
-name: Validate TV player repair
+name: Validate StarQuest YouTube player
 
 on:
   pull_request:
     paths:
       - index.html
       - js/app.js
+      - js/data.js
+      - js/youtube-only-catalog.js
+      - js/avatar-coin.js
+      - js/opening-rotation.js
       - js/share-safety-net.js
       - js/auth.js
-      - tests/share-flow.test.js
-      - tests/share-safety-net.test.js
-      - js/data.js
-      - js/archive-resolver.js
       - css/style.css
-      - tests/playback-catalog.test.js
+      - tests/**
       - .github/workflows/validate-tv-player.yml
 
 permissions:
@@ -23,62 +23,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check JavaScript syntax
+      - name: Check JavaScript and behavior
         run: |
           node --check js/data.js
+          node --check js/youtube-only-catalog.js
           node --check js/app.js
+          node --check js/avatar-coin.js
+          node --check js/opening-rotation.js
           node --check js/share-safety-net.js
-          node --check js/archive-resolver.js
           node tests/share-flow.test.js
           node tests/share-safety-net.test.js
           node tests/playback-catalog.test.js
-      - name: Check player integration and regression records
+          node tests/opening-rotation.test.js
+      - name: Check menu-only controls
         run: |
           python3 - <<'PY'
           from pathlib import Path
 
-          index = Path('index.html').read_text(encoding='utf-8')
-          data = Path('js/data.js').read_text(encoding='utf-8')
-          app = Path('js/app.js').read_text(encoding='utf-8')
-          resolver = Path('js/archive-resolver.js').read_text(encoding='utf-8')
+          index = Path("index.html").read_text(encoding="utf-8")
+          app = Path("js/app.js").read_text(encoding="utf-8")
+          avatar = Path("js/avatar-coin.js").read_text(encoding="utf-8")
 
-          # Catalog routing and automatic Cosmo-pop-in assertions are tracked in
-          # the P5 cleanup pass; they do not block the isolated P0 Share repair.
+          aside_start = index.index('id="sidebar"')
+          aside_end = index.index("</aside>", aside_start)
+          share = index.index('id="player-share-btn"')
+          coin = index.index('id="home-starcoin-status"')
+
           checks = {
-              'optional resolver loads after app.js when present': (
-                  'js/archive-resolver.js' not in index
-                  or index.index('js/app.js') < index.index('js/archive-resolver.js')
-              ),
-              'Share safety net loads before app.js': (
-                  index.index('js/share-safety-net.js') < index.index('js/app.js')
-              ),
-              'Share safety net remains independent': (
-                  'StarQuestShareSafetyNet' in Path('js/share-safety-net.js').read_text(encoding='utf-8')
-              ),
-              'Reading Rainbow catalog remains present': 'id: "reading-rainbow"' in data,
-              'Reading Rainbow uses live collection': 'ReadingRainbowTVSeries' in data,
-              'dead Reading Rainbow item IDs removed': 'archiveId: "ReadingRainbow01' not in data,
-              'MASH uses live replacement collection': 'mash-complete-series_202511' in data,
-              'dark MASH collection removed': 'archiveId: "MASH-Complete-Series"' not in data,
-              'Alfred Hitchcock catalog remains present': 'id: "new-alfred-hitchcock-presents"' in data,
-              'Hitchcock collection source remains present': 'the-new-alfred-hitchcock-presents-complete' in data,
-              'item-only Archive records are quarantined': app.count('records stay quarantined') >= 2 and 'return !!ep.archiveId;' not in app,
-              'resolver uses archive metadata': 'archive.org/metadata/' in resolver,
-              'resolver handles direct playback rejection': 'video.onerror' in resolver,
-              'Archive playback is event-driven': 'Archive playback is event-driven' in resolver and 'new MutationObserver' not in resolver,
-              'resolver collection declaration is active': 'Large\\\\n    // collections' not in resolver,
-              'Reading Rainbow shelf is present': 'id="row-reading-rainbow"' in index and 'rowReadingRainbow' in app,
-              'Reading Rainbow has a direct navigation link': 'href="#reading-rainbow-section"' in index,
-              'cold start does not infer Reading Rainbow preference': 'starterOrder' in app and 'show.id !== "reading-rainbow"' in app,
-              'StarCoin movie shelf is present': 'id="row-starcoin-movies"' in index and 'rowStarCoinMovies' in app,
-              'For You records consented search signals': 'recordDiscoverySearch' in app,
-              'music-first content is excluded from TV pool': 'isMusicFirst(show)' in app,
-              'resolver refuses unsafe collection guesses': 'could not be matched safely' in resolver,
+              "YouTube gate loads before the ledger": index.index("youtube-only-catalog.js") < index.index("catalog-ledger.js"),
+              "Archive runtime is not loaded": "archive-resolver.js" not in index and "source-search.js" not in index,
+              "No Archive link remains": "archive.org" not in index.lower(),
+              "Share lives in hamburger": aside_start < share < aside_end,
+              "StarCoin status lives in hamburger": aside_start < coin < aside_end,
+              "Player exposes hamburger": 'id="player-hamburger-btn"' in index,
+              "Only one static Avatar Star": index.count("design-star") == 1,
+              "Single star is beside the brand": 'data-design-key="brand-name"' in index,
+              "Dynamic Avatar stars are disabled": "new MutationObserver" not in avatar,
+              "App removes card adjustment markers": "if (marker) marker.remove();" in app,
+              "Share still earns tenths": "Every completed share adds 1/10" in index,
+              "Daily change time is visible": "12:00 AM in your local time" in index,
           }
 
           failed = [name for name, passed in checks.items() if not passed]
           for name, passed in checks.items():
-              print(('PASS' if passed else 'FAIL') + ': ' + name)
+              print(("PASS" if passed else "FAIL") + ": " + name)
           if failed:
-              raise SystemExit('Validation failed: ' + ', '.join(failed))
+              raise SystemExit("Validation failed: " + ", ".join(failed))
           PY
