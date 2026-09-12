@@ -11,17 +11,13 @@
   function registerCardEditor(card, key, original) {
     const value = card && card.querySelector(".editable-text");
     const marker = card && card.querySelector(".card-avatar-marker");
-    if (!value || !marker) return;
+    if (marker) marker.remove();
+    if (!value) return;
     originalElementLabels[key] = { node: value, kind: "element", original };
     try {
       const saved = JSON.parse(localStorage.getItem("starquest_personal_design")) || {};
       if (saved.overrides && saved.overrides[key]) value.textContent = String(saved.overrides[key]).slice(0, 64);
     } catch (_) {}
-    marker.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      document.dispatchEvent(new CustomEvent("starquest:edit-element", { detail: { target: original, scope: "component", key } }));
-    });
   }
 
   /* ── State ── */
@@ -142,17 +138,7 @@
   function isEpisodePlayable(ep, show) {
     if (!ep || typeof ep !== "object") return false;
     if (ep.sourceStatus === "restricted" || ep.sourceStatus === "file-missing" || ep.sourceStatus === "unverified") return false;
-    /* A YouTube rent/buy listing is metadata, not a verified full program.
-       Never charge a StarCoin or show a working Play control for a trailer or
-       storefront link. Paid catalog records become playable only after an
-       exact full source is mapped. */
-    if (showUnlockCost(show) > 0 && ep.youtubeId && !ep.archiveId && !ep.archiveFile) return false;
-    if (ep.youtubeId) return true;
-    if (typeof ep.archiveFile === "string" && ep.archiveId) return EXT_PLAYABLE.test(ep.archiveFile);
-    // Item-only records are allowed only because playback resolves metadata to
-    // a direct video file before anything is displayed. Archive pages are never
-    // embedded inside the StarQuest player.
-    return !!ep.archiveId;
+    return /^[A-Za-z0-9_-]{11}$/.test(String(ep.youtubeId || ""));
   }
 
   function isShowAvailable(show) {
@@ -454,24 +440,24 @@
       ? playableCatalog.slice().sort(byPersonalized(profile, {}))
       : playableCatalog.slice().sort(byScoreFreeFirst);
 
-    function rotateOpening() {
-      // Top Spot owns a complete persistent deck. Recommendation signals still
-      // learn from clicks and watches, but cannot pin or repeat the opening.
+    function rotateOpening(forceNext) {
+      // The scheduled opening is stable for the local calendar day. Surprise Me
+      // explicitly advances the deck without changing tomorrow's midnight rule.
       const show = window.StarQuestOpening
-        ? StarQuestOpening.choose(ordered)
+        ? StarQuestOpening.choose(ordered, { daily: forceNext !== true, forceNext: forceNext === true })
         : ordered[Math.floor(Math.random() * ordered.length)];
       if (show) renderHero(show);
     }
 
-    rotateOpening();
-    if (DOM.heroShuffleBtn) DOM.heroShuffleBtn.onclick = rotateOpening;
+    rotateOpening(false);
+    if (DOM.heroShuffleBtn) DOM.heroShuffleBtn.onclick = () => rotateOpening(true);
   }
 
   function renderHero(show) {
     state.currentShow = show;
     if (DOM.heroBadge) {
       const kind = window.StarQuestOpening ? StarQuestOpening.kind(show) : (show.type === "movie" ? "Movie" : "Show");
-      DOM.heroBadge.textContent = "✦ Tonight's opening " + kind;
+      DOM.heroBadge.textContent = "✦ Today's opening " + kind + " · changes at midnight";
     }
     if (DOM.heroBgArt) {
       const image = String(show.thumbnail || "").trim();
@@ -1989,51 +1975,7 @@
   }
   const brandName = $("nav-brand-name");
   if (brandName) originalElementLabels["brand-name"] = { node: brandName, kind: "element", original: "StarQuest" };
-  document.querySelectorAll(".section-title").forEach((title) => {
-    if (title.querySelector(".design-star")) return;
-    const star = document.createElement("button");
-    star.type = "button";
-    star.className = "design-star";
-    const labelNode = Array.from(title.childNodes).find((node) => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim());
-    if (!labelNode) return;
-    const key = "heading-" + (title.id || Math.random().toString(36).slice(2));
-    const original = labelNode.nodeValue.trim();
-    originalElementLabels[key] = { node: labelNode, kind: "text-node", original };
-    star.textContent = AVATAR_COIN_MARK;
-    star.dataset.designTarget = original;
-    star.dataset.designKey = key;
-    star.dataset.designScope = "component";
-    star.setAttribute("aria-label", "Customize " + title.textContent.trim());
-    title.appendChild(star);
-  });
-  /* Portal markers can live inside links and can be re-mounted by the editable-page
-     observer. Capture their click at the document boundary so the marker always wins
-     over parent navigation and still works after dynamic page updates. */
-  if (!window.StarQuestControls) {
-    document.addEventListener("click", (event) => {
-      const target = event.target;
-      const marker = target && target.closest ? target.closest("[data-avatar-portal]") : null;
-      if (!marker) return;
-      event.preventDefault();
-      event.stopPropagation();
-      closeSidebar();
-      openProfilePortal(
-        marker.dataset.designTarget || marker.dataset.avatarTarget || "StarQuest name",
-        marker.dataset.designScope || marker.dataset.avatarScope || "site",
-        marker.dataset.designKey || marker.dataset.avatarKey || "brand-name"
-      );
-    }, true);
-  }
-
-  document.querySelectorAll(".design-star:not([data-avatar-portal])").forEach((star) => {
-    star.textContent = AVATAR_COIN_MARK;
-    star.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      closeSidebar();
-      openProfilePortal(star.dataset.designTarget || "StarQuest name", star.dataset.designScope || "site", star.dataset.designKey || "brand-name");
-    });
-  });
+  document.querySelectorAll(".card-avatar-marker, .avatar-wave-marker, .design-star:not([data-avatar-portal][data-design-key=\"brand-name\"])").forEach((marker) => marker.remove());
   document.querySelectorAll("[data-design-theme]").forEach((button) => {
     button.addEventListener("click", () => {
       pendingDesign.theme = button.dataset.designTheme;
@@ -2094,6 +2036,7 @@
   if (profileBackdrop) profileBackdrop.addEventListener("click", (event) => { if (event.target === profileBackdrop) closeProfilePortal(); });
   if (profileSave) profileSave.addEventListener("click", async () => {
     profileSave.disabled = true;
+    pendingDesign.changeRequest = avatarChangeRequest ? avatarChangeRequest.value.trim() : "";
     localStorage.setItem(DESIGN_KEY, JSON.stringify(pendingDesign));
     applyPersonalDesign(pendingDesign);
     try {
@@ -2113,8 +2056,8 @@
       renderAvatarChain();
       if (profileMessage) {
         profileMessage.textContent = record
-          ? "Saved as Crown chain version " + record.version + "."
-          : "Your Avatar Coin design is saved on this device.";
+          ? "Created Avatar change token v" + record.version + " on this device."
+          : "Your Avatar change application is saved on this device.";
       }
     } catch (_) {
       if (profileMessage) profileMessage.textContent = "The page design saved, but its chain record could not be created.";
