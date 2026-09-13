@@ -1100,6 +1100,27 @@
   }
 ];
 
+  const SAFE_CURATED_TITLES = new Set([
+    "the phantom planet", "things to come", "the amazing transparent man", "attack from space",
+    "phantom from space", "missile to the moon", "the monster of piedras blancas",
+    "the santa trap", "a christmas karen", "a room to share", "runs in the family",
+    "moving mcallister", "super fuzz", "black fox", "chairman of the board", "bob the butler",
+    "khumba", "honest thief", "world trade center", "skyline", "beyond a reasonable doubt",
+    "mad families", "sneakers", "stargate", "crouching tiger, hidden dragon", "clueless",
+    "the longest yard", "survivor", "masters of the universe", "uhf", "the karate kid",
+    "the dark crystal", "labyrinth", "bill & ted's excellent adventure",
+    "bill & ted's bogus journey", "highlander: the final dimension"
+  ]);
+
+  function nonAdultRating(value) {
+    return !/^(R|NC-17|TV-MA)$/i.test(String(value || "").trim());
+  }
+
+  function safeExistingShow(show) {
+    return show && nonAdultRating(show.rating || show.contentRating) &&
+      !/galaxy of terror|chopping mall|fatal combat|hologram man|breakfast of champions|eulogy|blitz|the fanatic|the presence|monsters of man|wanted|zodiac|payback|\bava\b|assault on precinct 13|the fog|\brage\b|a good marriage|return of the living dead|michael collins|deathtrap/i.test(String(show.title || ""));
+  }
+
   function validVideoId(value) {
     return /^[A-Za-z0-9_-]{11}$/.test(String(value || ""));
   }
@@ -1125,6 +1146,7 @@
   }
 
   const existing = (typeof SHOWS !== "undefined" && Array.isArray(SHOWS) ? SHOWS : [])
+    .filter(safeExistingShow)
     .filter((show) => {
       const cost = Number.isFinite(Number(show.starCoinCost))
         ? Math.max(0, Math.trunc(Number(show.starCoinCost)))
@@ -1162,7 +1184,7 @@
   existing.forEach((show) => show.episodes.forEach((episode) => seenVideoIds.add(episode.youtubeId)));
 
   const replacements = CURATED_MOVIES.filter((movie) => {
-    if (!movie.cleared || !validVideoId(movie.videoId) || seenVideoIds.has(movie.videoId)) return false;
+    if (!movie.cleared || !SAFE_CURATED_TITLES.has(String(movie.title || "").toLowerCase()) || !validVideoId(movie.videoId) || seenVideoIds.has(movie.videoId)) return false;
     seenVideoIds.add(movie.videoId);
     return true;
   }).map((movie, index) => {
@@ -1174,7 +1196,7 @@
       title: movie.title,
       years: String(movie.year || ""),
       type: "movie",
-      rating: "NR",
+      rating: movie.rating || "Not rated / screened",
       score: 8 - ((index % 7) / 10),
       genre: genresFor(movie.collection),
       description: String(movie.collection || "Full-length movie") + " · YouTube selection from " + movie.channel + ".",
