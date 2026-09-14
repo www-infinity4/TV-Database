@@ -35,11 +35,33 @@ test('/v1/reason falls back to OpenAI when Anthropic is absent',async()=>{
   }finally{globalThis.fetch=originalFetch;}
 });
 
+test('/share/card exposes exact card metadata to social crawlers',async()=>{
+  const target='https://www-infinity4.github.io/Omni-Phi/overview/?q=Hydrogen';
+  const image='https://www-infinity4.github.io/Omni-Phi/assets/omni-phi-index-wide.jpg?v=2';
+  const requestUrl=new URL('https://infinity-rogers.marvaseater.workers.dev/share/card');
+  requestUrl.search=new URLSearchParams({
+    title:'Hydrogen source card',
+    body:'Exact source-backed card copy for the preview.',
+    image,
+    domain:'wikipedia.org',
+    target,
+  }).toString();
+  const response=await worker.fetch(new Request(requestUrl),{});
+  assert.equal(response.status,200);
+  assert.match(response.headers.get('content-type')||'',/text\/html/);
+  const html=await response.text();
+  assert.match(html,/property="og:title" content="Hydrogen source card"/);
+  assert.match(html,/name="twitter:card" content="summary_large_image"/);
+  assert.match(html,/Exact source-backed card copy for the preview\./);
+  assert.match(html,/www-infinity4\.github\.io\/Omni-Phi\/overview/);
+});
+
 test('/health exposes path routing and secret state',async()=>{
   const response=await worker.fetch(new Request('https://infinity-rogers.marvaseater.workers.dev/health'),{OPENAI_API_KEY:'configured'});
   assert.equal(response.status,200);
   const body=await response.json();
   assert.equal(body.openaiConfigured,true);
+  assert.equal(body.routes['/share/card'],'public-exact-phi-social-preview');
   assert.equal(body.routes['/v1/chat'],'openai-gpt');
   assert.equal(body.routes['/v1/reason'],'openai-cosmo-fallback');
 });
