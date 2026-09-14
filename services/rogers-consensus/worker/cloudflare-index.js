@@ -7,9 +7,99 @@ const ALLOWED_ORIGINS = new Set([
 
 const DEFAULT_OPENAI_MODEL = "gpt-5.6-luna";
 const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5-20251001";
+const PHI_HOME = "https://www-infinity4.github.io/Omni-Phi/";
+const PHI_PREVIEW_IMAGE = "https://www-infinity4.github.io/Omni-Phi/assets/omni-phi-index-wide.jpg?v=2";
 
 function clean(value, max = 12000) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[char]));
+}
+
+function safeHttps(value, fallback = "") {
+  try {
+    const url = new URL(clean(value, 2000));
+    return url.protocol === "https:" ? url.toString() : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function safePhiTarget(value) {
+  try {
+    const url = new URL(clean(value, 2000));
+    if (url.protocol !== "https:") return PHI_HOME;
+    if (url.hostname !== "www-infinity4.github.io") return PHI_HOME;
+    return url.toString();
+  } catch {
+    return PHI_HOME;
+  }
+}
+
+function shareCardPage(request, url) {
+  const title = clean(url.searchParams.get("title"), 180) || "Infinity Phi card";
+  const body = clean(url.searchParams.get("body"), 700) || "Open this Infinity Phi card and continue the exact research path.";
+  const domain = clean(url.searchParams.get("domain"), 120) || "Infinity Phi";
+  const image = safeHttps(url.searchParams.get("image"), PHI_PREVIEW_IMAGE);
+  const source = safeHttps(url.searchParams.get("source"), "");
+  const target = safePhiTarget(url.searchParams.get("target"));
+  const canonical = url.toString();
+  const description = body.length > 320 ? `${body.slice(0, 317).trim()}…` : body;
+
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>${escapeHtml(title)} — Infinity Phi</title>
+  <meta name="description" content="${escapeHtml(description)}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Infinity Phi">
+  <meta property="og:title" content="${escapeHtml(title)}">
+  <meta property="og:description" content="${escapeHtml(description)}">
+  <meta property="og:image" content="${escapeHtml(image)}">
+  <meta property="og:image:alt" content="${escapeHtml(title)}">
+  <meta property="og:url" content="${escapeHtml(canonical)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${escapeHtml(title)}">
+  <meta name="twitter:description" content="${escapeHtml(description)}">
+  <meta name="twitter:image" content="${escapeHtml(image)}">
+  <link rel="canonical" href="${escapeHtml(target)}">
+  <meta http-equiv="refresh" content="0;url=${escapeHtml(target)}">
+  <style>
+    :root{color-scheme:dark;font-family:Inter,system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#09040a;color:#ffe94c}.card{width:min(760px,100%);overflow:hidden;border:2px solid #ff8a1f;border-radius:28px;background:linear-gradient(145deg,#8e0d0d,#5f0707);box-shadow:0 26px 80px #0009}.card img{display:block;width:100%;max-height:420px;object-fit:cover;background:#230404}.copy{padding:22px}.domain{font-size:.75rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#ffb21f}.copy h1{margin:.45rem 0 .7rem;font-size:clamp(1.6rem,5vw,3.1rem);line-height:1.02}.copy p{margin:0;color:#fff06d;line-height:1.6}.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.links a{padding:11px 14px;border:1px solid #ffc849;border-radius:14px;color:#fff4a3;text-decoration:none;background:#320000;font-weight:800}
+  </style>
+</head>
+<body>
+  <article class="card">
+    <img src="${escapeHtml(image)}" alt="">
+    <div class="copy">
+      <div class="domain">${escapeHtml(domain)}</div>
+      <h1>${escapeHtml(title)}</h1>
+      <p>${escapeHtml(body)}</p>
+      <div class="links"><a href="${escapeHtml(target)}">Open exact Infinity Phi search</a>${source ? `<a href="${escapeHtml(source)}">Source website</a>` : ""}</div>
+    </div>
+  </article>
+  <script>location.replace(${JSON.stringify(target)});</script>
+</body>
+</html>`;
+
+  return new Response(html, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "public, max-age=300, s-maxage=300",
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
 }
 
 function cors(request) {
@@ -230,6 +320,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (request.method === "GET" && url.pathname === "/share/card") {
+      return shareCardPage(request, url);
+    }
+
     if (request.method === "OPTIONS") {
       if (!originAllowed(request)) return json(request, { ok: false, error: "origin_not_allowed" }, 403);
       return new Response(null, { status: 204, headers: cors(request) });
@@ -239,10 +333,11 @@ export default {
       return json(request, {
         ok: true,
         service: "infinity-ai-gateway",
-        version: "2026-09-14-path-router-1",
+        version: "2026-09-14-phi-card-preview-1",
         openaiConfigured: Boolean(env.OPENAI_API_KEY),
         anthropicConfigured: Boolean(env.ANTHROPIC_API_KEY),
         routes: {
+          "/share/card": "public-exact-phi-social-preview",
           "/v1/chat": "openai-gpt",
           "/v1/reason": env.ANTHROPIC_API_KEY ? "rogers-anthropic-with-openai-fallback" : "openai-cosmo-fallback",
         },
