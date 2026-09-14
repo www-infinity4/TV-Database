@@ -4,12 +4,16 @@ on:
   push:
     paths:
       - services/rogers-consensus/worker/index.js
+      - services/rogers-consensus/worker/cloudflare-index.js
       - tests/rogers-consensus-contract.test.mjs
+      - tests/cloudflare-path-router.test.mjs
       - .github/workflows/validate-rogers-gateway.yml
   pull_request:
     paths:
       - services/rogers-consensus/worker/index.js
+      - services/rogers-consensus/worker/cloudflare-index.js
       - tests/rogers-consensus-contract.test.mjs
+      - tests/cloudflare-path-router.test.mjs
       - .github/workflows/validate-rogers-gateway.yml
 
 permissions:
@@ -24,6 +28,10 @@ jobs:
         with:
           node-version: "20"
       - name: Check worker syntax
-        run: node --check services/rogers-consensus/worker/index.js
+        run: |
+          node --check services/rogers-consensus/worker/index.js
+          node --check services/rogers-consensus/worker/cloudflare-index.js
       - name: Run gateway contract tests
-        run: node --test tests/rogers-consensus-contract.test.mjs
+        run: |
+          node --test tests/rogers-consensus-contract.test.mjs
+          node --test tests/cloudflare-path-router.test.mjs
