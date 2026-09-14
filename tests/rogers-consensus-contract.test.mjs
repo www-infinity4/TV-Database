@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { pathToFileURL } from "node:url";
 
+// Contract tests for both OpenAI GPT routing and Rogers/Cosmo consensus routing.
 const workerUrl = pathToFileURL(new URL("../services/rogers-consensus/worker/index.js", import.meta.url).pathname);
 const { default: worker } = await import(workerUrl.href);
 
