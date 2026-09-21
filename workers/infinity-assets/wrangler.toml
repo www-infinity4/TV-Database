@@ -1,0 +1,9 @@
+name = "infinity-assets"
+main = "src/index.ts"
+compatibility_date = "2026-09-21"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "infinity-assets"
+database_id = "04e0f67d-cc92-4c22-8ee8-69017aaec849"
+migrations_dir = "migrations"
