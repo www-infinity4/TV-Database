@@ -5,6 +5,6 @@
   "compatibility_date": "2026-09-20",
   "observability": {"enabled": true},
   "d1_databases": [
-    {"binding":"DB","database_name":"infinity-assets","database_id":"REPLACE_WITH_D1_DATABASE_ID"}
+    {"binding":"DB","database_name":"infinity-assets","database_id":"04e0f67d-cc92-4c22-8ee8-69017aaec849"}
   ]
 }
