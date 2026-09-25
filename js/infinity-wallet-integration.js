@@ -14,12 +14,29 @@
   const slug = value => String(value || 'unresolved').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'unresolved';
   function current() { return wallet.state.currentWalletId && wallet.state.wallets[wallet.state.currentWalletId]; }
   function setStatus(message) { if (status) status.textContent = message; }
+  function syncStarCoinBalance() {
+    try {
+      const user = window.StarQuestAuth && window.StarQuestAuth.currentUser ? window.StarQuestAuth.currentUser() : null;
+      let connected = current();
+      if (!user || typeof wallet.syncSourceBalance !== 'function') return;
+      if (!connected) connected = wallet.createWallet({ displayName: 'Unified Infinity Wallet' });
+      wallet.syncSourceBalance({
+        walletId: connected.walletId,
+        assetCode: 'STAR_COIN',
+        amount: Number(user.tokens) || 0,
+        sourceSystem: 'STARQUEST_CLOUD',
+        sourceWalletId: user.key || user.username || '',
+        verification: 'STARQUEST_STATE'
+      });
+    } catch (_) {}
+  }
   function render() {
     const connected = current();
     if (buttonLabel) buttonLabel.textContent = connected ? 'Unified Wallet · ' + connected.walletId.slice(-8) : 'Connect Unified Wallet';
     if (buttonDetail) buttonDetail.textContent = connected ? 'Open wallet and account activity' : 'Use across Infinity websites';
     if (button) button.classList.toggle('connected', !!connected);
     setStatus(connected ? 'Movie unlocks and rights allocations will use the unified wallet.' : 'Connect before using StarCoins to unlock a movie.');
+    if (connected) syncStarCoinBalance();
   }
   if (button) button.addEventListener('click', function () {
     if (!current()) wallet.createWallet({ displayName: 'Unified Infinity Wallet' });
@@ -51,6 +68,9 @@
       setStatus('Movie unlocked for ' + unlock.cost + ' StarCoin. The recipient received a blank Infinity token; rights allocations were recorded separately.');
     } catch (error) { setStatus('Unlock completed, but unified wallet reconciliation needs review: ' + error.message); }
   });
+  document.addEventListener('starquest:tokens-updated', syncStarCoinBalance);
+  document.addEventListener('starquest:cloud-synced', syncStarCoinBalance);
+  document.addEventListener('starquest:auth-changed', syncStarCoinBalance);
   window.StarQuestInfinityWallet = { isConnected: function () { return !!current(); }, connect: function () { if (!current()) wallet.createWallet({ displayName: 'Unified Infinity Wallet' }); render(); return current(); }, engine: wallet };
   render();
 })();
