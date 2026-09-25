@@ -201,5 +201,25 @@
   document.addEventListener("starquest:watch-progress", scheduleHistorySync);
 
   if (currentUser()) connect();
-  global.StarQuestCloudLedger = Object.freeze({ enabled: true, connect: connect });
+  global.StarQuestCloudLedger = Object.freeze({
+    enabled: true,
+    connect: connect,
+    authenticatedFetch: async function (target, options) {
+      const user = currentUser();
+      if (!user) throw new Error("ledger_not_connected");
+      const url = new URL(String(target || ""));
+      const allowed = url.protocol === "https:" && url.hostname === "quanta-phi-ledger.marvaseater.workers.dev" && url.pathname.indexOf("/v1/quants/") === 0;
+      if (!allowed) throw new Error("ledger_target_not_allowed");
+      const response = await global.fetch(url.toString(), {
+        method: options && options.method ? options.method : "GET",
+        headers: {
+          "Authorization": "Bearer " + getDeviceToken(user.key),
+          "Content-Type": "application/json"
+        },
+        body: options && options.body ? JSON.stringify(options.body) : undefined,
+        cache: "no-store"
+      });
+      return response;
+    }
+  });
 })(window);
