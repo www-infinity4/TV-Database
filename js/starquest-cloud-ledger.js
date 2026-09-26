@@ -204,6 +204,30 @@
   global.StarQuestCloudLedger = Object.freeze({
     enabled: true,
     connect: connect,
+    submitShare: async function (share) {
+      if (!share || !String(share.attemptId || "").trim() || !String(share.contentId || "").trim()) {
+        throw new Error("share_attempt_and_content_required");
+      }
+      if (!await connect()) throw new Error("ledger_not_connected");
+      const payload = await request("/v1/shares", {
+        method: "POST",
+        body: {
+          attemptId: String(share.attemptId).trim(),
+          contentId: String(share.contentId).trim(),
+          method: share.method || "web_share_api",
+          receiptHash: share.receiptHash,
+          showTitle: share.showTitle,
+          episodeId: share.episodeId,
+          companyId: share.companyId,
+          actors: share.actors,
+          fullyWatched: share.fullyWatched,
+          attributionStatus: share.attributionStatus
+        },
+        keepalive: true
+      });
+      applyState(payload);
+      return payload;
+    },
     authenticatedFetch: async function (target, options) {
       const user = currentUser();
       if (!user) throw new Error("ledger_not_connected");
