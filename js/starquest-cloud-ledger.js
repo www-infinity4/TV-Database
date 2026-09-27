@@ -232,7 +232,8 @@
       const user = currentUser();
       if (!user) throw new Error("ledger_not_connected");
       const url = new URL(String(target || ""));
-      const allowedPath = url.pathname.indexOf("/v1/quants/") === 0 || url.pathname.indexOf("/v1/music-quants/") === 0;\n      const allowed = url.protocol === "https:" && url.hostname === "quanta-phi-ledger.marvaseater.workers.dev" && allowedPath;
+      const allowedPath = url.pathname.indexOf("/v1/quants/") === 0 || url.pathname.indexOf("/v1/music-quants/") === 0;
+      const allowed = url.protocol === "https:" && url.hostname === "quanta-phi-ledger.marvaseater.workers.dev" && allowedPath;
       if (!allowed) throw new Error("ledger_target_not_allowed");
       const response = await global.fetch(url.toString(), {
         method: options && options.method ? options.method : "GET",
