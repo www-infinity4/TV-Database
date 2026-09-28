@@ -443,6 +443,18 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
   if (request.method === "GET" && url.pathname === "/health") {
     return json(request, { ok: true, service: "starquest-ledger", sharesPerCoin: SHARES_PER_COIN });
   }
+  if (request.method === "POST" && url.pathname === "/v1/verify-existing") {
+    const body = await readBody<{ username?: string; credentialProof?: string }>(request);
+    const username = cleanString(body.username, 48).toLowerCase();
+    const proof = cleanString(body.credentialProof, 160);
+    if (!/^[a-z0-9][a-z0-9._-]{2,47}$/.test(username) || !/^(?:[0-9a-f]{64}|sync-[0-9a-f]{1,32})$/.test(proof))
+      throw new HttpError(400, "invalid_credentials", "Enter your StarQuest username and password.");
+    const credentialHash = await sha256(proof);
+    const existing = await env.DB.prepare("SELECT id FROM accounts WHERE username=? COLLATE NOCASE AND credential_hash=?")
+      .bind(username, credentialHash).first();
+    if (!existing) throw new HttpError(401, "account_not_verified", "This StarQuest account could not be verified.");
+    return json(request, { ok: true });
+  }
   if (request.method === "POST" && url.pathname === "/v1/bootstrap") return bootstrap(request, env);
 
   const account = await accountFromRequest(request, env);
