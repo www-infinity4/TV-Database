@@ -233,7 +233,9 @@
       if (!user) throw new Error("ledger_not_connected");
       const url = new URL(String(target || ""));
       const allowedPath = url.pathname.indexOf("/v1/quants/") === 0 || url.pathname.indexOf("/v1/music-quants/") === 0;
-      const allowed = url.protocol === "https:" && url.hostname === "quanta-phi-ledger.marvaseater.workers.dev" && allowedPath;
+      const quantTarget = url.hostname === "quanta-phi-ledger.marvaseater.workers.dev" && allowedPath;
+      const infinityTarget = url.hostname === "unified-wallet.marvaseater.workers.dev" && ["/v1/wallet/state", "/v1/tokens/mint"].includes(url.pathname);
+      const allowed = url.protocol === "https:" && (quantTarget || infinityTarget);
       if (!allowed) throw new Error("ledger_target_not_allowed");
       const response = await global.fetch(url.toString(), {
         method: options && options.method ? options.method : "GET",
