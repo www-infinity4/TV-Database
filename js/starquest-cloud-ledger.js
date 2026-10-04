@@ -96,12 +96,36 @@
           .map(function (event) { return event && event.attemptId; })
           .filter(Boolean)
       );
+      const deviceToken = getDeviceToken(user.key);
+      // A previously enrolled bearer token is already a durable device identity.
+      // Recover that cloud account first so loss of the browser profile cache can
+      // never silently bootstrap a second wallet for the same device.
+      try {
+        const stateResponse = await global.fetch(endpoint + "/v1/state", {
+          method: "GET",
+          headers: { "Authorization": "Bearer " + deviceToken },
+          cache: "no-store"
+        });
+        const statePayload = await stateResponse.json().catch(function () { return {}; });
+        if (stateResponse.ok && statePayload.ok && statePayload.state) {
+          const cloudUsername = String(statePayload.state.username || "").trim().toLowerCase();
+          if (cloudUsername && cloudUsername === String(user.key || "").toLowerCase()) {
+            connectedUsername = user.key;
+            bootstrapIncludedAttempts.clear();
+            applyState(statePayload);
+            document.dispatchEvent(new CustomEvent("starquest:ledger-connected", { detail: { username: user.key, recovered: true } }));
+            return true;
+          }
+        }
+      } catch (_) {
+        // Offline/transient state reads fall through to the existing bootstrap.
+      }
       const response = await global.fetch(endpoint + "/v1/bootstrap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: user.key,
-          deviceToken: getDeviceToken(user.key),
+          deviceToken: deviceToken,
           credentialProof: user.passwordHash,
           localState: localSnapshot(user)
         }),
