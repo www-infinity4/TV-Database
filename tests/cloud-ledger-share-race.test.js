@@ -33,6 +33,13 @@ function makeHarness(importedLocalState) {
     crypto: { getRandomValues(bytes) { bytes.fill(1); } },
     fetch: async (url, options) => {
       requests.push({ url, options });
+      if (url.endsWith("/v1/state")) {
+        return {
+          ok: false,
+          status: 401,
+          json: async () => ({ ok: false, error: "invalid_device_token" }),
+        };
+      }
       if (url.endsWith("/v1/bootstrap")) {
         return {
           ok: true,
@@ -81,3 +88,34 @@ async function dispatchShare(harness) {
 
   console.log("share during bootstrap is retained for existing D1 accounts: ok");
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
+
+async function testExistingDeviceRecoversWithoutBootstrap() {
+  const source = fs.readFileSync("js/starquest-cloud-ledger.js", "utf8");
+  const requests = [];
+  const user = { key: "kris", passwordHash: "", tokens: 0, pendingShareCredits: 0, shareCount: 0, watchHistory: [], shareEvents: [] };
+  const document = { addEventListener() {}, dispatchEvent() {} };
+  const window = {
+    document,
+    STARQUEST_LEDGER_CONFIG: { endpoint: "https://ledger.example" },
+    StarQuestAuth: { currentUser: () => user, applyCloudState() {}, getHistory: () => [] },
+    localStorage: { getItem: () => "sq_" + "x".repeat(43), setItem() {} },
+    crypto: { getRandomValues(bytes) { bytes.fill(1); } },
+    fetch: async (url, options) => {
+      requests.push({ url, options });
+      if (url.endsWith("/v1/state")) return { ok: true, json: async () => ({ ok: true, state: { username: "kris" } }) };
+      throw new Error("bootstrap must not run for an enrolled token");
+    },
+    setTimeout, clearTimeout,
+  };
+  window.window = window;
+  const context = vm.createContext({ window, document, CustomEvent: class CustomEvent {} });
+  vm.runInContext(source, context);
+  await window.StarQuestCloudLedger.connect();
+  assert.equal(requests.filter(request => request.url.endsWith("/v1/state")).length, 1);
+  assert.equal(requests.filter(request => request.url.endsWith("/v1/bootstrap")).length, 0);
+}
+
+testExistingDeviceRecoversWithoutBootstrap()
+  .then(() => console.log("enrolled device token recovers without creating a second account: ok"))
+  .catch(error => { console.error(error); process.exitCode = 1; });
