@@ -1,6 +1,6 @@
 const SHARES_PER_COIN = 10;
 const ALLOWED_ORIGINS = new Set([
-  "https://www-infinity4.github.io",
+  "https://www-infinity4.github.io",\n  "https://quantaphi.org",\n  "https://www.quantaphi.org",
   "http://localhost:8000",
   "http://127.0.0.1:8000",
 ]);
