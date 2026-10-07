@@ -537,6 +537,47 @@ async function featuredShopLcAuctions(request: Request): Promise<Response> {
   return json(request, { ok: true, auctions, purchaseVerified: false });
 }
 
+async function saveShopLcClick(request: Request, env: Env, account: AccountRow): Promise<Response> {
+  const body = await readBody<JsonRecord>(request);
+  const idempotencyKey = cleanString(body.clickId ?? body.idempotencyKey, 160);
+  const itemId = cleanString(body.itemId, 160);
+  const href = normalizeShopLcHref(body.href);
+  if (!idempotencyKey || !itemId) throw new HttpError(400, "shoplc_click_invalid", "A click ID and item ID are required.");
+  const title = cleanString(body.title, 500);
+  const derived = productSignalsFromTitle(title);
+  const category = cleanString(body.category, 80, derived.category);
+  const gemstone = cleanString(body.gemstone, 100, derived.gemstone);
+  const ringSize = cleanString(body.ringSize, 40, derived.ringSize);
+  const metal = cleanString(body.metal, 100, derived.metal);
+  const style = cleanString(body.style, 100, derived.style);
+  const actionType = cleanString(body.actionType, 24, "view").toLowerCase();
+  const quantId = cleanString(body.quantId, 240);
+  const price = Math.max(0, Number(body.price) || 0);
+  const image = cleanString(body.image, 1200);
+  const now = Date.now();
+  const result = await env.DB.prepare(
+    `INSERT OR IGNORE INTO shoplc_click_signals
+      (idempotency_key, account_id, quant_id, item_id, source_url, product_title, category, gemstone, ring_size, metal, style, price, currency, image_url, action_type, created_at)
+     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, 'USD', ?13, ?14, ?15)`
+  ).bind(idempotencyKey, account.id, quantId, itemId, href, title, category, gemstone, ringSize, metal, style, price, image, actionType, now).run();
+  return json(request, { ok: true, stored: Number(result.meta.changes || 0) === 1, signal: { itemId, quantId, title, category, gemstone, ringSize, metal, style, price, href, actionType } });
+}
+
+async function loadShopLcInterests(request: Request, env: Env, account: AccountRow): Promise<Response> {
+  const rows = await env.DB.prepare(
+    `SELECT product_title, category, gemstone, ring_size, metal, style, price, source_url, action_type, created_at
+       FROM shoplc_click_signals WHERE account_id = ?1 ORDER BY created_at DESC LIMIT 500`
+  ).bind(account.id).all();
+  const countBy = (key: string) => {
+    const counts = new Map<string, number>();
+    for (const row of rows.results as Record<string, unknown>[]) {
+      const value = cleanString(row[key], 120);
+      if (value) counts.set(value, (counts.get(value) || 0) + 1);
+    }
+    return [...counts.entries()].sort((a,b) => b[1] - a[1]).slice(0, 12).map(([value,count]) => ({ value, count }));
+  };
+  return json(request, { ok: true, clickCount: rows.results.length, interests: { categories: countBy("category"), gemstones: countBy("gemstone"), ringSizes: countBy("ring_size"), metals: countBy("metal"), styles: countBy("style") }, recent: rows.results.slice(0, 30) });
+}
 async function saveShopLcReward(request: Request, env: Env, account: AccountRow): Promise<Response> {
   const body = await readBody<JsonRecord>(request);
   const idempotencyKey = cleanString(body.clickId ?? body.idempotencyKey, 160);
@@ -663,6 +704,8 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
   if (request.method === "GET" && url.pathname === "/v1/state") return json(request, { ok: true, state: await loadState(env, account) });
   if (request.method === "POST" && url.pathname === "/v1/history") return saveHistory(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shares") return saveShare(request, env, account, ctx);
+  if (request.method === "POST" && url.pathname === "/v1/shoplc/clicks") return saveShopLcClick(request, env, account);
+  if (request.method === "GET" && url.pathname === "/v1/shoplc/interests") return loadShopLcInterests(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shoplc/rewards") return saveShopLcReward(request, env, account);
   throw new HttpError(404, "not_found", "StarQuest ledger endpoint not found.");
 }
