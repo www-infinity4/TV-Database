@@ -109,6 +109,30 @@ function normalizeShopLcHref(value: unknown): string {
   return url.toString();
 }
 
+function decodeHtmlText(value: string): string {
+  return value
+    .replace(/<script[\\s\\S]*?<\\/script>/gi, " ")
+    .replace(/<style[\\s\\S]*?<\\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&#(\\d+);/g, (_m, n) => String.fromCharCode(Number(n)))
+    .replace(/\\s+/g, " ")
+    .trim();
+}
+
+function productSignalsFromTitle(title: string): { category: string; gemstone: string; ringSize: string; metal: string; style: string } {
+  const cleanTitle = cleanString(title, 500);
+  const category = /\\bring\\b/i.test(cleanTitle) ? "ring" : /\\bearrings?\\b/i.test(cleanTitle) ? "earrings" : /\\bbracelet\\b/i.test(cleanTitle) ? "bracelet" : /\\bnecklace\\b/i.test(cleanTitle) ? "necklace" : /\\bpendant\\b/i.test(cleanTitle) ? "pendant" : /\\bwatch\\b/i.test(cleanTitle) ? "watch" : "shopping";
+  const gemstones = ["Turkizite","Ruby","Emerald","Sapphire","Diamond","Moissanite","Tanzanite","Turquoise","Amethyst","Garnet","Opal","Topaz","Peridot","Morganite","Kunzite","Zircon","Tourmaline","Aquamarine","Jade","Pearl","Moonstone","Spinel","Citrine"];
+  const gemstone = gemstones.find((name) => new RegExp("\\\\b" + name + "\\\\b", "i").test(cleanTitle)) || "";
+  const sizeMatch = cleanTitle.match(/\\bSize\\s*([0-9]{1,2}(?:\\.\\d+)?)\\b/i);
+  const metalMatch = cleanTitle.match(/\\b(14K|18K|10K)?\\s*(Yellow Gold|White Gold|Rose Gold|Sterling Silver|Stainless Steel|Platinum|Vermeil)\\b/i);
+  const styleMatch = cleanTitle.match(/\\b(solitaire|halo|cluster|band|cocktail|eternity|art deco|vintage|antique|statement)\\b/i);
+  return { category, gemstone, ringSize: sizeMatch ? sizeMatch[1] : "", metal: metalMatch ? cleanString(metalMatch[0], 80) : "", style: styleMatch ? cleanString(styleMatch[0], 80).toLowerCase() : "" };
+}
 async function readBody<T extends JsonRecord>(request: Request): Promise<T> {
   if (!request.headers.get("Content-Type")?.toLowerCase().includes("application/json")) {
     throw new HttpError(415, "json_required", "Send an application/json request body.");
@@ -469,21 +493,26 @@ async function currentShopLcItem(request: Request): Promise<Response> {
   });
   if (!response.ok) throw new HttpError(502, "shoplc_unavailable", "Shop LC current item could not be read.");
   const html = await response.text();
-  const currentIndex = html.search(/Currently\s+On\s+Air/i);
-  const scope = currentIndex >= 0 ? html.slice(currentIndex, currentIndex + 120000) : html;
-  const productMatch = scope.match(/Product\s*code[\s\S]{0,300}?\b([0-9]{5,12})\b/i)
-    || scope.match(/\b([0-9]{6,9})\b/);
+  const currentIndex = html.search(/Currently\\s+On\\s+Air/i);
+  const scope = currentIndex >= 0 ? html.slice(currentIndex, currentIndex + 140000) : html;
+  const text = decodeHtmlText(scope);
+  const productMatch = text.match(/(?:Product\\s*code:\\s*)?\\b([0-9]{6,9})\\b/i);
   if (!productMatch) throw new HttpError(502, "shoplc_item_unavailable", "Shop LC did not expose a current product code.");
-  const itemId = `product:${productMatch[1]}`;
-  return json(request, {
-    ok: true,
-    itemId,
-    productCode: productMatch[1],
-    href: "https://www.shoplc.com/pages/live-tv",
-    purchaseVerified: false,
-  });
+  const productCode = productMatch[1];
+  let title = "";
+  const titleAfterCode = text.match(new RegExp(productCode + "\\\\s+(.{12,420}?)(?:Est\\\\. Ret\\\\. Val|\\\\$[0-9]|Buy now|Quick Buy)", "i"));
+  if (titleAfterCode) title = cleanString(titleAfterCode[1], 500);
+  if (!title) title = "Shop LC item " + productCode;
+  const signals = productSignalsFromTitle(title);
+  const priceMatches = text.match(/\\$\\s*([0-9,]+(?:\\.\\d{2})?)/g) || [];
+  const numericPrices = priceMatches.map((value) => Number(value.replace(/[^0-9.]/g, ""))).filter((value) => Number.isFinite(value) && value > 0);
+  const price = numericPrices.length ? String(Math.min(...numericPrices)) : "";
+  const productHrefMatch = scope.match(/href=["\'](\\/products\\/[^"\'?#]+(?:\\?[^"\']*)?)["\']/i);
+  const href = productHrefMatch ? new URL(productHrefMatch[1], "https://www.shoplc.com").toString() : "https://www.shoplc.com/search?q=" + encodeURIComponent(productCode);
+  const imageMatch = scope.match(/<img[^>]+(?:src|data-src)=["\']([^"\']+)["\'][^>]*>/i);
+  const image = imageMatch ? new URL(imageMatch[1].startsWith("//") ? "https:" + imageMatch[1] : imageMatch[1], "https://www.shoplc.com").toString() : "";
+  return json(request, { ok: true, itemId: "product:" + productCode, productCode, title, href, image, price, currency: "USD", ...signals, purchaseVerified: false });
 }
-
 async function featuredShopLcAuctions(request: Request): Promise<Response> {
   const href = "https://www.shoplc.com/pages/online-auctions-ra?categoryname=Rings%2CBracelets%2CNecklaces%2CSets%2CEarrings%2CPendants&sort=enddate&sortorder=1";
   const response = await fetch(href, {
