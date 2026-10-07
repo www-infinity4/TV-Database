@@ -1,4 +1,6 @@
 const SHARES_PER_COIN = 10;
+const SHOPLC_REWARD_AMOUNT = 5;
+const SHOPLC_DAILY_REWARD_LIMIT = 3;
 const ALLOWED_ORIGINS = new Set([
   "https://www-infinity4.github.io",\n  "https://quantaphi.org",\n  "https://www.quantaphi.org",
   "http://localhost:8000",
@@ -80,6 +82,31 @@ async function sha256(value: string): Promise<string> {
   const bytes = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest("SHA-256", bytes);
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function centralDayKey(timestamp: number): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(new Date(timestamp));
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function normalizeShopLcHref(value: unknown): string {
+  const raw = cleanString(value, 1200);
+  let url: URL;
+  try { url = new URL(raw); } catch { throw new HttpError(400, "shoplc_url_invalid", "A valid Shop LC item link is required."); }
+  if (!["shoplc.com", "www.shoplc.com"].includes(url.hostname.toLowerCase())) {
+    throw new HttpError(400, "shoplc_url_invalid", "The reward link must point to Shop LC.");
+  }
+  url.protocol = "https:";
+  url.hostname = "www.shoplc.com";
+  url.hash = "";
+  for (const key of [...url.searchParams.keys()]) {
+    if (/^(utm_|fbclid$|gclid$|mc_)/i.test(key)) url.searchParams.delete(key);
+  }
+  url.searchParams.sort();
+  return url.toString();
 }
 
 async function readBody<T extends JsonRecord>(request: Request): Promise<T> {
@@ -165,7 +192,9 @@ async function loadState(env: Env, account: AccountRow): Promise<JsonRecord> {
       attributionStatus: row.attribution_status,
       payoutStatus: row.payout_status,
       ts: row.created_at,
-      reason: row.event_type === "share_reward" ? "Share reward: 10 completed shares" : "Confirmed share receipt",
+      reason: row.event_type === "shoplc_click_reward"
+        ? "ShopLC buy/bid click reward (purchase not verified)"
+        : row.event_type === "share_reward" ? "Share reward: 10 completed shares" : "Confirmed share receipt",
     })).reverse(),
   };
 }
@@ -434,6 +463,98 @@ async function saveShare(request: Request, env: Env, account: AccountRow, ctx: E
   });
 }
 
+async function saveShopLcReward(request: Request, env: Env, account: AccountRow): Promise<Response> {
+  const body = await readBody<JsonRecord>(request);
+  const idempotencyKey = cleanString(body.clickId ?? body.idempotencyKey, 160);
+  const actionType = cleanString(body.actionType, 16).toLowerCase();
+  if (!idempotencyKey) throw new HttpError(400, "shoplc_click_invalid", "A click ID is required.");
+  if (!["buy", "bid"].includes(actionType)) throw new HttpError(400, "shoplc_action_invalid", "Shop LC rewards require a buy or bid action.");
+
+  const href = normalizeShopLcHref(body.href);
+  const itemKey = await sha256(href);
+  const quantId = cleanString(body.quantId, 240);
+  const now = Date.now();
+  const dayKey = centralDayKey(now);
+  const receiptId = randomId("shoplc");
+  const ledgerId = randomId("ledger");
+
+  const results = await env.DB.batch([
+    env.DB.prepare(
+      `INSERT OR IGNORE INTO shoplc_reward_receipts
+        (idempotency_key, receipt_id, account_id, item_key, action_type, quant_id, href,
+         reward_amount, day_key, created_at)
+       SELECT ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10
+        WHERE NOT EXISTS (
+          SELECT 1 FROM shoplc_reward_receipts
+           WHERE account_id = ?3 AND item_key = ?4
+        )
+          AND (
+            SELECT COUNT(*) FROM shoplc_reward_receipts
+             WHERE account_id = ?3 AND day_key = ?9 AND credited_at IS NOT NULL
+          ) < ?11`
+    ).bind(idempotencyKey, receiptId, account.id, itemKey, actionType, quantId, href,
+      SHOPLC_REWARD_AMOUNT, dayKey, now, SHOPLC_DAILY_REWARD_LIMIT),
+    env.DB.prepare(
+      `UPDATE accounts
+          SET star_coins = star_coins + ?3, updated_at = ?4
+        WHERE id = ?1
+          AND EXISTS (
+            SELECT 1 FROM shoplc_reward_receipts
+             WHERE account_id = ?1 AND idempotency_key = ?2 AND credited_at IS NULL
+          )`
+    ).bind(account.id, idempotencyKey, SHOPLC_REWARD_AMOUNT, now),
+    env.DB.prepare(
+      `INSERT INTO ledger_events
+        (id, account_id, event_type, amount, balance, progress_to_next_coin, shares_per_coin,
+         reference_id, content_id, company_id, actors_json, attribution_status, payout_status, created_at)
+       SELECT ?1, a.id, 'shoplc_click_reward', ?4, a.star_coins, a.pending_share_credits, 10,
+              r.idempotency_key, r.href, 'shoplc.com', '[]',
+              'click_verified_purchase_unverified', 'credited_click_reward', ?5
+         FROM accounts a JOIN shoplc_reward_receipts r ON r.account_id = a.id
+        WHERE a.id = ?2 AND r.idempotency_key = ?3 AND r.credited_at IS NULL`
+    ).bind(ledgerId, account.id, idempotencyKey, SHOPLC_REWARD_AMOUNT, now),
+    env.DB.prepare(
+      `UPDATE shoplc_reward_receipts SET credited_at = ?3
+        WHERE account_id = ?1 AND idempotency_key = ?2 AND credited_at IS NULL`
+    ).bind(account.id, idempotencyKey, now),
+  ]);
+
+  const credited = Number(results[1].meta.changes || 0) === 1;
+  account = (await env.DB.prepare(
+    `SELECT id, username, star_coins, pending_share_credits, share_count FROM accounts WHERE id = ?1`
+  ).bind(account.id).first<AccountRow>())!;
+  const [itemReceipt, dailyCount] = await Promise.all([
+    env.DB.prepare(
+      `SELECT idempotency_key, credited_at FROM shoplc_reward_receipts WHERE account_id = ?1 AND item_key = ?2 LIMIT 1`
+    ).bind(account.id, itemKey).first<{ idempotency_key: string; credited_at: number | null }>(),
+    env.DB.prepare(
+      `SELECT COUNT(*) AS count FROM shoplc_reward_receipts WHERE account_id = ?1 AND day_key = ?2 AND credited_at IS NOT NULL`
+    ).bind(account.id, dayKey).first<{ count: number }>(),
+  ]);
+  const rewardedToday = Number(dailyCount?.count || 0);
+  const reason = credited ? "credited"
+    : itemReceipt ? "item_already_rewarded"
+    : rewardedToday >= SHOPLC_DAILY_REWARD_LIMIT ? "daily_limit"
+    : "duplicate_click";
+
+  return json(request, {
+    ok: true,
+    credited,
+    duplicate: reason === "item_already_rewarded" || reason === "duplicate_click",
+    reason,
+    awarded: credited ? SHOPLC_REWARD_AMOUNT : 0,
+    rewardAmount: SHOPLC_REWARD_AMOUNT,
+    rewardedToday,
+    dailyLimit: SHOPLC_DAILY_REWARD_LIMIT,
+    remainingToday: Math.max(0, SHOPLC_DAILY_REWARD_LIMIT - rewardedToday),
+    itemKey,
+    quantId,
+    href,
+    purchaseVerified: false,
+    state: await loadState(env, account),
+  });
+}
+
 async function route(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const url = new URL(request.url);
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(request) });
@@ -461,6 +582,7 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
   if (request.method === "GET" && url.pathname === "/v1/state") return json(request, { ok: true, state: await loadState(env, account) });
   if (request.method === "POST" && url.pathname === "/v1/history") return saveHistory(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shares") return saveShare(request, env, account, ctx);
+  if (request.method === "POST" && url.pathname === "/v1/shoplc/rewards") return saveShopLcReward(request, env, account);
   throw new HttpError(404, "not_found", "StarQuest ledger endpoint not found.");
 }
 
