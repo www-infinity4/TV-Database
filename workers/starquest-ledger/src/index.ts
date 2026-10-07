@@ -504,9 +504,11 @@ async function currentShopLcItem(request: Request): Promise<Response> {
   if (titleAfterCode) title = cleanString(titleAfterCode[1], 500);
   if (!title) title = "Shop LC item " + productCode;
   const signals = productSignalsFromTitle(title);
-  const priceMatches = text.match(/\\$\\s*([0-9,]+(?:\\.\\d{2})?)/g) || [];
+  const codePosition = text.indexOf(productCode);
+  const priceScope = (codePosition >= 0 ? text.slice(codePosition, codePosition + 1600) : text).split(/\b5\s*X\b/i)[0];
+  const priceMatches = priceScope.match(/\$\s*([0-9,]+(?:\.\d{2})?)/g) || [];
   const numericPrices = priceMatches.map((value) => Number(value.replace(/[^0-9.]/g, ""))).filter((value) => Number.isFinite(value) && value > 0);
-  const price = numericPrices.length ? String(Math.min(...numericPrices)) : "";
+  const price = numericPrices.length ? String(numericPrices[numericPrices.length - 1]) : "";
   const productHrefMatch = scope.match(/href=["\'](\\/products\\/[^"\'?#]+(?:\\?[^"\']*)?)["\']/i);
   const href = productHrefMatch ? new URL(productHrefMatch[1], "https://www.shoplc.com").toString() : "https://www.shoplc.com/search?q=" + encodeURIComponent(productCode);
   const imageMatch = scope.match(/<img[^>]+(?:src|data-src)=["\']([^"\']+)["\'][^>]*>/i);
