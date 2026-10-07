@@ -463,6 +463,51 @@ async function saveShare(request: Request, env: Env, account: AccountRow, ctx: E
   });
 }
 
+async function currentShopLcItem(request: Request): Promise<Response> {
+  const response = await fetch("https://www.shoplc.com/pages/live-tv", {
+    headers: { "Accept": "text/html,application/xhtml+xml", "User-Agent": "QuantaPhi-ShopLC-Companion/1.0" },
+  });
+  if (!response.ok) throw new HttpError(502, "shoplc_unavailable", "Shop LC current item could not be read.");
+  const html = await response.text();
+  const currentIndex = html.search(/Currently\s+On\s+Air/i);
+  const scope = currentIndex >= 0 ? html.slice(currentIndex, currentIndex + 120000) : html;
+  const productMatch = scope.match(/Product\s*code[\s\S]{0,300}?\b([0-9]{5,12})\b/i)
+    || scope.match(/\b([0-9]{6,9})\b/);
+  if (!productMatch) throw new HttpError(502, "shoplc_item_unavailable", "Shop LC did not expose a current product code.");
+  const itemId = `product:${productMatch[1]}`;
+  return json(request, {
+    ok: true,
+    itemId,
+    productCode: productMatch[1],
+    href: "https://www.shoplc.com/pages/live-tv",
+    purchaseVerified: false,
+  });
+}
+
+async function featuredShopLcAuctions(request: Request): Promise<Response> {
+  const href = "https://www.shoplc.com/pages/online-auctions-ra?categoryname=Rings%2CBracelets%2CNecklaces%2CSets%2CEarrings%2CPendants&sort=enddate&sortorder=1";
+  const response = await fetch(href, {
+    headers: { "Accept": "text/html,application/xhtml+xml", "User-Agent": "QuantaPhi-ShopLC-Companion/1.0" },
+  });
+  if (!response.ok) throw new HttpError(502, "shoplc_unavailable", "Shop LC auctions could not be read.");
+  const html = await response.text();
+  const seen = new Set<string>();
+  const auctions: Array<{ itemId: string; auctionCode: string; href: string }> = [];
+  const regex = /auctioncode(?:=|%3D)([A-Za-z0-9_-]{8,80})/gi;
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(html)) && auctions.length < 12) {
+    const code = match[1];
+    if (seen.has(code)) continue;
+    seen.add(code);
+    auctions.push({
+      itemId: `auction:${code}`,
+      auctionCode: code,
+      href: `https://www.shoplc.com/pages/ra-product-details?auctioncode=${encodeURIComponent(code)}`,
+    });
+  }
+  return json(request, { ok: true, auctions, purchaseVerified: false });
+}
+
 async function saveShopLcReward(request: Request, env: Env, account: AccountRow): Promise<Response> {
   const body = await readBody<JsonRecord>(request);
   const idempotencyKey = cleanString(body.clickId ?? body.idempotencyKey, 160);
@@ -471,7 +516,11 @@ async function saveShopLcReward(request: Request, env: Env, account: AccountRow)
   if (!["buy", "bid"].includes(actionType)) throw new HttpError(400, "shoplc_action_invalid", "Shop LC rewards require a buy or bid action.");
 
   const href = normalizeShopLcHref(body.href);
-  const itemKey = await sha256(href);
+  const itemId = cleanString(body.itemId, 160);
+  if (!/^(?:product|auction):[A-Za-z0-9._:-]{3,140}$/.test(itemId)) {
+    throw new HttpError(400, "shoplc_item_invalid", "An item-specific Shop LC product or auction ID is required.");
+  }
+  const itemKey = await sha256(`shoplc:${itemId}`);
   const quantId = cleanString(body.quantId, 240);
   const now = Date.now();
   const dayKey = centralDayKey(now);
@@ -548,6 +597,7 @@ async function saveShopLcReward(request: Request, env: Env, account: AccountRow)
     dailyLimit: SHOPLC_DAILY_REWARD_LIMIT,
     remainingToday: Math.max(0, SHOPLC_DAILY_REWARD_LIMIT - rewardedToday),
     itemKey,
+    itemId,
     quantId,
     href,
     purchaseVerified: false,
@@ -564,6 +614,8 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
   if (request.method === "GET" && url.pathname === "/health") {
     return json(request, { ok: true, service: "starquest-ledger", sharesPerCoin: SHARES_PER_COIN });
   }
+  if (request.method === "GET" && url.pathname === "/v1/shoplc/current-item") return currentShopLcItem(request);
+  if (request.method === "GET" && url.pathname === "/v1/shoplc/featured-auctions") return featuredShopLcAuctions(request);
   if (request.method === "POST" && url.pathname === "/v1/verify-existing") {
     const body = await readBody<{ username?: string; credentialProof?: string }>(request);
     const username = cleanString(body.username, 48).toLowerCase();
