@@ -2,7 +2,9 @@ const SHARES_PER_COIN = 10;
 const SHOPLC_REWARD_AMOUNT = 5;
 const SHOPLC_DAILY_REWARD_LIMIT = 3;
 const ALLOWED_ORIGINS = new Set([
-  "https://www-infinity4.github.io",\n  "https://quantaphi.org",\n  "https://www.quantaphi.org",
+  "https://www-infinity4.github.io",
+  "https://quantaphi.org",
+  "https://www.quantaphi.org",
   "http://localhost:8000",
   "http://127.0.0.1:8000",
 ]);
