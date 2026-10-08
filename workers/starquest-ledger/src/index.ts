@@ -677,6 +677,76 @@ async function saveShopLcReward(request: Request, env: Env, account: AccountRow)
   });
 }
 
+
+/**
+ * Fred Spaces discovery unlocks: a 1-StarCoin charge for a newly selected
+ * episode (not a fee for third-party audio). The episode IDs are server-side
+ * allowlisted; a browser cannot request an arbitrary priced item.
+ */
+const FRED_SPACE_IDS = new Set([
+  "fred-0147", "fred-0298", "fred-0555", "fred-0700", "fred-0888",
+]);
+
+async function ensureSpacesUnlocks(env: Env): Promise<void> {
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS spaces_episode_unlocks (
+      account_id TEXT NOT NULL REFERENCES accounts(id),
+      episode_id TEXT NOT NULL,
+      attempt_id TEXT NOT NULL,
+      charged_at INTEGER,
+      created_at INTEGER NOT NULL,
+      PRIMARY KEY(account_id, episode_id)
+    )`
+  ).run();
+}
+
+async function spacesUnlockState(request: Request, env: Env, account: AccountRow): Promise<Response> {
+  await ensureSpacesUnlocks(env);
+  const rows = await env.DB.prepare(
+    "SELECT episode_id FROM spaces_episode_unlocks WHERE account_id=?1 AND charged_at IS NOT NULL ORDER BY charged_at DESC LIMIT 1000"
+  ).bind(account.id).all<{episode_id:string}>();
+  const balance = await env.DB.prepare("SELECT star_coins FROM accounts WHERE id=?1").bind(account.id).first<{star_coins:number}>();
+  return json(request, {ok:true, unlocked:rows.results.map(r=>r.episode_id), starCoins:Math.max(0,Number(balance?.star_coins||0))});
+}
+
+async function unlockFredSpace(request: Request, env: Env, account: AccountRow): Promise<Response> {
+  const body = await readBody<JsonRecord>(request);
+  const episodeId = cleanString(body.episodeId, 40);
+  if (!FRED_SPACE_IDS.has(episodeId) || episodeId === "fred-0700")
+    throw new HttpError(400, "episode_not_billable", "This episode is free or unavailable for paid discovery.");
+  await ensureSpacesUnlocks(env);
+  const now=Date.now(), attemptId=randomId("spaces");
+  // D1 batch executes all statements in one transaction. The attempt ID
+  // prevents simultaneous clicks/retries from charging the same episode twice.
+  // changes() in statement 3 is the account debit result from statement 2.
+  await env.DB.batch([
+    env.DB.prepare(
+      "INSERT OR IGNORE INTO spaces_episode_unlocks(account_id,episode_id,attempt_id,created_at) SELECT ?1,?2,?3,?4 WHERE EXISTS(SELECT 1 FROM accounts WHERE id=?1 AND star_coins>=1)"
+    ).bind(account.id,episodeId,attemptId,now),
+    env.DB.prepare(
+      "UPDATE accounts SET star_coins=star_coins-1,updated_at=?4 WHERE id=?1 AND star_coins>=1 AND EXISTS(SELECT 1 FROM spaces_episode_unlocks WHERE account_id=?1 AND episode_id=?2 AND attempt_id=?3 AND charged_at IS NULL)"
+    ).bind(account.id,episodeId,attemptId,now),
+    env.DB.prepare(
+      "UPDATE spaces_episode_unlocks SET charged_at=?4 WHERE account_id=?1 AND episode_id=?2 AND attempt_id=?3 AND charged_at IS NULL AND changes()=1"
+    ).bind(account.id,episodeId,attemptId,now),
+    env.DB.prepare(
+      `INSERT INTO ledger_events(id,account_id,event_type,amount,balance,progress_to_next_coin,shares_per_coin,reference_id,content_id,created_at)
+       SELECT ?1,a.id,'spaces_episode_unlock',-1,a.star_coins,a.pending_share_credits,10,u.attempt_id,u.episode_id,?5
+       FROM spaces_episode_unlocks u JOIN accounts a ON a.id=u.account_id
+       WHERE u.account_id=?2 AND u.episode_id=?3 AND u.attempt_id=?4 AND u.charged_at=?5`
+    ).bind(randomId("ledger"),account.id,episodeId,attemptId,now),
+    env.DB.prepare(
+      "DELETE FROM spaces_episode_unlocks WHERE account_id=?1 AND episode_id=?2 AND attempt_id=?3 AND charged_at IS NULL"
+    ).bind(account.id,episodeId,attemptId),
+  ]);
+  const [unlock,balance] = await Promise.all([
+    env.DB.prepare("SELECT attempt_id,charged_at FROM spaces_episode_unlocks WHERE account_id=?1 AND episode_id=?2").bind(account.id,episodeId).first<{attempt_id:string;charged_at:number|null}>(),
+    env.DB.prepare("SELECT star_coins FROM accounts WHERE id=?1").bind(account.id).first<{star_coins:number}>()
+  ]);
+  if (!unlock?.charged_at) throw new HttpError(409,"insufficient_star_coins","Earn 1 full StarCoin through shares and collects before unlocking another episode.");
+  return json(request,{ok:true, episodeId, charged:unlock.attempt_id===attemptId?1:0, alreadyUnlocked:unlock.attempt_id!==attemptId, starCoins:Number(balance?.star_coins||0)});
+}
+
 async function route(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const url = new URL(request.url);
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(request) });
@@ -704,6 +774,8 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
 
   const account = await accountFromRequest(request, env);
   if (request.method === "GET" && url.pathname === "/v1/state") return json(request, { ok: true, state: await loadState(env, account) });
+  if (request.method === "GET" && url.pathname === "/v1/spaces/unlocks") return spacesUnlockState(request,env,account);
+  if (request.method === "POST" && url.pathname === "/v1/spaces/unlock") return unlockFredSpace(request,env,account);
   if (request.method === "POST" && url.pathname === "/v1/history") return saveHistory(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shares") return saveShare(request, env, account, ctx);
   if (request.method === "POST" && url.pathname === "/v1/shoplc/clicks") return saveShopLcClick(request, env, account);
