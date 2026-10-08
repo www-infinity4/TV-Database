@@ -1,7 +1,7 @@
 const ORIGINS=new Set(["https://quantaphi.org","https://www.quantaphi.org","https://www-infinity4.github.io"]);
 const PAID=new Set(["fred-0147","fred-0298","fred-0555","fred-0888"]);
 function reply(body,status,origin){return new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json","cache-control":"no-store",...(origin?{"access-control-allow-origin":origin,"vary":"Origin"}:{})}})}
-async function userOf(request,db){const auth=/^Bearer\\s+(sq_[A-Za-z0-9_-]{32,})$/.exec(request.headers.get("authorization")||"");if(!auth)return null;const hash=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(auth[1]));const hex=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,"0")).join("");return db.prepare("SELECT a.id FROM accounts a JOIN account_devices d ON d.account_id=a.id WHERE d.token_hash=?").bind(hex).first();}
+async function userOf(request,db){const auth=/^Bearer[ ]+(sq_[A-Za-z0-9_-]{32,})$/.exec(request.headers.get("authorization")||"");if(!auth)return null;const hash=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(auth[1]));const hex=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,"0")).join("");return db.prepare("SELECT a.id FROM accounts a JOIN account_devices d ON d.account_id=a.id WHERE d.token_hash=?").bind(hex).first();}
 async function ensure(db){return db.prepare("CREATE TABLE IF NOT EXISTS spaces_episode_unlocks(account_id TEXT NOT NULL REFERENCES accounts(id),episode_id TEXT NOT NULL,attempt_id TEXT NOT NULL,charged_at INTEGER,created_at INTEGER NOT NULL,PRIMARY KEY(account_id,episode_id))").run();}
 export default {async fetch(request,env){
  const u=new URL(request.url),origin=request.headers.get("origin")||"",cors=ORIGINS.has(origin)?origin:"";
