@@ -8,11 +8,12 @@ StarQuest device bearer-token authentication. It does not mint coins.
 
 - The opening Fred Krueger episode `fred-0700` is always free and is never
   accepted by the billing endpoint.
-- A future playable episode costs exactly **one full StarCoin** (not $0.25).
-- The UI must never submit a charge until it has a verified, authorized,
-  playable audio URL. Direct X replay links can be shown without charge.
+- The featured initial X replay link is free. A **new curated episode discovery link** costs exactly **one full StarCoin** (not $0.25).
+- Payment is for the Phi curation/discovery service, **not for the recording**. A qualifying paid candidate must be in the curated episode allowlist and have a direct, verified-format original X Spaces replay URL (not merely a generic archive listing).
+- The Phi card presents a player-style **link** that opens the original X Spaces page. It does not suggest that Phi has licensed, copied, embedded, or can guarantee playback of the audio. The browser may need an X sign-in, and X may remove a replay.
+- The UI discloses these limitations before the user chooses to pay. If a source has no direct X replay URL, it is not eligible to be offered as a paid curated discovery until a valid source is established.
 - The UI must require a user's explicit confirmation before paying.
-- A previous unlock for the same account and episode is free to revisit.
+- A previous curated-link unlock for the same account and episode is free to revisit.
 - The `spaces_episode_unlocks` table is created on first authenticated use,
   and StarQuest `accounts.star_coins` is the authoritative debit balance.
 - Each successful debit creates a `ledger_events` receipt
@@ -33,8 +34,10 @@ The user-facing card lives in `www-infinity4/QuantaPhi` under
 and Button Person styling.
 
 **Rights**: Metadata, excerpts, and original replay links are not licenses
-to download, relay, or monetize third-party audio. Play through a native
-player only after an authorized source has been verified.
+to download, relay, or sell third-party audio. StarCoins compensate original
+Phi selection and indexing only; the X owner controls the separate replay.
+Use a native in-page audio player only if licensed or otherwise authorized media
+is actually available.
 
 ## Production
 
