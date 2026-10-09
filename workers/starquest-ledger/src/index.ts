@@ -393,6 +393,30 @@ async function flushInfinityOutbox(env: Env): Promise<void> {
   }
 }
 
+async function saveCrusherSpin(request: Request, env: Env, account: AccountRow): Promise<Response> {
+  const body = await readBody<JsonRecord>(request);
+  const spinId = cleanString(body.spin_id, 100);
+  const query = cleanString(body.query, 1000);
+  const terms = Array.isArray(body.terms) ? body.terms.map((word: unknown) => cleanString(word, 65)) : [];
+  if (!/^[a-zA-Z0-9_-]{12,100}$/.test(spinId) || terms.length !== 4 ||
+      terms.some((word: string) => word.length < 2) ||
+      new Set(terms.map((word: string) => word.toLowerCase())).size !== 4 ||
+      query.length < 8 || !terms.every((word: string) => query.toLowerCase().includes(word.toLowerCase()))) {
+    throw new HttpError(400, "crusher_spin_invalid", "A unique completed four-term research spin is required.");
+  }
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS crusher_spin_receipts (account_id TEXT NOT NULL,spin_id TEXT NOT NULL,query_text TEXT NOT NULL,terms_json TEXT NOT NULL,credited_at INTEGER,created_at INTEGER NOT NULL,PRIMARY KEY(account_id,spin_id))").run();
+  const now = Date.now();
+  const changes = await env.DB.batch([
+    env.DB.prepare("INSERT OR IGNORE INTO crusher_spin_receipts(account_id,spin_id,query_text,terms_json,created_at) VALUES(?,?,?,?,?)").bind(account.id,spinId,query,JSON.stringify(terms),now),
+    env.DB.prepare(\`UPDATE accounts SET star_coins=star_coins+CASE WHEN pending_share_credits=9 THEN 1 ELSE 0 END,pending_share_credits=(pending_share_credits+1)%10,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM crusher_spin_receipts WHERE account_id=? AND spin_id=? AND credited_at IS NULL)\`).bind(now,account.id,account.id,spinId),
+    env.DB.prepare(\`INSERT INTO ledger_events(id,account_id,event_type,amount,balance,progress_to_next_coin,shares_per_coin,reference_id,content_id,company_id,actors_json,attribution_status,payout_status,created_at) SELECT ?,a.id,CASE WHEN a.pending_share_credits=0 THEN 'crusher_spin_reward' ELSE 'crusher_spin_credit' END,CASE WHEN a.pending_share_credits=0 THEN 1 ELSE 0 END,a.star_coins,a.pending_share_credits,10,r.spin_id,r.query_text,'bitcoin-crusher','[]','research_spin','credited',? FROM accounts a JOIN crusher_spin_receipts r ON r.account_id=a.id WHERE a.id=? AND r.spin_id=? AND r.credited_at IS NULL\`).bind(randomId("ledger"),now,account.id,spinId),
+    env.DB.prepare("UPDATE crusher_spin_receipts SET credited_at=? WHERE account_id=? AND spin_id=? AND credited_at IS NULL").bind(now,account.id,spinId)
+  ]);
+  const credited = Number(changes[1].meta.changes || 0) === 1;
+  const latest = await env.DB.prepare("SELECT id,username,star_coins,pending_share_credits,share_count FROM accounts WHERE id=?").bind(account.id).first<AccountRow>();
+  return json(request, {ok:true,credited,duplicate:!credited,starCoinCredit:credited?0.1:0,state:await loadState(env,latest || account)});
+}
+
 async function saveShare(request: Request, env: Env, account: AccountRow, ctx: ExecutionContext): Promise<Response> {
   const body = await readBody<JsonRecord>(request);
   const idempotencyKey = cleanString(body.attemptId ?? body.idempotencyKey, 160);
@@ -708,6 +732,7 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
   if (request.method === "GET" && url.pathname === "/v1/state") return json(request, { ok: true, state: await loadState(env, account) });
   if (request.method === "POST" && url.pathname === "/v1/history") return saveHistory(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shares") return saveShare(request, env, account, ctx);
+  if (request.method === "POST" && url.pathname === "/v1/crusher-spins") return saveCrusherSpin(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shoplc/clicks") return saveShopLcClick(request, env, account);
   if (request.method === "GET" && url.pathname === "/v1/shoplc/interests") return loadShopLcInterests(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shoplc/rewards") return saveShopLcReward(request, env, account);
