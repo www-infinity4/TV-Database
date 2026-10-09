@@ -220,6 +220,7 @@ async function loadState(env: Env, account: AccountRow): Promise<JsonRecord> {
       ts: row.created_at,
       reason: row.event_type === "shoplc_click_reward"
         ? "ShopLC buy/bid click reward (purchase not verified)"
+        : row.event_type === "crusher_spin_reward" || row.event_type === "crusher_spin_credit" ? "Bitcoin Crusher research spin: +0.1 StarCoin"
         : row.event_type === "share_reward" ? "Share reward: 10 completed shares" : "Confirmed share receipt",
     })).reverse(),
   };
