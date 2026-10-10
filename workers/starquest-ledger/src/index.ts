@@ -711,7 +711,7 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
     throw new HttpError(403, "origin_not_allowed", "This site is not allowed to write to the StarQuest ledger.");
   }
   if (request.method === "GET" && url.pathname === "/health") {
-    return json(request, { ok: true, service: "starquest-ledger", sharesPerCoin: SHARES_PER_COIN });
+    return json(request, { ok: true, service: "starquest-ledger", sharesPerCoin: SHARES_PER_COIN, shoplcRewards: { rewardAmount: SHOPLC_REWARD_AMOUNT, dailyLimit: SHOPLC_DAILY_REWARD_LIMIT, timezone: "America/Chicago", oncePerItem: true } });
   }
   if (request.method === "GET" && url.pathname === "/v1/shoplc/current-item") return currentShopLcItem(request);
   if (request.method === "GET" && url.pathname === "/v1/shoplc/featured-auctions") return featuredShopLcAuctions(request);
