@@ -10,7 +10,16 @@ export default {async fetch(request,env){
  const u=new URL(request.url),origin=request.headers.get("origin")||"",cors=ORIGINS.has(origin)?origin:"";
  if(request.method==="OPTIONS")return new Response(null,{status:cors?204:403,headers:{"access-control-allow-origin":cors,"access-control-allow-headers":"authorization,content-type","access-control-allow-methods":"GET,POST,OPTIONS"}});
  if(origin&&!cors)return reply({ok:false,error:"origin_not_allowed"},403);
- if(u.pathname==="/health")return reply({ok:true,service:"fred-spaces-ledger",authoritative:"starquest D1"},200,cors);
+ if(u.pathname==="/health"){
+   // Report configuration readiness without revealing any owner's account.
+   // A missing/unavailable owner means checkout must stay closed.
+   let paymentsReady=false;
+   try {
+     const owner=await env.DB.prepare("SELECT cfg.owner_account_id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star'").first();
+     paymentsReady=!!owner?.owner_account_id;
+   }catch(_){paymentsReady=false;}
+   return reply({ok:true,service:"fred-spaces-ledger",authoritative:"starquest D1",paymentsReady},200,cors);
+ }
  if(!["/v1/spaces/unlocks","/v1/spaces/unlock"].includes(u.pathname))return reply({ok:false,error:"not_found"},404,cors);
  try{
  const user=await userOf(request,env.DB);
