@@ -28,7 +28,8 @@ export default {async fetch(request,env){
  if(request.method==="GET"&&u.pathname==="/v1/spaces/unlocks"){
  const rows=await env.DB.prepare("SELECT episode_id FROM spaces_episode_unlocks WHERE account_id=? AND charged_at IS NOT NULL ORDER BY charged_at DESC").bind(user.id).all();
  const balance=await env.DB.prepare("SELECT star_coins FROM accounts WHERE id=?").bind(user.id).first();
- return reply({ok:true,unlocked:(rows.results||[]).map(x=>x.episode_id),starCoins:balance?.star_coins??0},200,cors);
+ const platform=await env.DB.prepare("SELECT owner_account_id FROM media_star_owner_config WHERE card_key='media-star'").first();
+ return reply({ok:true,unlocked:(rows.results||[]).map(x=>x.episode_id),starCoins:balance?.star_coins??0,isPlatformOwner:!!platform&&platform.owner_account_id===user.id},200,cors);
  }
  if(request.method!=="POST"||u.pathname!=="/v1/spaces/unlock")return reply({ok:false,error:"method_not_allowed"},405,cors);
  if(!request.headers.get("content-type")?.includes("application/json"))return reply({ok:false,error:"json_required"},415,cors);
@@ -37,7 +38,22 @@ export default {async fetch(request,env){
  // A paid unlock is a transfer, never a coin burn. Fail closed until the
  // business owner's payout wallet has been explicitly configured in D1.
  const owner=await env.DB.prepare("SELECT a.id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star'").first();
- if(!owner?.id)return reply({ok:false,error:"owner_payout_not_configured",message:"Media Star purchases are temporarily paused while the owner's StarCoin payout wallet is being connected. No StarCoin was charged."},503,cors);
+ if(!owner?.id)return reply({ok:false,error:"owner_payout_not_configured",message:"Media Star episode sales are unavailable while the platform owner wallet is not connected. No StarCoin was charged."},503,cors);
+ // The platform owner's preview is free and idempotent; it is not a sale.
+ // Creator-payout settings on separately embedded blank Media Star templates
+ // are independent and NEVER used by this Fred curation endpoint.
+ if(owner.id===user.id){
+   const previous=await env.DB.prepare("SELECT episode_id FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=? AND charged_at IS NOT NULL").bind(user.id,episodeId).first();
+   if(!previous){
+     const stamp=Date.now(),ref="owner-preview-"+crypto.randomUUID();
+     await env.DB.batch([
+       env.DB.prepare("INSERT OR IGNORE INTO spaces_episode_unlocks(account_id,episode_id,attempt_id,charged_at,created_at) VALUES(?,?,?,?,?)").bind(user.id,episodeId,ref,stamp,stamp),
+       env.DB.prepare("INSERT INTO ledger_events(id,account_id,event_type,amount,balance,progress_to_next_coin,shares_per_coin,reference_id,content_id,created_at) SELECT ?,a.id,'spaces_episode_owner_preview',0,a.star_coins,a.pending_share_credits,10,?, ?,? FROM accounts a JOIN spaces_episode_unlocks u ON u.account_id=a.id WHERE a.id=? AND u.episode_id=? AND u.attempt_id=?").bind(crypto.randomUUID(),ref,episodeId,stamp,user.id,episodeId,ref)
+     ]);
+   }
+   const coins=await env.DB.prepare("SELECT star_coins FROM accounts WHERE id=?").bind(user.id).first();
+   return reply({ok:true,episodeId,charged:0,ownerPreview:true,alreadyUnlocked:!!previous,starCoins:coins?.star_coins??0},200,cors);
+ }
  const now=Date.now(),attempt=crypto.randomUUID();
  await env.DB.batch([
  env.DB.prepare("INSERT OR IGNORE INTO spaces_episode_unlocks(account_id,episode_id,attempt_id,created_at) SELECT ?,?,?,? WHERE EXISTS(SELECT 1 FROM accounts WHERE id=? AND star_coins>=1)").bind(user.id,episodeId,attempt,now,user.id),
