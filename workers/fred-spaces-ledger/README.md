@@ -32,8 +32,11 @@ StarQuest device bearer-token authentication. It does not mint coins.
 - Purchases by the owner record equal debit/payout entries and net to zero.
   Previously unlocked episodes remain free to revisit.
 - October 9 payout audit discovered five -1 episode unlock entries, but no
-  owner-payout entries. These historic debits need an audited, idempotent
-  refund or settlement correction. Do not remove their original receipts,
+  owner-payout entries. These historic debits require reconciliation: the owner reports only
+  **one** StarCoin remaining missing, while the ledger shows independent
+  share-credit rewards that can increase the same balance. Verify the exact
+  shortfall before any idempotent refund or payout correction; never credit
+  all five automatically. Do not remove their original receipts,
   modify other customers' balances without evidence, or mint compensation
   twice. Funding corrections require authenticated administrative approval.
 - An unavailable wallet, failure, or insufficient balance must never
