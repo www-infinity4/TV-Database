@@ -16,8 +16,26 @@ StarQuest device bearer-token authentication. It does not mint coins.
 - A previous curated-link unlock for the same account and episode is free to revisit.
 - The `spaces_episode_unlocks` table is created on first authenticated use,
   and StarQuest `accounts.star_coins` is the authoritative debit balance.
-- Each successful debit creates a `ledger_events` receipt
-  (event type `spaces_episode_unlock`, amount -1).
+- Every successful purchase **must** transfer one StarCoin from the listener to the
+  QuantaPhi/Media Star business owner's verified StarQuest wallet. The debit
+  (event type `spaces_episode_unlock`, amount -1) and owner credit
+  (event type `spaces_episode_owner_payout`, amount +1) must share the
+  purchase attempt reference and commit in the same D1 transaction.
+- The owner destination is resolved exclusively on the server from
+  `media_star_owner_config` (`card_key='media-star'`, verified `owner_account_id`);
+  **never** from a client-supplied username, URL, or wallet ID. The table is
+  created automatically. An account administrator must configure the verified
+  owner's stable StarQuest account ID before paid unlocks are available.
+- Until the owner account is configured, paid unlocks return
+  `owner_payout_not_configured` **before any debit**. This is deliberate
+  loss prevention, not confirmation that a coin was spent.
+- Purchases by the owner record equal debit/payout entries and net to zero.
+  Previously unlocked episodes remain free to revisit.
+- October 9 payout audit discovered five -1 episode unlock entries, but no
+  owner-payout entries. These historic debits need an audited, idempotent
+  refund or settlement correction. Do not remove their original receipts,
+  modify other customers' balances without evidence, or mint compensation
+  twice. Funding corrections require authenticated administrative approval.
 - An unavailable wallet, failure, or insufficient balance must never
   be treated as a successful charge.
 
