@@ -1,5 +1,10 @@
 name: ShopLC StarCoin robot sentinel
 on:
+  pull_request:
+    paths:
+      - 'workers/shoplc-reward-watch/**'
+      - 'tests/shoplc-reward-watch.test.cjs'
+      - '.github/workflows/shoplc-reward-watch.yml'
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
