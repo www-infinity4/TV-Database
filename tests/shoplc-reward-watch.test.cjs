@@ -11,11 +11,13 @@ test('ShopLC watcher differentiates exact, pending, legacy and missing reward re
  assert.equal(signalStatus(base),'delivered');
  assert.equal(signalStatus({...base,ledger_id:null}),'receipt_no_ledger');
  assert.equal(signalStatus({...base,ledger_amount:1}),'wrong_amount');
+ assert.equal(signalStatus({...base,ledger_count:2,ledger_amount:10}),'duplicate_ledger');
  assert.equal(signalStatus({...base,reward_credit_at:null}),'receipt_pending');
  assert.equal(signalStatus({...base,reward_key:null}),'missing_receipt');
  assert.equal(signalStatus({...base,click_id:'shoplc-signal-older',reward_key:null}),'legacy_unlinked');
  assert.equal(receiptStatus(base),'delivered');
  assert.equal(receiptStatus({...base,ledger_id:null}),'receipt_no_ledger');
+ assert.equal(receiptStatus({...base,ledger_count:2}),'duplicate_ledger');
  assert.equal(receiptStatus({...base,reward_credit_at:null}),'receipt_pending');
 });
 test('five-minute watcher matches account and exact click, not username or browser balances',async()=>{
@@ -34,7 +36,7 @@ test('five-minute watcher matches account and exact click, not username or brows
    bind(...args){params=args;return op},
    async all(){
     if(sql.includes('FROM shoplc_click_signals s'))return{results:signals};
-    if(sql.includes('FROM shoplc_reward_receipts r LEFT JOIN ledger_events l'))return{results:receipts};
+    if(sql.includes('FROM shoplc_reward_receipts r LEFT JOIN ('))return{results:receipts};
     if(sql.includes('FROM ledger_events l LEFT JOIN shoplc_reward_receipts r'))return{results:[]};
     if(sql.includes('HAVING COUNT(*) > 3'))return{results:[]};
     throw Error('Unknown read-only query '+sql.slice(0,90))
@@ -49,9 +51,11 @@ test('five-minute watcher matches account and exact click, not username or brows
  assert.equal(result.counts.delivered,1,'single paid click not counted twice');
  assert.equal(result.counts.missing_receipt,1);
  assert.equal(result.counts.legacy_unlinked,1);
- assert.equal(result.flagged,2);
+ assert.equal(result.flagged,1,'only verified modern missing payout is actionable');
+ assert.equal(result.historicalReview,1,'older unmatched click remains visible but is not automatically unpaid');
  assert.ok(queries.some(sql=>sql.includes('r.idempotency_key=s.idempotency_key')&&sql.includes('r.account_id=s.account_id')));
  assert.ok(queries.some(sql=>sql.includes('l.account_id=r.account_id')&&sql.includes('l.reference_id=r.idempotency_key')));
+ assert.ok(queries.some(sql=>sql.includes('COUNT(*) AS ledger_count')&&sql.includes('GROUP BY account_id,reference_id')),'duplicate ledger rows are counted rather than hidden');
  assert.ok(writes.some(x=>x.params[0]==='signal:shoplc-click-unpaid'&&x.params[2]==='missing_receipt'));
  assert.ok(writes.some(x=>x.params[0]==='signal:shoplc-signal-old'&&x.params[2]==='legacy_unlinked'));
  assert.ok(!queries.some(sql=>/UPDATE accounts|INSERT INTO ledger_events|SET star_coins/i.test(sql)),'watcher must never change coin balances');
@@ -69,4 +73,19 @@ test('no public user account ids or device tokens in health response',async()=>{
  assert.equal(body.run.counts.missing_receipt,1);
  assert.doesNotMatch(JSON.stringify(body),/account_id|username|deviceToken|secret|internal-a/);
  assert.equal((await worker.fetch(new Request('https://observer.example/private'),{DB:db})).status,404);
+});
+
+test('all-legacy unmatched clicks do not trigger false missing-payout alarms',async()=>{
+ const {check}=await moduleCode();
+ const now=1791700000000;
+ const log=console.log;console.log=()=>{};
+ const db={prepare(sql){const self={bind(){return self},async run(){return{}},async all(){
+   if(sql.includes('FROM shoplc_click_signals s'))return{results:[{click_id:'shoplc-signal-old-a',account_id:'a',item_id:'product:1234',action_type:'buy',created_at:now-180000,reward_key:null}]};
+   if(sql.includes('FROM shoplc_reward_receipts r LEFT JOIN (')||sql.includes('FROM ledger_events l LEFT JOIN shoplc_reward_receipts r')||sql.includes('HAVING COUNT(*) > 3'))return{results:[]};
+   throw Error('Unexpected query');
+  }};return self}};
+ let result;try{result=await check({DB:db},now)}finally{console.log=log}
+ assert.equal(result.counts.legacy_unlinked,1);
+ assert.equal(result.historicalReview,1);
+ assert.equal(result.flagged,0);
 });
