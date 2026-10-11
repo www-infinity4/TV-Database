@@ -1,0 +1,63 @@
+name: ShopLC StarCoin robot sentinel
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'workers/shoplc-reward-watch/**'
+      - 'tests/shoplc-reward-watch.test.cjs'
+      - '.github/workflows/shoplc-reward-watch.yml'
+permissions:
+  contents: read
+  issues: write
+jobs:
+  observer-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --check workers/shoplc-reward-watch/worker.js
+      - run: node --test tests/shoplc-reward-watch.test.cjs
+  robot-ledger-watch:
+    needs: observer-unit-tests
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const url = 'https://shoplc-reward-watch.marvaseater.workers.dev/health';
+            let data, error = '';
+            try {
+              const r = await fetch(url, {signal: AbortSignal.timeout(15000)});
+              if (!r.ok) throw Error('Observer returned HTTP ' + r.status);
+              data = await r.json();
+              if (!data.ok || !data.auditOnly) throw Error('Observer unhealthy');
+            } catch (e) { error = String(e.message || e).slice(0,150); }
+            const run = data?.run || null;
+            const stale = !run || !Number.isFinite(Number(run.checkedAt)) || Date.now() - Number(run.checkedAt) > 25*60*1000;
+            const counts = run?.counts || {};
+            const flagged = Number(run?.flagged || 0);
+            const attention = Boolean(error || stale || flagged);
+            const title = '[Robot Watch] ShopLC StarCoin receipt reconciliation';
+            const {data:issues} = await github.rest.issues.listForRepo({...context.repo, state:'open', per_page:100});
+            const prior = issues.find(item => !item.pull_request && item.title === title);
+            const detail = 'ShopLC StarQuest reward observer (aggregate audit only; no account identifiers).\n\n' +
+              'Status: ' + (error || (stale ? 'Observer stale/not yet run' : (flagged ? 'Needs review' : 'Healthy'))) + '\n' +
+              'Last scan: ' + (run?.checkedAt ? new Date(run.checkedAt).toISOString() : 'none') + '\n' +
+              'Recent click signals: ' + Number(run?.signals||0) + '\n' +
+              'Recent reward receipts: ' + Number(run?.receipts||0) + '\n' +
+              'Flags: ' + JSON.stringify(counts, null, 2) + '\n\n' +
+              'Next bot action: Review account-scoped audit rows in D1 and the original click/receipt/ledger IDs. Reconcile only with verified wallet ownership. Do NOT mint, transfer, or restore coins based only on this issue.';
+            if (attention) {
+              if (prior) await github.rest.issues.update({...context.repo, issue_number:prior.number, body:detail});
+              else await github.rest.issues.create({...context.repo, title, body:detail});
+              core.warning('ShopLC reward auditor found flagged or missing information.');
+            } else if (prior) {
+              await github.rest.issues.createComment({...context.repo,issue_number:prior.number,body:'Latest ShopLC observer scan is healthy: ' + new Date(run.checkedAt).toISOString()});
+              await github.rest.issues.update({...context.repo,issue_number:prior.number,state:'closed'});
+            }
