@@ -607,6 +607,30 @@ async function loadShopLcInterests(request: Request, env: Env, account: AccountR
   };
   return json(request, { ok: true, clickCount: rows.results.length, interests: { categories: countBy("category"), gemstones: countBy("gemstone"), ringSizes: countBy("ring_size"), metals: countBy("metal"), styles: countBy("style") }, recent: rows.results.slice(0, 30) });
 }
+async function shopLcRewardStatus(request: Request, env: Env, account: AccountRow): Promise<Response> {
+  const dayKey = centralDayKey(Date.now());
+  const [daily, recent] = await Promise.all([
+    env.DB.prepare(
+      "SELECT COUNT(*) AS count FROM shoplc_reward_receipts WHERE account_id=?1 AND day_key=?2 AND credited_at IS NOT NULL"
+    ).bind(account.id, dayKey).first<{count:number}>(),
+    env.DB.prepare(
+      "SELECT receipt_id, action_type, reward_amount, day_key, credited_at FROM shoplc_reward_receipts WHERE account_id=?1 AND credited_at IS NOT NULL ORDER BY credited_at DESC LIMIT 10"
+    ).bind(account.id).all(),
+  ]);
+  const rewardedToday = Number(daily?.count||0);
+  return json(request,{
+    ok:true,rewardAmount:SHOPLC_REWARD_AMOUNT,rewardedToday,dailyLimit:SHOPLC_DAILY_REWARD_LIMIT,
+    remainingToday:Math.max(0,SHOPLC_DAILY_REWARD_LIMIT-rewardedToday),
+    timezone:"America/Chicago",
+    starCoins:Number(account.star_coins)||0,
+    receipts:recent.results.map(row=>({
+      receiptId:String(row.receipt_id),
+      actionType:String(row.action_type),amount:Number(row.reward_amount),
+      day:String(row.day_key),creditedAt:Number(row.credited_at)
+    }))
+  });
+}
+
 async function saveShopLcReward(request: Request, env: Env, account: AccountRow): Promise<Response> {
   const body = await readBody<JsonRecord>(request);
   const idempotencyKey = cleanString(body.clickId ?? body.idempotencyKey, 160);
@@ -619,7 +643,11 @@ async function saveShopLcReward(request: Request, env: Env, account: AccountRow)
   if (!/^(?:product|auction):[A-Za-z0-9._:-]{3,140}$/.test(itemId)) {
     throw new HttpError(400, "shoplc_item_invalid", "An item-specific Shop LC product or auction ID is required.");
   }
-  const itemKey = await sha256(`shoplc:${itemId}`);
+  // Each real Buy/Bid activation may earn, up to the per-account three-click cap per day.
+  // Hash the stable click receipt, not the item, so a live broadcast showing one product
+  // does not permanently disqualify later intentional clicks on that same item.
+  // The unique idempotency key still prevents replaying or refreshing a paid click.
+  const itemKey = await sha256(`shoplc:click:${idempotencyKey}`);
   const quantId = cleanString(body.quantId, 240);
   const now = Date.now();
   const dayKey = centralDayKey(now);
@@ -681,14 +709,14 @@ async function saveShopLcReward(request: Request, env: Env, account: AccountRow)
   ]);
   const rewardedToday = Number(dailyCount?.count || 0);
   const reason = credited ? "credited"
-    : itemReceipt ? "item_already_rewarded"
+    : itemReceipt ? "duplicate_click"
     : rewardedToday >= SHOPLC_DAILY_REWARD_LIMIT ? "daily_limit"
     : "duplicate_click";
 
   return json(request, {
     ok: true,
     credited,
-    duplicate: reason === "item_already_rewarded" || reason === "duplicate_click",
+    duplicate: reason === "duplicate_click",
     reason,
     awarded: credited ? SHOPLC_REWARD_AMOUNT : 0,
     rewardAmount: SHOPLC_REWARD_AMOUNT,
@@ -711,7 +739,7 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
     throw new HttpError(403, "origin_not_allowed", "This site is not allowed to write to the StarQuest ledger.");
   }
   if (request.method === "GET" && url.pathname === "/health") {
-    return json(request, { ok: true, service: "starquest-ledger", sharesPerCoin: SHARES_PER_COIN, shoplcRewards: { rewardAmount: SHOPLC_REWARD_AMOUNT, dailyLimit: SHOPLC_DAILY_REWARD_LIMIT, timezone: "America/Chicago", oncePerItem: true } });
+    return json(request, { ok: true, service: "starquest-ledger", sharesPerCoin: SHARES_PER_COIN, shoplcRewards: { rewardAmount: SHOPLC_REWARD_AMOUNT, dailyLimit: SHOPLC_DAILY_REWARD_LIMIT, timezone: "America/Chicago", oncePerItem: false, idempotency: "per_click" } });
   }
   if (request.method === "GET" && url.pathname === "/v1/shoplc/current-item") return currentShopLcItem(request);
   if (request.method === "GET" && url.pathname === "/v1/shoplc/featured-auctions") return featuredShopLcAuctions(request);
@@ -736,6 +764,7 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
   if (request.method === "POST" && url.pathname === "/v1/crusher-spins") return saveCrusherSpin(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shoplc/clicks") return saveShopLcClick(request, env, account);
   if (request.method === "GET" && url.pathname === "/v1/shoplc/interests") return loadShopLcInterests(request, env, account);
+  if (request.method === "GET" && url.pathname === "/v1/shoplc/rewards/status") return shopLcRewardStatus(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shoplc/rewards") return saveShopLcReward(request, env, account);
   throw new HttpError(404, "not_found", "StarQuest ledger endpoint not found.");
 }

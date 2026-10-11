@@ -1,0 +1,20 @@
+name: ShopLC reward accounting regression
+on:
+  pull_request:
+    paths:
+      - 'workers/starquest-ledger/src/index.ts'
+      - 'workers/starquest-ledger/test/shoplc_rewards.py'
+      - '.github/workflows/shoplc-ledger-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'workers/starquest-ledger/src/index.ts'
+      - 'workers/starquest-ledger/test/shoplc_rewards.py'
+      - '.github/workflows/shoplc-ledger-regression.yml'
+jobs:
+  verify-starcoin-rewards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test StarQuest D1 click settlement and 3/day cap
+        run: python3 workers/starquest-ledger/test/shoplc_rewards.py
