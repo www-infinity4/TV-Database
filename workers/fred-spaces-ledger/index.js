@@ -5,6 +5,7 @@ async function userOf(request,db){const auth=/^Bearer[ ]+(sq_[A-Za-z0-9_-]{32,})
 async function ensure(db){
  await db.prepare("CREATE TABLE IF NOT EXISTS spaces_episode_unlocks(account_id TEXT NOT NULL REFERENCES accounts(id),episode_id TEXT NOT NULL,attempt_id TEXT NOT NULL,charged_at INTEGER,created_at INTEGER NOT NULL,PRIMARY KEY(account_id,episode_id))").run();
  await db.prepare("CREATE TABLE IF NOT EXISTS media_star_owner_config(card_key TEXT PRIMARY KEY,owner_account_id TEXT NOT NULL REFERENCES accounts(id),configured_at INTEGER NOT NULL)").run();
+ await db.prepare("CREATE TABLE IF NOT EXISTS media_creator_payout_destinations(creator_key TEXT PRIMARY KEY,account_id TEXT NOT NULL REFERENCES accounts(id),verification_method TEXT NOT NULL CHECK(verification_method IN ('verified_oauth','verified_admin_proof')),verification_reference TEXT NOT NULL,verified_at INTEGER NOT NULL)").run();
 }
 export default {async fetch(request,env){
  const u=new URL(request.url),origin=request.headers.get("origin")||"",cors=ORIGINS.has(origin)?origin:"";
@@ -15,8 +16,9 @@ export default {async fetch(request,env){
    // A missing/unavailable owner means checkout must stay closed.
    let paymentsReady=false;
    try {
-     const owner=await env.DB.prepare("SELECT cfg.owner_account_id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star'").first();
-     paymentsReady=!!owner?.owner_account_id;
+     await ensure(env.DB);
+     const creator=await env.DB.prepare("SELECT a.id FROM media_creator_payout_destinations cfg JOIN accounts a ON a.id=cfg.account_id WHERE cfg.creator_key='fred-krueger' AND cfg.verified_at>0 AND length(cfg.verification_reference)>0").first();
+     paymentsReady=!!creator?.id;
    }catch(_){paymentsReady=false;}
    return reply({ok:true,service:"fred-spaces-ledger",authoritative:"starquest D1",paymentsReady},200,cors);
  }
@@ -35,14 +37,15 @@ export default {async fetch(request,env){
  if(!request.headers.get("content-type")?.includes("application/json"))return reply({ok:false,error:"json_required"},415,cors);
  const body=await request.json().catch(()=>null),episodeId=String(body?.episodeId||"");
  if(!PAID.has(episodeId))return reply({ok:false,error:"episode_not_billable"},400,cors);
- // A paid unlock is a transfer, never a coin burn. Fail closed until the
- // business owner's payout wallet has been explicitly configured in D1.
+ // A paid curated unlock transfers one coin to Fred's verified wallet.
+ // An outbound X link cannot verify playback of the audio.
  const owner=await env.DB.prepare("SELECT a.id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star'").first();
- if(!owner?.id)return reply({ok:false,error:"owner_payout_not_configured",message:"Media Star episode sales are unavailable while the platform owner wallet is not connected. No StarCoin was charged."},503,cors);
+ // Creator account must be independently verified before the user is debited.
+ const creator=await env.DB.prepare("SELECT a.id FROM media_creator_payout_destinations cfg JOIN accounts a ON a.id=cfg.account_id WHERE cfg.creator_key='fred-krueger' AND cfg.verified_at>0 AND length(cfg.verification_reference)>0").first();
+ if(!creator?.id)return reply({ok:false,error:"creator_payout_not_configured",message:"Fred's verified payout wallet is not connected. No StarCoin was charged."},503,cors);
  // The platform owner's preview is free and idempotent; it is not a sale.
- // Creator-payout settings on separately embedded blank Media Star templates
- // are independent and NEVER used by this Fred curation endpoint.
- if(owner.id===user.id){
+ // No browser-provided creator destination is accepted.
+ if(owner?.id===user.id){
    const previous=await env.DB.prepare("SELECT episode_id FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=? AND charged_at IS NOT NULL").bind(user.id,episodeId).first();
    if(!previous){
      const stamp=Date.now(),ref="owner-preview-"+crypto.randomUUID();
@@ -60,14 +63,14 @@ export default {async fetch(request,env){
  env.DB.prepare("UPDATE accounts SET star_coins=star_coins-1,updated_at=? WHERE id=? AND star_coins>=1 AND EXISTS(SELECT 1 FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=? AND attempt_id=? AND charged_at IS NULL)").bind(now,user.id,user.id,episodeId,attempt),
  env.DB.prepare("UPDATE spaces_episode_unlocks SET charged_at=? WHERE account_id=? AND episode_id=? AND attempt_id=? AND charged_at IS NULL AND changes()=1").bind(now,user.id,episodeId,attempt),
  env.DB.prepare("INSERT INTO ledger_events(id,account_id,event_type,amount,balance,progress_to_next_coin,shares_per_coin,reference_id,content_id,created_at) SELECT ?,a.id,'spaces_episode_unlock',-1,a.star_coins,a.pending_share_credits,10,u.attempt_id,u.episode_id,? FROM spaces_episode_unlocks u JOIN accounts a ON a.id=u.account_id WHERE u.account_id=? AND u.episode_id=? AND u.attempt_id=? AND u.charged_at=?").bind(crypto.randomUUID(),now,user.id,episodeId,attempt,now),
- // Payment and payout run in the same D1 batch/transaction, with paired receipts.
- // A self-purchase records both sides but leaves the owner wallet net unchanged.
- env.DB.prepare("UPDATE accounts SET star_coins=star_coins+1,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=? AND attempt_id=? AND charged_at=?)").bind(now,owner.id,user.id,episodeId,attempt,now),
- env.DB.prepare("INSERT INTO ledger_events(id,account_id,event_type,amount,balance,progress_to_next_coin,shares_per_coin,reference_id,content_id,created_at) SELECT ?,a.id,'spaces_episode_owner_payout',1,a.star_coins,a.pending_share_credits,10,u.attempt_id,u.episode_id,? FROM spaces_episode_unlocks u JOIN accounts a ON a.id=? WHERE u.account_id=? AND u.episode_id=? AND u.attempt_id=? AND u.charged_at=?").bind(crypto.randomUUID(),now,owner.id,user.id,episodeId,attempt,now),
+ // One atomic D1 batch records both the listener debit and creator credit.
+ // A creator self-purchase records both sides with zero net wallet change.
+ env.DB.prepare("UPDATE accounts SET star_coins=star_coins+1,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=? AND attempt_id=? AND charged_at=?)").bind(now,creator.id,user.id,episodeId,attempt,now),
+ env.DB.prepare("INSERT INTO ledger_events(id,account_id,event_type,amount,balance,progress_to_next_coin,shares_per_coin,reference_id,content_id,created_at) SELECT ?,a.id,'spaces_episode_creator_payout',1,a.star_coins,a.pending_share_credits,10,u.attempt_id,u.episode_id,? FROM spaces_episode_unlocks u JOIN accounts a ON a.id=? WHERE u.account_id=? AND u.episode_id=? AND u.attempt_id=? AND u.charged_at=?").bind(crypto.randomUUID(),now,creator.id,user.id,episodeId,attempt,now),
  env.DB.prepare("DELETE FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=? AND attempt_id=? AND charged_at IS NULL").bind(user.id,episodeId,attempt)
  ]);
  const [r,b]=await Promise.all([env.DB.prepare("SELECT attempt_id,charged_at FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=?").bind(user.id,episodeId).first(),env.DB.prepare("SELECT star_coins FROM accounts WHERE id=?").bind(user.id).first()]);
  if(!r?.charged_at)return reply({ok:false,error:"insufficient_star_coins",message:"Earn 1 full StarCoin to unlock another episode."},409,cors);
- return reply({ok:true,episodeId,charged:r.attempt_id===attempt?1:0,alreadyUnlocked:r.attempt_id!==attempt,starCoins:b?.star_coins??0},200,cors);
+ return reply({ok:true,episodeId,charged:r.attempt_id===attempt?1:0,creatorPaid:r.attempt_id===attempt,recipient:"fred-krueger",receiptReference:r.attempt_id,alreadyUnlocked:r.attempt_id!==attempt,starCoins:b?.star_coins??0},200,cors);
  }catch(error){console.error(error);return reply({ok:false,error:"ledger_unavailable",message:"Charge not confirmed; try again."},503,cors)}
  }};
