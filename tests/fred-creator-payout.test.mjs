@@ -12,7 +12,7 @@ function database({verified=false}={}){
        async run(){state.queries.push(this);return {meta:{changes:1}}},
        async first(){
          state.queries.push(this);
-         if(sql.includes('FROM account_devices'))return {id:'listener'};
+         if(sql.includes('JOIN account_devices'))return {id:'listener'};
          if(sql.includes('FROM media_star_owner_config'))return {id:'platform-owner'};
          if(sql.includes('FROM media_creator_payout_destinations'))return verified?{id:'verified-fred'}:null;
          if(sql.includes('FROM spaces_episode_unlocks'))return {attempt_id:state.attempt,charged_at:123};
