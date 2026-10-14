@@ -56,7 +56,7 @@ test('verified Fred beneficiary: one batch with debit and paired creator credit'
  assert.ok(debit&&credit&&deposit,'paired immutable receipts and creator deposit');
  assert.equal(deposit.args[1],'verified-fred');
  assert.equal(credit.args[2],'verified-fred');
- assert.equal(debit.args[2],credit.args[4],'debit and credit share one attempt reference');
+ assert.equal(debit.args[4],credit.args[5],'debit and credit share one attempt reference');
  assert.ok(!src.includes("'spaces_episode_owner_payout',1"),'Fred must not pay a different owner');
 });
 test('public health advertises payment readiness only when verified Fred destination exists',async()=>{
