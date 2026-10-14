@@ -16,21 +16,25 @@ StarQuest device bearer-token authentication. It does not mint coins.
 - A previous curated-link unlock for the same account and episode is free to revisit.
 - The `spaces_episode_unlocks` table is created on first authenticated use,
   and StarQuest `accounts.star_coins` is the authoritative debit balance.
-- Every successful purchase **must** transfer one StarCoin from the listener to the
-  QuantaPhi/Media Star business owner's verified StarQuest wallet. The debit
-  (event type `spaces_episode_unlock`, amount -1) and owner credit
-  (event type `spaces_episode_owner_payout`, amount +1) must share the
-  purchase attempt reference and commit in the same D1 transaction.
-- The owner destination is resolved exclusively on the server from
-  `media_star_owner_config` (`card_key='media-star'`, verified `owner_account_id`);
-  **never** from a client-supplied username, URL, or wallet ID. The table is
-  created automatically. An account administrator must configure the verified
-  owner's stable StarQuest account ID before paid unlocks are available.
-- Until the owner account is configured, paid unlocks return
-  `owner_payout_not_configured` **before any debit**. This is deliberate
-  loss prevention, not confirmation that a coin was spent.
-- Purchases by the owner record equal debit/payout entries and net to zero.
-  Previously unlocked episodes remain free to revisit.
+- Each *new paid unlock* transfers **one full StarCoin to Fred's verified creator account**.
+  The debit (`spaces_episode_unlock`, -1) and credit
+  (`spaces_episode_creator_payout`, +1) are written in one StarQuest D1 batch
+  with the same attempt reference. Retrying the same unlock never pays twice.
+- The destination comes only from the server-controlled
+  `media_creator_payout_destinations` registry. The `fred-krueger` entry must
+  have a verified StarQuest account, positive verification time, a recorded
+  ownership proof reference, and a verification method of `verified_oauth`
+  or `verified_admin_proof`. An X handle alone is NOT wallet proof.
+- Until Fred's authenticated/verified destination is provisioned, health says
+  `paymentsReady:false`; attempted purchases return
+  `creator_payout_not_configured` before any debit. Never pay the curator as
+  a fallback.
+- The platform owner's preview is independently free. A creator buying their
+  own paid unlock is credited back in the same atomic transfer.
+- This is **not an automatic fee on clicking Play** or proof of audio playback.
+  QuantaPhi currently opens X for the actual recording, and cannot know whether
+  X played it. A separate per-play license and explicit checkout confirmation
+  are needed before claiming recurring play royalties.
 - October 9 payout audit discovered five -1 episode unlock entries, but no
   owner-payout entries. These historic debits require reconciliation: the owner reports only
   **one** StarCoin remaining missing, while the ledger shows independent
@@ -65,3 +69,23 @@ is actually available.
 The Worker has been uploaded using Cloudflare Workers API. This folder is the
 version-controlled source and binding configuration for subsequent deployments.
 Do not replace or overwrite the existing `starquest-ledger` Worker.
+
+## Artist / AI builder attribution
+
+The verified creator registry is independent of the QuantaPhi curator wallet.
+Do not open a creator payout for Fred or any musician/host using only a display
+name or X username. First collect consent and proof the destination belongs to
+that contributor; record the verified StarQuest account server-side. The bot
+that authored a page or plugin should be recorded as a provenance actor
+(model/provider, job ID, repository, commit SHA, page/card ID, human owner,
+accepted tests). It must not receive spendable tokens without an authenticated
+authorized beneficiary and an explicit earning policy. An assistant cannot
+self-register an independent wallet account from an untrusted prompt.
+
+## Settlement reconciliation
+
+Read the immutable source receipts first, then join by attempt ID to the
+listener debit and creator credit. Investigate historical debit-only records
+without automatically restoring or double-paying them. An unmatched charge is
+an incident, not evidence of a confirmed Fred royalty. Keep `charged_at` rows
+for no-fee owner previews separate from actual negative debit events.
