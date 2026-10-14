@@ -1,0 +1,23 @@
+name: Fred verified creator payout regression
+on:
+  push:
+    paths:
+      - 'workers/fred-spaces-ledger/**'
+      - 'tests/fred-creator-payout.test.mjs'
+      - '.github/workflows/fred-creator-payout-regression.yml'
+  pull_request:
+    paths:
+      - 'workers/fred-spaces-ledger/**'
+      - 'tests/fred-creator-payout.test.mjs'
+      - '.github/workflows/fred-creator-payout-regression.yml'
+permissions:
+  contents: read
+jobs:
+  payout-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test tests/fred-creator-payout.test.mjs
