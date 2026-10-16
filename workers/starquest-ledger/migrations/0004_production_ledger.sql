@@ -66,3 +66,14 @@ CREATE TABLE IF NOT EXISTS production_research_jobs (
   evidence_url TEXT NOT NULL DEFAULT '',
   note TEXT NOT NULL DEFAULT ''
 );
+
+-- Public Fred host listing, not guest verification or rights to claim a payout.
+INSERT OR IGNORE INTO production_catalog(content_id,platform,source_id,title,source_url,attribution_state,research_state,created_at,updated_at) VALUES('xspaces:1OyKAjYPeXqGb','xspaces','1OyKAjYPeXqGb','Bitcoin and Coffee','https://x.com/i/spaces/1OyKAjYPeXqGb','host_listed_guest_research_pending','requires_independent_credits',0,0);
+INSERT OR IGNORE INTO production_credits(credit_id,content_id,person_key,display_name,role,evidence_url,evidence_status,created_at) VALUES('fred-host-1OyKAjYPeXqGb','xspaces:1OyKAjYPeXqGb','fred-krueger','Fred Krueger','host','https://www.twitterspacegpt.com/hosts/dotkrueger','public_host_listing_only_no_payment_rights',0);
+INSERT OR IGNORE INTO production_research_jobs(content_id,status,note) VALUES('xspaces:1OyKAjYPeXqGb','requires_independent_credits','No guest identified until a reliable speaker list or transcript is reviewed');
+INSERT OR IGNORE INTO production_catalog(content_id,platform,source_id,title,source_url,attribution_state,research_state,created_at,updated_at) VALUES('xspaces:1MnGnPEEvWYxO','xspaces','1MnGnPEEvWYxO','Silver is a bubble. Bitcoin is the real deal.','https://x.com/i/spaces/1MnGnPEEvWYxO','host_listed_guest_research_pending','requires_independent_credits',0,0);
+INSERT OR IGNORE INTO production_credits(credit_id,content_id,person_key,display_name,role,evidence_url,evidence_status,created_at) VALUES('fred-host-1MnGnPEEvWYxO','xspaces:1MnGnPEEvWYxO','fred-krueger','Fred Krueger','host','https://www.twitterspacegpt.com/hosts/dotkrueger','public_host_listing_only_no_payment_rights',0);
+INSERT OR IGNORE INTO production_research_jobs(content_id,status,note) VALUES('xspaces:1MnGnPEEvWYxO','requires_independent_credits','No guest identified until a reliable speaker list or transcript is reviewed');
+INSERT OR IGNORE INTO production_catalog(content_id,platform,source_id,title,source_url,attribution_state,research_state,created_at,updated_at) VALUES('xspaces:1MYxNlwEqYyGw','xspaces','1MYxNlwEqYyGw','State of the markets. Bitcoin.','https://x.com/i/spaces/1MYxNlwEqYyGw','host_listed_guest_research_pending','requires_independent_credits',0,0);
+INSERT OR IGNORE INTO production_credits(credit_id,content_id,person_key,display_name,role,evidence_url,evidence_status,created_at) VALUES('fred-host-1MYxNlwEqYyGw','xspaces:1MYxNlwEqYyGw','fred-krueger','Fred Krueger','host','https://www.twitterspacegpt.com/hosts/dotkrueger','public_host_listing_only_no_payment_rights',0);
+INSERT OR IGNORE INTO production_research_jobs(content_id,status,note) VALUES('xspaces:1MYxNlwEqYyGw','requires_independent_credits','No guest identified until a reliable speaker list or transcript is reviewed');
