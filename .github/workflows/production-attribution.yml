@@ -1,0 +1,55 @@
+name: Production-credit source and D1 safety
+on:
+  pull_request:
+    paths:
+      - 'workers/starquest-ledger/**'
+      - 'js/starquest-cloud-ledger.js'
+      - 'tests/production-attribution.test.cjs'
+      - '.github/workflows/production-attribution.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'workers/starquest-ledger/**'
+      - 'js/starquest-cloud-ledger.js'
+      - 'tests/production-attribution.test.cjs'
+      - '.github/workflows/production-attribution.yml'
+permissions:
+  contents: read
+jobs:
+  ledger-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Compile StarQuest Worker type safety
+        working-directory: workers/starquest-ledger
+        run: |
+          npm ci
+          npx wrangler types
+          npx tsc --noEmit
+      - name: Validate D1 schema and immutable ledger constraints
+        run: |
+          python3 - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          db=sqlite3.connect(':memory:')
+          base=Path('workers/starquest-ledger/migrations/')
+          db.executescript((base/'0001_initial.sql').read_text())
+          db.executescript((base/'0004_production_ledger.sql').read_text())
+          now=1792100000
+          db.execute("INSERT INTO accounts VALUES('a','viewer','secret',0,0,0,?,?)",(now,now))
+          db.execute("INSERT INTO production_catalog(content_id,platform,source_id,title,created_at,updated_at) VALUES('youtube:abc123ABCDE','youtube','abc123ABCDE','Sample',?,?)",(now,now))
+          db.execute("INSERT INTO production_play_receipts VALUES('r','youtube:abc123ABCDE','a','2026-10-15','self_reported_play',31,?)",(now,))
+          try:
+              db.execute("INSERT INTO production_play_receipts VALUES('r2','youtube:abc123ABCDE','a','2026-10-15','self_reported_play',31,?)",(now,))
+              raise AssertionError('Duplicate play was accepted')
+          except sqlite3.IntegrityError:pass
+          assert db.execute("SELECT star_coins FROM accounts WHERE id='a'").fetchone()[0]==0
+          print('Unique receipts, public credits and unfunded wallet isolation validated')
+          PY
+      - name: Browser source receipts regression tests
+        run: |
+          node --check js/starquest-cloud-ledger.js
+          node --test tests/production-attribution.test.cjs
