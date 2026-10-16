@@ -25,7 +25,7 @@ function make(tag,cl,text){const n=document.createElement(tag);if(cl)n.className
 function rights(metadata){
  const m=metadata?.metadata||{},license=String(m.licenseurl||'').trim().toLowerCase();
  // An archived television upload by itself is not a public distribution license.
- return /^https?:\/\/(?:creativecommons\.org\/licenses\/(?:by|by-sa|by-nd|by-nc|by-nc-sa|by-nc-nd)\/|creativecommons\.org\/publicdomain\/zero\/)/.test(license);
+ return /^https?:\/\/creativecommons\.org\/(?:licenses\/(?:by|by-sa)\/|publicdomain\/zero\/)/.test(license);
 }
 function direct(id,file){return 'https://archive.org/download/'+encodeURIComponent(id)+'/'+file.split('/').map(encodeURIComponent).join('/')}
 function mount(){
