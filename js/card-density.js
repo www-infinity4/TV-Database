@@ -6,7 +6,7 @@ function init(){
  const rows=[...document.querySelectorAll('#main-content .content-section .card-row')];
  const update=row=>{
   const section=row.closest('.content-section');if(!section||section.id==='sq-archive-vault')return;
-  const populated=!!row.querySelector('.card, .show-card, [role="listitem"], button:not(.scroll-btn), a, [data-show-id]')||row.children.length>0;
+  // Only an actual rendered, playable or inspectable title counts. Blank\n  // placeholders, invisible skeletons, and decorative row wrappers do not.\n  const populated=!!row.querySelector('.show-card, [data-show-id], [data-episode-id], .episode-item');
   section.classList.toggle('sq-no-programs',!populated);
  };
  for(const row of rows){update(row);new MutationObserver(()=>update(row)).observe(row,{childList:true,subtree:false})}
