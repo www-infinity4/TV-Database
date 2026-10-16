@@ -231,7 +231,18 @@
     const user=currentUser();
     if(!user||!service?.getHistory)return;
     const recent=service.getHistory()?.[0];
-    const videoId=String(recent?.youtubeId||recent?.videoId||'').trim();
+    // StarQuest history deliberately stores episodeId rather than copying
+    // source URLs. Resolve against the current vetted SHOWS episode catalog.
+    let videoId=String(recent?.youtubeId||recent?.videoId||'').trim();
+    if(!videoId && global.SHOWS && Array.isArray(global.SHOWS)) {
+      const text=String(recent?.episodeId||'');
+      const idx=text.lastIndexOf('|S'),showId=text.slice(0,idx),ep=text.slice(idx+1);
+      const show=global.SHOWS.find(function(x){return x.id===showId;});
+      const episode=show && Array.isArray(show.episodes) && show.episodes.find(function(x){
+        return 'S'+x.season+'E'+x.episode===ep;
+      });
+      videoId=String(episode?.youtubeId||'').trim();
+    }
     const seconds=Math.max(0,Number(recent?.watchedSeconds)||0);
     if(!/^[A-Za-z0-9_-]{11}$/.test(videoId)||seconds<30)return;
     const day=new Date().toISOString().slice(0,10);
