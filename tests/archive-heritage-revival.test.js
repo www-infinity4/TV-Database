@@ -10,3 +10,7 @@ assert.match(revival,/No unverified video was started/);
 assert.doesNotMatch(revival,/SHOWS\.splice|StarQuestAuth\.recordShare|receiveStarCoin/);
 assert.match(polish,/MutationObserver/);
 console.log('StarQuest Archive separation and presentation contracts passed');
+// Item-level archive presence is not enough for streaming. Deny noncommercial
+// licenses on the advertising-enabled site; only CC0 / BY / BY-SA qualify.
+assert.doesNotMatch(revival,/by-nc/);
+assert.match(revival,/publicdomain/);
