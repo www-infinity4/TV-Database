@@ -39,7 +39,7 @@
   }
 
   function localDay(dateValue) {
-    const date = dateValue instanceof Date ? dateValue : new Date();
+    const date = dateValue && typeof dateValue.getTime === "function" && Number.isFinite(dateValue.getTime()) ? dateValue : new Date();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -114,7 +114,7 @@
   }
 
   function nextChangeAt(dateValue) {
-    const now = dateValue instanceof Date ? new Date(dateValue.getTime()) : new Date();
+    const now = dateValue && typeof dateValue.getTime === "function" && Number.isFinite(dateValue.getTime()) ? new Date(dateValue.getTime()) : new Date();
     return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
   }
 
@@ -132,7 +132,7 @@
     ["⭐", "StarQuest", "https://www-infinity4.github.io/TV-Database/", true],
     ["📺", "Hermit TV", "https://www-infinity4.github.io/Hermit-TV/"],
     ["🚀", "Star Launcher", "https://www-infinity4.github.io/Star-Launcher/"],
-    ["🎬", "HBO", "https://www-infinity4.github.io/HBO/"],
+    ["📺", "Omni TV", "https://quantaphi.org/omni-tv/"],
     ["🎞️", "Cinemax", "https://www-infinity4.github.io/Cinemax/"],
     ["▶️", "Showtime", "https://www-infinity4.github.io/Showtime/"],
     ["✨", "Starz", "https://www-infinity4.github.io/Starz/"],
@@ -165,6 +165,7 @@
     else nav.appendChild(fragment);
   }
 
+  if (typeof document === "undefined") return; // Pure carousel tests have no DOM; browser installs once.
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", install, { once:true });
   else install();
 })(window);
