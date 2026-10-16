@@ -132,7 +132,7 @@
     ["⭐", "StarQuest", "https://www-infinity4.github.io/TV-Database/", true],
     ["📺", "Hermit TV", "https://www-infinity4.github.io/Hermit-TV/"],
     ["🚀", "Star Launcher", "https://www-infinity4.github.io/Star-Launcher/"],
-    ["🎬", "HBO", "https://www-infinity4.github.io/HBO/"],
+    ["📺", "Omni TV", "https://quantaphi.org/omni-tv/"],
     ["🎞️", "Cinemax", "https://www-infinity4.github.io/Cinemax/"],
     ["▶️", "Showtime", "https://www-infinity4.github.io/Showtime/"],
     ["✨", "Starz", "https://www-infinity4.github.io/Starz/"],
@@ -165,6 +165,7 @@
     else nav.appendChild(fragment);
   }
 
+  if (typeof document === "undefined") return; // Pure carousel tests have no DOM; browser installs once.
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", install, { once:true });
   else install();
 })(window);
