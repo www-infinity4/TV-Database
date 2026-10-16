@@ -223,11 +223,79 @@
   });
   document.addEventListener("starquest:history-progress", scheduleHistorySync);
   document.addEventListener("starquest:watch-progress", scheduleHistorySync);
+  // Use actual account playback progress, not a video-card open/click.
+  // A browser report is still untrusted until source & funded settlement.
+  const productionSeen=new Map();
+  async function productionHistoryProgress() {
+    const service=auth();
+    const user=currentUser();
+    if(!user||!service?.getHistory)return;
+    const recent=service.getHistory()?.[0];
+    // StarQuest history deliberately stores episodeId rather than copying
+    // source URLs. Resolve against the current vetted SHOWS episode catalog.
+    let videoId=String(recent?.youtubeId||recent?.videoId||'').trim();
+    if(!videoId && global.SHOWS && Array.isArray(global.SHOWS)) {
+      const text=String(recent?.episodeId||'');
+      const idx=text.lastIndexOf('|S'),showId=text.slice(0,idx),ep=text.slice(idx+1);
+      const show=global.SHOWS.find(function(x){return x.id===showId;});
+      const episode=show && Array.isArray(show.episodes) && show.episodes.find(function(x){
+        return 'S'+x.season+'E'+x.episode===ep;
+      });
+      videoId=String(episode?.youtubeId||'').trim();
+    }
+    const seconds=Math.max(0,Number(recent?.watchedSeconds)||0);
+    if(!/^[A-Za-z0-9_-]{11}$/.test(videoId)||seconds<30)return;
+    const day=new Date().toISOString().slice(0,10);
+    const key=user.key+'|'+videoId+'|'+day;
+    if(productionSeen.has(key))return;
+    productionSeen.set(key,true);
+    try{
+      if(!await connect())return;
+      await request('/v1/production/plays',{method:'POST',body:{platform:'youtube',sourceId:videoId,
+        title:String(recent.showTitle||recent.epTitle||'').slice(0,180),observedSeconds:seconds}});
+    }catch(error){
+      productionSeen.delete(key);
+      // A missing migration/deployment must never interrupt video playback.
+      console.warn('Production play ledger pending',error);
+    }
+  }
+  document.addEventListener('starquest:history-progress',()=>void productionHistoryProgress());
+  document.addEventListener('starquest:watch-progress',()=>void productionHistoryProgress());
+
 
   if (currentUser()) connect();
   global.StarQuestCloudLedger = Object.freeze({
     enabled: true,
     connect: connect,
+    // Signed StarQuest D1 receipts: credit discovery does not equal payment.
+    recordProductionPlay: async function (play) {
+      if (!play || !play.platform || !play.sourceId) throw Error('source_required');
+      if (!(await connect())) throw Error('ledger_not_connected');
+      return request('/v1/production/plays',{method:'POST',body:{
+        platform:play.platform,sourceId:play.sourceId,title:play.title,
+        observedSeconds:Math.max(0,Math.min(7200,Number(play.observedSeconds)||0))
+      }});
+    },
+    registerProduction: async function (card) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      // Only a verified owner's own card; never automatically grant third-party
+      // exports access to the platform account or Fred's work.
+      return request('/v1/production/register',{method:'POST',body:card});
+    },
+    searchProductionCredits: async function (name) {
+      const response=await global.fetch(endpoint+'/v1/production/search?name='+encodeURIComponent(String(name||'').trim().slice(0,100)),{cache:'no-store'});
+      const payload=await response.json();
+      if(!response.ok||!payload.ok)throw Error(payload.message||'Credit search unavailable');
+      return payload;
+    },
+    claimProductionCredit: async function (creditId,evidenceUrl) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      return request('/v1/production/claim',{method:'POST',body:{creditId,evidenceUrl}});
+    },
+    productionClaims: async function () {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      return request('/v1/production/mine',{method:'POST',body:{}});
+    },
     submitShare: async function (share) {
       if (!share || !String(share.attemptId || "").trim() || !String(share.contentId || "").trim()) {
         throw new Error("share_attempt_and_content_required");

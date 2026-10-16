@@ -1,3 +1,4 @@
+import {productionGet,productionPost,ProductionError,researchProductionCredits} from './production-ledger';
 const SHARES_PER_COIN = 10;
 const SHOPLC_REWARD_AMOUNT = 5;
 const SHOPLC_DAILY_REWARD_LIMIT = 3;
@@ -113,8 +114,8 @@ function normalizeShopLcHref(value: unknown): string {
 
 function decodeHtmlText(value: string): string {
   return value
-    .replace(/<script[\\s\\S]*?<\\/script>/gi, " ")
-    .replace(/<style[\\s\\S]*?<\\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&amp;/gi, "&")
     .replace(/&quot;/gi, '"')
@@ -536,7 +537,7 @@ async function currentShopLcItem(request: Request): Promise<Response> {
   const priceMatches = priceScope.match(/\$\s*([0-9,]+(?:\.\d{2})?)/g) || [];
   const numericPrices = priceMatches.map((value) => Number(value.replace(/[^0-9.]/g, ""))).filter((value) => Number.isFinite(value) && value > 0);
   const price = numericPrices.length ? String(numericPrices[numericPrices.length - 1]) : "";
-  const productHrefMatch = scope.match(/href=["\'](\\/products\\/[^"\'?#]+(?:\\?[^"\']*)?)["\']/i);
+  const productHrefMatch = scope.match(/href=["'](\/products\/[^"'?#]+(?:\?[^"']*)?)["']/i);
   const href = productHrefMatch ? new URL(productHrefMatch[1], "https://www.shoplc.com").toString() : "https://www.shoplc.com/search?q=" + encodeURIComponent(productCode);
   const imageMatch = scope.match(/<img[^>]+(?:src|data-src)=["\']([^"\']+)["\'][^>]*>/i);
   const image = imageMatch ? new URL(imageMatch[1].startsWith("//") ? "https:" + imageMatch[1] : imageMatch[1], "https://www.shoplc.com").toString() : "";
@@ -741,6 +742,10 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
   if (request.method === "GET" && url.pathname === "/health") {
     return json(request, { ok: true, service: "starquest-ledger", sharesPerCoin: SHARES_PER_COIN, shoplcRewards: { rewardAmount: SHOPLC_REWARD_AMOUNT, dailyLimit: SHOPLC_DAILY_REWARD_LIMIT, timezone: "America/Chicago", oncePerItem: false, idempotency: "per_click" } });
   }
+  if (request.method === "GET" && url.pathname.startsWith("/v1/production/")) {
+    const answer = await productionGet(url.pathname,url,env.DB);
+    if (answer) return json(request,answer);
+  }
   if (request.method === "GET" && url.pathname === "/v1/shoplc/current-item") return currentShopLcItem(request);
   if (request.method === "GET" && url.pathname === "/v1/shoplc/featured-auctions") return featuredShopLcAuctions(request);
   if (request.method === "POST" && url.pathname === "/v1/verify-existing") {
@@ -758,6 +763,11 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
   if (request.method === "POST" && url.pathname === "/v1/bootstrap") return bootstrap(request, env);
 
   const account = await accountFromRequest(request, env);
+  if (request.method === "POST" && url.pathname.startsWith("/v1/production/")) {
+    const body=await readBody<JsonRecord>(request);
+    const answer=await productionPost(url.pathname,env.DB,account,body);
+    if (answer) return json(request,answer);
+  }
   if (request.method === "GET" && url.pathname === "/v1/state") return json(request, { ok: true, state: await loadState(env, account) });
   if (request.method === "POST" && url.pathname === "/v1/history") return saveHistory(request, env, account);
   if (request.method === "POST" && url.pathname === "/v1/shares") return saveShare(request, env, account, ctx);
@@ -775,11 +785,13 @@ export default {
       return await route(request, env, ctx);
     } catch (error) {
       if (error instanceof HttpError) return json(request, { ok: false, error: error.code, message: error.message }, error.status);
+      if (error instanceof ProductionError) return json(request, {ok:false,error:error.code,message:error.message},error.status);
       console.error(JSON.stringify({ event: "unhandled_error", message: error instanceof Error ? error.message : String(error) }));
       return json(request, { ok: false, error: "server_error", message: "The ledger could not complete this request." }, 500);
     }
   },
   async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
     ctx.waitUntil(flushInfinityOutbox(env));
+    ctx.waitUntil(researchProductionCredits(env.DB).catch(error=>{console.warn("Production research is waiting for its D1 migration or source access",error)}));
   },
 } satisfies ExportedHandler<Env>;
