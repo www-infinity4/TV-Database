@@ -114,8 +114,8 @@ function normalizeShopLcHref(value: unknown): string {
 
 function decodeHtmlText(value: string): string {
   return value
-    .replace(/<script[\\s\\S]*?<\\/script>/gi, " ")
-    .replace(/<style[\\s\\S]*?<\\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&amp;/gi, "&")
     .replace(/&quot;/gi, '"')
@@ -537,7 +537,7 @@ async function currentShopLcItem(request: Request): Promise<Response> {
   const priceMatches = priceScope.match(/\$\s*([0-9,]+(?:\.\d{2})?)/g) || [];
   const numericPrices = priceMatches.map((value) => Number(value.replace(/[^0-9.]/g, ""))).filter((value) => Number.isFinite(value) && value > 0);
   const price = numericPrices.length ? String(numericPrices[numericPrices.length - 1]) : "";
-  const productHrefMatch = scope.match(/href=["\'](\\/products\\/[^"\'?#]+(?:\\?[^"\']*)?)["\']/i);
+  const productHrefMatch = scope.match(/href=["'](\/products\/[^"'?#]+(?:\?[^"']*)?)["']/i);
   const href = productHrefMatch ? new URL(productHrefMatch[1], "https://www.shoplc.com").toString() : "https://www.shoplc.com/search?q=" + encodeURIComponent(productCode);
   const imageMatch = scope.match(/<img[^>]+(?:src|data-src)=["\']([^"\']+)["\'][^>]*>/i);
   const image = imageMatch ? new URL(imageMatch[1].startsWith("//") ? "https:" + imageMatch[1] : imageMatch[1], "https://www.shoplc.com").toString() : "";
