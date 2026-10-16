@@ -39,7 +39,7 @@
   }
 
   function localDay(dateValue) {
-    const date = dateValue instanceof Date ? dateValue : new Date();
+    const date = dateValue && typeof dateValue.getTime === "function" && Number.isFinite(dateValue.getTime()) ? dateValue : new Date();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -114,7 +114,7 @@
   }
 
   function nextChangeAt(dateValue) {
-    const now = dateValue instanceof Date ? new Date(dateValue.getTime()) : new Date();
+    const now = dateValue && typeof dateValue.getTime === "function" && Number.isFinite(dateValue.getTime()) ? new Date(dateValue.getTime()) : new Date();
     return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
   }
 
