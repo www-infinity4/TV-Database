@@ -58,17 +58,25 @@ async function register(db:Database,owner:Viewer,body:Payload) {
 }
 async function record(db:Database,viewer:Viewer,body:Payload){
  const id=identity(body.platform,body.sourceId);
- if(id.platform==='media-star')throw new ProductionError(400,'creator_content_id_required','Media Star requires the publisher-scoped contentId.');
  let contentId=id.contentId;
- if(typeof body.contentId==='string'&&id.platform==='media-star')contentId=clean(body.contentId,180);
+ if(id.platform==='media-star'){
+  contentId=clean(body.contentId,180);
+  if(!/^media-star:[A-Za-z0-9_-]{3,90}:[A-Za-z0-9_-]{6,80}$/.test(contentId)||!contentId.endsWith(':'+id.sourceId))
+   throw new ProductionError(400,'creator_content_id_required','Use the registered Media Star contentId.');
+  const exists=await db.prepare('SELECT content_id FROM production_catalog WHERE content_id=? AND platform=?')
+   .bind(contentId,'media-star').first();
+  if(!exists)throw new ProductionError(404,'creator_content_not_registered','Register your own card before logging a qualified view.');
+ }
  const observed=cap(body.observedSeconds,7200);
  if(observed<30)throw new ProductionError(400,'short_play','A play requires at least 30 seconds of actual media progress.');
- const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
- const day=today.replace(/[^0-9-]/g,''),now=Date.now();
+ const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',
+  year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date())
+  .filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+ const day=parts.year+'-'+parts.month+'-'+parts.day,now=Date.now();
  const title=clean(body.title,180)||id.sourceId;
  // Plays from unrelated web clients can only create research-pending titles;
  // they cannot name a payee, owner, or mint a token.
- await db.prepare(`INSERT OR IGNORE INTO production_catalog (content_id,platform,source_id,title,source_url,created_at,updated_at)
+ if(id.platform!=='media-star')await db.prepare(`INSERT OR IGNORE INTO production_catalog (content_id,platform,source_id,title,source_url,created_at,updated_at)
  VALUES(?,?,?,?,?,?,?)`).bind(contentId,id.platform,id.sourceId,title,id.url,now,now).run();
  await db.prepare(`INSERT OR IGNORE INTO production_research_jobs(content_id,status) VALUES(?,'queued')`).bind(contentId).run();
  const count=await db.prepare('SELECT COUNT(*) AS n FROM production_play_receipts WHERE viewer_account_id=? AND day_key=?')
@@ -205,6 +213,9 @@ export async function researchProductionCredits(db:Database){
       'wikidata:'+one.qid,name,one.role,'https://www.wikidata.org/wiki/'+q,now));
    }
    if(operations.length)await db.batch(operations);
+   // Public provenance only; never assert any royalty entitlement.
+   await db.prepare("UPDATE production_catalog SET attribution_state='research_candidates',research_state='source_checked',updated_at=? WHERE content_id=?")
+    .bind(now,job.content_id).run();
    await db.prepare(`UPDATE production_research_jobs SET status='candidates_saved',attempts=attempts+1,last_checked_at=?,evidence_url=? WHERE content_id=?`)
    .bind(now,'https://www.wikidata.org/wiki/'+q,job.content_id).run();
    await allocate(db,job.content_id,now);
