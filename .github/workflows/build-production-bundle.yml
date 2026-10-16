@@ -1,0 +1,37 @@
+name: Compile StarQuest production Worker bundle
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'workers/starquest-ledger/src/**'
+      - '.github/workflows/build-production-bundle.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: Bundle Cloudflare Worker without deploying
+        working-directory: workers/starquest-ledger
+        run: |
+          npm ci
+          npx wrangler types
+          npx tsc --noEmit
+          npx wrangler deploy --dry-run --outdir ./dist
+      - name: Surface public bundle in numbered transport chunks for connected Cloudflare deployment
+        working-directory: workers/starquest-ledger
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),path=require('path');
+          const files=fs.readdirSync('dist').filter(f=>f.endsWith('.js'));
+          if(files.length!==1)throw Error('expected exactly one bundled JavaScript module: '+files);
+          const js=fs.readFileSync(path.join('dist',files[0]));
+          if(!js.includes('productionGet')||!js.includes('productionPost'))throw Error('production routes missing');
+          const b64=js.toString('base64'),size=1200;
+          for(let i=0;i<b64.length;i+=size)console.log('SQ_BUNDLE_'+String(i/size).padStart(4,'0')+'='+b64.slice(i,i+size));
+          console.log('SQ_BUNDLE_COUNT='+Math.ceil(b64.length/size));
+          console.log('SQ_BUNDLE_BYTE_LENGTH='+js.length);
+          NODE
