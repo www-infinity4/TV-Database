@@ -13,6 +13,7 @@ on:
       - js/auth.js
       - css/style.css
       - tests/**
+      - js/card-density.js
       - .github/workflows/validate-tv-player.yml
 
 permissions:
@@ -35,6 +36,7 @@ jobs:
           node tests/share-safety-net.test.js
           node tests/playback-catalog.test.js
           node tests/opening-rotation.test.js
+          node tests/single-green-wallet-menu.test.cjs
       - name: Check menu-only controls
         run: |
           python3 - <<'PY'
@@ -55,7 +57,7 @@ jobs:
               "No Archive link remains": "archive.org" not in index.lower(),
               "Share lives in hamburger": aside_start < share < aside_end,
               "StarCoin status lives in hamburger": aside_start < coin < aside_end,
-              "Player exposes hamburger": 'id="player-hamburger-btn"' in index,
+              "One green hamburger shared with player": index.count('id="hamburger-btn"') == 1 and 'player-hamburger-btn' not in index and 'starquest-green-menu' in index,
               "Only one static Avatar Star": index.count("design-star") == 1,
               "Single star is beside the brand": 'data-design-key="brand-name"' in index,
               "Dynamic Avatar stars are disabled": "new MutationObserver" not in avatar,
