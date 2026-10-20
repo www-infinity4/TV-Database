@@ -1147,7 +1147,7 @@
   function buildEmbedUrl(episode, startSeconds) {
     const resumeAt = Math.max(0, Math.trunc(Number(startSeconds) || 0));
     if (!episode || !episode.youtubeId) return "about:blank";
-    const params = new URLSearchParams({ autoplay: "1" });
+    const params = new URLSearchParams({ autoplay: "1", enablejsapi: "1", playsinline: "1", controls: "1", origin: location.origin });
     if (resumeAt > 5) params.set("start", String(resumeAt));
     return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
   }
@@ -2524,7 +2524,7 @@
   function buildPlayerUrl(episode, startSeconds) {
     const resumeAt = Math.max(0, Math.trunc(Number(startSeconds) || 0));
     if (!episode || !episode.youtubeId) return "about:blank";
-    const params = new URLSearchParams({ autoplay: "1" });
+    const params = new URLSearchParams({ autoplay: "1", enablejsapi: "1", playsinline: "1", controls: "1", origin: location.origin });
     if (resumeAt > 5) params.set("start", String(resumeAt));
     return "https://www.youtube.com/embed/" + encodeURIComponent(episode.youtubeId) + "?" + params.toString();
   }

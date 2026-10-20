@@ -5,6 +5,8 @@ on:
     paths:
       - index.html
       - js/app.js
+      - js/starquest-player-health.js
+      - css/starquest-cinema.css
       - js/infinity-wallet-integration.js
       - js/data.js
       - js/youtube-only-catalog.js
@@ -30,6 +32,8 @@ jobs:
           node --check js/data.js
           node --check js/youtube-only-catalog.js
           node --check js/app.js
+          node --check js/starquest-player-health.js
+          node tests/archive-heritage-revival.test.js
           node --check js/infinity-wallet-integration.js
           node --check js/avatar-coin.js
           node --check js/opening-rotation.js
