@@ -39,6 +39,7 @@
   <link rel="dns-prefetch" href="https://i.ytimg.com" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=20261020-cloud-wallet" />
+  <link rel="stylesheet" href="css/starquest-cinema.css?v=20261019-playback1" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
 </head>
 <body>
@@ -394,6 +395,19 @@
 
   <!-- CONTENT ROWS -->
   <main id="main-content">
+    <!-- Real hosted-video movie shelf; Archive listing is not playable content. -->
+    <section class="content-section" aria-labelledby="lbl-movies" id="row-movies-section">
+      <div class="section-header">
+        <h2 class="section-title" id="lbl-movies">🎬 StarQuest Cinema · Movies</h2>
+        <span class="section-more" tabindex="0" role="button" data-see-genre="Movies">Browse all movies</span>
+      </div>
+      <div class="card-row-wrap">
+        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
+        <div class="card-row" id="row-movies" role="list"></div>
+        <button class="scroll-btn right" aria-label="Scroll right">›</button>
+      </div>
+    </section>
+
 
     <!-- FOR YOU ROW — hidden until user has watch history -->
     <section class="content-section content-section--for-you" id="for-you-section" aria-labelledby="lbl-for-you" style="display:none">
@@ -459,17 +473,7 @@
         <button class="scroll-btn right" aria-label="Scroll right">›</button>
       </div>
     </section>
-    <section class="content-section" aria-labelledby="lbl-movies" id="row-movies-section">
-      <div class="section-header">
-        <h2 class="section-title" id="lbl-movies">🎬 Classic Movies</h2>
-        <span class="section-more" tabindex="0" role="button" data-see-genre="Movies">See All</span>
-      </div>
-      <div class="card-row-wrap">
-        <button class="scroll-btn left" aria-label="Scroll left">‹</button>
-        <div class="card-row" id="row-movies" role="list"></div>
-        <button class="scroll-btn right" aria-label="Scroll right">›</button>
-      </div>
-    </section>
+
     <section class="content-section" aria-labelledby="lbl-featured">
       <div class="section-header">
         <h2 class="section-title" id="lbl-featured">⭐ Featured Classics</h2>
@@ -1003,7 +1007,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260815-startup-repair"></script>
-  <script src="js/archive-heritage.js?v=20261015-recovery1"></script>
+
   <script src="js/youtube-only-catalog.js?v=20260913-safe-guide1"></script>
   <script src="js/catalog-ledger.js?v=20260814-ledger1"></script>
   <script src="js/auth.js?v=20260823-cloud-ledger1"></script>
@@ -1026,6 +1030,7 @@
   <script src="js/opening-rotation.js?v=20260912-daily1"></script>
   <script src="js/sona-media-card.js?v=20260825-card1"></script>
   <script src="js/app.js?v=20261019-menu-access"></script>
+  <script src="js/starquest-player-health.js?v=20261019-playback1"></script>
   <script defer src="js/card-density.js?v=20261019-one-menu"></script>
   <script src="js/picture-in-picture.js?v=20260823-pip1"></script>
   <script src="js/playback-watchdog.js?v=20260826-buffer30"></script>
