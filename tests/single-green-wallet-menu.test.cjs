@@ -22,7 +22,7 @@ test('the same wallet sidebar offers sign-in and independently verified Cloudfla
   const sidebar = html.slice(html.indexOf('<aside id="sidebar"'), html.indexOf('</aside>'));
   assert.match(sidebar, /id="unified-wallet-connect"/);
   assert.match(sidebar, /id="sidebar-signin-btn"/);
-  assert.match(sidebar, /id="sidebar-cloud-signin"[^>]*href="https:\/\/quantaphi\.org\/wallet-recovery\.html\?verify=1"/);
+  assert.match(sidebar, /id="sidebar-cloud-signin"[^>]*href="https:\/\/quantaphi\.org\/wallet-recovery\.html\?verify=1&amp;returnTo=%2FTV-Database%2F"/);
   assert.match(sidebar, /id="sidebar-account-backup"[^>]*href="https:\/\/quantaphi\.org\/bubbles-accounts\.html"/);
   assert.match(sidebar, /Do not create a replacement wallet/);
   assert.doesNotMatch(html, /id="splash-signin"/);
@@ -32,9 +32,9 @@ test('the same wallet sidebar offers sign-in and independently verified Cloudfla
 
 test('recovering after cleared browser data never creates a new blank local wallet', () => {
   const adapter = fs.readFileSync('js/infinity-wallet-integration.js', 'utf8');
-  assert.match(adapter, /RECOVERY_URL = 'https:\/\/quantaphi\.org\/wallet-recovery\.html\?verify=1'/);
-  assert.match(adapter, /if \(!current\(\)\) location\.href = RECOVERY_URL;/);
-  assert.match(adapter, /if \(!connected\) return;/);
+  assert.match(adapter, /RECOVERY_URL = 'https:\/\/quantaphi\.org\/wallet-recovery\.html\?verify=1&returnTo=/);
+  assert.match(adapter, /location\.href = cloudState \? VERIFIED_URL : RECOVERY_URL/);
+  assert.match(adapter, /if \(!cloudState \|\| !connected/);
   assert.doesNotMatch(adapter, /wallet\.createWallet\(/);
 });
 
