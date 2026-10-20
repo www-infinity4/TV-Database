@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
   <link rel="dns-prefetch" href="https://i.ytimg.com" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20260823-pip-wallet1" />
+  <link rel="stylesheet" href="css/style.css?v=20261019-green-menu-cloud-recovery" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
 </head>
 <body>
@@ -64,8 +64,6 @@
         <div class="splash__feature"><span>📜</span><span>Watch History</span></div>
       </div>
       <div class="splash__actions">
-        <button id="splash-signin" class="btn btn-primary btn-mario">⭐ Sign In</button>
-        <button id="splash-signup" class="btn btn-secondary">🌟 Create Account</button>
         <button id="splash-guest" class="btn-ghost">Browse as Guest →</button>
       </div>
       <p class="splash__sub">Free forever · No credit card · Earn rewards</p>
@@ -266,8 +264,14 @@
 
     <nav class="sidebar-nav" aria-label="Sidebar navigation">
       <button id="sidebar-signin-btn" class="sidebar-nav__item">
-        <span>👤</span> Sign In / Register
+        <span>👤</span> Sign In / Register on This Device
       </button>
+      <a id="sidebar-cloud-signin" class="sidebar-nav__item" href="https://quantaphi.org/wallet-recovery.html?verify=1">
+        <span>☁️</span> Sign In / Restore Cloudflare Wallet
+      </a>
+      <a id="sidebar-account-backup" class="sidebar-nav__item" href="https://quantaphi.org/bubbles-accounts.html">
+        <span>🔐</span> Bubbles Account Connections &amp; Backup
+      </a>
       <button id="sidebar-signout-btn" class="sidebar-nav__item" style="display:none">
         <span>🚪</span> Sign Out
       </button>
@@ -313,7 +317,7 @@
     </div>
     <div class="sidebar-section">
       <div class="history-empty" style="display:block">
-        Local account: this account and its StarCoins are stored only in this browser. Clearing browser data or changing devices will not transfer them.
+        Device sign-in and any unsynced progress stay in this browser. If you cleared its data, use Sign In / Restore Cloudflare Wallet above to verify your existing cloud account. Do not create a replacement wallet. Cloudflare balances must be confirmed by the server.
       </div>
     </div>
   </aside>
@@ -330,7 +334,7 @@
       <li><a href="#row-crime-section">Crime</a></li>
     </ul>
     <div class="nav__right">
-      <button id="hamburger-btn" class="hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+      <button id="hamburger-btn" class="hamburger starquest-green-menu" type="button" aria-label="Open StarQuest menu and Unified Wallet" aria-expanded="false" aria-controls="sidebar">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -635,7 +639,6 @@
       <div class="player-topbar__right">
         <span id="player-token-notif" class="player-token-notif" aria-live="polite" style="display:none">⭐ +1 StarCoin!</span>
         <button id="player-pip-btn" class="player-pip-btn" type="button" aria-label="Float this video over other apps" title="Float video over other apps">▣ Float</button>
-        <button id="player-hamburger-btn" class="hamburger player-menu-hamburger" type="button" aria-label="Open menu for sharing and StarCoins" aria-expanded="false" aria-controls="sidebar"><span></span><span></span><span></span></button>
       </div>
     </div>
     <div class="player-wrap">
@@ -911,7 +914,7 @@
         document.addEventListener("click", function (event) {
           var source = event.target;
           if (!source || !source.closest) return;
-          var hamburger = source.closest("#hamburger-btn, #player-hamburger-btn");
+          var hamburger = source.closest("#hamburger-btn");
           if (hamburger) {
             event.preventDefault();
             event.stopPropagation();
@@ -1019,10 +1022,10 @@
   <script src="js/recommendation-engine.js?v=20260821-gap50"></script>
   <script src="js/opening-rotation.js?v=20260912-daily1"></script>
   <script src="js/sona-media-card.js?v=20260825-card1"></script>
-  <script src="js/app.js?v=20260912-youtube-only1"></script>
-  <script defer src="js/card-density.js?v=20261015-oracle1"></script>
+  <script src="js/app.js?v=20261019-menu-access"></script>
+  <script defer src="js/card-density.js?v=20261019-one-menu"></script>
   <script src="js/picture-in-picture.js?v=20260823-pip1"></script>
   <script src="js/playback-watchdog.js?v=20260826-buffer30"></script>
   <script src="js/user-worlds.js?v=20260822-world-compact1"></script>
-<script src="https://www-infinity4.github.io/Mint-For-Infinity/infinity-wallet-menu.js?v=20260814-menu2"></script></body>
+</body>
 </html>
