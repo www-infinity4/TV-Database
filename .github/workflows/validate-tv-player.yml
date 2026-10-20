@@ -5,6 +5,7 @@ on:
     paths:
       - index.html
       - js/app.js
+      - js/infinity-wallet-integration.js
       - js/data.js
       - js/youtube-only-catalog.js
       - js/avatar-coin.js
@@ -29,6 +30,7 @@ jobs:
           node --check js/data.js
           node --check js/youtube-only-catalog.js
           node --check js/app.js
+          node --check js/infinity-wallet-integration.js
           node --check js/avatar-coin.js
           node --check js/opening-rotation.js
           node --check js/share-safety-net.js
@@ -37,6 +39,7 @@ jobs:
           node tests/playback-catalog.test.js
           node tests/opening-rotation.test.js
           node tests/single-green-wallet-menu.test.cjs
+          node tests/starquest-cloudflare-wallet-view.test.cjs
       - name: Check menu-only controls
         run: |
           python3 - <<'PY'
