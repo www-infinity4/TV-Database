@@ -10,6 +10,7 @@
     window.StarQuestInfinityWallet = { isConnected: function () { return false; } };
     return;
   }
+  const RECOVERY_URL = 'https://quantaphi.org/wallet-recovery.html?verify=1';
   const wallet = new window.InfinityUnifiedWallet.UnifiedInfinityWallet();
   const slug = value => String(value || 'unresolved').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'unresolved';
   function current() { return wallet.state.currentWalletId && wallet.state.wallets[wallet.state.currentWalletId]; }
@@ -19,7 +20,8 @@
       const user = window.StarQuestAuth && window.StarQuestAuth.currentUser ? window.StarQuestAuth.currentUser() : null;
       let connected = current();
       if (!user || typeof wallet.syncSourceBalance !== 'function') return;
-      if (!connected) connected = wallet.createWallet({ displayName: 'Unified Infinity Wallet' });
+      // A browser cache loss must never silently mint a replacement local wallet.
+      if (!connected) return;
       wallet.syncSourceBalance({
         walletId: connected.walletId,
         assetCode: 'STAR_COIN',
@@ -32,16 +34,17 @@
   }
   function render() {
     const connected = current();
-    if (buttonLabel) buttonLabel.textContent = connected ? 'Unified Wallet · ' + connected.walletId.slice(-8) : 'Connect Unified Wallet';
-    if (buttonDetail) buttonDetail.textContent = connected ? 'Open wallet and account activity' : 'Use across Infinity websites';
+    if (buttonLabel) buttonLabel.textContent = connected ? 'Unified Wallet · ' + connected.walletId.slice(-8) : 'Find / Restore Unified Wallet';
+    if (buttonDetail) buttonDetail.textContent = connected ? 'Open wallet and account activity' : 'Verify your existing Cloudflare wallet';
     if (button) button.classList.toggle('connected', !!connected);
-    setStatus(connected ? 'Movie unlocks and rights allocations will use the unified wallet.' : 'Connect before using StarCoins to unlock a movie.');
+    setStatus(connected ? 'Movie unlocks and rights allocations will use the unified wallet.' : 'Restore and verify your existing cloud wallet before using StarCoins.');
     if (connected) syncStarCoinBalance();
   }
   if (button) button.addEventListener('click', function () {
-    if (!current()) wallet.createWallet({ displayName: 'Unified Infinity Wallet' });
+    // Cloudflare is authoritative; an empty local browser is not permission
+    // to create another wallet or attach someone else's past balance.
+    if (!current()) location.href = RECOVERY_URL;
     else location.href = 'https://www-infinity4.github.io/Mint-For-Infinity/unified-wallet.html';
-    render();
   });
   document.addEventListener('starquest:content-unlocked', async function (event) {
     const connected = current();
@@ -71,6 +74,6 @@
   document.addEventListener('starquest:tokens-updated', syncStarCoinBalance);
   document.addEventListener('starquest:cloud-synced', syncStarCoinBalance);
   document.addEventListener('starquest:auth-changed', syncStarCoinBalance);
-  window.StarQuestInfinityWallet = { isConnected: function () { return !!current(); }, connect: function () { if (!current()) wallet.createWallet({ displayName: 'Unified Infinity Wallet' }); render(); return current(); }, engine: wallet };
+  window.StarQuestInfinityWallet = { isConnected: function () { return !!current(); }, connect: function () { if (!current()) { location.href = RECOVERY_URL; return null; } render(); return current(); }, engine: wallet };
   render();
 })();
