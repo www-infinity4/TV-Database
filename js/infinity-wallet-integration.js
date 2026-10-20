@@ -1,56 +1,102 @@
-/* StarQuest → Unified Infinity Wallet adapter */
+/* StarQuest → authoritative Cloudflare Unified Wallet account view.
+ * The Mint-for-Infinity browser wallet is legacy/local-only and is never a
+ * substitute for the Cloudflare wallet shared across QuantaPhi.org apps.
+ */
 (function () {
   'use strict';
+  const STAR = 'https://starquest-ledger.marvaseater.workers.dev/v1/state';
+  const UNIFIED = 'https://unified-wallet.marvaseater.workers.dev/v1/wallet/state';
+  const RECOVERY_URL = 'https://quantaphi.org/wallet-recovery.html?verify=1&returnTo=%2FTV-Database%2F';
+  const VERIFIED_URL = 'https://quantaphi.org/wallet-recovery.html?returnTo=%2FTV-Database%2F';
   const button = document.getElementById('unified-wallet-connect');
   const buttonLabel = document.getElementById('unified-wallet-label');
   const buttonDetail = document.getElementById('unified-wallet-detail');
   const status = document.getElementById('unified-wallet-status');
-  if (!window.InfinityUnifiedWallet) {
-    if (status) status.textContent = 'Unified wallet engine unavailable. Paid unlocks remain closed.';
-    window.StarQuestInfinityWallet = { isConnected: function () { return false; } };
-    return;
-  }
-  const RECOVERY_URL = 'https://quantaphi.org/wallet-recovery.html?verify=1';
-  const wallet = new window.InfinityUnifiedWallet.UnifiedInfinityWallet();
+  const cloudBalances = document.getElementById('cloud-unified-wallet-balances');
+  // Keep local rights records only as a non-authoritative legacy audit trail.
+  // Never import them or derive a Cloudflare token balance from browser storage.
+  const wallet = window.InfinityUnifiedWallet ? new window.InfinityUnifiedWallet.UnifiedInfinityWallet() : null;
   const slug = value => String(value || 'unresolved').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'unresolved';
-  function current() { return wallet.state.currentWalletId && wallet.state.wallets[wallet.state.currentWalletId]; }
+  let cloudState = null, loading = null, lastError = '';
+  function currentLocal() { return wallet?.state?.wallets?.[wallet.state.currentWalletId] || null; }
   function setStatus(message) { if (status) status.textContent = message; }
-  function syncStarCoinBalance() {
-    try {
-      const user = window.StarQuestAuth && window.StarQuestAuth.currentUser ? window.StarQuestAuth.currentUser() : null;
-      let connected = current();
-      if (!user || typeof wallet.syncSourceBalance !== 'function') return;
-      // A browser cache loss must never silently mint a replacement local wallet.
-      if (!connected) return;
-      wallet.syncSourceBalance({
-        walletId: connected.walletId,
-        assetCode: 'STAR_COIN',
-        amount: Number(user.tokens) || 0,
-        sourceSystem: 'STARQUEST_CLOUD',
-        sourceWalletId: user.key || user.username || '',
-        verification: 'STARQUEST_STATE'
-      });
-    } catch (_) {}
-  }
+  function format(n) { return Number.isFinite(Number(n)) ? Number(n).toLocaleString(undefined,{maximumFractionDigits:1}) : 'Unavailable'; }
   function render() {
-    const connected = current();
-    if (buttonLabel) buttonLabel.textContent = connected ? 'Unified Wallet · ' + connected.walletId.slice(-8) : 'Find / Restore Unified Wallet';
-    if (buttonDetail) buttonDetail.textContent = connected ? 'Open wallet and account activity' : 'Verify your existing Cloudflare wallet';
-    if (button) button.classList.toggle('connected', !!connected);
-    setStatus(connected ? 'Movie unlocks and rights allocations will use the unified wallet.' : 'Restore and verify your existing cloud wallet before using StarCoins.');
-    if (connected) syncStarCoinBalance();
+    const verified = !!cloudState;
+    if (buttonLabel) buttonLabel.textContent = verified ? 'Unified Wallet · Cloudflare verified' : 'Find / Restore Unified Wallet';
+    if (buttonDetail) buttonDetail.textContent = verified
+      ? 'StarCoins, Quants, Infinity, Music Quants · one verified account'
+      : 'Verify your existing Cloudflare wallet';
+    if (button) button.classList.toggle('connected',verified);
+    if (cloudBalances) {
+      cloudBalances.replaceChildren();
+      cloudBalances.hidden = !verified;
+      if (verified) {
+        for (const [asset,label] of [['STARCOIN','StarCoins'],['QUANT','Quants'],['INFINITY','Infinity'],['MUSIC_QUANT','Music Quants']]) {
+          const item = document.createElement('span');
+          const labelElement = document.createElement('small');
+          const value = document.createElement('strong');
+          labelElement.textContent = label;
+          value.textContent = format(cloudState.balances[asset]);
+          item.append(labelElement,value);
+          cloudBalances.appendChild(item);
+        }
+      }
+    }
+    setStatus(verified
+      ? 'Live Cloudflare wallet verified for ' + cloudState.username + '. Balances are read-only; local browser values are not imported.'
+      : lastError || 'Cloudflare wallet not verified. Recover the existing account; do not create a new wallet.');
+  }
+  async function request(url,token) {
+    const response = await fetch(url,{
+      method:'GET',cache:'no-store',
+      headers:{Authorization:'Bearer '+token},
+      signal:AbortSignal.timeout(12000)
+    });
+    const payload = await response.json().catch(()=>({}));
+    if (!response.ok || payload.ok !== true) throw Error(payload.error || 'cloud_wallet_unavailable');
+    return payload;
+  }
+  async function readCloud() {
+    const bridge = window.QuantaCloudConnection;
+    if (bridge?.ready) await bridge.ready;
+    const token = await bridge?.resolveDeviceToken?.();
+    if (!/^sq_[A-Za-z0-9_-]{32,}$/.test(token || '')) throw Error('Cloudflare device connection missing. Use wallet recovery.');
+    const [star,unified] = await Promise.all([request(STAR,token),request(UNIFIED,token)]);
+    const starName = String(star.state?.username || '').trim().toLowerCase();
+    const unifiedName = String(unified.user?.username || '').trim().toLowerCase();
+    if (!starName || starName !== unifiedName || !unified.user?.id) throw Error('Cloud wallet identity mismatch. No records changed.');
+    const localUser = window.StarQuestAuth?.currentUser?.();
+    if (localUser && String(localUser.key || localUser.username || '').trim().toLowerCase() !== starName)
+      throw Error('Different StarQuest account selected. Use verified account recovery.');
+    const balances=unified.balances;
+    if (!balances || !['STARCOIN','QUANT','INFINITY','MUSIC_QUANT'].every(asset=>Number.isFinite(Number(balances[asset]))))
+      throw Error('The unified wallet returned an incomplete balance report.');
+    return {username:starName,balances,accountId:unified.user.id};
+  }
+  function refreshCloud() {
+    if (loading) return loading;
+    loading = (async () => {
+      try {
+        const state = await readCloud();
+        cloudState = state;lastError = '';
+      } catch (error) {
+        cloudState = null;
+        lastError = 'Cloudflare verification needed: ' + String(error.message || error).slice(0,125);
+      } finally {
+        render();
+      }
+    })().finally(()=>{loading=null});
+    return loading;
   }
   if (button) button.addEventListener('click', function () {
-    // Cloudflare is authoritative; an empty local browser is not permission
-    // to create another wallet or attach someone else's past balance.
-    if (!current()) location.href = RECOVERY_URL;
-    else location.href = 'https://www-infinity4.github.io/Mint-For-Infinity/unified-wallet.html';
+    location.href = cloudState ? VERIFIED_URL : RECOVERY_URL;
   });
   document.addEventListener('starquest:content-unlocked', async function (event) {
-    const connected = current();
+    const connected = currentLocal();
     const detail = event.detail || {};
     const unlock = detail.unlock || {};
-    if (!connected || detail.alreadyUnlocked || !unlock.cost) return;
+    if (!cloudState || !connected || detail.alreadyUnlocked || !unlock.cost) return;
     const rights = unlock.rights || {};
     const companyName = String(rights.companyName || unlock.title + ' rights company — unresolved');
     const companyId = 'company:' + slug(rights.companyId || companyName);
@@ -68,12 +114,25 @@
       await wallet.receiveStarCoin({ eventId: 'starquest:blank-token:' + sourceId, fromWalletId: connected.walletId,
         toWalletId: companyWalletId, sourceSystem: 'STARQUEST', sourceEventId: sourceId, sourceContentId: unlock.contentId,
         timestamp: new Date(unlock.unlockedAt).toISOString() });
-      setStatus('Movie unlocked for ' + unlock.cost + ' StarCoin. The recipient received a blank Infinity token; rights allocations were recorded separately.');
-    } catch (error) { setStatus('Unlock completed, but unified wallet reconciliation needs review: ' + error.message); }
+      setStatus('Local rights record created. Cloudflare settlement remains unverified; no extra StarCoins or Infinity tokens were added.');
+    } catch (error) { setStatus('Local rights record pending verification. Cloudflare wallet records were not changed: ' + error.message); }
   });
-  document.addEventListener('starquest:tokens-updated', syncStarCoinBalance);
-  document.addEventListener('starquest:cloud-synced', syncStarCoinBalance);
-  document.addEventListener('starquest:auth-changed', syncStarCoinBalance);
-  window.StarQuestInfinityWallet = { isConnected: function () { return !!current(); }, connect: function () { if (!current()) { location.href = RECOVERY_URL; return null; } render(); return current(); }, engine: wallet };
+
+  document.addEventListener('starquest:ledger-connected',()=>void refreshCloud());
+  document.addEventListener('starquest:auth-changed',()=>void refreshCloud());
+  document.addEventListener('starquest:cloud-synced',()=>void refreshCloud());
+  document.addEventListener('visibilitychange',()=>{
+    if (document.visibilityState==='visible') void refreshCloud();
+  });
+  window.StarQuestInfinityWallet = {
+    isConnected: function () {
+      const selected = window.StarQuestAuth?.currentUser?.();
+      return !!cloudState && (!selected || String(selected.key||selected.username||'').toLowerCase() === cloudState.username);
+    },
+    connect: function () { if (!cloudState) location.href = RECOVERY_URL;return cloudState; },
+    refresh: refreshCloud,
+    engine: wallet
+  };
   render();
+  void refreshCloud();
 })();
