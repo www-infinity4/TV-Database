@@ -3012,3 +3012,10 @@ label + .avatar-wave-marker,
 .sq-archive-video[hidden]{display:none!important}
 .sq-archive-original{color:#fbd38e;font-weight:800;min-height:45px;display:inline-flex;align-items:center}
 #hamburger-btn[hidden],#player-hamburger-btn[hidden]{display:none!important}
+
+/* Read-only shared Cloudflare wallet inventory in StarQuest's green menu. */
+.cloud-unified-wallet-balances{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 0}
+.cloud-unified-wallet-balances[hidden]{display:none!important}
+.cloud-unified-wallet-balances>span{min-width:0;padding:10px;border:1px solid rgba(83,221,119,.32);border-radius:10px;background:rgba(13,83,44,.25)}
+.cloud-unified-wallet-balances small{display:block;color:#c0e7ce;font-size:11px;font-weight:700}
+.cloud-unified-wallet-balances strong{display:block;color:#fff;font-size:18px;line-height:1.5;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
