@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
   <link rel="dns-prefetch" href="https://i.ytimg.com" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20261019-green-menu-cloud-recovery" />
+  <link rel="stylesheet" href="css/style.css?v=20261020-cloud-wallet" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
 </head>
 <body>
@@ -244,7 +244,8 @@
         <span id="wallet-star-power">✨ Star Power (sharing): 0</span>
       </div>
       <div class="wallet-card__earn-hints"><span>🔗 Every completed share adds 1/10. The 10th share creates 1 StarCoin.</span></div>
-      <div class="wallet-card__earn-hints"><span id="unified-wallet-status">Connect before using StarCoins to unlock a movie.</span></div>
+      <div class="wallet-card__earn-hints"><span id="unified-wallet-status" role="status" aria-live="polite">Checking the shared Cloudflare wallet…</span></div>
+      <div id="cloud-unified-wallet-balances" class="cloud-unified-wallet-balances" aria-label="Cloudflare Unified Wallet balances" hidden></div>
       <button id="unified-wallet-connect" class="sidebar-unified-wallet" type="button">
         <span class="sidebar-unified-wallet__icon" aria-hidden="true">◈</span>
         <span><strong id="unified-wallet-label">Connect Unified Wallet</strong><small id="unified-wallet-detail">Use across Infinity websites</small></span>
@@ -266,7 +267,7 @@
       <button id="sidebar-signin-btn" class="sidebar-nav__item">
         <span>👤</span> Sign In / Register on This Device
       </button>
-      <a id="sidebar-cloud-signin" class="sidebar-nav__item" href="https://quantaphi.org/wallet-recovery.html?verify=1">
+      <a id="sidebar-cloud-signin" class="sidebar-nav__item" href="https://quantaphi.org/wallet-recovery.html?verify=1&amp;returnTo=%2FTV-Database%2F">
         <span>☁️</span> Sign In / Restore Cloudflare Wallet
       </a>
       <a id="sidebar-account-backup" class="sidebar-nav__item" href="https://quantaphi.org/bubbles-accounts.html">
@@ -1018,7 +1019,9 @@
   <script src="js/avatar-coin.js?v=20260912-single-star1"></script>
   <script src="js/share-safety-net.js?v=20260822-android-share4"></script>
   <script src="https://www-infinity4.github.io/Mint-For-Infinity/unified-wallet.js?v=20260925-multiasset1"></script>
-  <script src="js/infinity-wallet-integration.js?v=20261019-safe-cloud-recovery"></script>
+  <script>window.QuantaCloudConnectionDisableAutoRecovery=true;</script>
+  <script src="https://quantaphi.org/cloud-wallet-client.js?v=20261020-starquest-cloud1"></script>
+  <script src="js/infinity-wallet-integration.js?v=20261020-authoritative-cloud1"></script>
   <script src="js/recommendation-engine.js?v=20260821-gap50"></script>
   <script src="js/opening-rotation.js?v=20260912-daily1"></script>
   <script src="js/sona-media-card.js?v=20260825-card1"></script>
