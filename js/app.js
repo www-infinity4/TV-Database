@@ -1474,9 +1474,10 @@
     splash.style.opacity = "1";
   }
 
-  /* On load: if user already has a session, skip splash */
+  /* Account recovery must be reachable from the green menu, even when
+     browser cookies, local storage, or an old StarQuest session are gone. */
+  hideSplash();
   if (typeof StarQuestAuth !== "undefined" && StarQuestAuth.currentUser()) {
-    hideSplash();
     updateUIForUser(StarQuestAuth.currentUser());
   }
 
@@ -2173,7 +2174,7 @@
     if (typeof StarQuestAuth !== "undefined") StarQuestAuth.signOut();
     updateUIForUser(null);
     closeSidebar();
-    showSplash();
+    hideSplash();
   });
 
   /* Clear history */
