@@ -30,6 +30,14 @@ test('the same wallet sidebar offers sign-in and independently verified Cloudfla
   assert.match(app, /Account recovery must be reachable from the green menu/);
 });
 
+test('recovering after cleared browser data never creates a new blank local wallet', () => {
+  const adapter = fs.readFileSync('js/infinity-wallet-integration.js', 'utf8');
+  assert.match(adapter, /RECOVERY_URL = 'https:\/\/quantaphi\.org\/wallet-recovery\.html\?verify=1'/);
+  assert.match(adapter, /if \(!current\(\)\) location\.href = RECOVERY_URL;/);
+  assert.match(adapter, /if \(!connected\) return;/);
+  assert.doesNotMatch(adapter, /wallet\.createWallet\(/);
+});
+
 test('menu DOM node moves into the player and back without cloning', () => {
   let playing = false;
   const callbacks = [];
