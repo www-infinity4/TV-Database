@@ -10,11 +10,15 @@ function init(){
   section.classList.toggle('sq-no-programs',!populated);
  };
  for(const row of rows){update(row);new MutationObserver(()=>update(row)).observe(row,{childList:true,subtree:false})}
- // The fixed header owns browsing. The playback modal has its own menu.
- // Never expose both hamburger controls during one visible player session.
- const nav=document.getElementById('hamburger-btn'),player=document.getElementById('player-hamburger-btn'),page=document.getElementById('player-page');
- if(nav&&player&&page){
-  const refresh=()=>{const playing=page.classList.contains('open');nav.hidden=playing;player.hidden=!playing};
+ // One physical green menu button follows the user into the player top bar.
+ // Moving the same DOM node keeps its sidebar, account recovery, and wallet actions.
+ const nav=document.getElementById('hamburger-btn'),page=document.getElementById('player-page');
+ const playerHost=page?.querySelector('.player-topbar__right'),homeHost=nav?.parentElement;
+ if(nav&&page&&playerHost&&homeHost){
+  const refresh=()=>{
+   const destination=page.classList.contains('open')?playerHost:homeHost;
+   if(nav.parentElement!==destination)destination.appendChild(nav);
+  };
   new MutationObserver(refresh).observe(page,{attributes:true,attributeFilter:['class']});refresh();
  }
  const cloud=document.getElementById('unified-wallet-status');
