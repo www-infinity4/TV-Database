@@ -1,7 +1,7 @@
 'use strict';const assert=require('node:assert/strict'),fs=require('node:fs');
 const html=fs.readFileSync('index.html','utf8'),revival=fs.readFileSync('js/archive-heritage.js','utf8'),polish=fs.readFileSync('js/card-density.js','utf8');
-assert.ok(html.indexOf('js/data.js')<html.indexOf('js/archive-heritage.js'));
-assert.ok(html.indexOf('js/archive-heritage.js')<html.indexOf('js/youtube-only-catalog.js'));
+assert.ok(html.includes('js/data.js'));
+assert.ok(!html.includes('js/archive-heritage.js'), 'Unverified Archive shelf must not display on live StarQuest');
 assert.ok(html.includes('js/card-density.js'));
 assert.doesNotThrow(()=>new Function(revival));assert.doesNotThrow(()=>new Function(polish));
 assert.match(revival,/dbae38cf04622de07540d4b613e35486d8cfd470/);
