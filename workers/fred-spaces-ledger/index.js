@@ -17,7 +17,7 @@ export default {async fetch(request,env){
    let paymentsReady=false;
    try {
      await ensure(env.DB);
-     const creator=await env.DB.prepare("SELECT a.id FROM media_creator_payout_destinations cfg JOIN accounts a ON a.id=cfg.account_id WHERE cfg.creator_key='fred-krueger' AND cfg.verified_at>0 AND length(cfg.verification_reference)>0").first();
+     const creator=await env.DB.prepare("SELECT a.id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star' AND cfg.configured_at>0").first();
      paymentsReady=!!creator?.id;
    }catch(_){paymentsReady=false;}
    return reply({ok:true,service:"fred-spaces-ledger",authoritative:"starquest D1",paymentsReady},200,cors);
@@ -37,12 +37,12 @@ export default {async fetch(request,env){
  if(!request.headers.get("content-type")?.includes("application/json"))return reply({ok:false,error:"json_required"},415,cors);
  const body=await request.json().catch(()=>null),episodeId=String(body?.episodeId||"");
  if(!PAID.has(episodeId))return reply({ok:false,error:"episode_not_billable"},400,cors);
- // A paid curated unlock transfers one coin to Fred's verified wallet.
+ // A paid Phi discovery unlock transfers one coin to the configured platform owner.
  // An outbound X link cannot verify playback of the audio.
  const owner=await env.DB.prepare("SELECT a.id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star'").first();
- // Creator account must be independently verified before the user is debited.
- const creator=await env.DB.prepare("SELECT a.id FROM media_creator_payout_destinations cfg JOIN accounts a ON a.id=cfg.account_id WHERE cfg.creator_key='fred-krueger' AND cfg.verified_at>0 AND length(cfg.verification_reference)>0").first();
- if(!creator?.id)return reply({ok:false,error:"creator_payout_not_configured",message:"Fred's verified payout wallet is not connected. No StarCoin was charged."},503,cors);
+ // Use the server-configured platform owner for the Phi discovery service. Attribution does not authorize royalties.
+ const creator=await env.DB.prepare("SELECT a.id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star' AND cfg.configured_at>0").first();
+ if(!creator?.id)return reply({ok:false,error:"owner_payout_not_configured",message:"The platform owner's verified payout wallet is not connected. No StarCoin was charged."},503,cors);
  // The platform owner's preview is free and idempotent; it is not a sale.
  // No browser-provided creator destination is accepted.
  if(owner?.id===user.id){
@@ -66,11 +66,11 @@ export default {async fetch(request,env){
  // One atomic D1 batch records both the listener debit and creator credit.
  // A creator self-purchase records both sides with zero net wallet change.
  env.DB.prepare("UPDATE accounts SET star_coins=star_coins+1,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=? AND attempt_id=? AND charged_at=?)").bind(now,creator.id,user.id,episodeId,attempt,now),
- env.DB.prepare("INSERT INTO ledger_events(id,account_id,event_type,amount,balance,progress_to_next_coin,shares_per_coin,reference_id,content_id,created_at) SELECT ?,a.id,'spaces_episode_creator_payout',1,a.star_coins,a.pending_share_credits,10,u.attempt_id,u.episode_id,? FROM spaces_episode_unlocks u JOIN accounts a ON a.id=? WHERE u.account_id=? AND u.episode_id=? AND u.attempt_id=? AND u.charged_at=?").bind(crypto.randomUUID(),now,creator.id,user.id,episodeId,attempt,now),
+ env.DB.prepare("INSERT INTO ledger_events(id,account_id,event_type,amount,balance,progress_to_next_coin,shares_per_coin,reference_id,content_id,created_at) SELECT ?,a.id,'spaces_episode_owner_payout',1,a.star_coins,a.pending_share_credits,10,u.attempt_id,u.episode_id,? FROM spaces_episode_unlocks u JOIN accounts a ON a.id=? WHERE u.account_id=? AND u.episode_id=? AND u.attempt_id=? AND u.charged_at=?").bind(crypto.randomUUID(),now,creator.id,user.id,episodeId,attempt,now),
  env.DB.prepare("DELETE FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=? AND attempt_id=? AND charged_at IS NULL").bind(user.id,episodeId,attempt)
  ]);
  const [r,b]=await Promise.all([env.DB.prepare("SELECT attempt_id,charged_at FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=?").bind(user.id,episodeId).first(),env.DB.prepare("SELECT star_coins FROM accounts WHERE id=?").bind(user.id).first()]);
  if(!r?.charged_at)return reply({ok:false,error:"insufficient_star_coins",message:"Earn 1 full StarCoin to unlock another episode."},409,cors);
- return reply({ok:true,episodeId,charged:r.attempt_id===attempt?1:0,creatorPaid:r.attempt_id===attempt,recipient:"fred-krueger",receiptReference:r.attempt_id,alreadyUnlocked:r.attempt_id!==attempt,starCoins:b?.star_coins??0},200,cors);
+ return reply({ok:true,episodeId,charged:r.attempt_id===attempt?1:0,creatorPaid:r.attempt_id===attempt,ownerPaid:r.attempt_id===attempt,recipient:"platform-owner",receiptReference:r.attempt_id,alreadyUnlocked:r.attempt_id!==attempt,starCoins:b?.star_coins??0},200,cors);
  }catch(error){console.error(error);return reply({ok:false,error:"ledger_unavailable",message:"Charge not confirmed; try again."},503,cors)}
  }};

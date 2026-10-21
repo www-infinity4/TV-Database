@@ -16,21 +16,18 @@ StarQuest device bearer-token authentication. It does not mint coins.
 - A previous curated-link unlock for the same account and episode is free to revisit.
 - The `spaces_episode_unlocks` table is created on first authenticated use,
   and StarQuest `accounts.star_coins` is the authoritative debit balance.
-- Each *new paid unlock* transfers **one full StarCoin to Fred's verified creator account**.
+- Each *new paid unlock* transfers **one full StarCoin to the configured QuantaPhi platform owner account**.
   The debit (`spaces_episode_unlock`, -1) and credit
-  (`spaces_episode_creator_payout`, +1) are written in one StarQuest D1 batch
+  (`spaces_episode_owner_payout`, +1) are written in one StarQuest D1 batch
   with the same attempt reference. Retrying the same unlock never pays twice.
-- The destination comes only from the server-controlled
-  `media_creator_payout_destinations` registry. The `fred-krueger` entry must
-  have a verified StarQuest account, positive verification time, a recorded
-  ownership proof reference, and a verification method of `verified_oauth`
-  or `verified_admin_proof`. An X handle alone is NOT wallet proof.
-- Until Fred's authenticated/verified destination is provisioned, health says
-  `paymentsReady:false`; attempted purchases return
-  `creator_payout_not_configured` before any debit. Never pay the curator as
-  a fallback.
-- The platform owner's preview is independently free. A creator buying their
-  own paid unlock is credited back in the same atomic transfer.
+- The discovery fee destination comes only from the server-controlled
+  `media_star_owner_config` entry for `media-star`, joined to an existing account
+  with a positive configuration timestamp. Browser inputs cannot nominate recipients.
+- Until that owner is configured, health says `paymentsReady:false` and
+  checkout returns `owner_payout_not_configured` before any debit.
+- The platform owner's preview remains free. No creator royalty, AI payout,
+  or revenue split is established by attribution or a shared-ownership preference.
+  Separate payments require an explicit agreement and earning policy.
 - This is **not an automatic fee on clicking Play** or proof of audio playback.
   QuantaPhi currently opens X for the actual recording, and cannot know whether
   X played it. A separate per-play license and explicit checkout confirmation
@@ -72,7 +69,7 @@ Do not replace or overwrite the existing `starquest-ledger` Worker.
 
 ## Artist / AI builder attribution
 
-The verified creator registry is independent of the QuantaPhi curator wallet.
+The third-party creator registry is independent of the platform owner's discovery fee. This checkout does not consult that registry.
 Do not open a creator payout for Fred or any musician/host using only a display
 name or X username. First collect consent and proof the destination belongs to
 that contributor; record the verified StarQuest account server-side. The bot

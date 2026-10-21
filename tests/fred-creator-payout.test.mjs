@@ -13,8 +13,8 @@ function database({verified=false}={}){
        async first(){
          state.queries.push(this);
          if(sql.includes('JOIN account_devices'))return {id:'listener'};
-         if(sql.includes('FROM media_star_owner_config'))return {id:'platform-owner'};
-         if(sql.includes('FROM media_creator_payout_destinations'))return verified?{id:'verified-fred'}:null;
+         if(sql.includes('FROM media_star_owner_config'))return verified?{id:'platform-owner'}:null;
+         if(sql.includes('FROM media_creator_payout_destinations'))return verified?{id:'platform-owner'}:null;
          if(sql.includes('FROM spaces_episode_unlocks'))return {attempt_id:state.attempt,charged_at:123};
          if(sql.includes('SELECT star_coins FROM accounts'))return {star_coins:3};
          return null;
@@ -38,28 +38,28 @@ function request(path='/v1/spaces/unlock',method='POST'){
    ...(method==='POST'?{body:JSON.stringify({episodeId:'fred-0147'})}:{})
  });
 }
-test('no creator payout wallet: zero debits, zero receipts, fail closed',async()=>{
+test('no platform owner payout wallet: zero debits, zero receipts, fail closed',async()=>{
  const {db,state}=database(),r=await worker.fetch(request(),{DB:db});
  const data=await r.json();
- assert.equal(r.status,503);assert.equal(data.error,'creator_payout_not_configured');
+ assert.equal(r.status,503);assert.equal(data.error,'owner_payout_not_configured');
  assert.equal(state.batches.length,0);
 });
-test('verified Fred beneficiary: one batch with debit and paired creator credit',async()=>{
+test('configured platform owner beneficiary: one batch with debit and paired creator credit',async()=>{
  const {db,state}=database({verified:true}),r=await worker.fetch(request(),{DB:db});
  const data=await r.json();
- assert.equal(data.ok,true);assert.equal(data.creatorPaid,true);assert.equal(data.recipient,'fred-krueger');
+ assert.equal(data.ok,true);assert.equal(data.creatorPaid,true);assert.equal(data.recipient,'platform-owner');
  assert.equal(state.batches.length,1);
  const items=state.batches[0];
  const debit=items.find(p=>p.sql.includes("'spaces_episode_unlock',-1"));
- const credit=items.find(p=>p.sql.includes("'spaces_episode_creator_payout',1"));
+ const credit=items.find(p=>p.sql.includes("'spaces_episode_owner_payout',1"));
  const deposit=items.find(p=>p.sql.includes('SET star_coins=star_coins+1'));
  assert.ok(debit&&credit&&deposit,'paired immutable receipts and creator deposit');
- assert.equal(deposit.args[1],'verified-fred');
- assert.equal(credit.args[2],'verified-fred');
+ assert.equal(deposit.args[1],'platform-owner');
+ assert.equal(credit.args[2],'platform-owner');
  assert.equal(debit.args[4],credit.args[5],'debit and credit share one attempt reference');
- assert.ok(!src.includes("'spaces_episode_owner_payout',1"),'Fred must not pay a different owner');
+ assert.ok(!src.includes("WHERE cfg.creator_key='fred-krueger'"),'third-party attribution cannot select the discovery payout');
 });
-test('public health advertises payment readiness only when verified Fred destination exists',async()=>{
+test('public health advertises payment readiness only when configured platform owner destination exists',async()=>{
  const a=await worker.fetch(new Request('https://fred.example/health'),{DB:database().db});
  const b=await worker.fetch(new Request('https://fred.example/health'),{DB:database({verified:true}).db});
  assert.equal((await a.json()).paymentsReady,false);
