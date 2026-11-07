@@ -47,7 +47,13 @@ test('no platform owner payout wallet: zero debits, zero receipts, fail closed',
 test('configured platform owner beneficiary: one batch with debit and paired creator credit',async()=>{
  const {db,state}=database({verified:true}),r=await worker.fetch(request(),{DB:db});
  const data=await r.json();
- assert.equal(data.ok,true);assert.equal(data.creatorPaid,true);assert.equal(data.recipient,'platform-owner');
+ assert.equal(data.ok,true);
+ assert.equal(data.charged,1);
+ assert.equal(data.ownerPaid,true,'the 1 StarCoin curation fee is credited to the QuantaPhi owner');
+ assert.equal(data.creatorPaid,false,'a QuantaPhi curation fee must not masquerade as a Fred royalty');
+ assert.equal(data.creatorRoyaltyPaid,false,'Fred has no verified per-play royalty receipt here');
+ assert.equal(data.recipient,'platform-owner');
+ assert.ok(data.receiptReference,'paired owner debit/credit must have a shared reference');
  assert.equal(state.batches.length,1);
  const items=state.batches[0];
  const debit=items.find(p=>p.sql.includes("'spaces_episode_unlock',-1"));
