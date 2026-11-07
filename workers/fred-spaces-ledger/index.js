@@ -20,7 +20,7 @@ export default {async fetch(request,env){
      const creator=await env.DB.prepare("SELECT a.id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star' AND cfg.configured_at>0").first();
      paymentsReady=!!creator?.id;
    }catch(_){paymentsReady=false;}
-   return reply({ok:true,service:"fred-spaces-ledger",authoritative:"starquest D1",paymentsReady},200,cors);
+   return reply({ok:true,service:"fred-spaces-ledger",authoritative:"starquest D1",paymentsReady,receiptContractVersion:2},200,cors);
  }
  if(!["/v1/spaces/unlocks","/v1/spaces/unlock"].includes(u.pathname))return reply({ok:false,error:"not_found"},404,cors);
  try{
