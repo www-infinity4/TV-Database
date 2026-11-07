@@ -86,12 +86,12 @@ async function register(db:Database,owner:Viewer,body:Payload) {
  if(title.length<3)throw new ProductionError(400,'title_required','The Media Star card needs a real title.');
  const source=sourceURL(body.sourceUrl)||clean(body.sourceUrl,700);
  if(source){try{const u=new URL(source);if(u.protocol!=='https:'||u.username||u.password)throw Error()}catch{throw new ProductionError(400,'invalid_source_url','A public HTTPS source URL is required.');}}
+ const creatorSettings=parseCreatorSettings(body);
  const now=Date.now();
  await db.prepare(`INSERT OR IGNORE INTO production_catalog (content_id,platform,source_id,title,year,source_url,publisher_account_id,created_at,updated_at)
  VALUES(?,?,?,?,?,?,?,?,?)`).bind(contentId,canonical.platform,canonical.sourceId,title,year,source,owner.id,now,now).run();
  const existing=await db.prepare('SELECT publisher_account_id FROM production_catalog WHERE content_id=?').bind(contentId).first<{publisher_account_id:string}>();
  if(existing?.publisher_account_id!==owner.id)throw new ProductionError(403,'publisher_mismatch','You cannot attach credits to another publisher.');
- const creatorSettings=parseCreatorSettings(body);
  if(creatorSettings)await storeCreatorSettings(db,owner,contentId,creatorSettings,now);
  const rawCredits=Array.isArray(body.credits)?body.credits.slice(0,40):[];
  let saved=0;
