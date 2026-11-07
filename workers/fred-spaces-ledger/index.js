@@ -39,6 +39,7 @@ export default {async fetch(request,env){
  if(!PAID.has(episodeId))return reply({ok:false,error:"episode_not_billable"},400,cors);
  // A paid Phi discovery unlock transfers one coin to the configured platform owner.
  // An outbound X link cannot verify playback of the audio.
+ // A platform discovery-fee credit is not a Fred creator royalty, even when attributed to his content.
  const owner=await env.DB.prepare("SELECT a.id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star'").first();
  // Use the server-configured platform owner for the Phi discovery service. Attribution does not authorize royalties.
  const creator=await env.DB.prepare("SELECT a.id FROM media_star_owner_config cfg JOIN accounts a ON a.id=cfg.owner_account_id WHERE cfg.card_key='media-star' AND cfg.configured_at>0").first();
@@ -71,6 +72,6 @@ export default {async fetch(request,env){
  ]);
  const [r,b]=await Promise.all([env.DB.prepare("SELECT attempt_id,charged_at FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=?").bind(user.id,episodeId).first(),env.DB.prepare("SELECT star_coins FROM accounts WHERE id=?").bind(user.id).first()]);
  if(!r?.charged_at)return reply({ok:false,error:"insufficient_star_coins",message:"Earn 1 full StarCoin to unlock another episode."},409,cors);
- return reply({ok:true,episodeId,charged:r.attempt_id===attempt?1:0,creatorPaid:r.attempt_id===attempt,ownerPaid:r.attempt_id===attempt,recipient:"platform-owner",receiptReference:r.attempt_id,alreadyUnlocked:r.attempt_id!==attempt,starCoins:b?.star_coins??0},200,cors);
+ return reply({ok:true,episodeId,charged:r.attempt_id===attempt?1:0,ownerPaid:r.attempt_id===attempt,creatorPaid:false,creatorRoyaltyPaid:false,recipient:"platform-owner",receiptReference:r.attempt_id,alreadyUnlocked:r.attempt_id!==attempt,starCoins:b?.star_coins??0},200,cors);
  }catch(error){console.error(error);return reply({ok:false,error:"ledger_unavailable",message:"Charge not confirmed; try again."},503,cors)}
  }};
