@@ -26,6 +26,58 @@ function identity(source:unknown,id:unknown){
  if(p==='media-star'&&/^[a-zA-Z0-9_-]{6,80}$/.test(s))return{platform:p,sourceId:s,contentId:'media-star:'+s,url:''};
  throw new ProductionError(400,'invalid_production_source','Provide a supported media provider and actual source ID.');
 }
+// The card owner chooses free-first and curated-next rules. The signed account
+// is the publisher; a browser-supplied wallet address can NEVER select a payee.
+function parseCreatorSettings(body:Payload) {
+ const cfg=body.creatorSettings;
+ if(!cfg||typeof cfg!=='object'||Array.isArray(cfg))return null;
+ const options=cfg as Payload;
+ const requestedChargeMode=options.chargeForNext===true?'one_starcoin':'free';
+ const rawCount=Number(options.freeEpisodes);
+ if(!Number.isInteger(rawCount)||rawCount<0||rawCount>30)throw new ProductionError(400,'invalid_free_count','Choose 0 to 30 free episodes.');
+ const rawEpisodes=Array.isArray(body.episodes)?body.episodes:[];
+ if(rawEpisodes.length<1||rawEpisodes.length>30)throw new ProductionError(400,'invalid_creator_episodes','Enter 1 to 30 owned or permitted episode links.');
+ const episodes:Array<{title:string,sourceUrl:string}>=[];
+ const unique=new Set<string>();
+ for(const item of rawEpisodes){
+  if(!item||typeof item!=='object')throw new ProductionError(400,'invalid_creator_episode','Every episode needs a title and source.');
+  const episode=item as Payload,title=clean(episode.title,160),raw=clean(episode.sourceUrl,700);
+  if(title.length<2)throw new ProductionError(400,'invalid_creator_episode','Provide an episode title.');
+  let url:URL;
+  try{url=new URL(raw)}catch{throw new ProductionError(400,'invalid_creator_episode_url','An HTTPS original episode source is required.')}
+  const host=url.hostname.toLowerCase();
+  if(url.protocol!=='https:'||url.username||url.password||
+   ['localhost','127.0.0.1','::1','quantaphi.org','marvaseater.workers.dev'].includes(host)||
+   host.endsWith('.quantaphi.org')||host.endsWith('.marvaseater.workers.dev'))
+   throw new ProductionError(400,'invalid_creator_episode_url','Use your authorized public HTTPS media link, not a wallet or internal endpoint.');
+  if(unique.has(url.href))throw new ProductionError(400,'duplicate_creator_episode','Do not add the same source twice.');
+  unique.add(url.href);episodes.push({title,sourceUrl:url.href});
+ }
+ return {requestedChargeMode,freeEpisodes:Math.min(rawCount,episodes.length),episodes};
+}
+async function storeCreatorSettings(db:Database,owner:Viewer,contentId:string,settings:NonNullable<ReturnType<typeof parseCreatorSettings>>,now:number) {
+ const writes=[
+  db.prepare(`INSERT INTO media_star_creator_policies
+   (content_id,creator_account_id,requested_charge_mode,free_episode_count,price_star_coins,payment_state,publish_state,created_at,updated_at)
+   VALUES(?,?,?,?,1,'disabled_pending_verification','draft',?,?)
+   ON CONFLICT(content_id) DO UPDATE SET requested_charge_mode=excluded.requested_charge_mode,
+   free_episode_count=excluded.free_episode_count,payment_state='disabled_pending_verification',
+   publish_state='draft',updated_at=excluded.updated_at
+   WHERE media_star_creator_policies.creator_account_id=excluded.creator_account_id`)
+    .bind(contentId,owner.id,settings.requestedChargeMode,settings.freeEpisodes,now,now),
+  db.prepare('DELETE FROM media_star_creator_episodes WHERE content_id=?').bind(contentId)
+ ];
+ for(let i=0;i<settings.episodes.length;i++){
+  const e=settings.episodes[i];
+  writes.push(db.prepare(`INSERT INTO media_star_creator_episodes
+    (episode_id,content_id,position,title,source_url,created_at) VALUES(?,?,?,?,?,?)`)
+    .bind(contentId+':episode-'+i,contentId,i,e.title,e.sourceUrl,now));
+ }
+ // The only side effects are publisher-scoped D1 draft metadata.
+ // No account balance, minted coin, wallet recipient, or entitlement is changed.
+ await db.batch(writes);
+}
+
 async function register(db:Database,owner:Viewer,body:Payload) {
  const canonical=identity(body.platform,body.sourceId);
  if(canonical.platform!=='media-star')throw new ProductionError(403,'creator_card_required','Only your own Media Star content may be registered here. Broadcasts are indexed from qualified views.');
@@ -39,6 +91,8 @@ async function register(db:Database,owner:Viewer,body:Payload) {
  VALUES(?,?,?,?,?,?,?,?,?)`).bind(contentId,canonical.platform,canonical.sourceId,title,year,source,owner.id,now,now).run();
  const existing=await db.prepare('SELECT publisher_account_id FROM production_catalog WHERE content_id=?').bind(contentId).first<{publisher_account_id:string}>();
  if(existing?.publisher_account_id!==owner.id)throw new ProductionError(403,'publisher_mismatch','You cannot attach credits to another publisher.');
+ const creatorSettings=parseCreatorSettings(body);
+ if(creatorSettings)await storeCreatorSettings(db,owner,contentId,creatorSettings,now);
  const rawCredits=Array.isArray(body.credits)?body.credits.slice(0,40):[];
  let saved=0;
  for(const person of rawCredits){
@@ -54,7 +108,8 @@ async function register(db:Database,owner:Viewer,body:Payload) {
  }
  await db.prepare(`INSERT OR IGNORE INTO production_research_jobs(content_id,status) VALUES(?,'queued')`).bind(contentId).run();
  return {ok:true,contentId,creditsRecorded:saved,research:'queued',creditState:'not_settled',
-  fundingState:'unfunded',cardPaymentsEnabled:false,spendableStarCoins:0,claimableStarCoins:0};
+  fundingState:'unfunded',cardPaymentsEnabled:false,spendableStarCoins:0,claimableStarCoins:0,
+  creatorSettingsStored:!!creatorSettings,creatorEditionPaymentStatus:'disabled_pending_verification'};
 }
 async function record(db:Database,viewer:Viewer,body:Payload){
  const id=identity(body.platform,body.sourceId);
@@ -92,11 +147,20 @@ async function record(db:Database,viewer:Viewer,body:Payload){
  const row=credited?receipt:seen?.receipt_id;
  // An illustrative ONE-StarCoin pool per qualified distinct play is apportioned
  // to researched credits, BUT these units are NOT funded or spendable.
- if(row)await allocate(db,contentId,now);
+ if(row){
+  await allocate(db,contentId,now);
+  // SECOND ledger: Infinity proposes one NEW issuer-funded coin for the
+  // verified media owner after independent validation; never debit the viewer.
+  // Repeated reports reuse the SAME receipt and cannot double-allocate.
+  await db.prepare(`INSERT OR IGNORE INTO media_star_infinity_view_awards
+   (receipt_id,content_id,created_at) VALUES(?,?,?)`).bind(row,contentId,now).run();
+ }
  return {ok:true,contentId,receiptId:row||null,recorded:credited,duplicate:!credited,
     contributorResearch:'pending_or_unreviewed',proposedPoolMilliStarCoins:1000,
     creditedStarCoins:0,spendableStarCoins:0,paymentStatus:'unfunded',
-    playbackProof:'client_reported_not_independently_verified'};
+    playbackProof:'client_reported_not_independently_verified',
+    issuerViewAwards:'pending_independent_playback_and_funding',
+    creatorCuratorFees:'separate_unconfigured_no_transfer'};
 }
 async function allocate(db:Database,contentId:string,now=Date.now()){
  const credits=(await db.prepare('SELECT credit_id FROM production_credits WHERE content_id=? ORDER BY credit_id LIMIT 120')
