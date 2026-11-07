@@ -47,7 +47,9 @@ test('no platform owner payout wallet: zero debits, zero receipts, fail closed',
 test('configured platform owner beneficiary: one batch with debit and paired creator credit',async()=>{
  const {db,state}=database({verified:true}),r=await worker.fetch(request(),{DB:db});
  const data=await r.json();
- assert.equal(data.ok,true);assert.equal(data.creatorPaid,true);assert.equal(data.recipient,'platform-owner');
+ assert.equal(data.ok,true);assert.equal(data.creatorPaid,true);assert.equal(data.ownerPaid,true);
+ assert.equal(data.recipient,'platform-owner');
+ assert.equal(data.receiptReference,state.attempt);
  assert.equal(state.batches.length,1);
  const items=state.batches[0];
  const debit=items.find(p=>p.sql.includes("'spaces_episode_unlock',-1"));
@@ -62,6 +64,9 @@ test('configured platform owner beneficiary: one batch with debit and paired cre
 test('public health advertises payment readiness only when configured platform owner destination exists',async()=>{
  const a=await worker.fetch(new Request('https://fred.example/health'),{DB:database().db});
  const b=await worker.fetch(new Request('https://fred.example/health'),{DB:database({verified:true}).db});
- assert.equal((await a.json()).paymentsReady,false);
- assert.equal((await b.json()).paymentsReady,true);
+ const offline=await a.json(),online=await b.json();
+ assert.equal(offline.paymentsReady,false);
+ assert.equal(online.paymentsReady,true);
+ assert.equal(offline.receiptContractVersion,2);
+ assert.equal(online.receiptContractVersion,2);
 });
