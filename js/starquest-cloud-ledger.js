@@ -273,6 +273,7 @@
       if (!(await connect())) throw Error('ledger_not_connected');
       return request('/v1/production/plays',{method:'POST',body:{
         platform:play.platform,sourceId:play.sourceId,title:play.title,
+        contentId:play.contentId,
         observedSeconds:Math.max(0,Math.min(7200,Number(play.observedSeconds)||0))
       }});
     },
