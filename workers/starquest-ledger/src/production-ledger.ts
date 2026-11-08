@@ -254,8 +254,71 @@ async function submitCreatorIdentityClaim(db:Database,owner:Viewer,body:Payload)
   notice:'Rights evidence saved for independent review only. Claim does not create an award, verify identity or enable a payout.'};
 }
 
+// The original daily production receipt is intentionally not reused here:
+// it deduplicates by account/content/day and would erase genuine replays.
+// These fresh per-session receipts are only EVIDENCE CANDIDATES. A client
+// timer alone cannot verify a third-party video/listen or mint a StarCoin.
+async function beginMediaStarSession(db:Database,viewer:Viewer,body:Payload){
+ const contentId=clean(body.contentId,180),episodeId=clean(body.episodeId,180);
+ if(!/^media-star:[A-Za-z0-9_-]{3,90}:[A-Za-z0-9_-]{6,80}$/.test(contentId)||!episodeId)
+  throw new ProductionError(400,'media_star_session_invalid','Select an original Media Star episode.');
+ const allowed=await db.prepare(`SELECT e.episode_id FROM media_star_creator_episodes e
+  JOIN media_star_creator_policies m ON m.content_id=e.content_id
+  WHERE e.episode_id=? AND e.content_id=? AND m.publish_state='approved'
+  AND (m.requested_charge_mode='free' OR e.position<m.free_episode_count)`)
+  .bind(episodeId,contentId).first();
+ if(!allowed)throw new ProductionError(403,'media_star_session_not_free','Only a reviewed public free episode can begin a no-charge listen.');
+ const now=Date.now();
+ const recent=await db.prepare('SELECT COUNT(*) AS n FROM media_star_session_evidence WHERE viewer_account_id=? AND started_at>?')
+  .bind(viewer.id,now-3600000).first<{n:number}>();
+ if(Number(recent?.n||0)>=50)throw new ProductionError(429,'media_star_session_rate_limit','Too many sessions were started by this account recently.');
+ const sessionId=crypto.randomUUID();
+ await db.prepare(`INSERT INTO media_star_session_evidence
+ (session_id,content_id,episode_id,viewer_account_id,started_at) VALUES(?,?,?,?,?)`)
+ .bind(sessionId,contentId,episodeId,viewer.id,now).run();
+ return {ok:true,sessionId,contentId,episodeId,startedAt:now,
+   playbackProof:'client_report_only',pendingInfinityAward:0,
+   issuedStarCoins:0,viewerChargedStarCoins:0};
+}
+async function completeMediaStarSession(db:Database,viewer:Viewer,body:Payload){
+ const sessionId=clean(body.sessionId,64);
+ if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(sessionId))
+  throw new ProductionError(400,'media_star_session_invalid','A signed-in playback session ID is required.');
+ const observedSeconds=cap(body.observedSeconds,7200);
+ if(observedSeconds<30)throw new ProductionError(400,'media_star_short_play','A session needs at least 30 seconds of observed media progress.');
+ const row=await db.prepare(`SELECT session_id,content_id,episode_id,started_at,state
+  FROM media_star_session_evidence WHERE session_id=? AND viewer_account_id=?`)
+  .bind(sessionId,viewer.id).first<{
+   session_id:string;content_id:string;episode_id:string;started_at:number;state:string
+  }>();
+ if(!row)throw new ProductionError(404,'media_star_session_not_found','This playback session is not linked to the signed-in account.');
+ const now=Date.now(),elapsed=now-row.started_at;
+ if(row.state==='started' && (elapsed<30000||elapsed>7200000||observedSeconds*1000>elapsed+5000))
+  throw new ProductionError(400,'media_star_session_unverified','The reported media progress is not consistent with this server-issued session.');
+ if(row.state==='started'){
+  // D1 batch is one transaction: replaying this call cannot grant two awards.
+  await db.batch([
+   db.prepare(`UPDATE media_star_session_evidence SET state='candidate',observed_seconds=?,completed_at=?
+    WHERE session_id=? AND viewer_account_id=? AND state='started'`)
+    .bind(observedSeconds,now,sessionId,viewer.id),
+   db.prepare(`INSERT OR IGNORE INTO media_star_infinity_session_awards
+    (session_id,content_id,created_at)
+    SELECT session_id,content_id,? FROM media_star_session_evidence
+    WHERE session_id=? AND viewer_account_id=? AND state='candidate'`)
+    .bind(now,sessionId,viewer.id)
+  ]);
+ }
+ const candidate=await db.prepare('SELECT session_id FROM media_star_infinity_session_awards WHERE session_id=?')
+  .bind(sessionId).first();
+ return {ok:true,sessionId,contentId:row.content_id,episodeId:row.episode_id,
+  proposedInfinityStarCoins:candidate?1:0,issuedStarCoins:0,viewerChargedStarCoins:0,
+  candidateReceiptId:candidate?sessionId:null,
+  reviewStatus:'pending_independent_playback_and_rights',payoutStatus:'unfunded_unclaimed',
+  playbackProof:'client_native_media_progress_not_independently_verified'};
+}
+
 async function myClaims(db:Database,account:Viewer){
- const [r,awardRows,creatorClaims]=await Promise.all([
+ const [r,awardRows,creatorClaims,sessionAwardRows]=await Promise.all([
   db.prepare(`SELECT cl.id,cl.credit_id,cl.status,cl.created_at,c.display_name,c.role,p.title
    FROM production_claim_requests cl JOIN production_credits c ON c.credit_id=cl.credit_id
    JOIN production_catalog p ON p.content_id=c.content_id
@@ -273,13 +336,28 @@ async function myClaims(db:Database,account:Viewer){
    ORDER BY a.created_at DESC LIMIT 200`).bind(account.id,account.id).all(),
   db.prepare(`SELECT claim_id,content_id,creator_display_name,review_status,submitted_at,reviewed_at
    FROM media_star_creator_claims WHERE claimant_account_id=? ORDER BY submitted_at DESC LIMIT 100`)
-   .bind(account.id).all()
+   .bind(account.id).all(),
+  db.prepare(`SELECT a.session_id,a.content_id,p.title AS content_title,
+   a.proposed_star_coins,a.verification_status,a.payout_status,a.settled_star_coins,a.created_at
+   FROM media_star_infinity_session_awards a
+   JOIN production_catalog p ON p.content_id=a.content_id
+   WHERE (p.publisher_account_id=? AND p.platform='media-star') OR EXISTS(
+     SELECT 1 FROM media_star_creator_claims cl
+     WHERE cl.content_id=a.content_id AND cl.claimant_account_id=? AND cl.review_status='verified'
+   )
+   ORDER BY a.created_at DESC LIMIT 200`).bind(account.id,account.id).all()
  ]);
  const awards=(awardRows.results||[]) as Array<{
   receipt_id:string;content_id:string;content_title:string;created_at:number;
   verification_status:string;payout_status:string;proposed_star_coins:number;settled_star_coins:number;
  }>;
+ const sessions=(sessionAwardRows.results||[]) as Array<{
+  session_id:string;content_id:string;content_title:string;proposed_star_coins:number;
+  verification_status:string;payout_status:string;settled_star_coins:number;created_at:number
+ }>;
  return {ok:true,claims:r.results,creatorIdentityClaims:creatorClaims.results||[],
+  pendingPerSessionInfinityProposals:sessions.filter(a=>a.payout_status!=='settled').length,
+  infinitySessionProposals:sessions,
   pendingInfinityViewAwards:awards.filter(a=>a.payout_status!=='settled').length,
   infinityViewAwards:awards,
   coinSources:{infinityIssuer:'pending_rights_and_verified_playback',curatedEpisode:'separate_user_funded_checkout'},
@@ -344,6 +422,8 @@ export async function productionPost(path:string,db:Database,account:Viewer,body
  if(path==='/v1/production/plays')return record(db,account,body);
  if(path==='/v1/production/claim')return claim(db,account,body);
  if(path==='/v1/production/media-star-claim')return submitCreatorIdentityClaim(db,account,body);
+ if(path==='/v1/production/media-star-session-start')return beginMediaStarSession(db,account,body);
+ if(path==='/v1/production/media-star-session-finish')return completeMediaStarSession(db,account,body);
  if(path==='/v1/production/mine')return myClaims(db,account);
  return null;
 }
