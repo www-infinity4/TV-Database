@@ -90,8 +90,8 @@ test('per-session API binds the authenticated viewer, only permits approved free
  assert.match(api,/viewer.id/);
  assert.match(api,/publish_state='approved'/);
  assert.match(api,/e.position<m.free_episode_count/);
- assert.match(api,/media_star_session_start/);
- assert.match(api,/media_star_session_finish/);
+ assert.match(api,/\/v1\/production\/media-star-session-start/);
+ assert.match(api,/\/v1\/production\/media-star-session-finish/);
  assert.match(api,/pendingPerSessionInfinityProposals/);
  assert.doesNotMatch(api,/UPDATE accounts SET star_coins/);
 });
