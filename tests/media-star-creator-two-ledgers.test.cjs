@@ -26,3 +26,16 @@ test('creator curator fees never masquerade as Infinity view awards',()=>{
  assert.match(schema,/payment_status TEXT NOT NULL DEFAULT 'not_charged'/);
  assert.match(api,/issuerViewAwards.*pending/);
 });
+
+test('public creator catalog exposes only approved cards and free media, never hidden paid URLs',()=>{
+ assert.match(api,/function publicMediaStarCards\(/);
+ assert.match(api,/publish_state='approved'/);
+ assert.match(api,/WHEN m.requested_charge_mode='free' OR e.position<m.free_episode_count THEN e.source_url ELSE NULL END AS public_source_url/);
+ assert.match(api,/\/'v1\/production\/media-star-cards\'/);
+ assert.doesNotMatch(api,/return \{ok:true,.*creator_payout_account_id/s);
+});
+test('published episodes and existing purchase receipts cannot be deleted by a draft edit',()=>{
+ assert.match(api,/published_creator_card_immutable/);
+ assert.match(api,/existing_curator_unlocks_immutable/);
+ assert.match(api,/UPDATE production_catalog SET source_url=\?/);
+});
