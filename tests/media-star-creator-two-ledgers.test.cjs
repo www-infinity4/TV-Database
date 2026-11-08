@@ -105,3 +105,11 @@ test('paid episode URL is only returned by signed readback after a settled owner
  assert.match(api,/sourceUrl:null/);
  assert.match(api,/\/v1\/production\/media-star-episode-access/);
 });
+
+test('replay of an already paid episode may create an Infinity session candidate without a second curator charge',()=>{
+ assert.match(api,/u.viewer_account_id=\?/);
+ assert.match(api,/u.payment_status='settled'/);
+ assert.match(api,/u.transfer_receipt IS NOT NULL/);
+ assert.match(api,/media_star_session_not_entitled/);
+ assert.match(api,/viewerChargedStarCoins:0/);
+});
