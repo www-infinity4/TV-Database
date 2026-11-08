@@ -58,17 +58,12 @@ jobs:
           assert db.execute("SELECT star_coins FROM accounts WHERE id='a'").fetchone()[0]==0
           # Exercise the ACTUAL public API SQL with approved/free, paid and
           # draft source URLs. Do not grant any token or create fake public data.
-          import re
-          db.execute("INSERT INTO production_catalog(content_id,platform,source_id,title,publisher_account_id,created_at,updated_at) VALUES('media-star:a:approved001','media-star','approved001','Approved show','a',?,?)",(now,now))
-          db.execute("INSERT INTO production_catalog(content_id,platform,source_id,title,publisher_account_id,created_at,updated_at) VALUES('media-star:a:draft00001','media-star','draft00001','Draft show','a',?,?)",(now,now))
-          for content,state in [('media-star:a:approved001','approved'),('media-star:a:draft00001','draft')]:
-              db.execute("INSERT INTO media_star_creator_policies(content_id,creator_account_id,requested_charge_mode,free_episode_count,publish_state,created_at,updated_at) VALUES(?,?,'one_starcoin',1,?,?,?)",(content,'a',state,now,now))
-              for position,title,url in [(0,'First','https://example.org/first.mp3'),(1,'Locked','https://example.org/private-episode.mp3')]:
-                  db.execute("INSERT INTO media_star_creator_episodes(episode_id,content_id,position,title,source_url,created_at) VALUES(?,?,?,?,?,?)",(content+':'+str(position),content,position,title,url,now))
+          # Get the query compiled into the Worker itself, rather than a copied approximation.
           source=Path('workers/starquest-ledger/src/production-ledger.ts').read_text()
-          match=re.search(r"async function publicMediaStarCards\\(.*?db\\.prepare\\(`(SELECT .*?)`\\)\\.all",source,re.S)
-          assert match, 'public Media Star SQL was not discovered'
-          cursor=db.execute(match.group(1))
+          assert 'async function publicMediaStarCards' in source
+          sql=source.split('async function publicMediaStarCards',1)[1].split('db.prepare(`',1)[1].split('`).all',1)[0]
+          assert sql.startswith('SELECT m.content_id')
+          cursor=db.execute(sql)
           names=[column[0] for column in cursor.description]
           result=[dict(zip(names,row)) for row in cursor.fetchall()]
           assert len(result)==2, result
@@ -76,7 +71,7 @@ jobs:
           assert next(x for x in result if x['episode_title']=='First')['public_source_url']=='https://example.org/first.mp3'
           assert next(x for x in result if x['episode_title']=='Locked')['public_source_url'] is None
           assert all(x['card_title']=='Approved show' for x in result)
-                    print('Unique receipts, public credits and unfunded wallet isolation validated')
+          print('Unique receipts, public credits and unfunded wallet isolation validated')
           PY
       - name: Browser source receipts regression tests
         run: |
