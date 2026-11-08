@@ -58,6 +58,12 @@ jobs:
           assert db.execute("SELECT star_coins FROM accounts WHERE id='a'").fetchone()[0]==0
           # Exercise the ACTUAL public API SQL with approved/free, paid and
           # draft source URLs. Do not grant any token or create fake public data.
+          db.execute("INSERT INTO production_catalog(content_id,platform,source_id,title,publisher_account_id,created_at,updated_at) VALUES('media-star:a:approved001','media-star','approved001','Approved show','a',?,?)",(now,now))
+          db.execute("INSERT INTO production_catalog(content_id,platform,source_id,title,publisher_account_id,created_at,updated_at) VALUES('media-star:a:draft00001','media-star','draft00001','Draft show','a',?,?)",(now,now))
+          for content,state in [('media-star:a:approved001','approved'),('media-star:a:draft00001','draft')]:
+              db.execute("INSERT INTO media_star_creator_policies(content_id,creator_account_id,requested_charge_mode,free_episode_count,publish_state,created_at,updated_at) VALUES(?,?,'one_starcoin',1,?,?,?)",(content,'a',state,now,now))
+              for position,title,url in [(0,'First','https://example.org/first.mp3'),(1,'Locked','https://example.org/private-episode.mp3')]:
+                  db.execute("INSERT INTO media_star_creator_episodes(episode_id,content_id,position,title,source_url,created_at) VALUES(?,?,?,?,?,?)",(content+':'+str(position),content,position,title,url,now))
           # Get the query compiled into the Worker itself, rather than a copied approximation.
           source=Path('workers/starquest-ledger/src/production-ledger.ts').read_text()
           assert 'async function publicMediaStarCards' in source
