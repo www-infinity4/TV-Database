@@ -95,3 +95,13 @@ test('per-session API binds the authenticated viewer, only permits approved free
  assert.match(api,/pendingPerSessionInfinityProposals/);
  assert.doesNotMatch(api,/UPDATE accounts SET star_coins/);
 });
+
+test('paid episode URL is only returned by signed readback after a settled owner-specific transfer receipt',()=>{
+ assert.match(api,/async function mediaStarEpisodeAccess/);
+ assert.match(api,/viewer_account_id=\?/);
+ assert.match(api,/payment_status='settled'/);
+ assert.match(api,/transfer_receipt IS NOT NULL/);
+ assert.match(api,/purchaseEnabled:false/);
+ assert.match(api,/sourceUrl:null/);
+ assert.match(api,/\/v1\/production\/media-star-episode-access/);
+});
