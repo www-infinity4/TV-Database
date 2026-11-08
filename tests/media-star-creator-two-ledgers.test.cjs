@@ -73,3 +73,25 @@ test('claim status readback only lists requests for the signed in account and ne
  assert.match(api,/review_status/);
  assert.match(api,/spendableStarCoinsFromProduction:0/);
 });
+
+test('distinct play sessions create separate unfunded Infinity proposals without charging or minted coins',()=>{
+ assert.match(schema,/CREATE TABLE IF NOT EXISTS media_star_session_evidence/);
+ assert.match(schema,/CREATE TABLE IF NOT EXISTS media_star_infinity_session_awards/);
+ assert.match(schema,/session_id TEXT PRIMARY KEY REFERENCES media_star_session_evidence/);
+ assert.match(schema,/proposed_star_coins INTEGER NOT NULL DEFAULT 1/);
+ assert.match(api,/async function beginMediaStarSession/);
+ assert.match(api,/async function completeMediaStarSession/);
+ assert.match(api,/state='candidate'/);
+ assert.match(api,/observedSeconds<30/);
+ assert.match(api,/INSERT OR IGNORE INTO media_star_infinity_session_awards/);
+ assert.match(api,/unfunded_unclaimed/);
+});
+test('per-session API binds the authenticated viewer, only permits approved free episodes and avoids double-issuance',()=>{
+ assert.match(api,/viewer.id/);
+ assert.match(api,/publish_state='approved'/);
+ assert.match(api,/e.position<m.free_episode_count/);
+ assert.match(api,/media_star_session_start/);
+ assert.match(api,/media_star_session_finish/);
+ assert.match(api,/pendingPerSessionInfinityProposals/);
+ assert.doesNotMatch(api,/UPDATE accounts SET star_coins/);
+});
