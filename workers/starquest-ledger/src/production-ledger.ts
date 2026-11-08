@@ -265,9 +265,12 @@ async function beginMediaStarSession(db:Database,viewer:Viewer,body:Payload){
  const allowed=await db.prepare(`SELECT e.episode_id FROM media_star_creator_episodes e
   JOIN media_star_creator_policies m ON m.content_id=e.content_id
   WHERE e.episode_id=? AND e.content_id=? AND m.publish_state='approved'
-  AND (m.requested_charge_mode='free' OR e.position<m.free_episode_count)`)
-  .bind(episodeId,contentId).first();
- if(!allowed)throw new ProductionError(403,'media_star_session_not_free','Only a reviewed public free episode can begin a no-charge listen.');
+  AND ((m.requested_charge_mode='free' OR e.position<m.free_episode_count)
+   OR EXISTS (SELECT 1 FROM media_star_curator_unlock_receipts u
+    WHERE u.episode_id=e.episode_id AND u.viewer_account_id=?
+      AND u.payment_status='settled' AND u.transfer_receipt IS NOT NULL))`)
+  .bind(episodeId,contentId,viewer.id).first();
+ if(!allowed)throw new ProductionError(403,'media_star_session_not_entitled','Only reviewed free or already purchased episodes can begin a session.');
  const now=Date.now();
  const recent=await db.prepare('SELECT COUNT(*) AS n FROM media_star_session_evidence WHERE viewer_account_id=? AND started_at>?')
   .bind(viewer.id,now-3600000).first<{n:number}>();
