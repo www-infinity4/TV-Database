@@ -218,11 +218,33 @@ async function claim(db:Database,account:Viewer,body:Payload){
  return {ok:true,submitted:Number(inserted.meta.changes||0)===1,claimStatus:'pending_identity_and_rights_review',creditedStarCoins:0,withdrawableCash:0};
 }
 async function myClaims(db:Database,account:Viewer){
- const r=await db.prepare(`SELECT cl.id,cl.credit_id,cl.status,cl.created_at,c.display_name,c.role,p.title
- FROM production_claim_requests cl JOIN production_credits c ON c.credit_id=cl.credit_id
- JOIN production_catalog p ON p.content_id=c.content_id
- WHERE cl.claimant_account_id=? ORDER BY cl.created_at DESC LIMIT 100`).bind(account.id).all();
- return {ok:true,claims:r.results,spendableStarCoinsFromProduction:0,payoutsEnabled:false};
+ const [r,awardRows]=await Promise.all([
+  db.prepare(`SELECT cl.id,cl.credit_id,cl.status,cl.created_at,c.display_name,c.role,p.title
+   FROM production_claim_requests cl JOIN production_credits c ON c.credit_id=cl.credit_id
+   JOIN production_catalog p ON p.content_id=c.content_id
+   WHERE cl.claimant_account_id=? ORDER BY cl.created_at DESC LIMIT 100`).bind(account.id).all(),
+  // Authenticated, wallet-scoped readback. A card publisher can inspect proposed
+  // rights-pending awards for their own registered card. A credited person can
+  // inspect other awards only when BOTH identity and claim have been verified.
+  db.prepare(`SELECT a.receipt_id,a.content_id,p.title AS content_title,a.created_at,
+    a.verification_status,a.payout_status,a.proposed_star_coins,a.settled_star_coins
+   FROM media_star_infinity_view_awards a
+   JOIN production_catalog p ON p.content_id=a.content_id
+   LEFT JOIN production_credits c ON c.credit_id=a.beneficiary_credit_id
+   WHERE (p.publisher_account_id=? AND p.platform='media-star')
+      OR (c.claimant_account_id=? AND c.claim_status='verified')
+   ORDER BY a.created_at DESC LIMIT 200`).bind(account.id,account.id).all()
+ ]);
+ const awards=(awardRows.results||[]) as Array<{
+  receipt_id:string;content_id:string;content_title:string;created_at:number;
+  verification_status:string;payout_status:string;proposed_star_coins:number;settled_star_coins:number;
+ }>;
+ return {ok:true,claims:r.results,
+  pendingInfinityViewAwards:awards.filter(a=>a.payout_status!=='settled').length,
+  infinityViewAwards:awards,
+  coinSources:{infinityIssuer:'pending_rights_and_verified_playback',curatedEpisode:'separate_user_funded_checkout'},
+  spendableStarCoinsFromProduction:0,payoutsEnabled:false,
+  notice:'Proposals do not create or transfer spendable coins. Verified creator claims and an approved issuer settlement are required.'};
 }
 // Public-read-only discovery: only cards already approved by a separate
 // rights/identity moderator; locked episode links never leave Cloudflare D1.
