@@ -87,7 +87,16 @@ jobs:
           assert db.execute("SELECT review_status FROM media_star_creator_claims WHERE claimant_account_id='a'").fetchone()[0]=='pending_identity_and_rights_review'
           assert db.execute("SELECT star_coins FROM accounts WHERE id='a'").fetchone()[0]==0
           assert db.execute("SELECT creator_payout_account_id FROM media_star_creator_policies WHERE content_id='media-star:a:approved001'").fetchone()[0] is None
-          print('Unique receipts, masked media and signed pending rights claims validated; no funds moved')
+          # Two separate, non-spendable session proposals can exist for two
+          # real listening sessions on the SAME day. Duplicate finish is inert.
+          for session in ['first-native-session','second-native-session']:
+              db.execute("INSERT INTO media_star_session_evidence(session_id,content_id,episode_id,viewer_account_id,started_at,observed_seconds,state) VALUES(?,?,?,?,?,35,'candidate')",(session,'media-star:a:approved001','media-star:a:approved001:0','b',now))
+              sql="INSERT OR IGNORE INTO media_star_infinity_session_awards(session_id,content_id,created_at) SELECT session_id,content_id,? FROM media_star_session_evidence WHERE session_id=? AND viewer_account_id=? AND state='candidate'"
+              db.execute(sql,(now,session,'b'))
+              db.execute(sql,(now,session,'b'))
+          assert db.execute("SELECT COUNT(*),SUM(proposed_star_coins),SUM(settled_star_coins) FROM media_star_infinity_session_awards").fetchone()==(2,2,0)
+          assert db.execute("SELECT star_coins FROM accounts WHERE id='b'").fetchone()[0]==0
+          print('Distinct repeat-session proposals, masked paid media, pending rights claims: no wallet funds moved')
           PY
       - name: Browser source receipts regression tests
         run: |
