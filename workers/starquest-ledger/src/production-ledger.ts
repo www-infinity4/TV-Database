@@ -217,8 +217,45 @@ async function claim(db:Database,account:Viewer,body:Payload){
  VALUES(?,?,?,?,?)`).bind(id,creditId,account.id,evidence,now).run();
  return {ok:true,submitted:Number(inserted.meta.changes||0)===1,claimStatus:'pending_identity_and_rights_review',creditedStarCoins:0,withdrawableCash:0};
 }
+// A public name or creator claim is not proof of entitlement. Claims are bound
+// to the authenticated account, never to a user-supplied wallet ID.
+async function submitCreatorIdentityClaim(db:Database,owner:Viewer,body:Payload){
+ const contentId=clean(body.contentId,180),creatorName=clean(body.creatorName,120);
+ if(!/^media-star:[A-Za-z0-9_-]{3,90}:[A-Za-z0-9_-]{6,80}$/.test(contentId))
+  throw new ProductionError(400,'creator_content_id_required','Select a registered Media Star card.');
+ if(!validName(creatorName))throw new ProductionError(400,'creator_name_required','Provide the public creator name to review.');
+ if(body.rightsAttestation!==true)
+  throw new ProductionError(400,'creator_attestation_required','Confirm you are authorized to submit this content rights claim.');
+ const raw=clean(body.evidenceUrl,700);
+ let evidence:URL;
+ try{evidence=new URL(raw)}catch{throw new ProductionError(400,'creator_evidence_invalid','Provide a public HTTPS rights or production credits source.')}
+ const host=evidence.hostname.toLowerCase();
+ if(evidence.protocol!=='https:'||evidence.username||evidence.password||!host.includes('.')||
+    ['localhost','127.0.0.1','::1','quantaphi.org'].includes(host)||
+    host.endsWith('.localhost')||host.endsWith('.local')||host.endsWith('.internal')||
+    host.endsWith('.quantaphi.org')||host.endsWith('.marvaseater.workers.dev')||
+    /^(?:10\.|127\.|192\.168\.|169\.254\.|0\.)/.test(host))
+  throw new ProductionError(400,'creator_evidence_invalid','Use a public HTTPS source; private links and internal endpoints cannot establish rights.');
+ const catalog=await db.prepare("SELECT content_id FROM production_catalog WHERE content_id=? AND platform='media-star'")
+  .bind(contentId).first();
+ if(!catalog)throw new ProductionError(404,'creator_content_not_registered','The claimed Media Star collection must first be registered.');
+ const now=Date.now(),claimId=crypto.randomUUID();
+ const insert=await db.prepare(`INSERT OR IGNORE INTO media_star_creator_claims
+  (claim_id,content_id,claimant_account_id,creator_display_name,public_evidence_url,rights_attestation_at,submitted_at)
+  VALUES(?,?,?,?,?,?,?)`)
+  .bind(claimId,contentId,owner.id,creatorName,evidence.href,now,now).run();
+ const prior=await db.prepare(`SELECT claim_id,review_status,submitted_at FROM media_star_creator_claims
+  WHERE content_id=? AND claimant_account_id=?`).bind(contentId,owner.id)
+  .first<{claim_id:string,review_status:string,submitted_at:number}>();
+ return {ok:true,submitted:Number(insert.meta.changes||0)===1,
+  claimId:prior?.claim_id||null,reviewStatus:prior?.review_status||'pending_identity_and_rights_review',
+  submittedAt:prior?.submitted_at||now,claimantAccount:'authenticated_wallet_only',
+  verifiedCreator:false,issuerStarCoinsMinted:0,spendableStarCoins:0,
+  notice:'Rights evidence saved for independent review only. Claim does not create an award, verify identity or enable a payout.'};
+}
+
 async function myClaims(db:Database,account:Viewer){
- const [r,awardRows]=await Promise.all([
+ const [r,awardRows,creatorClaims]=await Promise.all([
   db.prepare(`SELECT cl.id,cl.credit_id,cl.status,cl.created_at,c.display_name,c.role,p.title
    FROM production_claim_requests cl JOIN production_credits c ON c.credit_id=cl.credit_id
    JOIN production_catalog p ON p.content_id=c.content_id
@@ -233,13 +270,16 @@ async function myClaims(db:Database,account:Viewer){
    LEFT JOIN production_credits c ON c.credit_id=a.beneficiary_credit_id
    WHERE (p.publisher_account_id=? AND p.platform='media-star')
       OR (c.claimant_account_id=? AND c.claim_status='verified')
-   ORDER BY a.created_at DESC LIMIT 200`).bind(account.id,account.id).all()
+   ORDER BY a.created_at DESC LIMIT 200`).bind(account.id,account.id).all(),
+  db.prepare(`SELECT claim_id,content_id,creator_display_name,review_status,submitted_at,reviewed_at
+   FROM media_star_creator_claims WHERE claimant_account_id=? ORDER BY submitted_at DESC LIMIT 100`)
+   .bind(account.id).all()
  ]);
  const awards=(awardRows.results||[]) as Array<{
   receipt_id:string;content_id:string;content_title:string;created_at:number;
   verification_status:string;payout_status:string;proposed_star_coins:number;settled_star_coins:number;
  }>;
- return {ok:true,claims:r.results,
+ return {ok:true,claims:r.results,creatorIdentityClaims:creatorClaims.results||[],
   pendingInfinityViewAwards:awards.filter(a=>a.payout_status!=='settled').length,
   infinityViewAwards:awards,
   coinSources:{infinityIssuer:'pending_rights_and_verified_playback',curatedEpisode:'separate_user_funded_checkout'},
@@ -303,6 +343,7 @@ export async function productionPost(path:string,db:Database,account:Viewer,body
  if(path==='/v1/production/register')return register(db,account,body);
  if(path==='/v1/production/plays')return record(db,account,body);
  if(path==='/v1/production/claim')return claim(db,account,body);
+ if(path==='/v1/production/media-star-claim')return submitCreatorIdentityClaim(db,account,body);
  if(path==='/v1/production/mine')return myClaims(db,account);
  return null;
 }
