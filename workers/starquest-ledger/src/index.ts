@@ -1,4 +1,5 @@
 import {productionGet,productionPost,ProductionError,researchProductionCredits} from './production-ledger';
+import {UsageError} from './usage-receipts';
 const SHARES_PER_COIN = 10;
 const SHOPLC_REWARD_AMOUNT = 5;
 const SHOPLC_DAILY_REWARD_LIMIT = 3;
@@ -30,6 +31,7 @@ interface BootstrapBody extends JsonRecord {
 interface Env {
   DB: D1Database;
   INFINITY_CONNECTOR_SECRET?: string;
+  USAGE_ALIAS_SECRET?: string; // Server-only HMAC, not a public pseudonym or a payment secret
 }
 
 const INFINITY_LEDGER_URL = "https://infinity-ledger.marvaseater.workers.dev";
@@ -765,7 +767,7 @@ async function route(request: Request, env: Env, ctx: ExecutionContext): Promise
   const account = await accountFromRequest(request, env);
   if (request.method === "POST" && url.pathname.startsWith("/v1/production/")) {
     const body=await readBody<JsonRecord>(request);
-    const answer=await productionPost(url.pathname,env.DB,account,body);
+    const answer=await productionPost(url.pathname,env.DB,account,body,env.USAGE_ALIAS_SECRET);
     if (answer) return json(request,answer);
   }
   if (request.method === "GET" && url.pathname === "/v1/state") return json(request, { ok: true, state: await loadState(env, account) });
@@ -786,6 +788,7 @@ export default {
     } catch (error) {
       if (error instanceof HttpError) return json(request, { ok: false, error: error.code, message: error.message }, error.status);
       if (error instanceof ProductionError) return json(request, {ok:false,error:error.code,message:error.message},error.status);
+      if (error instanceof UsageError) return json(request, {ok:false,error:error.code,message:error.message},error.status);
       console.error(JSON.stringify({ event: "unhandled_error", message: error instanceof Error ? error.message : String(error) }));
       return json(request, { ok: false, error: "server_error", message: "The ledger could not complete this request." }, 500);
     }
