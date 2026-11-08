@@ -52,7 +52,9 @@ test('configured platform owner beneficiary: one batch with debit and paired cre
  assert.equal(data.ok,true);assert.equal(data.creatorPaid,true);assert.equal(data.ownerPaid,true);
  assert.equal(data.recipient,'platform-owner');
  assert.equal(data.receiptReference,state.attempt);
- assert.ok(state.queries.some(q=>q.sql.includes("AS debit_count")&&q.sql.includes("AS credit_count")),'must independently read both immutable ledger receipt events');
+ const proof=state.queries.find(q=>q.sql.includes("AS debit_count")&&q.sql.includes("AS credit_count"));
+ assert.ok(proof,'must independently read both immutable ledger receipt events');
+ assert.deepEqual(proof.args,['listener','platform-owner',state.attempt,'fred-0147'],'receipt query must match listener, owner, attempt and episode');
  assert.equal(state.batches.length,1);
  const items=state.batches[0];
  const debit=items.find(p=>p.sql.includes("'spaces_episode_unlock',-1"));
