@@ -28,7 +28,7 @@ test('broadcaster does not register someone else as publisher',()=>{
 });
 test('existing StarQuest wallet boundaries and payment paths stay untouched',()=>{
  assert.match(route,/await accountFromRequest\(request, env\)/);
- assert.match(route,/productionPost\(url.pathname,env.DB,account,body\)/);
+ assert.match(route,/productionPost\(url.pathname,env.DB,account,body,env.USAGE_ALIAS_SECRET\)/);
  assert.match(route,/researchProductionCredits\(env.DB\)/);
  assert.match(route,/saveShare\(request, env, account, ctx\)/);
  assert.match(bridge,/recordProductionPlay/);
