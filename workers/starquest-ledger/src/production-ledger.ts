@@ -317,6 +317,36 @@ async function completeMediaStarSession(db:Database,viewer:Viewer,body:Payload){
   playbackProof:'client_native_media_progress_not_independently_verified'};
 }
 
+// An existing curator-paid entitlement may reveal its source, but only after
+// the SAME authenticated viewer has a settled, receipt-backed transfer.
+async function mediaStarEpisodeAccess(db:Database,viewer:Viewer,body:Payload){
+ const episodeId=clean(body.episodeId,180);
+ if(!episodeId)throw new ProductionError(400,'episode_required','Select a Media Star episode.');
+ const episode=await db.prepare(`SELECT e.episode_id,e.position,e.source_url,e.title,
+  m.requested_charge_mode,m.free_episode_count,m.payment_state,m.publish_state
+  FROM media_star_creator_episodes e JOIN media_star_creator_policies m
+  ON m.content_id=e.content_id WHERE e.episode_id=?`)
+  .bind(episodeId).first<{
+   episode_id:string;position:number;source_url:string;title:string;
+   requested_charge_mode:string;free_episode_count:number;payment_state:string;publish_state:string
+  }>();
+ if(!episode||episode.publish_state!=='approved')
+  throw new ProductionError(404,'episode_not_published','The selected Media Star episode is not publicly approved.');
+ const isFree=episode.requested_charge_mode==='free'||episode.position<episode.free_episode_count;
+ if(isFree)return {ok:true,episodeId,episodeTitle:episode.title,access:'free',
+  sourceUrl:episode.source_url,priceStarCoins:0,alreadyUnlocked:true,purchaseEnabled:false,
+  issuerAward:'separate_pending_session_receipt'};
+ const paid=await db.prepare(`SELECT transfer_receipt FROM media_star_curator_unlock_receipts
+  WHERE episode_id=? AND viewer_account_id=? AND payment_status='settled'
+   AND transfer_receipt IS NOT NULL`).bind(episodeId,viewer.id).first();
+ if(paid)return {ok:true,episodeId,episodeTitle:episode.title,access:'previously_purchased',
+  sourceUrl:episode.source_url,priceStarCoins:0,alreadyUnlocked:true,purchaseEnabled:false,
+  issuerAward:'separate_pending_session_receipt'};
+ return {ok:true,episodeId,episodeTitle:episode.title,access:'paid_locked',
+  sourceUrl:null,priceStarCoins:1,alreadyUnlocked:false,purchaseEnabled:false,
+  reason:'Creator checkout requires reviewed rights, verified curator wallet and atomic customer-confirmed transfer.'};
+}
+
 async function myClaims(db:Database,account:Viewer){
  const [r,awardRows,creatorClaims,sessionAwardRows]=await Promise.all([
   db.prepare(`SELECT cl.id,cl.credit_id,cl.status,cl.created_at,c.display_name,c.role,p.title
@@ -424,6 +454,7 @@ export async function productionPost(path:string,db:Database,account:Viewer,body
  if(path==='/v1/production/media-star-claim')return submitCreatorIdentityClaim(db,account,body);
  if(path==='/v1/production/media-star-session-start')return beginMediaStarSession(db,account,body);
  if(path==='/v1/production/media-star-session-finish')return completeMediaStarSession(db,account,body);
+ if(path==='/v1/production/media-star-episode-access')return mediaStarEpisodeAccess(db,account,body);
  if(path==='/v1/production/mine')return myClaims(db,account);
  return null;
 }
