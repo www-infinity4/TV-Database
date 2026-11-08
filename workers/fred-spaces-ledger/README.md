@@ -17,6 +17,7 @@ StarQuest device bearer-token authentication. It does not mint coins.
 - The `spaces_episode_unlocks` table is created on first authenticated use,
   and StarQuest `accounts.star_coins` is the authoritative debit balance.
 - Each *new paid unlock* transfers **one full StarCoin to the configured QuantaPhi platform owner account**.
+- After the D1 batch, the Worker rereads the immutable ledger and confirms **exactly one** listener debit event (-1) and **exactly one** platform-owner credit event (+1) sharing the same attempt ID and Fred episode ID. The response only reports `ownerPaid:true` when both records exist. Missing proof returns an incident response with **do not retry** rather than falsely claiming payment success. This source change requires independent payment review and authorized production deployment; the live Worker remains on the legacy response until then.
   The debit (`spaces_episode_unlock`, -1) and credit
   (`spaces_episode_owner_payout`, +1) are written in one StarQuest D1 batch
   with the same attempt reference. Retrying the same unlock never pays twice.
