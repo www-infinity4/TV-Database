@@ -1218,7 +1218,9 @@
   });
 
   if (typeof SHOWS !== "undefined" && Array.isArray(SHOWS)) {
-    SHOWS.splice(0, SHOWS.length, ...existing, ...replacements);
+    const filteredExisting = existing.filter(item => !item.archiveId && !item.archiveFile);
+const filteredReplacements = replacements.filter(item => !item.archiveId && !item.archiveFile);
+SHOWS.splice(0, SHOWS.length, ...filteredExisting, ...filteredReplacements);
   }
 
   global.StarQuestYouTubeCatalog = Object.freeze({
