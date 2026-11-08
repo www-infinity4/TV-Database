@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS media_star_curator_unlock_receipts (
   viewer_account_id TEXT NOT NULL REFERENCES accounts(id),
   curator_account_id TEXT NOT NULL REFERENCES accounts(id),
   requested_price_star_coins INTEGER NOT NULL DEFAULT 1 CHECK(requested_price_star_coins=1),
-  payment_status TEXT NOT NULL DEFAULT 'not_charged',
+  payment_status TEXT NOT NULL DEFAULT 'not_charged' CHECK(payment_status IN ('not_charged','authorized','settled','refunded','disputed')),
   transfer_receipt TEXT UNIQUE,
   created_at INTEGER NOT NULL,
   UNIQUE(viewer_account_id,episode_id)
