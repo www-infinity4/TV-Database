@@ -293,6 +293,12 @@
       if (!(await connect())) throw Error('ledger_not_connected');
       return request('/v1/production/claim',{method:'POST',body:{creditId,evidenceUrl}});
     },
+    mediaStarEpisodeAccess: async function (episodeId) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      if(!episodeId)throw Error('episode_required');
+      return request('/v1/production/media-star-episode-access',{method:'POST',
+        body:{episodeId:String(episodeId)}});
+    },
     beginMediaStarPlayback: async function (session) {
       if (!(await connect())) throw Error('ledger_not_connected');
       if(!session||!session.contentId||!session.episodeId)throw Error('creator_episode_required');
