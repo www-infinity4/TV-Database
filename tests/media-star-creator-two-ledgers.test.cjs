@@ -46,3 +46,11 @@ test('authenticated playback bridge carries registered creator contentId instead
  assert.match(api,/creator_content_id_required/);
  assert.match(api,/issuerViewAwards:'pending_independent_playback_and_funding'/);
 });
+
+test('authenticated creator can inspect proposed Infinity view awards without a mint or unverified claim',()=>{
+ assert.match(api,/pendingInfinityViewAwards/);
+ assert.match(api,/media_star_infinity_view_awards a/);
+ assert.match(api,/publisher_account_id=\?/);
+ assert.match(api,/claim_status='verified'/);
+ assert.match(api,/spendableStarCoinsFromProduction:0/);
+});
