@@ -77,7 +77,17 @@ jobs:
           assert next(x for x in result if x['episode_title']=='First')['public_source_url']=='https://example.org/first.mp3'
           assert next(x for x in result if x['episode_title']=='Locked')['public_source_url'] is None
           assert all(x['card_title']=='Approved show' for x in result)
-          print('Unique receipts, public credits and unfunded wallet isolation validated')
+          db.execute("INSERT INTO accounts VALUES('b','other','secret2',0,0,0,?,?)",(now,now))
+          db.execute("INSERT INTO media_star_creator_claims (claim_id,content_id,claimant_account_id,creator_display_name,public_evidence_url,rights_attestation_at,submitted_at) VALUES ('owner-claim','media-star:a:approved001','a','Test Creator','https://example.org/credits',?,?)",(now,now))
+          try:
+              db.execute("INSERT INTO media_star_creator_claims (claim_id,content_id,claimant_account_id,creator_display_name,public_evidence_url,rights_attestation_at,submitted_at) VALUES ('duplicate-claim','media-star:a:approved001','a','Test Creator','https://example.org/credits',?,?)",(now,now))
+              raise AssertionError('Duplicate rights claim accepted')
+          except sqlite3.IntegrityError:pass
+          assert db.execute("SELECT COUNT(*) FROM media_star_creator_claims WHERE claimant_account_id='b'").fetchone()[0]==0
+          assert db.execute("SELECT review_status FROM media_star_creator_claims WHERE claimant_account_id='a'").fetchone()[0]=='pending_identity_and_rights_review'
+          assert db.execute("SELECT star_coins FROM accounts WHERE id='a'").fetchone()[0]==0
+          assert db.execute("SELECT creator_payout_account_id FROM media_star_creator_policies WHERE content_id='media-star:a:approved001'").fetchone()[0] is None
+          print('Unique receipts, masked media and signed pending rights claims validated; no funds moved')
           PY
       - name: Browser source receipts regression tests
         run: |
