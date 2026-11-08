@@ -5,6 +5,7 @@ on:
       - 'workers/starquest-ledger/**'
       - 'js/starquest-cloud-ledger.js'
       - 'tests/production-attribution.test.cjs'
+      - 'tests/media-star-creator-two-ledgers.test.cjs'
       - '.github/workflows/production-attribution.yml'
   push:
     branches: [main]
@@ -12,6 +13,7 @@ on:
       - 'workers/starquest-ledger/**'
       - 'js/starquest-cloud-ledger.js'
       - 'tests/production-attribution.test.cjs'
+      - 'tests/media-star-creator-two-ledgers.test.cjs'
       - '.github/workflows/production-attribution.yml'
 permissions:
   contents: read
@@ -38,6 +40,7 @@ jobs:
           base=Path('workers/starquest-ledger/migrations/')
           db.executescript((base/'0001_initial.sql').read_text())
           db.executescript((base/'0004_production_ledger.sql').read_text())
+          db.executescript((base/'0005_media_star_creator_ledgers.sql').read_text())
           now=1792100000
           db.execute("INSERT INTO accounts VALUES('a','viewer','secret',0,0,0,?,?)",(now,now))
           db.execute("INSERT INTO production_catalog(content_id,platform,source_id,title,created_at,updated_at) VALUES('youtube:abc123ABCDE','youtube','abc123ABCDE','Sample',?,?)",(now,now))
@@ -46,10 +49,67 @@ jobs:
               db.execute("INSERT INTO production_play_receipts VALUES('r2','youtube:abc123ABCDE','a','2026-10-15','self_reported_play',31,?)",(now,))
               raise AssertionError('Duplicate play was accepted')
           except sqlite3.IntegrityError:pass
+          db.execute("INSERT INTO media_star_infinity_view_awards(receipt_id,content_id,created_at) VALUES('r','youtube:abc123ABCDE',?)",(now,))
+          try:
+              db.execute("INSERT INTO media_star_infinity_view_awards(receipt_id,content_id,created_at) VALUES('r','youtube:abc123ABCDE',?)",(now,))
+              raise AssertionError('Duplicate Infinity award was accepted')
+          except sqlite3.IntegrityError:pass
+          assert db.execute("SELECT proposed_star_coins,settled_star_coins FROM media_star_infinity_view_awards").fetchone()==(1,0)
           assert db.execute("SELECT star_coins FROM accounts WHERE id='a'").fetchone()[0]==0
-          print('Unique receipts, public credits and unfunded wallet isolation validated')
+          # Exercise the ACTUAL public API SQL with approved/free, paid and
+          # draft source URLs. Do not grant any token or create fake public data.
+          db.execute("INSERT INTO production_catalog(content_id,platform,source_id,title,publisher_account_id,created_at,updated_at) VALUES('media-star:a:approved001','media-star','approved001','Approved show','a',?,?)",(now,now))
+          db.execute("INSERT INTO production_catalog(content_id,platform,source_id,title,publisher_account_id,created_at,updated_at) VALUES('media-star:a:draft00001','media-star','draft00001','Draft show','a',?,?)",(now,now))
+          for content,state in [('media-star:a:approved001','approved'),('media-star:a:draft00001','draft')]:
+              db.execute("INSERT INTO media_star_creator_policies(content_id,creator_account_id,requested_charge_mode,free_episode_count,publish_state,created_at,updated_at) VALUES(?,?,'one_starcoin',1,?,?,?)",(content,'a',state,now,now))
+              for position,title,url in [(0,'First','https://example.org/first.mp3'),(1,'Locked','https://example.org/private-episode.mp3')]:
+                  db.execute("INSERT INTO media_star_creator_episodes(episode_id,content_id,position,title,source_url,created_at) VALUES(?,?,?,?,?,?)",(content+':'+str(position),content,position,title,url,now))
+          # Get the query compiled into the Worker itself, rather than a copied approximation.
+          source=Path('workers/starquest-ledger/src/production-ledger.ts').read_text()
+          assert 'async function publicMediaStarCards' in source
+          sql=source.split('async function publicMediaStarCards',1)[1].split('db.prepare(`',1)[1].split('`).all',1)[0]
+          assert sql.startswith('SELECT m.content_id')
+          cursor=db.execute(sql)
+          names=[column[0] for column in cursor.description]
+          result=[dict(zip(names,row)) for row in cursor.fetchall()]
+          assert len(result)==2, result
+          assert {x['episode_title'] for x in result}=={'First','Locked'}
+          assert next(x for x in result if x['episode_title']=='First')['public_source_url']=='https://example.org/first.mp3'
+          assert next(x for x in result if x['episode_title']=='Locked')['public_source_url'] is None
+          assert all(x['card_title']=='Approved show' for x in result)
+          db.execute("INSERT INTO accounts VALUES('b','other','secret2',0,0,0,?,?)",(now,now))
+          db.execute("INSERT INTO media_star_creator_claims (claim_id,content_id,claimant_account_id,creator_display_name,public_evidence_url,rights_attestation_at,submitted_at) VALUES ('owner-claim','media-star:a:approved001','a','Test Creator','https://example.org/credits',?,?)",(now,now))
+          try:
+              db.execute("INSERT INTO media_star_creator_claims (claim_id,content_id,claimant_account_id,creator_display_name,public_evidence_url,rights_attestation_at,submitted_at) VALUES ('duplicate-claim','media-star:a:approved001','a','Test Creator','https://example.org/credits',?,?)",(now,now))
+              raise AssertionError('Duplicate rights claim accepted')
+          except sqlite3.IntegrityError:pass
+          assert db.execute("SELECT COUNT(*) FROM media_star_creator_claims WHERE claimant_account_id='b'").fetchone()[0]==0
+          assert db.execute("SELECT review_status FROM media_star_creator_claims WHERE claimant_account_id='a'").fetchone()[0]=='pending_identity_and_rights_review'
+          assert db.execute("SELECT star_coins FROM accounts WHERE id='a'").fetchone()[0]==0
+          assert db.execute("SELECT creator_payout_account_id FROM media_star_creator_policies WHERE content_id='media-star:a:approved001'").fetchone()[0] is None
+          # Two separate, non-spendable session proposals can exist for two
+          # real listening sessions on the SAME day. Duplicate finish is inert.
+          for session in ['first-native-session','second-native-session']:
+              db.execute("INSERT INTO media_star_session_evidence(session_id,content_id,episode_id,viewer_account_id,started_at,observed_seconds,state) VALUES(?,?,?,?,?,35,'candidate')",(session,'media-star:a:approved001','media-star:a:approved001:0','b',now))
+              sql="INSERT OR IGNORE INTO media_star_infinity_session_awards(session_id,content_id,created_at) SELECT session_id,content_id,? FROM media_star_session_evidence WHERE session_id=? AND viewer_account_id=? AND state='candidate'"
+              db.execute(sql,(now,session,'b'))
+              db.execute(sql,(now,session,'b'))
+          assert db.execute("SELECT COUNT(*),SUM(proposed_star_coins),SUM(settled_star_coins) FROM media_star_infinity_session_awards").fetchone()==(2,2,0)
+          assert db.execute("SELECT star_coins FROM accounts WHERE id='b'").fetchone()[0]==0
+          # Synthetic settled-entitlement fixture ONLY: check viewer isolation,
+          # never transfer coins or imply the production checkout is enabled.
+          db.execute("INSERT INTO media_star_curator_unlock_receipts(request_id,content_id,episode_id,viewer_account_id,curator_account_id,requested_price_star_coins,payment_status,transfer_receipt,created_at) VALUES('synthetic-entitlement','media-star:a:approved001','media-star:a:approved001:1','b','a',1,'settled','synthetic-only-receipt',?)",(now,))
+          lookup="SELECT transfer_receipt FROM media_star_curator_unlock_receipts WHERE episode_id=? AND viewer_account_id=? AND payment_status='settled' AND transfer_receipt IS NOT NULL"
+          assert db.execute(lookup,('media-star:a:approved001:1','a')).fetchone() is None
+          assert db.execute(lookup,('media-star:a:approved001:1','b')).fetchone()[0]=='synthetic-only-receipt'
+          try:
+              db.execute("INSERT INTO media_star_curator_unlock_receipts(request_id,content_id,episode_id,viewer_account_id,curator_account_id,created_at) VALUES('duplicate','media-star:a:approved001','media-star:a:approved001:1','b','a',?)",(now,))
+              raise AssertionError('Duplicate paid unlock accepted')
+          except sqlite3.IntegrityError:pass
+          assert db.execute("SELECT star_coins FROM accounts WHERE id='b'").fetchone()[0]==0
+          print('Distinct session proposals, pending creator claims and viewer-isolated synthetic paid entitlements: no funds moved')
           PY
       - name: Browser source receipts regression tests
         run: |
           node --check js/starquest-cloud-ledger.js
-          node --test tests/production-attribution.test.cjs
+          node --test tests/production-attribution.test.cjs tests/media-star-creator-two-ledgers.test.cjs

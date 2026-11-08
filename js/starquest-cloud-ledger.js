@@ -273,6 +273,7 @@
       if (!(await connect())) throw Error('ledger_not_connected');
       return request('/v1/production/plays',{method:'POST',body:{
         platform:play.platform,sourceId:play.sourceId,title:play.title,
+        contentId:play.contentId,
         observedSeconds:Math.max(0,Math.min(7200,Number(play.observedSeconds)||0))
       }});
     },
@@ -291,6 +292,38 @@
     claimProductionCredit: async function (creditId,evidenceUrl) {
       if (!(await connect())) throw Error('ledger_not_connected');
       return request('/v1/production/claim',{method:'POST',body:{creditId,evidenceUrl}});
+    },
+    mediaStarEpisodeAccess: async function (episodeId) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      if(!episodeId)throw Error('episode_required');
+      return request('/v1/production/media-star-episode-access',{method:'POST',
+        body:{episodeId:String(episodeId)}});
+    },
+    beginMediaStarPlayback: async function (session) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      if(!session||!session.contentId||!session.episodeId)throw Error('creator_episode_required');
+      return request('/v1/production/media-star-session-start',{method:'POST',body:{
+        contentId:String(session.contentId),episodeId:String(session.episodeId)
+      }});
+    },
+    completeMediaStarPlayback: async function (session) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      if(!session||!session.sessionId)throw Error('server_session_id_required');
+      return request('/v1/production/media-star-session-finish',{method:'POST',body:{
+        sessionId:String(session.sessionId),
+        observedSeconds:Math.max(0,Math.min(7200,Number(session.observedSeconds)||0))
+      }});
+    },
+    claimMediaStarCreator: async function (claim) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      if (!claim || !claim.contentId || !claim.creatorName || !claim.evidenceUrl || claim.rightsAttestation!==true) {
+        throw Error('creator_rights_claim_needs_consent_and_evidence');
+      }
+      // The signed StarQuest account, never form input, selects the claimant wallet.
+      return request('/v1/production/media-star-claim',{method:'POST',body:{
+        contentId:String(claim.contentId),creatorName:String(claim.creatorName),
+        evidenceUrl:String(claim.evidenceUrl),rightsAttestation:true
+      }});
     },
     productionClaims: async function () {
       if (!(await connect())) throw Error('ledger_not_connected');

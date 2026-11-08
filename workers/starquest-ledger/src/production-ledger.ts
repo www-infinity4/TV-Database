@@ -26,6 +26,73 @@ function identity(source:unknown,id:unknown){
  if(p==='media-star'&&/^[a-zA-Z0-9_-]{6,80}$/.test(s))return{platform:p,sourceId:s,contentId:'media-star:'+s,url:''};
  throw new ProductionError(400,'invalid_production_source','Provide a supported media provider and actual source ID.');
 }
+// The card owner chooses free-first and curated-next rules. The signed account
+// is the publisher; a browser-supplied wallet address can NEVER select a payee.
+function parseCreatorSettings(body:Payload) {
+ const cfg=body.creatorSettings;
+ if(!cfg||typeof cfg!=='object'||Array.isArray(cfg))return null;
+ const options=cfg as Payload;
+ const requestedChargeMode=options.chargeForNext===true?'one_starcoin':'free';
+ const rawCount=Number(options.freeEpisodes);
+ if(!Number.isInteger(rawCount)||rawCount<0||rawCount>30)throw new ProductionError(400,'invalid_free_count','Choose 0 to 30 free episodes.');
+ const rawEpisodes=Array.isArray(body.episodes)?body.episodes:[];
+ if(rawEpisodes.length<1||rawEpisodes.length>30)throw new ProductionError(400,'invalid_creator_episodes','Enter 1 to 30 owned or permitted episode links.');
+ const episodes:Array<{title:string,sourceUrl:string}>=[];
+ const unique=new Set<string>();
+ for(const item of rawEpisodes){
+  if(!item||typeof item!=='object')throw new ProductionError(400,'invalid_creator_episode','Every episode needs a title and source.');
+  const episode=item as Payload,title=clean(episode.title,160),raw=clean(episode.sourceUrl,700);
+  if(title.length<2)throw new ProductionError(400,'invalid_creator_episode','Provide an episode title.');
+  let url:URL;
+  try{url=new URL(raw)}catch{throw new ProductionError(400,'invalid_creator_episode_url','An HTTPS original episode source is required.')}
+  const host=url.hostname.toLowerCase();
+  if(url.protocol!=='https:'||url.username||url.password||
+   ['localhost','127.0.0.1','::1','quantaphi.org','marvaseater.workers.dev'].includes(host)||
+   host.endsWith('.quantaphi.org')||host.endsWith('.marvaseater.workers.dev'))
+   throw new ProductionError(400,'invalid_creator_episode_url','Use your authorized public HTTPS media link, not a wallet or internal endpoint.');
+  if(unique.has(url.href))throw new ProductionError(400,'duplicate_creator_episode','Do not add the same source twice.');
+  unique.add(url.href);episodes.push({title,sourceUrl:url.href});
+ }
+ return {requestedChargeMode,freeEpisodes:Math.min(rawCount,episodes.length),episodes};
+}
+async function storeCreatorSettings(db:Database,owner:Viewer,contentId:string,settings:NonNullable<ReturnType<typeof parseCreatorSettings>>,now:number) {
+ // Once a reviewed card is visible publicly or a viewer has a locked
+ // entitlement, never erase/reassign episode IDs by rewriting its catalog.
+ // Future edits need a new reviewed revision and a migration plan.
+ const current=await db.prepare('SELECT publish_state FROM media_star_creator_policies WHERE content_id=? AND creator_account_id=?')
+  .bind(contentId,owner.id).first<{publish_state:string}>();
+ if(current&&current.publish_state!=='draft')
+  throw new ProductionError(409,'published_creator_card_immutable','An approved/pending public card needs a new reviewed revision; existing episode links are unchanged.');
+ const priorUnlock=await db.prepare('SELECT request_id FROM media_star_curator_unlock_receipts WHERE content_id=? LIMIT 1')
+  .bind(contentId).first();
+ if(priorUnlock)
+  throw new ProductionError(409,'existing_curator_unlocks_immutable','Existing viewer entitlements prevent replacing episode IDs. Create a reviewed new edition.');
+ const firstSource=settings.episodes[0]?.sourceUrl||'';
+ const publicFirst=settings.requestedChargeMode==='one_starcoin'&&settings.freeEpisodes===0?'':firstSource;
+ const writes=[
+  db.prepare('UPDATE production_catalog SET source_url=?,updated_at=? WHERE content_id=? AND publisher_account_id=?')
+   .bind(publicFirst,now,contentId,owner.id),
+  db.prepare(`INSERT INTO media_star_creator_policies
+   (content_id,creator_account_id,requested_charge_mode,free_episode_count,price_star_coins,payment_state,publish_state,created_at,updated_at)
+   VALUES(?,?,?,?,1,'disabled_pending_verification','draft',?,?)
+   ON CONFLICT(content_id) DO UPDATE SET requested_charge_mode=excluded.requested_charge_mode,
+   free_episode_count=excluded.free_episode_count,payment_state='disabled_pending_verification',
+   publish_state='draft',updated_at=excluded.updated_at
+   WHERE media_star_creator_policies.creator_account_id=excluded.creator_account_id`)
+    .bind(contentId,owner.id,settings.requestedChargeMode,settings.freeEpisodes,now,now),
+  db.prepare('DELETE FROM media_star_creator_episodes WHERE content_id=?').bind(contentId)
+ ];
+ for(let i=0;i<settings.episodes.length;i++){
+  const e=settings.episodes[i];
+  writes.push(db.prepare(`INSERT INTO media_star_creator_episodes
+    (episode_id,content_id,position,title,source_url,created_at) VALUES(?,?,?,?,?,?)`)
+    .bind(contentId+':episode-'+i,contentId,i,e.title,e.sourceUrl,now));
+ }
+ // The only side effects are publisher-scoped D1 draft metadata.
+ // No account balance, minted coin, wallet recipient, or entitlement is changed.
+ await db.batch(writes);
+}
+
 async function register(db:Database,owner:Viewer,body:Payload) {
  const canonical=identity(body.platform,body.sourceId);
  if(canonical.platform!=='media-star')throw new ProductionError(403,'creator_card_required','Only your own Media Star content may be registered here. Broadcasts are indexed from qualified views.');
@@ -34,11 +101,16 @@ async function register(db:Database,owner:Viewer,body:Payload) {
  if(title.length<3)throw new ProductionError(400,'title_required','The Media Star card needs a real title.');
  const source=sourceURL(body.sourceUrl)||clean(body.sourceUrl,700);
  if(source){try{const u=new URL(source);if(u.protocol!=='https:'||u.username||u.password)throw Error()}catch{throw new ProductionError(400,'invalid_source_url','A public HTTPS source URL is required.');}}
+ const creatorSettings=parseCreatorSettings(body);
+ // Do not put a locked first episode URL in the general catalog source field.
+ // Paid URLs remain only in private, publisher-scoped episode records.
+ const catalogSource=creatorSettings?.requestedChargeMode==='one_starcoin'&&creatorSettings.freeEpisodes===0?'':source;
  const now=Date.now();
  await db.prepare(`INSERT OR IGNORE INTO production_catalog (content_id,platform,source_id,title,year,source_url,publisher_account_id,created_at,updated_at)
- VALUES(?,?,?,?,?,?,?,?,?)`).bind(contentId,canonical.platform,canonical.sourceId,title,year,source,owner.id,now,now).run();
+ VALUES(?,?,?,?,?,?,?,?,?)`).bind(contentId,canonical.platform,canonical.sourceId,title,year,catalogSource,owner.id,now,now).run();
  const existing=await db.prepare('SELECT publisher_account_id FROM production_catalog WHERE content_id=?').bind(contentId).first<{publisher_account_id:string}>();
  if(existing?.publisher_account_id!==owner.id)throw new ProductionError(403,'publisher_mismatch','You cannot attach credits to another publisher.');
+ if(creatorSettings)await storeCreatorSettings(db,owner,contentId,creatorSettings,now);
  const rawCredits=Array.isArray(body.credits)?body.credits.slice(0,40):[];
  let saved=0;
  for(const person of rawCredits){
@@ -54,7 +126,8 @@ async function register(db:Database,owner:Viewer,body:Payload) {
  }
  await db.prepare(`INSERT OR IGNORE INTO production_research_jobs(content_id,status) VALUES(?,'queued')`).bind(contentId).run();
  return {ok:true,contentId,creditsRecorded:saved,research:'queued',creditState:'not_settled',
-  fundingState:'unfunded',cardPaymentsEnabled:false,spendableStarCoins:0,claimableStarCoins:0};
+  fundingState:'unfunded',cardPaymentsEnabled:false,spendableStarCoins:0,claimableStarCoins:0,
+  creatorSettingsStored:!!creatorSettings,creatorEditionPaymentStatus:'disabled_pending_verification'};
 }
 async function record(db:Database,viewer:Viewer,body:Payload){
  const id=identity(body.platform,body.sourceId);
@@ -92,11 +165,20 @@ async function record(db:Database,viewer:Viewer,body:Payload){
  const row=credited?receipt:seen?.receipt_id;
  // An illustrative ONE-StarCoin pool per qualified distinct play is apportioned
  // to researched credits, BUT these units are NOT funded or spendable.
- if(row)await allocate(db,contentId,now);
+ if(row){
+  await allocate(db,contentId,now);
+  // SECOND ledger: Infinity proposes one NEW issuer-funded coin for the
+  // verified media owner after independent validation; never debit the viewer.
+  // Repeated reports reuse the SAME receipt and cannot double-allocate.
+  await db.prepare(`INSERT OR IGNORE INTO media_star_infinity_view_awards
+   (receipt_id,content_id,created_at) VALUES(?,?,?)`).bind(row,contentId,now).run();
+ }
  return {ok:true,contentId,receiptId:row||null,recorded:credited,duplicate:!credited,
     contributorResearch:'pending_or_unreviewed',proposedPoolMilliStarCoins:1000,
     creditedStarCoins:0,spendableStarCoins:0,paymentStatus:'unfunded',
-    playbackProof:'client_reported_not_independently_verified'};
+    playbackProof:'client_reported_not_independently_verified',
+    issuerViewAwards:'pending_independent_playback_and_funding',
+    creatorCuratorFees:'separate_unconfigured_no_transfer'};
 }
 async function allocate(db:Database,contentId:string,now=Date.now()){
  const credits=(await db.prepare('SELECT credit_id FROM production_credits WHERE content_id=? ORDER BY credit_id LIMIT 120')
@@ -135,14 +217,225 @@ async function claim(db:Database,account:Viewer,body:Payload){
  VALUES(?,?,?,?,?)`).bind(id,creditId,account.id,evidence,now).run();
  return {ok:true,submitted:Number(inserted.meta.changes||0)===1,claimStatus:'pending_identity_and_rights_review',creditedStarCoins:0,withdrawableCash:0};
 }
-async function myClaims(db:Database,account:Viewer){
- const r=await db.prepare(`SELECT cl.id,cl.credit_id,cl.status,cl.created_at,c.display_name,c.role,p.title
- FROM production_claim_requests cl JOIN production_credits c ON c.credit_id=cl.credit_id
- JOIN production_catalog p ON p.content_id=c.content_id
- WHERE cl.claimant_account_id=? ORDER BY cl.created_at DESC LIMIT 100`).bind(account.id).all();
- return {ok:true,claims:r.results,spendableStarCoinsFromProduction:0,payoutsEnabled:false};
+// A public name or creator claim is not proof of entitlement. Claims are bound
+// to the authenticated account, never to a user-supplied wallet ID.
+async function submitCreatorIdentityClaim(db:Database,owner:Viewer,body:Payload){
+ const contentId=clean(body.contentId,180),creatorName=clean(body.creatorName,120);
+ if(!/^media-star:[A-Za-z0-9_-]{3,90}:[A-Za-z0-9_-]{6,80}$/.test(contentId))
+  throw new ProductionError(400,'creator_content_id_required','Select a registered Media Star card.');
+ if(!validName(creatorName))throw new ProductionError(400,'creator_name_required','Provide the public creator name to review.');
+ if(body.rightsAttestation!==true)
+  throw new ProductionError(400,'creator_attestation_required','Confirm you are authorized to submit this content rights claim.');
+ const raw=clean(body.evidenceUrl,700);
+ let evidence:URL;
+ try{evidence=new URL(raw)}catch{throw new ProductionError(400,'creator_evidence_invalid','Provide a public HTTPS rights or production credits source.')}
+ const host=evidence.hostname.toLowerCase();
+ if(evidence.protocol!=='https:'||evidence.username||evidence.password||!host.includes('.')||
+    ['localhost','127.0.0.1','::1','quantaphi.org'].includes(host)||
+    host.endsWith('.localhost')||host.endsWith('.local')||host.endsWith('.internal')||
+    host.endsWith('.quantaphi.org')||host.endsWith('.marvaseater.workers.dev')||
+    /^(?:10\.|127\.|192\.168\.|169\.254\.|0\.)/.test(host))
+  throw new ProductionError(400,'creator_evidence_invalid','Use a public HTTPS source; private links and internal endpoints cannot establish rights.');
+ const catalog=await db.prepare("SELECT content_id FROM production_catalog WHERE content_id=? AND platform='media-star'")
+  .bind(contentId).first();
+ if(!catalog)throw new ProductionError(404,'creator_content_not_registered','The claimed Media Star collection must first be registered.');
+ const now=Date.now(),claimId=crypto.randomUUID();
+ const insert=await db.prepare(`INSERT OR IGNORE INTO media_star_creator_claims
+  (claim_id,content_id,claimant_account_id,creator_display_name,public_evidence_url,rights_attestation_at,submitted_at)
+  VALUES(?,?,?,?,?,?,?)`)
+  .bind(claimId,contentId,owner.id,creatorName,evidence.href,now,now).run();
+ const prior=await db.prepare(`SELECT claim_id,review_status,submitted_at FROM media_star_creator_claims
+  WHERE content_id=? AND claimant_account_id=?`).bind(contentId,owner.id)
+  .first<{claim_id:string,review_status:string,submitted_at:number}>();
+ return {ok:true,submitted:Number(insert.meta.changes||0)===1,
+  claimId:prior?.claim_id||null,reviewStatus:prior?.review_status||'pending_identity_and_rights_review',
+  submittedAt:prior?.submitted_at||now,claimantAccount:'authenticated_wallet_only',
+  verifiedCreator:false,issuerStarCoinsMinted:0,spendableStarCoins:0,
+  notice:'Rights evidence saved for independent review only. Claim does not create an award, verify identity or enable a payout.'};
 }
+
+// The original daily production receipt is intentionally not reused here:
+// it deduplicates by account/content/day and would erase genuine replays.
+// These fresh per-session receipts are only EVIDENCE CANDIDATES. A client
+// timer alone cannot verify a third-party video/listen or mint a StarCoin.
+async function beginMediaStarSession(db:Database,viewer:Viewer,body:Payload){
+ const contentId=clean(body.contentId,180),episodeId=clean(body.episodeId,180);
+ if(!/^media-star:[A-Za-z0-9_-]{3,90}:[A-Za-z0-9_-]{6,80}$/.test(contentId)||!episodeId)
+  throw new ProductionError(400,'media_star_session_invalid','Select an original Media Star episode.');
+ const allowed=await db.prepare(`SELECT e.episode_id FROM media_star_creator_episodes e
+  JOIN media_star_creator_policies m ON m.content_id=e.content_id
+  WHERE e.episode_id=? AND e.content_id=? AND m.publish_state='approved'
+  AND ((m.requested_charge_mode='free' OR e.position<m.free_episode_count)
+   OR EXISTS (SELECT 1 FROM media_star_curator_unlock_receipts u
+    WHERE u.episode_id=e.episode_id AND u.viewer_account_id=?
+      AND u.payment_status='settled' AND u.transfer_receipt IS NOT NULL))`)
+  .bind(episodeId,contentId,viewer.id).first();
+ if(!allowed)throw new ProductionError(403,'media_star_session_not_entitled','Only reviewed free or already purchased episodes can begin a session.');
+ const now=Date.now();
+ const recent=await db.prepare('SELECT COUNT(*) AS n FROM media_star_session_evidence WHERE viewer_account_id=? AND started_at>?')
+  .bind(viewer.id,now-3600000).first<{n:number}>();
+ if(Number(recent?.n||0)>=50)throw new ProductionError(429,'media_star_session_rate_limit','Too many sessions were started by this account recently.');
+ const sessionId=crypto.randomUUID();
+ await db.prepare(`INSERT INTO media_star_session_evidence
+ (session_id,content_id,episode_id,viewer_account_id,started_at) VALUES(?,?,?,?,?)`)
+ .bind(sessionId,contentId,episodeId,viewer.id,now).run();
+ return {ok:true,sessionId,contentId,episodeId,startedAt:now,
+   playbackProof:'client_report_only',pendingInfinityAward:0,
+   issuedStarCoins:0,viewerChargedStarCoins:0};
+}
+async function completeMediaStarSession(db:Database,viewer:Viewer,body:Payload){
+ const sessionId=clean(body.sessionId,64);
+ if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(sessionId))
+  throw new ProductionError(400,'media_star_session_invalid','A signed-in playback session ID is required.');
+ const observedSeconds=cap(body.observedSeconds,7200);
+ if(observedSeconds<30)throw new ProductionError(400,'media_star_short_play','A session needs at least 30 seconds of observed media progress.');
+ const row=await db.prepare(`SELECT session_id,content_id,episode_id,started_at,state
+  FROM media_star_session_evidence WHERE session_id=? AND viewer_account_id=?`)
+  .bind(sessionId,viewer.id).first<{
+   session_id:string;content_id:string;episode_id:string;started_at:number;state:string
+  }>();
+ if(!row)throw new ProductionError(404,'media_star_session_not_found','This playback session is not linked to the signed-in account.');
+ const now=Date.now(),elapsed=now-row.started_at;
+ if(row.state==='started' && (elapsed<30000||elapsed>7200000||observedSeconds*1000>elapsed+5000))
+  throw new ProductionError(400,'media_star_session_unverified','The reported media progress is not consistent with this server-issued session.');
+ if(row.state==='started'){
+  // D1 batch is one transaction: replaying this call cannot grant two awards.
+  await db.batch([
+   db.prepare(`UPDATE media_star_session_evidence SET state='candidate',observed_seconds=?,completed_at=?
+    WHERE session_id=? AND viewer_account_id=? AND state='started'`)
+    .bind(observedSeconds,now,sessionId,viewer.id),
+   db.prepare(`INSERT OR IGNORE INTO media_star_infinity_session_awards
+    (session_id,content_id,created_at)
+    SELECT session_id,content_id,? FROM media_star_session_evidence
+    WHERE session_id=? AND viewer_account_id=? AND state='candidate'`)
+    .bind(now,sessionId,viewer.id)
+  ]);
+ }
+ const candidate=await db.prepare('SELECT session_id FROM media_star_infinity_session_awards WHERE session_id=?')
+  .bind(sessionId).first();
+ return {ok:true,sessionId,contentId:row.content_id,episodeId:row.episode_id,
+  proposedInfinityStarCoins:candidate?1:0,issuedStarCoins:0,viewerChargedStarCoins:0,
+  candidateReceiptId:candidate?sessionId:null,
+  reviewStatus:'pending_independent_playback_and_rights',payoutStatus:'unfunded_unclaimed',
+  playbackProof:'client_native_media_progress_not_independently_verified'};
+}
+
+// An existing curator-paid entitlement may reveal its source, but only after
+// the SAME authenticated viewer has a settled, receipt-backed transfer.
+async function mediaStarEpisodeAccess(db:Database,viewer:Viewer,body:Payload){
+ const episodeId=clean(body.episodeId,180);
+ if(!episodeId)throw new ProductionError(400,'episode_required','Select a Media Star episode.');
+ const episode=await db.prepare(`SELECT e.episode_id,e.position,e.source_url,e.title,
+  m.requested_charge_mode,m.free_episode_count,m.payment_state,m.publish_state
+  FROM media_star_creator_episodes e JOIN media_star_creator_policies m
+  ON m.content_id=e.content_id WHERE e.episode_id=?`)
+  .bind(episodeId).first<{
+   episode_id:string;position:number;source_url:string;title:string;
+   requested_charge_mode:string;free_episode_count:number;payment_state:string;publish_state:string
+  }>();
+ if(!episode||episode.publish_state!=='approved')
+  throw new ProductionError(404,'episode_not_published','The selected Media Star episode is not publicly approved.');
+ const isFree=episode.requested_charge_mode==='free'||episode.position<episode.free_episode_count;
+ if(isFree)return {ok:true,episodeId,episodeTitle:episode.title,access:'free',
+  sourceUrl:episode.source_url,priceStarCoins:0,alreadyUnlocked:true,purchaseEnabled:false,
+  issuerAward:'separate_pending_session_receipt'};
+ const paid=await db.prepare(`SELECT transfer_receipt FROM media_star_curator_unlock_receipts
+  WHERE episode_id=? AND viewer_account_id=? AND payment_status='settled'
+   AND transfer_receipt IS NOT NULL`).bind(episodeId,viewer.id).first();
+ if(paid)return {ok:true,episodeId,episodeTitle:episode.title,access:'previously_purchased',
+  sourceUrl:episode.source_url,priceStarCoins:0,alreadyUnlocked:true,purchaseEnabled:false,
+  issuerAward:'separate_pending_session_receipt'};
+ return {ok:true,episodeId,episodeTitle:episode.title,access:'paid_locked',
+  sourceUrl:null,priceStarCoins:1,alreadyUnlocked:false,purchaseEnabled:false,
+  reason:'Creator checkout requires reviewed rights, verified curator wallet and atomic customer-confirmed transfer.'};
+}
+
+async function myClaims(db:Database,account:Viewer){
+ const [r,awardRows,creatorClaims,sessionAwardRows]=await Promise.all([
+  db.prepare(`SELECT cl.id,cl.credit_id,cl.status,cl.created_at,c.display_name,c.role,p.title
+   FROM production_claim_requests cl JOIN production_credits c ON c.credit_id=cl.credit_id
+   JOIN production_catalog p ON p.content_id=c.content_id
+   WHERE cl.claimant_account_id=? ORDER BY cl.created_at DESC LIMIT 100`).bind(account.id).all(),
+  // Authenticated, wallet-scoped readback. A card publisher can inspect proposed
+  // rights-pending awards for their own registered card. A credited person can
+  // inspect other awards only when BOTH identity and claim have been verified.
+  db.prepare(`SELECT a.receipt_id,a.content_id,p.title AS content_title,a.created_at,
+    a.verification_status,a.payout_status,a.proposed_star_coins,a.settled_star_coins
+   FROM media_star_infinity_view_awards a
+   JOIN production_catalog p ON p.content_id=a.content_id
+   LEFT JOIN production_credits c ON c.credit_id=a.beneficiary_credit_id
+   WHERE (p.publisher_account_id=? AND p.platform='media-star')
+      OR (c.claimant_account_id=? AND c.claim_status='verified')
+   ORDER BY a.created_at DESC LIMIT 200`).bind(account.id,account.id).all(),
+  db.prepare(`SELECT claim_id,content_id,creator_display_name,review_status,submitted_at,reviewed_at
+   FROM media_star_creator_claims WHERE claimant_account_id=? ORDER BY submitted_at DESC LIMIT 100`)
+   .bind(account.id).all(),
+  db.prepare(`SELECT a.session_id,a.content_id,p.title AS content_title,
+   a.proposed_star_coins,a.verification_status,a.payout_status,a.settled_star_coins,a.created_at
+   FROM media_star_infinity_session_awards a
+   JOIN production_catalog p ON p.content_id=a.content_id
+   WHERE (p.publisher_account_id=? AND p.platform='media-star') OR EXISTS(
+     SELECT 1 FROM media_star_creator_claims cl
+     WHERE cl.content_id=a.content_id AND cl.claimant_account_id=? AND cl.review_status='verified'
+   )
+   ORDER BY a.created_at DESC LIMIT 200`).bind(account.id,account.id).all()
+ ]);
+ const awards=(awardRows.results||[]) as Array<{
+  receipt_id:string;content_id:string;content_title:string;created_at:number;
+  verification_status:string;payout_status:string;proposed_star_coins:number;settled_star_coins:number;
+ }>;
+ const sessions=(sessionAwardRows.results||[]) as Array<{
+  session_id:string;content_id:string;content_title:string;proposed_star_coins:number;
+  verification_status:string;payout_status:string;settled_star_coins:number;created_at:number
+ }>;
+ return {ok:true,claims:r.results,creatorIdentityClaims:creatorClaims.results||[],
+  pendingPerSessionInfinityProposals:sessions.filter(a=>a.payout_status!=='settled').length,
+  infinitySessionProposals:sessions,
+  pendingInfinityViewAwards:awards.filter(a=>a.payout_status!=='settled').length,
+  infinityViewAwards:awards,
+  coinSources:{infinityIssuer:'pending_rights_and_verified_playback',curatedEpisode:'separate_user_funded_checkout'},
+  spendableStarCoinsFromProduction:0,payoutsEnabled:false,
+  notice:'Proposals do not create or transfer spendable coins. Verified creator claims and an approved issuer settlement are required.'};
+}
+// Public-read-only discovery: only cards already approved by a separate
+// rights/identity moderator; locked episode links never leave Cloudflare D1.
+async function publicMediaStarCards(db:Database){
+ const rows=(await db.prepare(`SELECT m.content_id,p.title AS card_title,m.requested_charge_mode,
+ m.free_episode_count,m.payment_state,e.episode_id,e.position,e.title AS episode_title,
+ CASE WHEN m.requested_charge_mode='free' OR e.position<m.free_episode_count THEN e.source_url ELSE NULL END AS public_source_url
+ FROM media_star_creator_policies m
+ JOIN production_catalog p ON p.content_id=m.content_id
+ JOIN media_star_creator_episodes e ON e.content_id=m.content_id
+ WHERE m.publish_state='approved'
+ AND m.content_id IN (
+  SELECT content_id FROM media_star_creator_policies WHERE publish_state='approved' ORDER BY updated_at DESC LIMIT 40
+ )
+ ORDER BY m.updated_at DESC,e.position ASC LIMIT 1200`).all<{
+  content_id:string;card_title:string;requested_charge_mode:string;free_episode_count:number;
+  payment_state:string;episode_id:string;position:number;episode_title:string;public_source_url:string|null;
+ }>()).results;
+ const cards=new Map<string,{
+  contentId:string;title:string;freeEpisodeCount:number;paymentState:string;
+  curatedPriceStarCoins:number;episodes:Array<{episodeId:string;position:number;title:string;free:boolean;sourceUrl:string|null;requiresUnlock:boolean}>;
+ }>();
+ for(const entry of rows){
+  let card=cards.get(entry.content_id);
+  if(!card){
+   card={contentId:entry.content_id,title:entry.card_title,freeEpisodeCount:entry.free_episode_count,
+    paymentState:entry.payment_state,curatedPriceStarCoins:entry.requested_charge_mode==='one_starcoin'?1:0,episodes:[]};
+   cards.set(entry.content_id,card);
+  }
+  const free=entry.requested_charge_mode==='free'||entry.position<entry.free_episode_count;
+  card.episodes.push({episodeId:entry.episode_id,position:entry.position,title:entry.episode_title,
+   free,sourceUrl:free?entry.public_source_url:null,requiresUnlock:!free});
+ }
+ return {ok:true,cards:[...cards.values()],
+  publisherApproval:'moderated_only',checkoutEnabled:false,
+  disclosure:'Free original media links are shown; paid links are withheld until authorized entitlements and verified curator checkout exist.'};
+}
+
 export async function productionGet(path:string,url:URL,db:Database){
+ if(path==='/v1/production/media-star-cards')return publicMediaStarCards(db);
  if(path==='/v1/production/search')return findByName(db,clean(url.searchParams.get('name'),100));
  if(path==='/v1/production/record'){
   const id=clean(url.searchParams.get('contentId'),180);
@@ -161,6 +454,10 @@ export async function productionPost(path:string,db:Database,account:Viewer,body
  if(path==='/v1/production/register')return register(db,account,body);
  if(path==='/v1/production/plays')return record(db,account,body);
  if(path==='/v1/production/claim')return claim(db,account,body);
+ if(path==='/v1/production/media-star-claim')return submitCreatorIdentityClaim(db,account,body);
+ if(path==='/v1/production/media-star-session-start')return beginMediaStarSession(db,account,body);
+ if(path==='/v1/production/media-star-session-finish')return completeMediaStarSession(db,account,body);
+ if(path==='/v1/production/media-star-episode-access')return mediaStarEpisodeAccess(db,account,body);
  if(path==='/v1/production/mine')return myClaims(db,account);
  return null;
 }
