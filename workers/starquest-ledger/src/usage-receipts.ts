@@ -1,6 +1,6 @@
 /* Media Star engagement ledger #317: non-payable observations ONLY.
  * The server authenticates the viewer; it never trusts a client-provided account,
- * address, creator, payee, payment success, or analytics targeting permission.
+ * creator, payee, payment success, or analytics targeting permission.
  * The HMAC secret must be server-side and separately deployed.
  */
 type Database=D1Database;
