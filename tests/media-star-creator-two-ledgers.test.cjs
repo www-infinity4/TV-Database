@@ -54,3 +54,22 @@ test('authenticated creator can inspect proposed Infinity view awards without a 
  assert.match(api,/claim_status='verified'/);
  assert.match(api,/spendableStarCoinsFromProduction:0/);
 });
+
+test('authenticated claimant submits rights proof to distinct creator-identity review without selecting a wallet payee',()=>{
+ assert.match(schema,/CREATE TABLE IF NOT EXISTS media_star_creator_claims/);
+ assert.match(schema,/claimant_account_id TEXT NOT NULL REFERENCES accounts\(id\)/);
+ assert.match(schema,/UNIQUE\(content_id,claimant_account_id\)/);
+ assert.match(schema,/review_status TEXT NOT NULL DEFAULT 'pending_identity_and_rights_review'/);
+ assert.match(api,/async function submitCreatorIdentityClaim/);
+ assert.match(api,/rightsAttestation!==true/);
+ assert.match(api,/owner.id/);
+ assert.match(api,/INSERT OR IGNORE INTO media_star_creator_claims/);
+ assert.match(api,/\/v1\/production\/media-star-claim/);
+ assert.doesNotMatch(api,/\bcreator_payout_account_id\s*=\s*\?/);
+});
+test('claim status readback only lists requests for the signed in account and never pays an unverified claimant',()=>{
+ assert.match(api,/FROM media_star_creator_claims WHERE claimant_account_id=\?/);
+ assert.match(api,/creatorIdentityClaims/);
+ assert.match(api,/review_status/);
+ assert.match(api,/spendableStarCoinsFromProduction:0/);
+});
