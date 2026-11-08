@@ -31,7 +31,7 @@ test('public creator catalog exposes only approved cards and free media, never h
  assert.match(api,/function publicMediaStarCards\(/);
  assert.match(api,/publish_state='approved'/);
  assert.match(api,/WHEN m.requested_charge_mode='free' OR e.position<m.free_episode_count THEN e.source_url ELSE NULL END AS public_source_url/);
- assert.match(api,/\/'v1\/production\/media-star-cards\'/);
+ assert.match(api,/return publicMediaStarCards\(db\)/);
  assert.doesNotMatch(api,/return \{ok:true,.*creator_payout_account_id/s);
 });
 test('published episodes and existing purchase receipts cannot be deleted by a draft edit',()=>{
