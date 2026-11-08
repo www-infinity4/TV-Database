@@ -96,7 +96,18 @@ jobs:
               db.execute(sql,(now,session,'b'))
           assert db.execute("SELECT COUNT(*),SUM(proposed_star_coins),SUM(settled_star_coins) FROM media_star_infinity_session_awards").fetchone()==(2,2,0)
           assert db.execute("SELECT star_coins FROM accounts WHERE id='b'").fetchone()[0]==0
-          print('Distinct repeat-session proposals, masked paid media, pending rights claims: no wallet funds moved')
+          # Synthetic settled-entitlement fixture ONLY: check viewer isolation,
+          # never transfer coins or imply the production checkout is enabled.
+          db.execute("INSERT INTO media_star_curator_unlock_receipts(request_id,content_id,episode_id,viewer_account_id,curator_account_id,requested_price_star_coins,payment_status,transfer_receipt,created_at) VALUES('synthetic-entitlement','media-star:a:approved001','media-star:a:approved001:1','b','a',1,'settled','synthetic-only-receipt',?)",(now,))
+          lookup="SELECT transfer_receipt FROM media_star_curator_unlock_receipts WHERE episode_id=? AND viewer_account_id=? AND payment_status='settled' AND transfer_receipt IS NOT NULL"
+          assert db.execute(lookup,('media-star:a:approved001:1','a')).fetchone() is None
+          assert db.execute(lookup,('media-star:a:approved001:1','b')).fetchone()[0]=='synthetic-only-receipt'
+          try:
+              db.execute("INSERT INTO media_star_curator_unlock_receipts(request_id,content_id,episode_id,viewer_account_id,curator_account_id,created_at) VALUES('duplicate','media-star:a:approved001','media-star:a:approved001:1','b','a',?)",(now,))
+              raise AssertionError('Duplicate paid unlock accepted')
+          except sqlite3.IntegrityError:pass
+          assert db.execute("SELECT star_coins FROM accounts WHERE id='b'").fetchone()[0]==0
+          print('Distinct session proposals, pending creator claims and viewer-isolated synthetic paid entitlements: no funds moved')
           PY
       - name: Browser source receipts regression tests
         run: |
