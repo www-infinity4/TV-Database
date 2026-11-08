@@ -293,6 +293,17 @@
       if (!(await connect())) throw Error('ledger_not_connected');
       return request('/v1/production/claim',{method:'POST',body:{creditId,evidenceUrl}});
     },
+    claimMediaStarCreator: async function (claim) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      if (!claim || !claim.contentId || !claim.creatorName || !claim.evidenceUrl || claim.rightsAttestation!==true) {
+        throw Error('creator_rights_claim_needs_consent_and_evidence');
+      }
+      // The signed StarQuest account, never form input, selects the claimant wallet.
+      return request('/v1/production/media-star-claim',{method:'POST',body:{
+        contentId:String(claim.contentId),creatorName:String(claim.creatorName),
+        evidenceUrl:String(claim.evidenceUrl),rightsAttestation:true
+      }});
+    },
     productionClaims: async function () {
       if (!(await connect())) throw Error('ledger_not_connected');
       return request('/v1/production/mine',{method:'POST',body:{}});
