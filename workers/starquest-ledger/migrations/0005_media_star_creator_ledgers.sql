@@ -55,3 +55,21 @@ CREATE TABLE IF NOT EXISTS media_star_curator_unlock_receipts (
   created_at INTEGER NOT NULL,
   UNIQUE(viewer_account_id,episode_id)
 );
+
+-- Signed user rights claim: a pending application, never a verified royalty,
+-- payout routing rule or authorization to mint/transfer a StarCoin.
+CREATE TABLE IF NOT EXISTS media_star_creator_claims (
+  claim_id TEXT PRIMARY KEY,
+  content_id TEXT NOT NULL REFERENCES production_catalog(content_id),
+  claimant_account_id TEXT NOT NULL REFERENCES accounts(id),
+  creator_display_name TEXT NOT NULL CHECK(length(creator_display_name) BETWEEN 2 AND 120),
+  public_evidence_url TEXT NOT NULL,
+  rights_attestation_at INTEGER NOT NULL,
+  review_status TEXT NOT NULL DEFAULT 'pending_identity_and_rights_review'
+    CHECK(review_status IN ('pending_identity_and_rights_review','verified','rejected','needs_more_evidence')),
+  reviewed_at INTEGER,
+  review_reference TEXT,
+  submitted_at INTEGER NOT NULL,
+  UNIQUE(content_id,claimant_account_id)
+);
+CREATE INDEX IF NOT EXISTS media_star_creator_claims_by_claimant ON media_star_creator_claims(claimant_account_id,submitted_at DESC);
