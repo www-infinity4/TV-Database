@@ -56,7 +56,22 @@ function parseCreatorSettings(body:Payload) {
  return {requestedChargeMode,freeEpisodes:Math.min(rawCount,episodes.length),episodes};
 }
 async function storeCreatorSettings(db:Database,owner:Viewer,contentId:string,settings:NonNullable<ReturnType<typeof parseCreatorSettings>>,now:number) {
+ // Once a reviewed card is visible publicly or a viewer has a locked
+ // entitlement, never erase/reassign episode IDs by rewriting its catalog.
+ // Future edits need a new reviewed revision and a migration plan.
+ const current=await db.prepare('SELECT publish_state FROM media_star_creator_policies WHERE content_id=? AND creator_account_id=?')
+  .bind(contentId,owner.id).first<{publish_state:string}>();
+ if(current&&current.publish_state!=='draft')
+  throw new ProductionError(409,'published_creator_card_immutable','An approved/pending public card needs a new reviewed revision; existing episode links are unchanged.');
+ const priorUnlock=await db.prepare('SELECT request_id FROM media_star_curator_unlock_receipts WHERE content_id=? LIMIT 1')
+  .bind(contentId).first();
+ if(priorUnlock)
+  throw new ProductionError(409,'existing_curator_unlocks_immutable','Existing viewer entitlements prevent replacing episode IDs. Create a reviewed new edition.');
+ const firstSource=settings.episodes[0]?.sourceUrl||'';
+ const publicFirst=settings.requestedChargeMode==='one_starcoin'&&settings.freeEpisodes===0?'':firstSource;
  const writes=[
+  db.prepare('UPDATE production_catalog SET source_url=?,updated_at=? WHERE content_id=? AND publisher_account_id=?')
+   .bind(publicFirst,now,contentId,owner.id),
   db.prepare(`INSERT INTO media_star_creator_policies
    (content_id,creator_account_id,requested_charge_mode,free_episode_count,price_star_coins,payment_state,publish_state,created_at,updated_at)
    VALUES(?,?,?,?,1,'disabled_pending_verification','draft',?,?)
@@ -209,7 +224,45 @@ async function myClaims(db:Database,account:Viewer){
  WHERE cl.claimant_account_id=? ORDER BY cl.created_at DESC LIMIT 100`).bind(account.id).all();
  return {ok:true,claims:r.results,spendableStarCoinsFromProduction:0,payoutsEnabled:false};
 }
+// Public-read-only discovery: only cards already approved by a separate
+// rights/identity moderator; locked episode links never leave Cloudflare D1.
+async function publicMediaStarCards(db:Database){
+ const rows=(await db.prepare(`SELECT m.content_id,p.title AS card_title,m.requested_charge_mode,
+ m.free_episode_count,m.payment_state,e.episode_id,e.position,e.title AS episode_title,
+ CASE WHEN m.requested_charge_mode='free' OR e.position<m.free_episode_count THEN e.source_url ELSE NULL END AS public_source_url
+ FROM media_star_creator_policies m
+ JOIN production_catalog p ON p.content_id=m.content_id
+ JOIN media_star_creator_episodes e ON e.content_id=m.content_id
+ WHERE m.publish_state='approved'
+ AND m.content_id IN (
+  SELECT content_id FROM media_star_creator_policies WHERE publish_state='approved' ORDER BY updated_at DESC LIMIT 40
+ )
+ ORDER BY m.updated_at DESC,e.position ASC LIMIT 1200`).all<{
+  content_id:string;card_title:string;requested_charge_mode:string;free_episode_count:number;
+  payment_state:string;episode_id:string;position:number;episode_title:string;public_source_url:string|null;
+ }>()).results;
+ const cards=new Map<string,{
+  contentId:string;title:string;freeEpisodeCount:number;paymentState:string;
+  curatedPriceStarCoins:number;episodes:Array<{episodeId:string;position:number;title:string;free:boolean;sourceUrl:string|null;requiresUnlock:boolean}>;
+ }>();
+ for(const entry of rows){
+  let card=cards.get(entry.content_id);
+  if(!card){
+   card={contentId:entry.content_id,title:entry.card_title,freeEpisodeCount:entry.free_episode_count,
+    paymentState:entry.payment_state,curatedPriceStarCoins:entry.requested_charge_mode==='one_starcoin'?1:0,episodes:[]};
+   cards.set(entry.content_id,card);
+  }
+  const free=entry.requested_charge_mode==='free'||entry.position<entry.free_episode_count;
+  card.episodes.push({episodeId:entry.episode_id,position:entry.position,title:entry.episode_title,
+   free,sourceUrl:free?entry.public_source_url:null,requiresUnlock:!free});
+ }
+ return {ok:true,cards:[...cards.values()],
+  publisherApproval:'moderated_only',checkoutEnabled:false,
+  disclosure:'Free original media links are shown; paid links are withheld until authorized entitlements and verified curator checkout exist.'};
+}
+
 export async function productionGet(path:string,url:URL,db:Database){
+ if(path==='/v1/production/media-star-cards')return publicMediaStarCards(db);
  if(path==='/v1/production/search')return findByName(db,clean(url.searchParams.get('name'),100));
  if(path==='/v1/production/record'){
   const id=clean(url.searchParams.get('contentId'),180);
