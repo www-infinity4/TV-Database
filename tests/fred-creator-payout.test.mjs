@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 
 const src=readFileSync(new URL('../workers/fred-spaces-ledger/index.js',import.meta.url),'utf8');
 const worker=(await import('data:text/javascript;base64,'+Buffer.from(src).toString('base64'))).default;
-function database({verified=false}={}){
+function database({verified=false,receipts=true}={}){
  const state={batches:[],queries:[],attempt:null};
  const db={
    prepare(sql){
@@ -15,6 +15,8 @@ function database({verified=false}={}){
          if(sql.includes('JOIN account_devices'))return {id:'listener'};
          if(sql.includes('FROM media_star_owner_config'))return verified?{id:'platform-owner'}:null;
          if(sql.includes('FROM media_creator_payout_destinations'))return verified?{id:'platform-owner'}:null;
+         if(sql.includes('AS debit_count')&&sql.includes('AS credit_count'))
+           return receipts?{debit_count:1,credit_count:1}:{debit_count:1,credit_count:0};
          if(sql.includes('FROM spaces_episode_unlocks'))return {attempt_id:state.attempt,charged_at:123};
          if(sql.includes('SELECT star_coins FROM accounts'))return {star_coins:3};
          return null;
@@ -50,6 +52,7 @@ test('configured platform owner beneficiary: one batch with debit and paired cre
  assert.equal(data.ok,true);assert.equal(data.creatorPaid,true);assert.equal(data.ownerPaid,true);
  assert.equal(data.recipient,'platform-owner');
  assert.equal(data.receiptReference,state.attempt);
+ assert.ok(state.queries.some(q=>q.sql.includes("AS debit_count")&&q.sql.includes("AS credit_count")),'must independently read both immutable ledger receipt events');
  assert.equal(state.batches.length,1);
  const items=state.batches[0];
  const debit=items.find(p=>p.sql.includes("'spaces_episode_unlock',-1"));
@@ -69,4 +72,16 @@ test('public health advertises payment readiness only when configured platform o
  assert.equal(online.paymentsReady,true);
  assert.equal(offline.receiptContractVersion,2);
  assert.equal(online.receiptContractVersion,2);
+});
+
+test('charged attempt without a matching owner credit never claims payment completed or invites unsafe retry',async()=>{
+ const {db,state}=database({verified:true,receipts:false});
+ const r=await worker.fetch(request(),{DB:db});
+ const data=await r.json();
+ assert.equal(r.status,503);
+ assert.equal(data.ok,false);
+ assert.equal(data.error,'owner_payout_receipt_unverified');
+ assert.notEqual(data.ownerPaid,true);
+ assert.match(data.message,/do not retry/i);
+ assert.equal(state.batches.length,1,'one attempted atomic ledger transaction, not an unverified second charge');
 });
