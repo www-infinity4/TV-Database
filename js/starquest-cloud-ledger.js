@@ -293,6 +293,21 @@
       if (!(await connect())) throw Error('ledger_not_connected');
       return request('/v1/production/claim',{method:'POST',body:{creditId,evidenceUrl}});
     },
+    beginMediaStarPlayback: async function (session) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      if(!session||!session.contentId||!session.episodeId)throw Error('creator_episode_required');
+      return request('/v1/production/media-star-session-start',{method:'POST',body:{
+        contentId:String(session.contentId),episodeId:String(session.episodeId)
+      }});
+    },
+    completeMediaStarPlayback: async function (session) {
+      if (!(await connect())) throw Error('ledger_not_connected');
+      if(!session||!session.sessionId)throw Error('server_session_id_required');
+      return request('/v1/production/media-star-session-finish',{method:'POST',body:{
+        sessionId:String(session.sessionId),
+        observedSeconds:Math.max(0,Math.min(7200,Number(session.observedSeconds)||0))
+      }});
+    },
     claimMediaStarCreator: async function (claim) {
       if (!(await connect())) throw Error('ledger_not_connected');
       if (!claim || !claim.contentId || !claim.creatorName || !claim.evidenceUrl || claim.rightsAttestation!==true) {
