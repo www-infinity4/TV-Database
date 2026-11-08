@@ -73,3 +73,33 @@ CREATE TABLE IF NOT EXISTS media_star_creator_claims (
   UNIQUE(content_id,claimant_account_id)
 );
 CREATE INDEX IF NOT EXISTS media_star_creator_claims_by_claimant ON media_star_creator_claims(claimant_account_id,submitted_at DESC);
+
+-- Playback-session evidence is separate from legacy one-per-day,
+-- self-reported production_play_receipts. A fresh real viewing can have
+-- a new SESSION candidate, but a client report can NEVER auto-mint coins.
+CREATE TABLE IF NOT EXISTS media_star_session_evidence (
+  session_id TEXT PRIMARY KEY,
+  content_id TEXT NOT NULL REFERENCES media_star_creator_policies(content_id),
+  episode_id TEXT NOT NULL REFERENCES media_star_creator_episodes(episode_id),
+  viewer_account_id TEXT NOT NULL REFERENCES accounts(id),
+  started_at INTEGER NOT NULL,
+  completed_at INTEGER,
+  observed_seconds INTEGER NOT NULL DEFAULT 0 CHECK(observed_seconds BETWEEN 0 AND 7200),
+  state TEXT NOT NULL DEFAULT 'started' CHECK(state IN ('started','candidate','rejected')),
+  evidence_kind TEXT NOT NULL DEFAULT 'client_native_media_progress',
+  UNIQUE(session_id,viewer_account_id)
+);
+CREATE INDEX IF NOT EXISTS media_star_session_per_viewer ON media_star_session_evidence(viewer_account_id,started_at DESC);
+-- Exactly one newly proposed Infinity-issued coin PER session. A repeated
+-- finish call returns the same award: it never creates a second coin or debit.
+CREATE TABLE IF NOT EXISTS media_star_infinity_session_awards (
+  session_id TEXT PRIMARY KEY REFERENCES media_star_session_evidence(session_id),
+  content_id TEXT NOT NULL REFERENCES media_star_creator_policies(content_id),
+  proposed_star_coins INTEGER NOT NULL DEFAULT 1 CHECK(proposed_star_coins=1),
+  verification_status TEXT NOT NULL DEFAULT 'pending_independent_playback_and_rights',
+  payout_status TEXT NOT NULL DEFAULT 'unfunded_unclaimed',
+  beneficiary_credit_id TEXT REFERENCES production_credits(credit_id),
+  settled_star_coins INTEGER NOT NULL DEFAULT 0 CHECK(settled_star_coins BETWEEN 0 AND 1),
+  settlement_receipt TEXT UNIQUE,
+  created_at INTEGER NOT NULL
+);
