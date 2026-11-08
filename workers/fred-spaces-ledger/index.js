@@ -71,6 +71,15 @@ export default {async fetch(request,env){
  ]);
  const [r,b]=await Promise.all([env.DB.prepare("SELECT attempt_id,charged_at FROM spaces_episode_unlocks WHERE account_id=? AND episode_id=?").bind(user.id,episodeId).first(),env.DB.prepare("SELECT star_coins FROM accounts WHERE id=?").bind(user.id).first()]);
  if(!r?.charged_at)return reply({ok:false,error:"insufficient_star_coins",message:"Earn 1 full StarCoin to unlock another episode."},409,cors);
- return reply({ok:true,episodeId,charged:r.attempt_id===attempt?1:0,creatorPaid:r.attempt_id===attempt,ownerPaid:r.attempt_id===attempt,recipient:"platform-owner",receiptReference:r.attempt_id,alreadyUnlocked:r.attempt_id!==attempt,starCoins:b?.star_coins??0},200,cors);
+ const newlyCharged=r.attempt_id===attempt;
+ if(newlyCharged){
+   // A D1 batch result is not itself proof that both immutable receipt events
+   // exist. Verify one debit for the listener and one credit for the configured
+   // platform owner, joined by the same real attempt ID and content ID.
+   const receipt=await env.DB.prepare("SELECT SUM(CASE WHEN event_type='spaces_episode_unlock' AND account_id=? AND amount=-1 THEN 1 ELSE 0 END) AS debit_count, SUM(CASE WHEN event_type='spaces_episode_owner_payout' AND account_id=? AND amount=1 THEN 1 ELSE 0 END) AS credit_count FROM ledger_events WHERE reference_id=? AND content_id=? AND event_type IN ('spaces_episode_unlock','spaces_episode_owner_payout')").bind(user.id,creator.id,attempt,episodeId).first();
+   if(Number(receipt?.debit_count)!==1||Number(receipt?.credit_count)!==1)
+     return reply({ok:false,error:"owner_payout_receipt_unverified",message:"This unlock needs a payment receipt review. Do not retry or purchase again; contact support to reconcile the attempt."},503,cors);
+ }
+ return reply({ok:true,episodeId,charged:newlyCharged?1:0,creatorPaid:newlyCharged,ownerPaid:newlyCharged,recipient:"platform-owner",receiptReference:r.attempt_id,alreadyUnlocked:!newlyCharged,starCoins:b?.star_coins??0},200,cors);
  }catch(error){console.error(error);return reply({ok:false,error:"ledger_unavailable",message:"Charge not confirmed; try again."},503,cors)}
  }};
