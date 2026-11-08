@@ -39,3 +39,10 @@ test('published episodes and existing purchase receipts cannot be deleted by a d
  assert.match(api,/existing_curator_unlocks_immutable/);
  assert.match(api,/UPDATE production_catalog SET source_url=\?/);
 });
+
+test('authenticated playback bridge carries registered creator contentId instead of losing linkage',()=>{
+ const bridge=fs.readFileSync('js/starquest-cloud-ledger.js','utf8');
+ assert.match(bridge,/contentId:play\.contentId/);
+ assert.match(api,/creator_content_id_required/);
+ assert.match(api,/issuerViewAwards:'pending_independent_playback_and_funding'/);
+});
