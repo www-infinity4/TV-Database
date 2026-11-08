@@ -17,6 +17,7 @@ StarQuest device bearer-token authentication. It does not mint coins.
 - The `spaces_episode_unlocks` table is created on first authenticated use,
   and StarQuest `accounts.star_coins` is the authoritative debit balance.
 - Each *new paid unlock* transfers **one full StarCoin to the configured QuantaPhi platform owner account**.
+- After the D1 batch, the Worker rereads the immutable ledger and confirms **exactly one** listener debit event (-1) and **exactly one** platform-owner credit event (+1) sharing the same attempt ID and Fred episode ID. The response only reports `ownerPaid:true` when both records exist. Missing proof returns an incident response with **do not retry** rather than falsely claiming payment success. This source change requires independent payment review and authorized production deployment; the live Worker remains on the legacy response until then.
   The debit (`spaces_episode_unlock`, -1) and credit
   (`spaces_episode_owner_payout`, +1) are written in one StarQuest D1 batch
   with the same attempt reference. Retrying the same unlock never pays twice.
@@ -45,7 +46,7 @@ StarQuest device bearer-token authentication. It does not mint coins.
 
 ## Endpoints
 
-`GET /health` reports service status without accessing a wallet.
+`GET /health` reports service status without accessing a wallet and advertises `receiptContractVersion:2` only in the reviewed paired-receipt implementation. The QuantaPhi Fred Quick Card must require BOTH `paymentsReady:true` and `receiptContractVersion:2` before offering a new paid unlock; older live Worker versions that omit this marker are **fail-closed**, even if owner destination configuration exists. Deploying the new Worker and checking its public health response is a separate approved release step.
 `GET /v1/spaces/unlocks` returns the authenticated listener's unlocked
 IDs and whole StarCoin balance.
 `POST /v1/spaces/unlock` accepts JSON `{"episodeId":"fred-0147"}`
@@ -86,3 +87,7 @@ listener debit and creator credit. Investigate historical debit-only records
 without automatically restoring or double-paying them. An unmatched charge is
 an incident, not evidence of a confirmed Fred royalty. Keep `charged_at` rows
 for no-fee owner previews separate from actual negative debit events.
+
+## November 7, 2026 · receipt compatibility gate
+
+The public Worker readback still returned no `ownerPaid`, `recipient`, `creatorPaid` or `receiptReference` in the paid unlock response although the deployed source contained an atomic owner-credit query. A visitor must never be charged based on `paymentsReady` alone, because the browser cannot validate the paired credit receipt on that version. This branch adds explicit `receiptContractVersion:2` to health for deployment with the newer full receipt response. Owner account configuration was read-only verified; historical StarQuest ledger counts showed five debits and zero owner-credit events. These older records are a separate authenticated reconciliation incident (issue #110/#116); do not grant refund or bonus balances based on counts alone or automatically retry charges.
