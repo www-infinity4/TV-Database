@@ -6,6 +6,7 @@ on:
       - 'js/starquest-cloud-ledger.js'
       - 'tests/production-attribution.test.cjs'
       - 'tests/media-star-creator-two-ledgers.test.cjs'
+      - 'tests/media-star-usage-privacy.test.cjs'
       - '.github/workflows/production-attribution.yml'
   push:
     branches: [main]
@@ -14,6 +15,7 @@ on:
       - 'js/starquest-cloud-ledger.js'
       - 'tests/production-attribution.test.cjs'
       - 'tests/media-star-creator-two-ledgers.test.cjs'
+      - 'tests/media-star-usage-privacy.test.cjs'
       - '.github/workflows/production-attribution.yml'
 permissions:
   contents: read
@@ -41,6 +43,7 @@ jobs:
           db.executescript((base/'0001_initial.sql').read_text())
           db.executescript((base/'0004_production_ledger.sql').read_text())
           db.executescript((base/'0005_media_star_creator_ledgers.sql').read_text())
+          db.executescript((base/'0006_media_star_usage_receipts.sql').read_text())
           now=1792100000
           db.execute("INSERT INTO accounts VALUES('a','viewer','secret',0,0,0,?,?)",(now,now))
           db.execute("INSERT INTO production_catalog(content_id,platform,source_id,title,created_at,updated_at) VALUES('youtube:abc123ABCDE','youtube','abc123ABCDE','Sample',?,?)",(now,now))
@@ -55,10 +58,16 @@ jobs:
               raise AssertionError('Duplicate Infinity award was accepted')
           except sqlite3.IntegrityError:pass
           assert db.execute("SELECT proposed_star_coins,settled_star_coins FROM media_star_infinity_view_awards").fetchone()==(1,0)
+          db.execute("INSERT INTO media_star_usage_events(receipt_id,content_id,viewer_mask,request_id,event_type,observed_day,recorded_at) VALUES('u1','youtube:abc123ABCDE','anon_testmaskedviewer01234567890','saferequest0123456789','card_open','2026-11-07',?)",(now,))
+          try:
+              db.execute("INSERT INTO media_star_usage_events(receipt_id,content_id,viewer_mask,request_id,event_type,observed_day,recorded_at) VALUES('u2','youtube:abc123ABCDE','anon_testmaskedviewer01234567890','saferequest0123456789','app_use','2026-11-07',?)",(now,))
+              raise AssertionError('Duplicate usage was accepted')
+          except sqlite3.IntegrityError:pass
+          assert db.execute('SELECT observation_state,reward_state,settled_milli_starcoins FROM media_star_usage_events').fetchone()==('client_unverified','not_payable',0)
           assert db.execute("SELECT star_coins FROM accounts WHERE id='a'").fetchone()[0]==0
           print('Unique receipts, public credits and unfunded wallet isolation validated')
           PY
       - name: Browser source receipts regression tests
         run: |
           node --check js/starquest-cloud-ledger.js
-          node --test tests/production-attribution.test.cjs tests/media-star-creator-two-ledgers.test.cjs
+          node --test tests/production-attribution.test.cjs tests/media-star-creator-two-ledgers.test.cjs tests/media-star-usage-privacy.test.cjs

@@ -1,3 +1,4 @@
+import {recordUsageEvent} from './usage-receipts';
 /* StarQuest contributor receipts. Never conflate a public credit, a 
  * self-reported play, a verified claimant, or a funded wallet transfer. */
 type Database = D1Database;
@@ -224,7 +225,8 @@ export async function productionGet(path:string,url:URL,db:Database){
  }
  return null;
 }
-export async function productionPost(path:string,db:Database,account:Viewer,body:Payload){
+export async function productionPost(path:string,db:Database,account:Viewer,body:Payload,usageAliasSecret?:string){
+ if(path==='/v1/production/interaction')return recordUsageEvent(db,account,body,usageAliasSecret);
  if(path==='/v1/production/register')return register(db,account,body);
  if(path==='/v1/production/plays')return record(db,account,body);
  if(path==='/v1/production/claim')return claim(db,account,body);
