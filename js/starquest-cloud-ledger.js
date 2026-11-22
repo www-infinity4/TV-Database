@@ -100,25 +100,39 @@
       // A previously enrolled bearer token is already a durable device identity.
       // Recover that cloud account first so loss of the browser profile cache can
       // never silently bootstrap a second wallet for the same device.
+      let stateResponse;
       try {
-        const stateResponse = await global.fetch(endpoint + "/v1/state", {
+        stateResponse = await global.fetch(endpoint + "/v1/state", {
           method: "GET",
           headers: { "Authorization": "Bearer " + deviceToken },
           cache: "no-store"
         });
-        const statePayload = await stateResponse.json().catch(function () { return {}; });
-        if (stateResponse.ok && statePayload.ok && statePayload.state) {
-          const cloudUsername = String(statePayload.state.username || "").trim().toLowerCase();
-          if (cloudUsername && cloudUsername === String(user.key || "").toLowerCase()) {
-            connectedUsername = user.key;
-            bootstrapIncludedAttempts.clear();
-            applyState(statePayload);
-            document.dispatchEvent(new CustomEvent("starquest:ledger-connected", { detail: { username: user.key, recovered: true } }));
-            return true;
-          }
-        }
       } catch (_) {
-        // Offline/transient state reads fall through to the existing bootstrap.
+        // Network failure is not a new device. Keep its existing token and
+        // cloud identity rather than attempting an account-creating bootstrap.
+        const error = new Error("Ledger verification is temporarily unavailable.");
+        error.code = "ledger_state_unavailable";
+        throw error;
+      }
+      const statePayload = await stateResponse.json().catch(function () { return {}; });
+      if (stateResponse.ok && statePayload.ok && statePayload.state) {
+        const cloudUsername = String(statePayload.state.username || "").trim().toLowerCase();
+        if (cloudUsername && cloudUsername === String(user.key || "").toLowerCase()) {
+          connectedUsername = user.key;
+          bootstrapIncludedAttempts.clear();
+          applyState(statePayload);
+          document.dispatchEvent(new CustomEvent("starquest:ledger-connected", { detail: { username: user.key, recovered: true } }));
+          return true;
+        }
+      }
+      // Only an explicitly unrecognized device credential permits the
+      // existing verified-account bootstrap. A D1 5xx/429, service failure,
+      // malformed successful response or different cloud user must fail
+      // closed without importing or overwriting the local wallet snapshot.
+      if (!(stateResponse.status === 401 && statePayload.error === "invalid_device_token")) {
+        const error = new Error(statePayload.message || "Ledger identity verification could not be completed.");
+        error.code = stateResponse.ok ? "ledger_state_mismatch" : (statePayload.error || "ledger_state_unavailable");
+        throw error;
       }
       const response = await global.fetch(endpoint + "/v1/bootstrap", {
         method: "POST",
