@@ -14,6 +14,7 @@ on:
       - js/opening-rotation.js
       - js/share-safety-net.js
       - js/auth.js
+      - js/starquest-cloud-ledger.js
       - css/style.css
       - tests/**
       - js/card-density.js
@@ -44,6 +45,8 @@ jobs:
           node tests/opening-rotation.test.js
           node tests/single-green-wallet-menu.test.cjs
           node tests/starquest-cloudflare-wallet-view.test.cjs
+          node tests/cloud-ledger-share-race.test.js
+          node tests/cloud-ledger-outage-no-bootstrap.test.js
       - name: Check menu-only controls
         run: |
           python3 - <<'PY'
